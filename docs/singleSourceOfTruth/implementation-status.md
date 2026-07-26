@@ -1,98 +1,67 @@
 # triageRush — Implementation Status
 
-**Last verified:** 2026-07-25 15:24 PDT  
-**Owner:** Current repository state, known gaps, and next work
+**Last verified:** 2026-07-26 11:13 PDT
+**Status:** Revised edu/game concept in design; implementation not started
 
-## Current state
+## Repository direction
 
-triageRush is in design and patient-data preparation. There is no playable game
-in the rebuilt repository yet.
+- `main` is the official path for the revised triageRush concept.
+- Git tag `v1` preserves the original concept.
+- The v1 canonical documents are archived under
+  `docs/archive/v1-original-concept-single-source-of-truth/`.
+- The detailed 2026-07-26 design discussion is retained under `docs/DESIGN/`.
+- No second repository or fork is planned.
 
-### Completed
+## Implemented assets and data
 
-- Fixed 360 × 640 mobile canvas contract.
-- 22/56/22 play-area columns.
-- Five equal waiting-room and door rows.
-- Patient-panel background and four reusable overlay assets.
-- Sixteen selected waiting-room backgrounds.
-- Closed/open artwork for all five destinations.
-- Current selected artwork collected under `SELECTED ARTWORK`.
-- 160 patient JSON records and 160 corresponding patient images.
-- Every patient has ESI 1–5.
-- Deterministic ESI-to-room and alternate-room rules encoded in JSON.
-- `esi2roomsNotes` present in all patient records.
-- Patient schema/template established as the schema authority.
-- `clinical.quote` migrated to `quoteLong`.
-- `quoteShort` added and currently `null` in all records.
-- `imageScale` added and currently `1.0` in all records.
-- Canonical documentation consolidated under `docs/singleSourceOfTruth/`.
-
-### Latest patient-data validation
-
-- Patient JSON files: 160
-- Parse errors: 0
-- Current schema-field errors: 0
-- ESI/room-routing errors: 0
-- Non-null `esi2roomsNotes`: 29
-- Psych-correct patients: 5
-- Discharge-correct patients: 24
+- 160 patient JSON records.
+- 160 primary patient images.
+- Existing exact ESI values from 1 through 5.
+- Existing v1 Psych and Discharge exceptions.
+- Existing patient schema/template.
+- Existing v1 interface and selected artwork exploration.
+- Git/GitHub repository with `main` and the preserved `v1` tag.
 
 ## Not implemented
 
-- Root `index.html` is empty.
-- No production HTML, CSS, or JavaScript game shell exists.
-- No runtime asset manifest exists.
-- No patient loader or game-data bundling step exists.
-- No waiting-room state machine exists.
-- No scoring implementation exists.
-- No door-state feedback is wired.
-- No expanded clipboard is implemented.
-- No mobile-browser test harness exists.
-- `patientsBrowser-app` is empty.
+- No playable production game exists.
+- Root `index.html` remains empty.
+- No revised seven-choice game shell exists.
+- No Game/Edu mode selection exists.
+- No revised scoring or outcome evaluation exists.
+- No immediate pulse/audio feedback exists.
+- No Coach card exists.
+- No revised patient-answer schema exists.
+- No patient rationales have been authored for Coach.
+- No seven-choice production artwork or validated layout exists.
 
-The HTML/CSS file under `docs/DESIGN/REFINING IMAGES/mockups/` is a structural
-prototype only.
+## Transition constraints
 
-## Current authorities
+- Do not build the archived five-door routing model as the new target.
+- Do not migrate patient answers until Close/Wrong and Psych/Discharge rules
+  are confirmed.
+- Do not treat v1 selected door artwork as final for seven-choice play.
+- Do not reveal Coach information before the player commits to a decision.
+- Do not fill undecided rules by copying older specifications.
 
-| Subject | Authority |
-|---|---|
-| Documentation index | `docs/singleSourceOfTruth/README.md` |
-| Patient schema | `patientsCRUD-app/patient-data/docs/patient-schema.json` |
-| Patient records | `patientsCRUD-app/patient-data/patient-json/` |
-| Patient images | `patientsCRUD-app/patient-data/patient-images/` |
-| Selected artwork | `docs/DESIGN/REFINING IMAGES/SELECTED ARTWORK/` |
+## Next design sequence
 
-## Known gaps
+1. Resolve exact Correct/Close/Wrong evaluation rules.
+2. Resolve Psych and Discharge evaluation behavior.
+3. Resolve ESI 1 under-triage handling.
+4. Define Coach content and Game-mode timer behavior.
+5. Define Game scoring, Edu tallies, rounds, and pacing.
+6. Produce and test low-fidelity seven-choice interface alternatives.
+7. Approve the revised patient-answer and Coach schema.
+8. Migrate and validate the patient library.
+9. Establish the revised asset plan.
+10. Begin production implementation.
 
-1. All `quoteShort` values still need to be authored and reviewed.
-2. All `imageScale` values remain at the default until a real layout preview
-   exists.
-3. The schema/template is not yet a formal JSON Schema.
-4. Door images differ slightly in source dimensions.
-5. Exact scoring values and round/pacing rules require reconfirmation.
-6. Timer behavior while expanded information is open is undecided.
-7. Runtime asset locations inside `triageRush-app` are not established.
-8. The optional Psych waiting-room poster should be reviewed before shipping.
+## Documentation rule during redesign
 
-## Recommended next sequence
+Design discussion may continue in timestamped notes. Once the user confirms a
+rule, update the relevant active document in this folder before implementing
+it. Archived v1 files must remain unchanged.
 
-1. Author and review `quoteShort` for all patients.
-2. Create the fixed 360 × 640 production shell.
-3. Implement the 40/560/40 vertical grid and 22/56/22 play grid.
-4. Implement the shared five-row waiting/door rails.
-5. Establish a production asset structure and manifest using the selected art.
-6. Layer the active-patient background, patient, overlays, and HTML text.
-7. Add an image preview/tuning workflow for `imageScale`.
-8. Implement patient selection and swap behavior.
-9. Implement room placement using authored `answer` fields.
-10. Add closed/open door feedback.
-11. Implement the expanded clipboard.
-12. Reconfirm scoring, timing, round, and spawn settings.
-13. Test the required mobile viewport matrix.
-
-## Status update rule
-
-Update this document when repository state changes. Do not put new canonical
-rules here; place them in the subject-owning document and link to them.
-
+The previous status report is available in the
+[archived v1 implementation document](../archive/v1-original-concept-single-source-of-truth/implementation-status.md).

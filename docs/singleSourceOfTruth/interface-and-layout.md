@@ -1,208 +1,101 @@
-# triageRush — Interface and Layout
+# triageRush — Interface and Layout Transition
 
-**Last reviewed:** 2026-07-25 15:24 PDT  
-**Owner:** Viewport, geometry, visual layers, and artwork use
+**Last reviewed:** 2026-07-26 11:13 PDT
+**Status:** Existing assets documented; revised layout under discussion
 
-## Viewport contract
+## Current authority
 
-triageRush is a fixed portrait, non-scrolling mobile-browser game.
+The v1 interface was designed around five destination doors and five matching
+side rows. That geometry is archived and is not a binding requirement for the
+revised seven-choice design.
 
-- Logical canvas: **360 × 640 CSS pixels**
-- High-resolution design canvas: **1080 × 1920 raster pixels**
-- Raster scale: **3×**
-- Aspect ratio: **9:16**
-- Scale the complete game canvas uniformly.
-- Fit against `100vw × 100svh`.
-- Letterbox surplus width or height.
-- Do not reflow when mobile browser controls retract.
-- Keep the document and game shell `overflow: hidden`.
-- Respect safe-area insets.
+No final v2 interface geometry has been approved.
 
-Required viewport checks:
+## Assumptions that remain useful
 
-- 360 × 640
-- 375 × 667
-- 390 × 700
-- 393 × 720
-- 402 × 780
-- 412 × 732
-- 430 × 800
+Unless later testing changes them, the revised design is still expected to be:
 
-The earlier detailed viewport analysis remains available as historical support:
-[mobile viewport contract](../DESIGN/2026%200724%20codex%20mobile-viewport-contract.md).
-This document owns the current implementation contract.
+- A mobile-browser game.
+- Primarily portrait-oriented.
+- Tap-driven rather than dependent on drag-and-drop.
+- Non-scrolling during active play.
+- Built with full-cell semantic controls and visible focus treatment.
+- Able to present all evidence required for a fair decision before placement.
 
-## Primary layout
+The previous 360 × 640 logical canvas and 9:16 design work remain useful
+starting references, not locked v2 requirements.
 
-### Vertical regions
+## New interface requirements
 
-| Region | CSS pixels | Raster pixels | Canvas share |
-|---|---:|---:|---:|
-| Header | 40 | 120 | 6.25% |
-| Play area | 560 | 1680 | 87.5% |
-| Footer | 40 | 120 | 6.25% |
+The revised interface must accommodate:
 
-### Play-area columns
+- Seven treatment choices rather than five.
+- Distinct, readable ESI 1–5 choices.
+- Visually differentiated Psych and Discharge choices.
+- Green, orange, red, and light-green feedback pulses.
+- Text or symbols accompanying color and sound feedback.
+- A Coach affordance that remains unavailable until after a decision.
+- A post-decision Coach view.
+- Game-mode timer and numeric scoring.
+- Edu-mode Correct/Close/Wrong outcome tallies.
 
-```css
-grid-template-columns: 22% 56% 22%;
-```
+## Existing artwork status
 
-| Column | Share | CSS target | Raster target |
-|---|---:|---:|---:|
-| Waiting room | 22% | 79.2 px | 237.6 px |
-| Active patient | 56% | 201.6 px | 604.8 px |
-| Destination doors | 22% | 79.2 px | 237.6 px |
+The selected v1 artwork remains stored at:
 
-Practical 1080-pixel rounding is **238 / 604 / 238**.
+`docs/DESIGN/REFINING IMAGES/SELECTED ARTWORK/`
 
-### Side rows
+Those assets are historical/design inputs. They are no longer the automatic
+production-art authority because:
 
-Waiting patients and destination doors share five equal rows:
+- The door set represents five consolidated choices.
+- Seven stacked choices change the available cell height.
+- Separate ESI 2, ESI 3, ESI 4, and ESI 5 treatments may require new visual
+  language.
+- A Coach card introduces a new overlay and interaction state.
 
-```css
-grid-template-rows: repeat(5, minmax(0, 1fr));
-```
+Patient images and reusable patient-panel components may still be suitable
+after layout testing.
 
-- Play-area height: 560 CSS pixels.
-- Each row: 112 CSS pixels / 336 raster pixels.
-- A waiting cell and the corresponding destination cell share boundaries.
-- Generated full-layout artwork is not a geometry authority.
-- The complete cell is the touch target; artwork sits inside it.
+## Working layout observations
 
-## Artwork authority
+Seven equal choices within the previous 560 CSS pixel play height would be
+approximately 80 CSS pixels tall rather than 112. This can provide usable touch
+targets, but the detailed scenic door art may become visually cramped.
 
-Current selected artwork:
+Possible directions still under discussion include:
 
-[SELECTED ARTWORK](../DESIGN/REFINING%20IMAGES/SELECTED%20ARTWORK/)
+- Seven compact treatment bays in the existing right rail.
+- Simplified destination controls instead of seven miniature door scenes.
+- One visual family for ESI 1–5 and distinct styling for Psych/Discharge.
+- A Coach overlay using the central patient region.
+- A broader screen redesign if the three-column composition cannot remain
+  readable.
 
-The folder currently contains 35 files:
+None of these alternatives is yet selected.
 
-- Full-layout example and companion specifications.
-- Patient-panel background and four overlays.
-- Sixteen waiting-room backgrounds.
-- Ten door images: closed and open state for each destination.
+## Feedback accessibility
 
-Use selected files over similarly named earlier renders. The user may revise
-the selection later.
+The design must not rely solely on:
 
-## Active-patient panel
+- Color, because of color-vision differences.
+- Sound, because devices may be muted and players may have hearing
+  differences.
 
-Selected background:
+Each result should combine visual animation with a concise symbol or word.
+Sound should be mutable without disabling other feedback.
 
-- **604 × 1680 raster pixels**
-- Approximately **201.33 × 560 CSS pixels**
+## Validation still required
 
-Selected overlays:
+Before interface geometry becomes canonical:
 
-| Overlay | Raster dimensions |
-|---|---:|
-| Name plaque | 245 × 61 |
-| Quote bubble | 509 × 151 |
-| Vitals panel | 540 × 234 |
-| Presentation clipboard | 539 × 250 |
+1. Create low-fidelity seven-choice layouts.
+2. Test label and artwork legibility at representative mobile sizes.
+3. Test all feedback states.
+4. Test the hidden, newly available, open, and dismissed Coach states.
+5. Test both Game and Edu status displays.
+6. Confirm that no required patient evidence is obscured.
+7. Confirm full touch targets, focus behavior, and safe-area handling.
 
-Layer order:
-
-```text
-0   corridor/patient-panel background
-10  current patient image
-20  plaque, quote, vitals, and presentation artwork
-30  runtime HTML text and semantic controls
-```
-
-- Do not bake patient-specific text or vital values into the artwork.
-- Apply `imageScale` uniformly to the patient layer from bottom center.
-- Apply `imageFlipped` without changing the layout box.
-- The visual three-dot control needs a semantic HTML button overlay.
-- Final font sizes, padding, and text bounds require browser testing.
-
-## Waiting-room cells
-
-All selected waiting-room backgrounds are:
-
-- **238 × 336 raster pixels**
-- Approximately **79.33 × 112 CSS pixels**
-- Aspect ratio **17:24**
-
-Approved background geometry:
-
-- Wall: 262 raster pixels / 77.98%.
-- Floor: 74 raster pixels / 22.02%.
-- Wall/floor junction: raster `y = 262`.
-
-Tested patient overlay:
-
-- Raster: `left 0`, `top 98`, `width 238`, `height 238`.
-- CSS: `left 0`, `top 32.67`, `width 79.33`, `height 79.33`.
-
-Choose one background when a patient enters a waiting slot and retain it for
-that appearance. Do not choose a new background on every render.
-
-## Door cells and states
-
-Door labels and clinical routing are owned by
-[gameplay-rules.md](gameplay-rules.md).
-
-### RESUS, ACUTE, FAST TRACK, and PSYCH
-
-Closed state:
-
-- One seamless door slab with no middle seam.
-- Handle at the left/free edge.
-- Handle horizontal.
-- Indicator housing present with light off.
-
-Open state:
-
-- Right-hinged door opens inward approximately halfway.
-- Handle is depressed approximately 45 degrees.
-- Door lettering stays on the slab and follows perspective.
-- Indicator is on.
-- Interior environment matches the destination.
-
-Interior distinctions:
-
-- RESUS: resuscitation bay; idle/disconnected monitor uses flat traces and
-  dashes, not patient values.
-- ACUTE: acute treatment equipment distinct from RESUS.
-- FAST TRACK: simpler exam table, chairs, rolling BP monitor, and clinician
-  stool.
-- PSYCH: calm office/behavioral-health furniture.
-
-### DISCHARGE
-
-- Large paired glass doors with surrounding glass.
-- Closed and open views share the same exterior campus.
-- No people.
-- Same partially visible ambulance and two distant cars in both states.
-- Small blue sign shows hospital `H`, wheelchair icon, and right arrow.
-- Do not use the earlier oversized red EMERGENCY sign.
-- Both doors push outward; one is approximately 75% open and the other 50%.
-
-### Source-size caution
-
-Most selected doors are 1055 × 1491 pixels; two are 1054 × 1492. Normalize
-them later or enforce one consistent crop/`object-fit` rule inside the
-238 × 336 destination cells.
-
-## Expanded clipboard
-
-- One expanded clipboard, not separate quote and presentation dialogs.
-- It shows `quoteLong` and `presentationLong`.
-- The patient and waiting-room layers do not shift.
-- It may cover the default quote.
-- It must not cover the vitals or `presentationShort`.
-- Surrounding inactive regions may become grayscale.
-- Only the return control remains active.
-
-## Accessibility and implementation checks
-
-- Use semantic buttons for patient choices, doors, and clipboard controls.
-- Preserve visible keyboard focus.
-- Ensure touch targets are the full cells.
-- Keep required content inside safe-area padding.
-- Opening the clipboard must not cause layout shift or scrolling.
-- Door-state feedback must not be the only indicator of scoring outcome.
-- Test initial browser chrome, chrome retraction, and restoration.
-
+The detailed v1 contract remains available in the
+[archived interface and layout document](../archive/v1-original-concept-single-source-of-truth/interface-and-layout.md).

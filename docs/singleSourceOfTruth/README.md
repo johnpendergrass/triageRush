@@ -1,74 +1,101 @@
 # triageRush — Single Source of Truth
 
-**Last reviewed:** 2026-07-25 15:24 PDT  
-**Status:** Canonical project documentation
+**Last reviewed:** 2026-07-26 11:13 PDT
+**Status:** Canonical transition-state documentation
 
-Start here before changing game behavior, patient data, interface geometry, or
-production artwork.
+## Current project state
 
-## Canonical documents
+`triageRush` is changing from its original five-room routing concept toward a
+hybrid game/education design. The new direction is the official path forward
+on `main`, but its detailed gameplay, data, layout, scoring, and feedback
+contracts are still being designed.
 
-| Subject | Canonical owner |
+The original concept remains permanently preserved by the Git tag `v1`. Its
+former canonical documents are archived together at:
+
+[v1 Original Concept — Archived Single Source of Truth](../archive/v1-original-concept-single-source-of-truth/README.md)
+
+Do not use the archived v1 rules as implementation requirements for the
+revised app.
+
+## Active canonical documents
+
+| Subject | Current owner |
 |---|---|
-| Gameplay behavior, destinations, scoring interpretation, and room rules | [gameplay-rules.md](gameplay-rules.md) |
-| Patient-data locations, field meanings, authoring, and validation | [patient-data.md](patient-data.md) |
-| Mobile viewport, layout geometry, visual layers, and artwork use | [interface-and-layout.md](interface-and-layout.md) |
-| What exists now, known gaps, and the next implementation work | [implementation-status.md](implementation-status.md) |
-| Exact patient JSON structure | [patient-schema.json](../../patientsCRUD-app/patient-data/docs/patient-schema.json) |
+| Confirmed direction, working gameplay model, and unresolved rules | [gameplay-rules.md](gameplay-rules.md) |
+| Current patient assets, legacy routing fields, and migration status | [patient-data.md](patient-data.md) |
+| Interface assumptions that remain valid and areas awaiting redesign | [interface-and-layout.md](interface-and-layout.md) |
+| Repository state and the next design/implementation sequence | [implementation-status.md](implementation-status.md) |
+| Exact currently implemented patient record shape | [patient-schema.json](../../patientsCRUD-app/patient-data/docs/patient-schema.json) |
 
-Each fact should have one owner. Other documents should link to that owner
-instead of copying and independently maintaining the same rule.
+During this transition, a document may explicitly say that a decision is open.
+That statement is authoritative: older notes must not be used to fill the gap.
 
-## Operational sources outside this folder
+## Direction accepted for continued design
 
-These files stay near the applications that consume or maintain them:
+The following direction has been accepted as the basis for the revised app:
 
-| Content | Authoritative location |
+- The product is primarily a game with serious, realistic medical content.
+- The ESI 2–3 and ESI 4–5 gameplay consolidations will be removed.
+- The working model offers seven treatment choices: ESI 1, ESI 2, ESI 3,
+  ESI 4, ESI 5, Psych, and Discharge.
+- The “rooms” are a gameplay metaphor for classification and treatment, not a
+  claim that ESI levels are literal physical rooms.
+- Every committed choice receives immediate audiovisual feedback.
+- Educational coaching is available only after the player commits to a
+  decision.
+- The revised app has a timed, numerically scored Game mode and an untimed Edu
+  mode with Correct/Close/Wrong outcome tallies instead of points.
+
+These statements establish direction, not a complete implementation contract.
+Open details are recorded in the subject-owning documents.
+
+## Operational sources
+
+These existing locations remain the operational sources until a reviewed
+migration changes them:
+
+| Content | Location |
 |---|---|
 | Patient schema/template | `patientsCRUD-app/patient-data/docs/patient-schema.json` |
 | Patient JSON records | `patientsCRUD-app/patient-data/patient-json/` |
 | Patient images | `patientsCRUD-app/patient-data/patient-images/` |
-| Current selected artwork | `docs/DESIGN/REFINING IMAGES/SELECTED ARTWORK/` |
+| Existing selected v1 artwork | `docs/DESIGN/REFINING IMAGES/SELECTED ARTWORK/` |
 
-The `SELECTED ARTWORK` folder is the current visual authority, but the user may
-change that selection later.
+The patient records and images remain valuable inputs. Their v1 room-answer
+fields and the selected v1 door artwork are not automatically valid for the
+revised design.
 
-## Precedence when information conflicts
+## Supporting design discussion
 
-Use this order:
+The detailed discussion that initiated this transition is recorded in:
+
+[2026 0726 1058 potential gamestyle change to edu, game.md](../DESIGN/2026%200726%201058%20potential%20gamestyle%20change%20to%20edu,%20game.md)
+
+That note preserves the discussion and alternatives. This folder owns the
+current status of any decision.
+
+## Precedence
+
+When information conflicts, use this order:
 
 1. The user's latest explicit decision.
-2. The exact operational source for the subject:
-   `patient-schema.json`, an individual patient JSON record, or a selected
-   artwork file.
-3. The subject-owning document in this folder.
-4. Older design notes, session summaries, prototypes, and specifications.
+2. The active subject-owning document in this folder.
+3. The currently implemented operational source, but only for facts that the
+   active document has not marked legacy or pending migration.
+4. Supporting design notes.
+5. The archived v1 documents and other historical material.
 
-If an operational source and its canonical explanatory document disagree, stop
-and reconcile them rather than silently choosing one.
+If a required rule is marked undecided, stop and resolve it rather than
+silently restoring the v1 behavior.
 
-## Historical and working material
+## Maintenance rule
 
-The following areas are useful history but are not current implementation
-authority:
+When a proposed rule becomes confirmed:
 
-- `docs/DESIGN/`
-- `docs/claude-john-docs/`
-- Timestamped session summaries
-- Earlier layout mockups outside `SELECTED ARTWORK`
-- The July 19 ESI/room note
-
-In particular, ignore older models that treat Psych and Discharge as ESI 6 and
-7, or map both ESI 1 and 2 to Resus. The current room contract is owned by
-[gameplay-rules.md](gameplay-rules.md).
-
-## Documentation maintenance rule
-
-When a decision changes:
-
-1. Update the operational source when the change affects data or assets.
-2. Update the one canonical document that owns the rule.
-3. Update `implementation-status.md` if the repository state changed.
-4. Change the relevant `Last reviewed` timestamp.
-5. Do not rewrite historical notes merely to make them appear current.
-
+1. Update its active subject-owning document.
+2. Update the schema, patient records, or artwork only after the rule is
+   documented.
+3. Validate any data migration.
+4. Update [implementation-status.md](implementation-status.md).
+5. Preserve archived documents as history rather than rewriting them.
