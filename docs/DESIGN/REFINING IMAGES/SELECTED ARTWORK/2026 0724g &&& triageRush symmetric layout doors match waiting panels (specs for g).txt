@@ -1,0 +1,61 @@
+triageRush HTML/CSS layout specification
+
+Companion image:
+2026 0724 triageRush symmetric layout doors match waiting panels.png
+
+Working reference:
+docs/DESIGN/REFINING IMAGES/mockups/2026 0724g triageRush symmetric layout doors match waiting panels.html
+docs/DESIGN/REFINING IMAGES/mockups/2026 0724g triageRush symmetric layout doors match waiting panels.css
+
+CANVAS
+- Raster reference: 1080 x 1920 pixels
+- CSS design canvas: 360 x 640 CSS pixels
+- Raster scale: 3 image pixels per CSS pixel
+- Aspect ratio: 9:16
+- Runtime behavior: scale uniformly to fit 100vw x 100svh; letterbox any unused space
+- No scrolling and no responsive reflow inside the game canvas
+
+PRIMARY VERTICAL LAYOUT
+- Header: 40 CSS px / 120 raster px / 6.25%
+- Play area: 560 CSS px / 1680 raster px / 87.5%
+- Footer: 40 CSS px / 120 raster px / 6.25%
+
+PLAY-AREA COLUMNS
+- Waiting room: 22% / 79.2 CSS px / 237.6 raster px
+- Patient panel: 56% / 201.6 CSS px / 604.8 raster px
+- Doors panel: 22% / 79.2 CSS px / 237.6 raster px
+- CSS definition: grid-template-columns: 22% 56% 22%
+- Practical 1080-pixel raster rounding: 238 / 604 / 238 pixels
+
+SIDE-PANEL ROW LAYOUT
+- Waiting room and doors use the same grid definition.
+- CSS implementation: grid-template-rows: repeat(5, minmax(0, 1fr))
+- Play-area height: 560 CSS px
+- Each logical row: 112 CSS px
+- Each raster row: 336 raster px before borders and gutters
+- Corresponding patient and door rows therefore always share the same top,
+  bottom, and height.
+
+MEASURED ROWS IN THE COMPANION RASTER MOCKUP
+- Row 1: y 125-504; 380 raster px; approximately 126.67 CSS px
+- Row 2: y 508-849; 342 raster px; 114 CSS px
+- Row 3: y 854-1174; 321 raster px; 107 CSS px
+- Row 4: y 1179-1488; 310 raster px; approximately 103.33 CSS px
+- Row 5: y 1492-1795; 304 raster px; approximately 101.33 CSS px
+
+The raster rows above reflect small inconsistencies in the generated artwork.
+They are documented for image comparison only. The real HTML/CSS layout uses
+five equal 112 CSS-pixel rows so the buttons are consistent and maintainable.
+
+IMPLEMENTATION CONTRACT
+- One fixed 360 x 640 game surface.
+- Main play columns remain locked at 22/56/22.
+- Both side panels share one five-row grid contract.
+- Patient thumbnails and room buttons fill their grid cells with no independent
+  heights.
+- Door artwork is an asset inside a room button; it does not determine button
+  dimensions.
+- The current-patient panel owns its image, quote, vitals, and presentation
+  layout independently of the side-panel row grid.
+- Touch targets are the entire room cells, not just the illustrated doors.
+- Browser chrome changes available space only; it does not cause layout reflow.

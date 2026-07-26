@@ -1,0 +1,83 @@
+{
+  "id": "patient-032",
+  "number": 32,
+  "easterEgg": false,
+  "difficulty": 3,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Ronald",
+      "age": 71,
+      "sex": "M",
+      "race": "white"
+    },
+    "image": {
+      "imageFilename": "patient-032.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Passed out, belly and back pain",
+      "quoteShort": null,
+      "quoteLong": "I passed out cold at the store. Now I've got this deep tearing pain in my belly going through to my back, and it kind of throbs. Something feels really, really wrong.",
+      "presentationShort": "71yo M — syncope then severe abdominal/back pain, pulsatile abdominal mass, diaphoretic, borderline hypotensive — ruptured AAA.",
+      "presentationLong": "71-year-old male, syncope followed by severe tearing abdominal and back pain, a pulsatile abdominal mass, diaphoresis, and borderline hypotension — ruptured abdominal aortic aneurysm until excluded."
+    },
+    "vitals": {
+      "hr": {
+        "value": 118,
+        "color": "red"
+      },
+      "bp": {
+        "value": "88/54",
+        "color": "red"
+      },
+      "rr": {
+        "value": 22,
+        "color": "yellow"
+      },
+      "spo2": {
+        "value": 97,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.8,
+        "color": "green"
+      },
+      "pain": {
+        "value": 9,
+        "color": "red"
+      }
+    },
+    "diagnosis": {
+      "primary": "Ruptured abdominal aortic aneurysm (AAA)",
+      "esi": 1,
+      "esi2roomsNotes": null,
+      "disposition": "Resus → immediate bedside ultrasound, large-bore IVs, type & cross, vascular surgery STAT; do NOT delay for CT if unstable.",
+      "why": "The triad that kills fast: syncope, back/belly pain, pulsatile mass. Unstable → straight to the OR, not the CT scanner.",
+      "redFlag": "Syncope + abdominal/back pain + pulsatile mass + hypotension = ruptured AAA."
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "Resus",
+    "otherAcceptableRooms": []
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "71-year-old man, pale and sweaty",
+    "pose": "hunched, both hands clutching his belly",
+    "expression": "frightened, in severe pain",
+    "signs": [
+      "pale and sweaty",
+      "clutching his abdomen"
+    ],
+    "lookSeverity": "clearly critically ill",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-032.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 71-year-old man, pale and sweaty, seated on a blue padded clinic chair. Pose: hunched forward, both hands clutching his belly. Expression: frightened and in severe pain. Clearly visible: pale sweaty skin and both hands gripping his abdomen. No text, no logos."
+  }
+}

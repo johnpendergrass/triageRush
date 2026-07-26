@@ -1,0 +1,85 @@
+{
+  "id": "patient-081",
+  "number": 81,
+  "easterEgg": false,
+  "difficulty": 2,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Tanya",
+      "age": 35,
+      "sex": "F",
+      "race": "black"
+    },
+    "image": {
+      "imageFilename": "patient-081.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Had a seizure",
+      "quoteShort": null,
+      "quoteLong": "(Bystander) She dropped and started convulsing — full-body shaking for a couple of minutes, bit her tongue. It stopped on its own. She's coming around now but she's groggy and confused.",
+      "presentationShort": "35yo F — witnessed generalized tonic-clonic seizure ~2 min, tongue laceration, now postictal and rousable — seizure.",
+      "presentationLong": "35-year-old female with a witnessed generalized tonic-clonic seizure lasting about two minutes with a tongue laceration, now postictal but rousable."
+    },
+    "vitals": {
+      "hr": {
+        "value": 104,
+        "color": "yellow"
+      },
+      "bp": {
+        "value": "134/84",
+        "color": "green"
+      },
+      "rr": {
+        "value": 18,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 97,
+        "color": "green"
+      },
+      "temp": {
+        "value": 37.1,
+        "color": "green"
+      },
+      "pain": {
+        "value": 2,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Generalized seizure (postictal)",
+      "esi": 2,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → protect airway, check glucose, labs/levels, identify trigger; observe recovery. Prolonged/repeat → status pathway.",
+      "why": "Check a glucose in every seizure. Most self-terminate; if it doesn't stop or she doesn't wake up, treat as status.",
+      "redFlag": "Seizing >5 min or not recovering = status epilepticus — a true emergency."
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "Acute",
+    "otherAcceptableRooms": [
+      "Resus"
+    ]
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "35-year-old woman, groggy",
+    "pose": "slumped and dazed, being supported in the chair",
+    "expression": "dazed, confused (postictal)",
+    "signs": [
+      "dazed, unfocused gaze",
+      "a little blood at the lip"
+    ],
+    "lookSeverity": "postictal, recovering",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-081.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a black 35-year-old woman, groggy and dazed, slumped on a blue padded clinic chair. Pose: slumped and supported, head heavy. Expression: dazed and confused, a postictal look. Clearly visible: an unfocused dazed gaze and a small bit of blood at the lip. No text, no logos."
+  }
+}

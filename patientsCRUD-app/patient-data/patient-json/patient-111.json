@@ -1,0 +1,84 @@
+{
+  "id": "patient-111",
+  "number": 111,
+  "easterEgg": false,
+  "difficulty": 2,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Katherine",
+      "age": 46,
+      "sex": "F",
+      "race": "white"
+    },
+    "image": {
+      "imageFilename": "patient-111.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Very drowsy, hard to wake",
+      "quoteShort": null,
+      "quoteLong": "(rousable only briefly) ...I'm fine... just tired... please don't call my office...",
+      "presentationShort": "46yo F — found drowsy at her desk, empty zolpidem and lorazepam packets in her bag. Rousable to voice, protecting airway.",
+      "presentationLong": "46-year-old female found drowsy at her desk with empty zolpidem and lorazepam packets nearby; rousable to voice and protecting her own airway."
+    },
+    "vitals": {
+      "hr": {
+        "value": 62,
+        "color": "green"
+      },
+      "bp": {
+        "value": "106/64",
+        "color": "green"
+      },
+      "rr": {
+        "value": 11,
+        "color": "yellow"
+      },
+      "spo2": {
+        "value": 95,
+        "color": "yellow"
+      },
+      "temp": {
+        "value": 36.4,
+        "color": "green"
+      },
+      "pain": {
+        "value": 0,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Sedative-hypnotic (benzodiazepine and Z-drug) overdose",
+      "esi": 3,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → monitored bed, serial airway and respiratory assessment, toxicology screen, psychiatric evaluation",
+      "why": "She is in a tailored suit and it changes nothing. Overdose has no dress code — the drowsiness and the respiratory rate of 11 are the case, not the appearance.",
+      "redFlag": "Respiratory rate of 11 with sedation — the airway needs watching; this can deepen."
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "Acute",
+    "otherAcceptableRooms": []
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a white 46-year-old woman in a smart tailored blazer and blouse, slumped back on a blue padded clinic chair",
+    "pose": "slumped back with head lolling to one side, arms limp at her sides",
+    "expression": "heavy-lidded and barely rousable",
+    "signs": [
+      "eyes half closed",
+      "an immaculate blazer at odds with her posture",
+      "slack facial muscles"
+    ],
+    "lookSeverity": "deeply drowsy but breathing on her own",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-111.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. Subject: a white 46-year-old woman in a smart tailored blazer and blouse, slumped back on a blue padded clinic chair. Pose: slumped back with head lolling to one side, arms limp at her sides. Expression: heavy-lidded and barely rousable. Clearly visible: eyes half closed; an immaculate blazer at odds with her posture; slack facial muscles. Overall: deeply drowsy but breathing on her own. No text, no logos, no watermarks, no border."
+  }
+}

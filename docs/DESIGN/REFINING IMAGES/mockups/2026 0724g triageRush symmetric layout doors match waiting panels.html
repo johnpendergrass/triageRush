@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>triageRush — 22/56/22 layout reference</title>
+  <link rel="stylesheet" href="2026 0724g triageRush symmetric layout doors match waiting panels.css">
+</head>
+<body>
+  <main class="game" aria-label="triageRush fixed mobile layout reference">
+    <header class="game-header">
+      <strong>TRIAGE</strong>
+      <div class="timer"><b>1</b><span></span><b>60</b></div>
+      <strong>RUSH!</strong>
+    </header>
+
+    <section class="play-area">
+      <aside class="waiting-column" aria-label="Waiting room">
+        <div class="waiting-title">WAITING ROOM</div>
+        <ol class="side-stack">
+          <li><span class="number">1</span><img src="../../../../patientsCRUD-app/patient-data/patient-images/patient-001.png" alt="Waiting patient 1"></li>
+          <li><span class="number">2</span><img src="../../../../patientsCRUD-app/patient-data/patient-images/patient-002.png" alt="Waiting patient 2"></li>
+          <li><span class="number">3</span><img src="../../../../patientsCRUD-app/patient-data/patient-images/patient-003.png" alt="Waiting patient 3"></li>
+          <li><span class="number">4</span><img src="../../../../patientsCRUD-app/patient-data/patient-images/patient-004.png" alt="Waiting patient 4"></li>
+          <li><span class="number">5</span><img src="../../../../patientsCRUD-app/patient-data/patient-images/patient-005.png" alt="Waiting patient 5"></li>
+        </ol>
+      </aside>
+
+      <article class="patient-column">
+        <div class="patient-label">PATIENT #1</div>
+        <div class="patient-image">
+          <img src="../../../../patientsCRUD-app/patient-data/patient-images/patient-001.png" alt="Current patient">
+        </div>
+        <blockquote>“It’s just heartburn. Gimme a Tums and I’ll be fine.”</blockquote>
+        <div class="vitals" aria-label="Patient vitals">
+          <span>♥ <b>HR<br>108</b></span>
+          <span>♥ <b>BP<br>108/70</b></span>
+          <span>♟ <b>RR<br>20</b></span>
+          <span>O₂ <b>SpO₂<br>95%</b></span>
+          <span>● <b>Temp<br>37.0°C</b></span>
+          <span>● <b>Pain<br>5/10</b></span>
+        </div>
+        <div class="presentation">
+          58yo M — substernal “heartburn” radiating to jaw, sweaty and nauseated.
+          Began 45 minutes ago; no relief with antacids.
+          <button type="button" aria-label="Open full patient information">•••</button>
+        </div>
+      </article>
+
+      <nav class="rooms-column" aria-label="Room choices">
+        <div class="side-stack">
+          <button class="room resus"><span>ESI 1</span><b>RESUS</b><i>✚</i></button>
+          <button class="room acute"><span>ESI 2–3</span><b>ACUTE</b><i>⌁</i></button>
+          <button class="room fast"><span>ESI 4–5</span><b>FAST<br>TRACK</b><i>▱</i></button>
+          <button class="room psych"><span>PSYCH</span><b>BEHAVIORAL<br>HEALTH</b><i>◉</i></button>
+          <button class="room discharge"><span>DISCHARGE</span><i>↗</i></button>
+        </div>
+      </nav>
+    </section>
+
+    <footer class="game-footer">
+      <button>START</button>
+      <div><small>SCORE</small><strong>45 / 125</strong></div>
+      <button>QUIT</button>
+    </footer>
+  </main>
+</body>
+</html>

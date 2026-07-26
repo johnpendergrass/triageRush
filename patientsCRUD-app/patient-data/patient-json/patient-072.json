@@ -1,0 +1,80 @@
+{
+  "id": "patient-072",
+  "number": 72,
+  "easterEgg": false,
+  "difficulty": 1,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Andre",
+      "age": 20,
+      "sex": "M",
+      "race": "black"
+    },
+    "image": {
+      "imageFilename": "patient-072.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Fainted at church",
+      "quoteShort": null,
+      "quoteLong": "I stood up in a hot, crowded church and felt hot and sweaty and my vision went gray, then I passed out for a few seconds. I feel totally fine now. It's happened once before, same way.",
+      "presentationShort": "20yo M — classic vasovagal syncope with prodrome (warm, diaphoretic, tunnel vision), quick recovery, normal exam — benign.",
+      "presentationLong": "20-year-old male with classic vasovagal syncope preceded by warmth, diaphoresis, and tunnel vision while standing, with rapid full recovery and a normal exam."
+    },
+    "vitals": {
+      "hr": {
+        "value": 72,
+        "color": "green"
+      },
+      "bp": {
+        "value": "118/74",
+        "color": "green"
+      },
+      "rr": {
+        "value": 14,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 99,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.8,
+        "color": "green"
+      },
+      "pain": {
+        "value": 0,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Vasovagal syncope",
+      "esi": 5,
+      "esi2roomsNotes": null,
+      "disposition": "Fast Track → clinician assessment and screening ECG, then reassurance and hydration if the evaluation remains reassuring.",
+      "why": "Prodrome + trigger + quick full recovery in a young healthy person strongly support vasovagal syncope, but a patient presenting after syncope should still receive a brief clinician assessment and screening ECG before leaving the ED.",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "Fast Track",
+    "otherAcceptableRooms": []
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "20-year-old man in church clothes",
+    "pose": "seated, looking a bit embarrassed, otherwise fine",
+    "expression": "sheepish, well",
+    "signs": [],
+    "lookSeverity": "completely well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-072.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a black 20-year-old man in nice church clothes, seated on a blue padded clinic chair. Pose: sitting up, looking a bit embarrassed. Expression: sheepish but completely well. Clearly visible: a healthy young man with no distress. No text, no logos."
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "id": "patient-031",
+  "number": 31,
+  "easterEgg": false,
+  "difficulty": 3,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Yuki",
+      "age": 85,
+      "sex": "F",
+      "race": "asian"
+    },
+    "image": {
+      "imageFilename": "patient-031.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Confused and not herself",
+      "quoteShort": null,
+      "quoteLong": "(Daughter) She's just not herself — confused, calling me by my sister's name, sleepy all day. No real fever, barely a cough. She keeps picking at her blanket and drifting off.",
+      "presentationShort": "85yo F — acute delirium over 2 days, quietly hypoxic (SpO2 91%), faint R-base crackles, afebrile — occult pneumonia.",
+      "presentationLong": "85-year-old female with acute confusion and delirium over two days, quietly hypoxic with faint right-base crackles and no fever — delirium as the sole herald of occult pneumonia."
+    },
+    "vitals": {
+      "hr": {
+        "value": 104,
+        "color": "yellow"
+      },
+      "bp": {
+        "value": "128/74",
+        "color": "green"
+      },
+      "rr": {
+        "value": 22,
+        "color": "yellow"
+      },
+      "spo2": {
+        "value": 91,
+        "color": "red"
+      },
+      "temp": {
+        "value": 37.0,
+        "color": "green"
+      },
+      "pain": {
+        "value": 0,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Delirium from occult pneumonia (hypoxia)",
+      "esi": 2,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → sepsis/infection workup, CXR, cultures, oxygen, fluids, antibiotics; delirium is a medical emergency in elders.",
+      "why": "Delirium isn't 'just old age.' Low SpO2 + new confusion = occult pneumonia. Elders frequently don't mount a fever.",
+      "redFlag": "New confusion in an elder = occult serious illness (here, hypoxic pneumonia) — and they're often afebrile."
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "Acute",
+    "otherAcceptableRooms": [
+      "Resus"
+    ]
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "frail 85-year-old woman in a cardigan",
+    "pose": "seated, slightly slumped, picking at a blanket on her lap",
+    "expression": "vacant, confused, drowsy",
+    "signs": [
+      "vacant confused gaze",
+      "picking at a blanket"
+    ],
+    "lookSeverity": "quietly unwell, confused",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-031.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a frail asian 85-year-old woman in a cardigan, seated on a blue padded clinic chair. Pose: slightly slumped, hands picking at a blanket on her lap. Expression: vacant, confused, and drowsy. Clearly visible: a confused, faraway gaze and hands fidgeting with the blanket. No text, no logos."
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "id": "patient-033",
+  "number": 33,
+  "easterEgg": false,
+  "difficulty": 2,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Javier",
+      "age": 68,
+      "sex": "M",
+      "race": "hispanic"
+    },
+    "image": {
+      "imageFilename": "patient-033.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Diabetic, sweaty and confused",
+      "quoteShort": null,
+      "quoteLong": "(Wife) He's diabetic and took his insulin but then skipped lunch. Now he's drenched in sweat, shaky, and talking nonsense — he doesn't know where he is.",
+      "presentationShort": "68yo M diabetic — insulin without a meal; diaphoretic, tremulous, confused; fingerstick glucose 38 — neuroglycopenia.",
+      "presentationLong": "68-year-old diabetic male who took insulin then skipped a meal, now diaphoretic, tremulous, and confused with a fingerstick glucose of 38 — neuroglycopenia."
+    },
+    "vitals": {
+      "hr": {
+        "value": 110,
+        "color": "yellow"
+      },
+      "bp": {
+        "value": "138/82",
+        "color": "green"
+      },
+      "rr": {
+        "value": 18,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 98,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.6,
+        "color": "green"
+      },
+      "pain": {
+        "value": 0,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Severe hypoglycemia (neuroglycopenia)",
+      "esi": 2,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → IV dextrose (or IM glucagon) NOW, recheck glucose, then find the cause; rapidly reversible.",
+      "why": "Always check a sugar in altered patients. Hypoglycemia mimics stroke and intoxication and reverses in minutes with dextrose.",
+      "redFlag": "Altered + diaphoretic in a diabetic = check a glucose immediately."
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "Acute",
+    "otherAcceptableRooms": [
+      "Resus"
+    ]
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "68-year-old man, visibly sweating",
+    "pose": "seated, being steadied, slightly slumped",
+    "expression": "glassy, confused stare",
+    "signs": [
+      "visibly sweaty face",
+      "glassy, confused stare"
+    ],
+    "lookSeverity": "altered but stable vitals",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-033.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a hispanic 68-year-old man, visibly sweating, seated on a blue padded clinic chair. Pose: slightly slumped, being steadied. Expression: a glassy, confused stare. Clearly visible: a sweaty face and a confused, faraway look. No text, no logos."
+  }
+}

@@ -1,0 +1,111 @@
+triageRush waiting-room background asset specifications
+
+ASSETS
+- 2026 0724p triageRush waiting room background 1.png
+- 2026 0724q triageRush waiting room background 2.png
+- 2026 0724r triageRush waiting room background 3.png
+- 2026 0724s triageRush waiting room background 4.png
+- 2026 0724t triageRush waiting room background 5.png
+- 2026 0724u triageRush waiting room background 6 medicare advantage.png
+- 2026 0724v triageRush waiting room background 7 vaccination.png
+- 2026 0724w triageRush waiting room background 8 masks sanitizer.png
+- 2026 0724x triageRush waiting room background 9 water cooler.png
+- 2026 0724y triageRush waiting room background 10 clock magazines.png
+- 2026 0724z triageRush waiting room background 11 got vaccinated.png
+- 2026 0724za triageRush waiting room background 12 surgery cut above.png
+- 2026 0724zb triageRush waiting room background 13 psych crazy.png
+- 2026 0724zc triageRush waiting room background 14 radiology mascot.png
+- 2026 0724zd triageRush waiting room background 15 cardiology mascot.png
+- 2026 0724ze triageRush waiting room background 16 laboratory mascot.png
+
+SHARED GEOMETRY
+- Raster dimensions: 238 x 336 pixels
+- CSS dimensions at 3x scale: approximately 79.33 x 112 CSS pixels
+- Aspect ratio: 17:24
+- Wall area: 262 raster pixels; 77.98%
+- Floor area: 74 raster pixels; 22.02%
+- Floor begins at raster y = 262
+- CSS floor height: approximately 24.67 CSS pixels
+- CSS wall/floor junction: approximately y = 87.33 CSS pixels
+
+VISUAL CONTRACT
+- Warm cream hospital wall
+- Teal chair rail and baseboard
+- Smooth seamless warm-gray/beige hospital-grade vinyl floor
+- No tiles, grout, seams, boards, or checker pattern
+- Central area kept quiet for a transparent patient overlay
+- Chairs, plants, tables, magazines, and framed art remain peripheral
+- Background 6 includes a fictional Harborlight Advantage advertisement. It
+  does not represent a real insurer or official Medicare communication.
+- Background 7 includes a general vaccination reminder.
+- Background 8 includes a face-mask dispenser and hand-sanitizer stand.
+- Background 9 includes a compact water cooler and paper-cup holder.
+- Background 10 includes a wall clock, chairs, magazines, and a small plant.
+- Background 11 includes a humorous fictional "GOT VACCINATED?" poster with a
+  flexed arm and syringe. It contains no real vaccine or campaign branding.
+- Background 12 includes a humorous fictional surgery-department poster with
+  the slogan "VISIT OUR SURGERY DEPT! WE'RE A CUT ABOVE!" and a non-graphic
+  surgical-scissors mascot.
+- Background 13 includes a deliberately corny fictional psych-department poster
+  with the slogan "YOU'D HAVE TO BE CRAZY TO NOT VISIT OUR PSYCH DEPARTMENT!"
+  and a friendly brain mascot on a therapist's couch. It avoids distressed
+  patient caricatures, restraints, violence, and other stigmatizing imagery.
+- Backgrounds 14-16 extend the same fictional hospital mascot campaign:
+  radiology uses "WE CAN SEE RIGHT THROUGH YOU!" with an X-ray-machine mascot;
+  cardiology uses "WE'VE GOT A LOT OF HEART!" with a symbolic heart mascot;
+  and the laboratory uses "WE'VE GOT GOOD CHEMISTRY!" with two test-tube
+  mascots. All three are non-graphic and contain no real hospital branding.
+- Faint contact shadows and restrained diffuse floor reflections
+- No people, text, signs, numbers, logos, or medical equipment
+
+CSS EXAMPLE
+
+.waiting-cell {
+  position: relative;
+  width: 79.3333px;
+  height: 112px;
+  overflow: hidden;
+}
+
+.waiting-cell__background {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.waiting-cell__patient {
+  position: absolute;
+  left: 0;
+  top: 32.6667px;
+  width: 79.3333px;
+  height: 79.3333px;
+  object-fit: contain;
+}
+
+Equivalent 3x raster patient placement:
+- left: 0
+- top: 98 pixels
+- width: 238 pixels
+- height: 238 pixels
+
+RANDOM ASSIGNMENT
+- Assign one of the sixteen backgrounds when a patient enters a waiting-room
+  slot.
+- Store the assigned background ID with that waiting-room appearance so it does
+  not change on every render.
+- Reassign or release the background when the patient leaves the waiting room.
+- Repetition is acceptable, although the game may prefer unused backgrounds
+  when several are available.
+
+IMPLEMENTATION NOTE
+- The background and patient are separate image layers.
+- The complete waiting-room cell remains the touch target.
+- Scale the whole fixed 360 x 640 game canvas uniformly; do not independently
+  reflow or resize individual cells for different browser dimensions.
+
+CREATION METHOD
+- Built-in image generation created the sixteen visual variants.
+- Each selected result was normalized locally to exactly 238 x 336 pixels.
+- The wall/floor junction was enforced at raster y = 262 for every asset.

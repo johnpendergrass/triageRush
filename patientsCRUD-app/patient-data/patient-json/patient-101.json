@@ -1,0 +1,84 @@
+{
+  "id": "patient-101",
+  "number": 101,
+  "easterEgg": false,
+  "difficulty": 1,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Walter",
+      "age": 79,
+      "sex": "M",
+      "race": "white"
+    },
+    "image": {
+      "imageFilename": "patient-101.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Can't breathe",
+      "quoteShort": null,
+      "quoteLong": "Six days... of this. Can't... get a full... breath. Had to stop... twice... walking in.",
+      "presentationShort": "79yo M — 6 days COVID, now severe dyspnoea at rest, two-word sentences, accessory muscle use.",
+      "presentationLong": "79-year-old male, six days of COVID symptoms, now in severe respiratory distress at rest, speaking two-word sentences and using accessory muscles."
+    },
+    "vitals": {
+      "hr": {
+        "value": 124,
+        "color": "red"
+      },
+      "bp": {
+        "value": "98/58",
+        "color": "yellow"
+      },
+      "rr": {
+        "value": 34,
+        "color": "red"
+      },
+      "spo2": {
+        "value": 79,
+        "color": "red"
+      },
+      "temp": {
+        "value": 38.9,
+        "color": "red"
+      },
+      "pain": {
+        "value": 2,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "COVID-19 pneumonia with acute hypoxaemic respiratory failure",
+      "esi": 1,
+      "esi2roomsNotes": null,
+      "disposition": "Resus → high-flow oxygen, prepare for intubation, ICU admission",
+      "why": "Work of breathing beats any single number. Two-word sentences and tripoding mean the tank is nearly empty — set up to intubate before you have to.",
+      "redFlag": "Two-word sentences with accessory muscle use and SpO₂ 79% — imminent respiratory failure."
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "Resus",
+    "otherAcceptableRooms": []
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a white 79-year-old man in a pale hospital gown and slippers, seated on a blue padded clinic chair",
+    "pose": "sitting bolt upright, both hands braced on his knees, leaning forward to breathe in the tripod position",
+    "expression": "exhausted, glassy-eyed and air-hungry",
+    "signs": [
+      "dusky bluish lips",
+      "strained taut neck muscles",
+      "sweat beading on the forehead"
+    ],
+    "lookSeverity": "critically ill and visibly fighting for every breath",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-101.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. Subject: a white 79-year-old man in a pale hospital gown and slippers, seated on a blue padded clinic chair. Pose: sitting bolt upright, both hands braced on his knees, leaning forward to breathe in the tripod position. Expression: exhausted, glassy-eyed and air-hungry. Clearly visible: dusky bluish lips; strained taut neck muscles; sweat beading on the forehead. Overall: critically ill and visibly fighting for every breath. No text, no logos, no watermarks, no border."
+  }
+}

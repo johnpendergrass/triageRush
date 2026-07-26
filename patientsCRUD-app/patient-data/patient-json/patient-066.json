@@ -1,0 +1,83 @@
+{
+  "id": "patient-066",
+  "number": 66,
+  "easterEgg": false,
+  "difficulty": 2,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Walt",
+      "age": 66,
+      "sex": "M",
+      "race": "white"
+    },
+    "image": {
+      "imageFilename": "patient-066.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Short of breath, wheezing",
+      "quoteShort": null,
+      "quoteLong": "My breathing's been getting worse for two days — more wheezy, coughing up yellow stuff. I'm a longtime smoker with emphysema. My rescue inhaler barely helps now.",
+      "presentationShort": "66yo M COPD/smoker — increased dyspnea, wheeze, purulent sputum, hypoxic, accessory muscle use — COPD exacerbation.",
+      "presentationLong": "66-year-old male with COPD and a smoking history, with two days of worsening dyspnea, wheeze, purulent sputum, hypoxia, and accessory muscle use — COPD exacerbation."
+    },
+    "vitals": {
+      "hr": {
+        "value": 104,
+        "color": "yellow"
+      },
+      "bp": {
+        "value": "142/86",
+        "color": "green"
+      },
+      "rr": {
+        "value": 26,
+        "color": "yellow"
+      },
+      "spo2": {
+        "value": 88,
+        "color": "red"
+      },
+      "temp": {
+        "value": 37.4,
+        "color": "green"
+      },
+      "pain": {
+        "value": 1,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "COPD exacerbation",
+      "esi": 3,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → controlled O2 (target 88-92%), nebs, steroids, antibiotics, CXR; watch for CO2 retention.",
+      "why": "COPD flare: nebs + steroids + antibiotics. Titrate O2 to 88-92% — too much oxygen can blunt the drive.",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "Acute",
+    "otherAcceptableRooms": []
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "66-year-old man",
+    "pose": "leaning forward, hands on knees, pursed-lip breathing",
+    "expression": "working to breathe, tired",
+    "signs": [
+      "pursed-lip breathing",
+      "leaning forward on his knees"
+    ],
+    "lookSeverity": "short of breath, stable",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-066.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 66-year-old man, seated on a blue padded clinic chair. Pose: leaning forward with hands on his knees, pursed-lip breathing. Expression: tired and working to breathe. Clearly visible: a forward-leaning tripod posture and effortful breathing. No text, no logos."
+  }
+}

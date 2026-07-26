@@ -1,0 +1,85 @@
+{
+  "id": "patient-042",
+  "number": 42,
+  "easterEgg": false,
+  "difficulty": 3,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Terrence",
+      "age": 40,
+      "sex": "M",
+      "race": "black"
+    },
+    "image": {
+      "imageFilename": "patient-042.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Back pain, numb, can't pee",
+      "quoteShort": null,
+      "quoteLong": "My back's been killing me, but now both legs feel weak and I'm numb between my legs when I sit down. And — this is embarrassing — I couldn't pee for hours, then it just dribbled out.",
+      "presentationShort": "40yo M — low back pain with bilateral leg weakness, saddle anesthesia, urinary retention with overflow — cauda equina syndrome.",
+      "presentationLong": "40-year-old male with low back pain, bilateral leg weakness, saddle anesthesia, and urinary retention with overflow incontinence — cauda equina syndrome."
+    },
+    "vitals": {
+      "hr": {
+        "value": 84,
+        "color": "green"
+      },
+      "bp": {
+        "value": "134/80",
+        "color": "green"
+      },
+      "rr": {
+        "value": 16,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 99,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.8,
+        "color": "green"
+      },
+      "pain": {
+        "value": 7,
+        "color": "red"
+      }
+    },
+    "diagnosis": {
+      "primary": "Cauda equina syndrome",
+      "esi": 2,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → post-void residual, STAT MRI lumbar spine, neurosurgery; decompress within hours to save function.",
+      "why": "The back pain you can't sit on: saddle anesthesia + retention = cauda equina. Emergent MRI + decompression or the deficit is permanent.",
+      "redFlag": "Back pain + saddle numbness + urinary retention + bilateral leg weakness = cauda equina — emergent MRI."
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "Acute",
+    "otherAcceptableRooms": [
+      "Resus"
+    ]
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "40-year-old man",
+    "pose": "shifting uncomfortably, unable to settle, hand on his lower back",
+    "expression": "uncomfortable, worried",
+    "signs": [
+      "hand on the lower back",
+      "shifting, can't get comfortable"
+    ],
+    "lookSeverity": "uncomfortable but stable vitals",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-042.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a black 40-year-old man, seated on a blue padded clinic chair. Pose: shifting uncomfortably, unable to settle, one hand pressed to his lower back. Expression: uncomfortable and worried. Clearly visible: a hand on the lower back and a restless, can't-get-comfortable posture. No text, no logos."
+  }
+}

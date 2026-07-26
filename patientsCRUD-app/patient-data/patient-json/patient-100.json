@@ -1,0 +1,83 @@
+{
+  "id": "patient-100",
+  "number": 100,
+  "easterEgg": false,
+  "difficulty": 2,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Angela",
+      "age": 43,
+      "sex": "F",
+      "race": "hispanic"
+    },
+    "image": {
+      "imageFilename": "patient-100.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Swollen, red cheek and eye",
+      "quoteShort": null,
+      "quoteLong": "My cheek got red and swollen over a day and now it's spreading up toward my eye — it's hot and tender, and my eye's a bit puffy. It started near a spot on my face. I've got a fever now.",
+      "presentationShort": "43yo F — spreading facial cellulitis approaching the periorbital area, warm/tender, febrile; assess for orbital involvement (eye movements/vision).",
+      "presentationLong": "43-year-old female with a spreading facial cellulitis approaching the periorbital region, warm and tender with a fever — requires assessment for orbital involvement (eye movement and vision)."
+    },
+    "vitals": {
+      "hr": {
+        "value": 98,
+        "color": "yellow"
+      },
+      "bp": {
+        "value": "128/80",
+        "color": "green"
+      },
+      "rr": {
+        "value": 16,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 98,
+        "color": "green"
+      },
+      "temp": {
+        "value": 38.3,
+        "color": "yellow"
+      },
+      "pain": {
+        "value": 5,
+        "color": "yellow"
+      }
+    },
+    "diagnosis": {
+      "primary": "Facial cellulitis (assess for periorbital/orbital spread)",
+      "esi": 3,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → antibiotics, mark the border, CT and ophtho if any orbital signs (pain with eye movement, proptosis, vision change); monitor.",
+      "why": "Facial cellulitis near the eye: check eye movement and vision. Preseptal is treatable; orbital cellulitis is an emergency.",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "Acute",
+    "otherAcceptableRooms": []
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "43-year-old woman",
+    "pose": "seated, hand hovering near a red, swollen cheek",
+    "expression": "uncomfortable, worried",
+    "signs": [
+      "red, swollen cheek",
+      "mild eye puffiness"
+    ],
+    "lookSeverity": "uncomfortable, stable",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-100.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a hispanic 43-year-old woman, seated on a blue padded clinic chair. Pose: one hand hovering near a red, swollen cheek. Expression: uncomfortable and worried. Clearly visible: a red, swollen cheek with mild puffiness near the eye. No text, no logos."
+  }
+}

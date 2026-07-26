@@ -1,0 +1,33 @@
+triageRush symmetric mobile layout measurements
+
+Companion image:
+2026 0724 triageRush symmetric layout w correct ratios.png
+
+Canvas
+- Image size: 1080 x 1920 actual pixels
+- CSS design canvas: 360 x 640 CSS pixels
+- Scale: 3 actual pixels per CSS pixel
+- Aspect ratio: 9:16
+
+Horizontal panel ratio
+- Waiting room: 22%
+- Patient panel: 56%
+- Room doors: 22%
+- Combined ratio: 22 / 56 / 22
+
+Ideal widths
+- Actual pixels: 237.6 / 604.8 / 237.6
+- CSS pixels: 79.2 / 201.6 / 79.2
+
+Integer raster boundaries for the 1080-pixel image
+- Waiting room: x = 0 through 237; width 238 px
+- Patient panel: x = 238 through 841; width 604 px
+- Room doors: x = 842 through 1079; width 238 px
+- Integer widths: 238 / 604 / 238
+- Resulting raster percentages: 22.037% / 55.926% / 22.037%
+
+Implementation rule
+- Use the exact CSS proportions 22% 56% 22%.
+- Do not use the rounded raster percentages as the CSS layout definition.
+- The game canvas remains fixed at 360 x 640 CSS pixels and is scaled uniformly
+  to fit the available browser viewport with letterboxing when necessary.

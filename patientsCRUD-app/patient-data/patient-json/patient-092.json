@@ -1,0 +1,82 @@
+{
+  "id": "patient-092",
+  "number": 92,
+  "easterEgg": false,
+  "difficulty": 1,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Justin",
+      "age": 19,
+      "sex": "M",
+      "race": "white"
+    },
+    "image": {
+      "imageFilename": "patient-092.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Sore, red fingernail",
+      "quoteShort": null,
+      "quoteLong": "The side of my fingernail has been red, swollen, and sore for a few days — I bite my nails. There's a little pocket of pus by the nail now. It throbs but I feel fine otherwise.",
+      "presentationShort": "19yo M — localized paronychia with a small pointing abscess at the nail fold, no spreading cellulitis, systemically well.",
+      "presentationLong": "19-year-old male with a localized paronychia and a small pointing abscess at the nail fold, without spreading cellulitis, systemically well."
+    },
+    "vitals": {
+      "hr": {
+        "value": 72,
+        "color": "green"
+      },
+      "bp": {
+        "value": "120/76",
+        "color": "green"
+      },
+      "rr": {
+        "value": 14,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 99,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.8,
+        "color": "green"
+      },
+      "pain": {
+        "value": 3,
+        "color": "yellow"
+      }
+    },
+    "diagnosis": {
+      "primary": "Paronychia with small abscess",
+      "esi": 5,
+      "esi2roomsNotes": null,
+      "disposition": "Fast Track → warm soaks, incision/drainage of the pocket, ± antibiotics; discharge.",
+      "why": "Red, tender nail fold with a pus pocket = paronychia. Drain the pocket; soaks help. Minor, quick.",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "Fast Track",
+    "otherAcceptableRooms": []
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "19-year-old man",
+    "pose": "seated, holding up one finger with a red nail fold",
+    "expression": "mildly annoyed, well",
+    "signs": [
+      "red, swollen fingertip"
+    ],
+    "lookSeverity": "well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-092.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. ANATOMY AND OBJECTS (critical): exactly one head, exactly two arms ending in exactly two hands, exactly two legs ending in two feet, five fingers on each hand. No extra, duplicated, floating or partial limbs anywhere. Anything the character touches must be plausibly held by one of those two hands. All furniture is solid and fully opaque - the chair must never look transparent or see-through, and its back, seat and legs must all be completely drawn. Subject: a white 19-year-old man, seated on a blue padded clinic chair, holding out his LEFT hand for examination. Pose: sitting forward with his left hand held out flat and open, palm down and ALL FIVE FINGERS EXTENDED TOGETHER side by side, presenting the swollen INDEX finger for inspection - no finger is raised on its own and the middle finger is never isolated or pointed upward. Expression: mildly fed up and self-conscious. Clearly visible: an open flat hand with all fingers extended together; the index fingertip red, shiny and swollen along the side of the nail fold. Overall: entirely well, sore finger. No text, no logos, no watermarks, no border."
+  }
+}

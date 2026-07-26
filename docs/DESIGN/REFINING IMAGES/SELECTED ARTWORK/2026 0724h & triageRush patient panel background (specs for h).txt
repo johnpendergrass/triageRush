@@ -1,0 +1,47 @@
+triageRush patient-panel background asset
+
+Companion image:
+2026 0724h triageRush patient panel background.png
+
+DIMENSIONS
+- Width: 604 raster pixels
+- Height: 1680 raster pixels
+- Intended CSS footprint at 3x scale: approximately 201.33 x 560 CSS pixels
+- Source column: center 56% column of the 1080 x 1920 mobile mockup
+- Intended placement: patient column within the fixed 360 x 640 game canvas
+
+CONTENT
+- Preserved visual concept: metallic panel frame, hospital corridor, ceiling
+  tiles, side doors, back double door, warm lighting, ROOMS sign, checkerboard
+  floor, perspective, and color palette.
+- Removed: current patient, chair, PATIENT #1 plaque, quote bubble, vitals card,
+  presentation clipboard, and all gameplay overlay text and icons.
+- Floor: reconstructed continuously to the bottom edge so quote, vitals, and
+  presentation elements can be overlaid at runtime.
+
+ACCURACY NOTE
+- The output dimensions and intended panel footprint are exact.
+- Background areas that were visible in the source mockup were used as the
+  visual reference.
+- Areas hidden by the patient and UI could not be literally extracted because
+  their original pixels do not exist. Those areas were generated to continue
+  the corridor and tiled-floor perspective consistently.
+- This is therefore a reconstructed production candidate, not a forensic
+  pixel-for-pixel recovery of the obscured background.
+
+IMPLEMENTATION
+- Render as the patient-panel background beneath every gameplay overlay.
+- Recommended CSS:
+  background-image: url(...);
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+- Keep the panel at the fixed 56% center-column width.
+- Patient artwork, patient label, quote, vitals, presentation, and expanded
+  clipboard should be separate positioned layers.
+- Do not crop or independently zoom the background at different viewport sizes;
+  scale the complete 360 x 640 game canvas uniformly.
+
+CREATION METHOD
+- Built-in image editing was used to reconstruct the obscured corridor.
+- The selected result was normalized locally to exactly 604 x 1680 pixels.

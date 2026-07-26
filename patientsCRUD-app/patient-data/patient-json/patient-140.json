@@ -1,0 +1,85 @@
+{
+  "id": "patient-140",
+  "number": 140,
+  "easterEgg": false,
+  "difficulty": 1,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Brandon",
+      "age": 22,
+      "sex": "M",
+      "race": "hispanic"
+    },
+    "image": {
+      "imageFilename": "patient-140.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Chipped my tooth",
+      "quoteShort": null,
+      "quoteLong": "Bottle opener. Yes, with my teeth. Yes, I know. It doesn't even hurt, it's just — a bit of it is gone and I panicked.",
+      "presentationShort": "22yo M — small enamel chip to an upper incisor. No pain, no bleeding, tooth stable, no other facial trauma.",
+      "presentationLong": "22-year-old male with a small enamel chip to an upper incisor with no pain or bleeding; the tooth is stable and there is no other facial injury."
+    },
+    "vitals": {
+      "hr": {
+        "value": 74,
+        "color": "green"
+      },
+      "bp": {
+        "value": "124/76",
+        "color": "green"
+      },
+      "rr": {
+        "value": 14,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 99,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.8,
+        "color": "green"
+      },
+      "pain": {
+        "value": 1,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Uncomplicated enamel fracture of an incisor",
+      "esi": 5,
+      "esi2roomsNotes": "ESI 5: no ED treatment-area resources are expected; brief evaluation, counseling, and discharge are appropriate.",
+      "disposition": "Discharge → routine dental appointment; nothing for the ED to do",
+      "why": "Enamel only, no pulp exposure, no mobility, no other injury. Pink or bleeding at the fracture site would mean pulp involvement and a same-day dentist.",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "Discharge",
+    "otherAcceptableRooms": [
+      "Fast Track"
+    ]
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a hispanic 22-year-old man in a casual shirt, seated on a blue padded clinic chair",
+    "pose": "sitting forward, lifting his upper lip with one finger to show a front tooth",
+    "expression": "sheepish and faintly ridiculous",
+    "signs": [
+      "one finger lifting the upper lip",
+      "a small chip in a front tooth"
+    ],
+    "lookSeverity": "entirely well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-140.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. Subject: a hispanic 22-year-old man in a casual shirt, seated on a blue padded clinic chair. Pose: sitting forward, lifting his upper lip with one finger to show a front tooth. Expression: sheepish and faintly ridiculous. Clearly visible: one finger lifting the upper lip; a small chip in a front tooth. Overall: entirely well. No text, no logos, no watermarks, no border."
+  }
+}

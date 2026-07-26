@@ -1,0 +1,85 @@
+{
+  "id": "patient-049",
+  "number": 49,
+  "easterEgg": true,
+  "difficulty": 1,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Tyler",
+      "age": 26,
+      "sex": "M",
+      "race": "white"
+    },
+    "image": {
+      "imageFilename": "patient-049.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Thinks he's dying (it's a cold)",
+      "quoteShort": null,
+      "quoteLong": "I've been grinding ranked for like 14 hours straight and now I've got a runny nose, sore throat, and I feel gross — I was sure I was dying. No fever, breathing's fine, I just needed someone to tell me it's not serious.",
+      "presentationShort": "26yo M — 2 days of rhinorrhea, sore throat, malaise; afebrile, no respiratory distress, normal exam — viral URI.",
+      "presentationLong": "26-year-old male with two days of runny nose, sore throat, and malaise, afebrile with no respiratory distress and a normal exam — a common cold."
+    },
+    "vitals": {
+      "hr": {
+        "value": 72,
+        "color": "green"
+      },
+      "bp": {
+        "value": "120/76",
+        "color": "green"
+      },
+      "rr": {
+        "value": 14,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 99,
+        "color": "green"
+      },
+      "temp": {
+        "value": 37.1,
+        "color": "green"
+      },
+      "pain": {
+        "value": 2,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Viral upper respiratory infection (common cold)",
+      "esi": 5,
+      "esi2roomsNotes": "ESI 5: no ED treatment-area resources are expected; brief evaluation, counseling, and discharge are appropriate.",
+      "disposition": "Discharge → supportive care (fluids, rest, analgesics), return precautions; antibiotics not indicated.",
+      "why": "Well-appearing, afebrile URI with a normal exam → reassurance and supportive care. No antibiotics, no workup. (And maybe log off, champ.) 🎮",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "Discharge",
+    "otherAcceptableRooms": [
+      "Fast Track"
+    ]
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "26-year-old man in a hoodie",
+    "pose": "seated, holding a tissue to his nose, a bit sheepish",
+    "expression": "sniffly but otherwise fine, sheepish",
+    "signs": [
+      "holding a tissue to the nose",
+      "sniffly but well"
+    ],
+    "lookSeverity": "completely well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-049.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 26-year-old man in a hoodie, seated on a blue padded clinic chair. Pose: seated, holding a tissue to his nose, looking a bit sheepish. Expression: sniffly but otherwise fine and a little embarrassed. Clearly visible: a tissue held to the nose; he otherwise looks healthy. No text, no logos."
+  }
+}

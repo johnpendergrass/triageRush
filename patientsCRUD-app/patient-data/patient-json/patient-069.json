@@ -1,0 +1,82 @@
+{
+  "id": "patient-069",
+  "number": 69,
+  "easterEgg": false,
+  "difficulty": 2,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Ed",
+      "age": 68,
+      "sex": "M",
+      "race": "white"
+    },
+    "image": {
+      "imageFilename": "patient-069.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Heart racing and fluttering",
+      "quoteShort": null,
+      "quoteLong": "My heart's been racing and fluttering for a few hours — it feels irregular, like it's skipping all over. I'm a little short of breath and lightheaded but no chest pain.",
+      "presentationShort": "68yo M — palpitations, irregularly irregular pulse, rate ~140, mild dyspnea, no chest pain, stable BP — AF with RVR.",
+      "presentationLong": "68-year-old male with palpitations, an irregularly irregular pulse around 140, mild dyspnea, and no chest pain, hemodynamically stable — atrial fibrillation with rapid ventricular response."
+    },
+    "vitals": {
+      "hr": {
+        "value": 142,
+        "color": "red"
+      },
+      "bp": {
+        "value": "118/76",
+        "color": "green"
+      },
+      "rr": {
+        "value": 18,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 97,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.8,
+        "color": "green"
+      },
+      "pain": {
+        "value": 1,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Atrial fibrillation with rapid ventricular response",
+      "esi": 3,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → ECG, rate control (diltiazem/metoprolol), assess onset for anticoagulation/cardioversion; monitor.",
+      "why": "Irregularly irregular + fast = AF with RVR. Rate control if stable; unstable → cardiovert. Think stroke risk.",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "Acute",
+    "otherAcceptableRooms": []
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "68-year-old man",
+    "pose": "seated, one hand on his chest, alert",
+    "expression": "anxious, a little breathless",
+    "signs": [
+      "hand on the chest"
+    ],
+    "lookSeverity": "stable but anxious",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-069.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 68-year-old man, seated on a blue padded clinic chair. Pose: one hand resting on his chest, sitting up alert. Expression: anxious and a little breathless. Clearly visible: a hand resting over the heart. No text, no logos."
+  }
+}

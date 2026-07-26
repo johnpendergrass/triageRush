@@ -1,0 +1,85 @@
+{
+  "id": "patient-018",
+  "number": 18,
+  "easterEgg": false,
+  "difficulty": 1,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Cody",
+      "age": 9,
+      "sex": "M",
+      "race": "white"
+    },
+    "image": {
+      "imageFilename": "patient-018.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Hurt wrist",
+      "quoteShort": null,
+      "quoteLong": "I was SO close to landing the kickflip. My wrist made a weird bendy crunch and now it hurts to twist it. ...Can I still skate this weekend?",
+      "presentationShort": "9yo M — FOOSH off a skateboard. Focal dorsal distal-forearm tenderness, subtle dorsal bump, NV intact, moving fingers.",
+      "presentationLong": "9-year-old male, fell onto an outstretched hand off a skateboard, focal tenderness with a subtle dorsal angulation over the distal forearm, neurovascularly intact and moving all fingers."
+    },
+    "vitals": {
+      "hr": {
+        "value": 96,
+        "color": "green"
+      },
+      "bp": {
+        "value": "106/68",
+        "color": "green"
+      },
+      "rr": {
+        "value": 20,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 99,
+        "color": "green"
+      },
+      "temp": {
+        "value": 37.0,
+        "color": "green"
+      },
+      "pain": {
+        "value": 5,
+        "color": "yellow"
+      }
+    },
+    "diagnosis": {
+      "primary": "Distal radius buckle (torus) fracture",
+      "esi": 4,
+      "esi2roomsNotes": null,
+      "disposition": "Fast Track → wrist X-ray, splint, ortho follow-up; discharge with return precautions.",
+      "why": "Classic FOOSH buckle fracture — stable, one X-ray + splint. Back on the board in a few weeks. 🛹",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "Fast Track",
+    "otherAcceptableRooms": [
+      "Acute"
+    ]
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "9-year-old boy in skate gear (helmet, knee pads), skateboard propped beside him",
+    "pose": "sitting, cradling his right forearm against his body",
+    "expression": "pouty but tough, a mild wince",
+    "signs": [
+      "cradling right forearm",
+      "slight swelling at the wrist"
+    ],
+    "lookSeverity": "uncomfortable but clearly stable",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-018.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 9-year-old boy in skate gear (helmet, knee pads), a skateboard propped beside him, seated on a blue padded clinic chair. Pose: sitting, cradling his right forearm against his body. Expression: pouty but tough, a mild wince. Clearly visible: cradling the right forearm, slight swelling at the wrist. No text, no logos."
+  }
+}

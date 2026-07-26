@@ -1,0 +1,85 @@
+{
+  "id": "patient-097",
+  "number": 97,
+  "easterEgg": false,
+  "difficulty": 2,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Chloe",
+      "age": 22,
+      "sex": "F",
+      "race": "white"
+    },
+    "image": {
+      "imageFilename": "patient-097.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Can't breathe, hands tingling",
+      "quoteShort": null,
+      "quoteLong": "I got really overwhelmed during finals and suddenly couldn't breathe right — I'm breathing super fast, my hands and lips are tingling and cramping up. It's terrifying but there's no chest pain.",
+      "presentationShort": "22yo F — acute hyperventilation with perioral/carpopedal tingling in the setting of stress, clear lungs, normal SpO2 — anxiety-driven.",
+      "presentationLong": "22-year-old female with acute hyperventilation and perioral and carpopedal paresthesias during exam stress, with clear lungs and a normal oxygen saturation — hyperventilation syndrome (diagnosis of exclusion)."
+    },
+    "vitals": {
+      "hr": {
+        "value": 100,
+        "color": "green"
+      },
+      "bp": {
+        "value": "124/78",
+        "color": "green"
+      },
+      "rr": {
+        "value": 26,
+        "color": "yellow"
+      },
+      "spo2": {
+        "value": 100,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.8,
+        "color": "green"
+      },
+      "pain": {
+        "value": 1,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Hyperventilation syndrome (anxiety)",
+      "esi": 4,
+      "esi2roomsNotes": null,
+      "disposition": "Fast Track → reassurance, coached slow breathing, exclude organic causes; discharge. (A diagnosis of exclusion — SpO2 is normal here.)",
+      "why": "Fast breathing + tingling hands/lips + NORMAL SpO2 + clear lungs = hyperventilation. Coach breathing — but exclude PE/asthma/DKA first.",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "Fast Track",
+    "otherAcceptableRooms": [
+      "Acute"
+    ]
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "22-year-old woman",
+    "pose": "seated, hands held up cramped, breathing fast",
+    "expression": "frightened, overwhelmed",
+    "signs": [
+      "hands held up, fingers cramped",
+      "breathing fast"
+    ],
+    "lookSeverity": "distressed but stable vitals",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-097.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 22-year-old woman, seated on a blue padded clinic chair. Pose: hands held up with fingers cramped, breathing fast. Expression: frightened and overwhelmed. Clearly visible: hands held up with cramped fingers and rapid breathing. No text, no logos."
+  }
+}

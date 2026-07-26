@@ -1,0 +1,86 @@
+{
+  "id": "patient-002",
+  "number": 2,
+  "easterEgg": false,
+  "difficulty": 3,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Frank",
+      "age": 58,
+      "sex": "M",
+      "race": "white"
+    },
+    "image": {
+      "imageFilename": "patient-002.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Heartburn",
+      "quoteShort": null,
+      "quoteLong": "It's just heartburn — that gas-station burrito had it coming. Gimme a Tums and I'm outta here, I've got a 3 o'clock.",
+      "presentationShort": "58yo M — substernal 'heartburn,' radiating to jaw, onset at his desk.",
+      "presentationLong": "58-year-old male, substernal chest pressure he's calling heartburn, radiating to the jaw, started at his desk."
+    },
+    "vitals": {
+      "hr": {
+        "value": 108,
+        "color": "yellow"
+      },
+      "bp": {
+        "value": "108/70",
+        "color": "green"
+      },
+      "rr": {
+        "value": 20,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 95,
+        "color": "green"
+      },
+      "temp": {
+        "value": 37.0,
+        "color": "green"
+      },
+      "pain": {
+        "value": 5,
+        "color": "yellow"
+      }
+    },
+    "diagnosis": {
+      "primary": "Inferior STEMI masquerading as 'indigestion'",
+      "esi": 2,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → 12-lead ECG in <10 min, ASA, cardiac monitor, troponin, activate cath lab",
+      "why": "Nice catch — 'indigestion' + diaphoresis in a 58yo is an MI until proven otherwise. The vitals barely flinch; the tell is the sweat and the radiation. 🎯",
+      "redFlag": "Diaphoretic + tachypneic — the sweat and the story don't match 'heartburn'"
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "Acute",
+    "otherAcceptableRooms": [
+      "Resus"
+    ]
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "58-year-old man in a rumpled work shirt, tie loosened",
+    "pose": "hunched slightly forward, one hand resting flat on the center of his chest",
+    "expression": "uneasy, jaw tight, a sheen of sweat on his forehead",
+    "signs": [
+      "diaphoretic — visible beads of sweat",
+      "slightly gray, washed-out skin tone",
+      "hand pressed to center of chest"
+    ],
+    "lookSeverity": "insists he's fine, but plainly looks unwell",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-002.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 58-year-old man in a rumpled work shirt with a loosened tie, seated on a blue padded clinic chair. Pose: hunched slightly forward, one hand resting flat on the center of his chest. Expression: uneasy and unwell, quiet worry, jaw tight (not a big grimace). Clearly visible: beads of sweat on his forehead (diaphoretic), slightly gray washed-out skin, hand pressed to the center of his chest. Overall insists he's fine but plainly looks unwell. No text, no logos."
+  }
+}

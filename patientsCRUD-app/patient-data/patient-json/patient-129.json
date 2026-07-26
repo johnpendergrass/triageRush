@@ -1,0 +1,86 @@
+{
+  "id": "patient-129",
+  "number": 129,
+  "easterEgg": false,
+  "difficulty": 3,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Margaret",
+      "age": 66,
+      "sex": "F",
+      "race": "white"
+    },
+    "image": {
+      "imageFilename": "patient-129.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Terrible eye pain, seeing halos",
+      "quoteShort": null,
+      "quoteLong": "It came on at the cinema — the dark, they tell me. There are rainbow rings around every light, and I've been throwing up from the pain.",
+      "presentationShort": "66yo F — 4h severe unilateral eye pain with haloes and vomiting. Red eye, mid-dilated fixed pupil, hard globe, blurred vision.",
+      "presentationLong": "66-year-old female with four hours of severe one-sided eye pain with coloured haloes and vomiting; the eye is red with a mid-dilated non-reactive pupil and feels hard."
+    },
+    "vitals": {
+      "hr": {
+        "value": 92,
+        "color": "green"
+      },
+      "bp": {
+        "value": "158/88",
+        "color": "yellow"
+      },
+      "rr": {
+        "value": 18,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 98,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.8,
+        "color": "green"
+      },
+      "pain": {
+        "value": 9,
+        "color": "red"
+      }
+    },
+    "diagnosis": {
+      "primary": "Acute angle-closure glaucoma",
+      "esi": 2,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → immediate pressure-lowering treatment and urgent ophthalmology for definitive laser iridotomy",
+      "why": "Headache with vomiting and a red eye gets misfiled as migraine or gastroenteritis. A hard globe with a mid-dilated fixed pupil is angle closure, and threatened vision within hours makes this a high-risk time-critical ESI 2 presentation.",
+      "redFlag": "A hard red eye with a mid-dilated fixed pupil and haloes — sight-threatening within hours."
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "Acute",
+    "otherAcceptableRooms": [
+      "Resus"
+    ]
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a white 66-year-old woman in a blouse and cardigan, seated on a blue padded clinic chair",
+    "pose": "sitting hunched with one hand shielding her left eye from the light, a small basin in her lap",
+    "expression": "in severe pain, squinting hard against the light",
+    "signs": [
+      "one markedly red inflamed eye",
+      "a hand shielding that eye from the light",
+      "a basin held in the lap"
+    ],
+    "lookSeverity": "in severe pain and nauseated, otherwise stable",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-129.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. Subject: a white 66-year-old woman in a blouse and cardigan, seated on a blue padded clinic chair. Pose: sitting hunched with one hand shielding her left eye from the light, a small basin in her lap. Expression: in severe pain, squinting hard against the light. Clearly visible: one markedly red inflamed eye; a hand shielding that eye from the light; a basin held in the lap. Overall: in severe pain and nauseated, otherwise stable. No text, no logos, no watermarks, no border."
+  }
+}

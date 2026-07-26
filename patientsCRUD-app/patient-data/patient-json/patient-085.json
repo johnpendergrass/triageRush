@@ -1,0 +1,85 @@
+{
+  "id": "patient-085",
+  "number": 85,
+  "easterEgg": false,
+  "difficulty": 3,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Otis",
+      "age": 72,
+      "sex": "M",
+      "race": "black"
+    },
+    "image": {
+      "imageFilename": "patient-085.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Drowning in his own lungs",
+      "quoteShort": null,
+      "quoteLong": "I woke up gasping like I was drowning — I can't breathe lying down at all, I have to sit bolt upright. I'm coughing up frothy spit and my heart's pounding. Came on fast tonight.",
+      "presentationShort": "72yo M — acute severe dyspnea, orthopnea, frothy sputum, diffuse crackles, severe hypertension, hypoxic — flash pulmonary edema.",
+      "presentationLong": "72-year-old male with acute severe dyspnea, orthopnea, frothy sputum, diffuse crackles, severe hypertension, and hypoxia — flash (hypertensive) pulmonary edema."
+    },
+    "vitals": {
+      "hr": {
+        "value": 118,
+        "color": "yellow"
+      },
+      "bp": {
+        "value": "212/118",
+        "color": "red"
+      },
+      "rr": {
+        "value": 32,
+        "color": "red"
+      },
+      "spo2": {
+        "value": 85,
+        "color": "red"
+      },
+      "temp": {
+        "value": 36.9,
+        "color": "green"
+      },
+      "pain": {
+        "value": 2,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Flash (hypertensive) pulmonary edema",
+      "esi": 2,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → sit upright, high-flow O2/BiPAP, IV nitroglycerin, diuresis; rapid afterload reduction.",
+      "why": "Sky-high BP + drowning in frothy fluid = flash pulmonary edema. Nitro + BiPAP fast; afterload reduction is the fix.",
+      "redFlag": "Severe hypertension + hypoxia + frothy sputum + can't lie flat = flash pulmonary edema."
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "Acute",
+    "otherAcceptableRooms": [
+      "Resus"
+    ]
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "72-year-old man, sweaty, struggling",
+    "pose": "bolt upright, gripping the chair, gasping",
+    "expression": "panicked, air-hungry",
+    "signs": [
+      "bolt upright, gripping the chair",
+      "gasping, sweaty"
+    ],
+    "lookSeverity": "critically short of breath",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-085.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a black 72-year-old man, sweaty and struggling, sitting bolt upright on a blue padded clinic chair. Pose: bolt upright, gripping the chair arms, gasping for air. Expression: panicked and air-hungry. Clearly visible: a rigid upright posture, white-knuckle grip, and gasping effort. No text, no logos."
+  }
+}

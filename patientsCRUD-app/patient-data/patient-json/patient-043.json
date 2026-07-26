@@ -1,0 +1,85 @@
+{
+  "id": "patient-043",
+  "number": 43,
+  "easterEgg": false,
+  "difficulty": 2,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Devon",
+      "age": 29,
+      "sex": "M",
+      "race": "white"
+    },
+    "image": {
+      "imageFilename": "patient-043.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Seeing things",
+      "quoteShort": null,
+      "quoteLong": "There are shadow people in the corners again, and the voices are louder today. I stopped my medication a few weeks ago because I felt fine. I'm not going to hurt anyone — I just want it to stop.",
+      "presentationShort": "29yo M — known schizophrenia off meds; visual & auditory hallucinations, calm and cooperative, no SI/HI, normal vitals, no organic red flags.",
+      "presentationLong": "29-year-old male with known schizophrenia who stopped his medication weeks ago, now with visual and auditory hallucinations, calm and cooperative, denying suicidal or homicidal ideation, with normal vitals and nothing to suggest an organic cause."
+    },
+    "vitals": {
+      "hr": {
+        "value": 78,
+        "color": "green"
+      },
+      "bp": {
+        "value": "122/76",
+        "color": "green"
+      },
+      "rr": {
+        "value": 14,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 99,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.8,
+        "color": "green"
+      },
+      "pain": {
+        "value": 0,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Acute psychotic relapse (medication non-adherence)",
+      "esi": 4,
+      "esi2roomsNotes": "ESI 4: medically stable and low risk; Psych is preferred for a behavioral-health evaluation, and Fast Track is acceptable.",
+      "disposition": "Psych → calm low-stimulation area, psychiatric evaluation, restart antipsychotic; screen for organic causes / co-ingestion (none here).",
+      "why": "Calm, cooperative, known psych off meds, normal vitals, no danger to self/others → the Psych lane. (Caveat: brand-NEW visual hallucinations lean organic — always exclude delirium, drugs, and metabolic causes first.)",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "Psych",
+    "otherAcceptableRooms": [
+      "Fast Track"
+    ]
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "29-year-old man in a hoodie",
+    "pose": "seated, turned slightly, glancing warily toward an empty corner of the room",
+    "expression": "wary, distracted, uneasy — as if watching something unseen",
+    "signs": [
+      "glancing warily at an empty corner",
+      "tense, preoccupied posture"
+    ],
+    "lookSeverity": "calm but internally preoccupied",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-043.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 29-year-old man in a hoodie, seated on a blue padded clinic chair. Pose: seated, turned slightly, glancing warily toward an empty corner of the room as if watching something unseen. Expression: wary, distracted, and uneasy. Clearly visible: a sidelong wary glance and a tense, preoccupied posture. No text, no logos."
+  }
+}

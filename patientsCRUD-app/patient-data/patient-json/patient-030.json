@@ -1,0 +1,85 @@
+{
+  "id": "patient-030",
+  "number": 30,
+  "easterEgg": false,
+  "difficulty": 3,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Herbert",
+      "age": 78,
+      "sex": "M",
+      "race": "black"
+    },
+    "image": {
+      "imageFilename": "patient-030.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Bumped his head",
+      "quoteShort": null,
+      "quoteLong": "I tripped on the rug and bumped my head — barely anything, I feel completely fine. My wife made me come in. Oh, I take that blood thinner, warfarin, for my heart rhythm.",
+      "presentationShort": "78yo M on warfarin (AF) — ground-level fall w/ head strike, currently asymptomatic, GCS 15, no focal deficit.",
+      "presentationLong": "78-year-old male on warfarin for atrial fibrillation, ground-level fall with a head strike, currently asymptomatic with a normal exam — high risk for delayed intracranial hemorrhage."
+    },
+    "vitals": {
+      "hr": {
+        "value": 78,
+        "color": "yellow"
+      },
+      "bp": {
+        "value": "152/88",
+        "color": "yellow"
+      },
+      "rr": {
+        "value": 16,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 97,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.7,
+        "color": "green"
+      },
+      "pain": {
+        "value": 2,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Head injury on anticoagulation (risk of intracranial hemorrhage)",
+      "esi": 2,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → non-contrast head CT now, reverse if bleed (PCC/vit K), serial neuro checks; anticoagulation makes a trivial bump lethal.",
+      "why": "The scariest 'I feel fine.' On warfarin/DOAC a minor head bump can bleed hours later — always CT.",
+      "redFlag": "Anticoagulation + ANY head strike = CT even if asymptomatic; bleeds can be delayed for hours."
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "Acute",
+    "otherAcceptableRooms": [
+      "Resus"
+    ]
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "78-year-old man, well-dressed, a small bruise on his forehead",
+    "pose": "sitting comfortably, looking mildly annoyed at being here",
+    "expression": "calm, a little exasperated",
+    "signs": [
+      "small bruise on the forehead",
+      "looks well and unbothered"
+    ],
+    "lookSeverity": "looks completely well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-030.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a black 78-year-old man, well-dressed, with a small bruise on his forehead, seated on a blue padded clinic chair. Pose: sitting comfortably, arms relaxed, looking mildly annoyed to be here. Expression: calm and a little exasperated. Clearly visible: a small bruise on the forehead; he otherwise looks completely well. No text, no logos."
+  }
+}

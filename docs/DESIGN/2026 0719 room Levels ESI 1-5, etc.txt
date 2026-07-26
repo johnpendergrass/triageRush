@@ -1,0 +1,23 @@
+The 5 ER rooms
+
+triage 1–7 maps to five zones. 1–5 are real ESI acuity levels; 6–7 are game routing lanes.
+
+┌───────────┬────────┬─────────────────────────────────────────┬─────────────────────────────────┐
+│   Zone    │ triage │                Criteria                 │      Example from the bank      │
+├───────────┼────────┼─────────────────────────────────────────┼─────────────────────────────────┤
+│           │        │ Immediate life-saving intervention, or  │ 002 inferior STEMI hiding as    │
+│ Resus     │ 1–2    │ high-risk/can't-wait. Also: danger to   │ heartburn; septic shock;        │
+│           │        │ self/others                             │ stroke; anaphylaxis             │
+├───────────┼────────┼─────────────────────────────────────────┼─────────────────────────────────┤
+│ Acute     │ 3      │ Stable, but needs multiple resources to │ abd-pain workup, post-MVC back  │
+│           │        │  work up                                │ pain                            │
+├───────────┼────────┼─────────────────────────────────────────┼─────────────────────────────────┤
+│ Fast      │        │ Minor: needs one resource (4) or none   │ 001 peds ankle sprain → one     │
+│ Track     │ 4–5    │ but still needs eyes on them (5)        │ X-ray; simple laceration; med   │
+│           │        │                                         │ refill                          │
+├───────────┼────────┼─────────────────────────────────────────┼─────────────────────────────────┤
+│ Psych     │ 6      │ Stable behavioral only                  │ 043 acute psychosis             │
+├───────────┼────────┼─────────────────────────────────────────┼─────────────────────────────────┤
+│ Discharge │ 7      │ Worried-well. Honestly fine, go home —  │ common cold, poison-ivy-tier    │
+│           │        │ no ED care needed                       │ reassurance                     │
+└───────────┴────────┴─────────────────────────────────────────┴─────────────────────────────────┘

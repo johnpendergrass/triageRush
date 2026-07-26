@@ -1,0 +1,84 @@
+{
+  "id": "patient-110",
+  "number": 110,
+  "easterEgg": false,
+  "difficulty": 1,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Devon",
+      "age": 33,
+      "sex": "M",
+      "race": "black"
+    },
+    "image": {
+      "imageFilename": "patient-110.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Agitated and burning up",
+      "quoteShort": null,
+      "quoteLong": "I'm FINE — everybody needs to back up. Why is it freezing in here? Why is everyone looking at me? I haven't slept and I don't need to.",
+      "presentationShort": "33yo M — brought by police, agitated and paranoid after stimulant use. Drenched, hyperthermic.",
+      "presentationLong": "33-year-old male brought in by police, agitated and paranoid after stimulant use, drenched in sweat with a dangerously high temperature."
+    },
+    "vitals": {
+      "hr": {
+        "value": 148,
+        "color": "red"
+      },
+      "bp": {
+        "value": "186/104",
+        "color": "red"
+      },
+      "rr": {
+        "value": 26,
+        "color": "yellow"
+      },
+      "spo2": {
+        "value": 97,
+        "color": "green"
+      },
+      "temp": {
+        "value": 40.1,
+        "color": "red"
+      },
+      "pain": {
+        "value": 0,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Sympathomimetic (stimulant) toxicity with hyperthermia",
+      "esi": 1,
+      "esi2roomsNotes": null,
+      "disposition": "Resus → aggressive cooling, generous benzodiazepines, IV fluids, cardiac monitoring, check CK",
+      "why": "In stimulant toxicity the temperature is the number that kills. Cool aggressively and sedate with benzodiazepines — never with restraints alone, which make the hyperthermia worse.",
+      "redFlag": "Temperature 40.1°C with agitation — hyperthermia in stimulant toxicity kills via rhabdomyolysis, DIC and arrhythmia."
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "Resus",
+    "otherAcceptableRooms": []
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a black 33-year-old man in a sweat-soaked t-shirt, perched on the edge of a blue padded clinic chair",
+    "pose": "unable to sit still, half-rising, hands moving restlessly",
+    "expression": "wide-eyed, agitated and suspicious",
+    "signs": [
+      "skin drenched with sweat",
+      "hugely dilated pupils",
+      "flushed red face"
+    ],
+    "lookSeverity": "critically unwell and dangerously overheated",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-110.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. Subject: a black 33-year-old man in a sweat-soaked t-shirt, perched on the edge of a blue padded clinic chair. Pose: unable to sit still, half-rising, hands moving restlessly. Expression: wide-eyed, agitated and suspicious. Clearly visible: skin drenched with sweat; hugely dilated pupils; flushed red face. Overall: critically unwell and dangerously overheated. No text, no logos, no watermarks, no border."
+  }
+}

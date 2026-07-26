@@ -1,0 +1,182 @@
+triageRush patient-panel overlay asset specifications
+
+Reference panel:
+- Background asset: 2026 0724h triageRush patient panel background.png
+- Background dimensions: 604 x 1680 raster pixels
+- Scale: 3 raster pixels per CSS pixel
+
+All four overlay images use 32-bit PNG transparency. Their corner pixels are
+transparent, allowing them to sit over the patient-panel background without
+rectangular remnants from the source mockup.
+
+I — PATIENT NAME PLAQUE
+- File: 2026 0724i triageRush empty patient name plaque.png
+- Raster dimensions: 245 x 61 pixels
+- CSS dimensions at 3x scale: approximately 81.67 x 20.33 CSS pixels
+- Approximate source position inside the 604 x 1680 panel:
+  left 173 px; top 21 px
+- Approximate CSS position: left 57.67 px; top 7 px
+- Content retained: navy face, metallic border, bevel, rounded corners
+- Content removed: PATIENT #1 text
+- Intended overlay: patient name or patient-number text
+
+J — PATIENT QUOTE BUBBLE
+- File: 2026 0724j triageRush empty patient quote bubble.png
+- Raster dimensions: 509 x 151 pixels
+- CSS dimensions at 3x scale: approximately 169.67 x 50.33 CSS pixels
+- Approximate source anchor inside the panel:
+  left 40 px; top 1031 px
+- Approximate CSS anchor: left 13.33 px; top 343.67 px
+- Content retained: cream surface, tan outline, bevel, shadow, complete tail
+- Content removed: quotation text and quotation marks
+- Intended overlay: quoteShort text; the full quote belongs in the expanded
+  clipboard state
+
+K — VITALS PANEL
+- File: 2026 0724k triageRush vitals panel labels no values.png
+- Raster dimensions: 540 x 234 pixels
+- CSS dimensions at 3x scale: 180 x 78 CSS pixels
+- Approximate source position inside the panel:
+  left 24 px; top 1181 px
+- Approximate CSS position: left 8 px; top 393.67 px
+- Content retained: panel, six cells, icons, HR, BP, RR, SpO₂, Temp, Pain
+- Content removed: 108, 108/70, 20, 95%, 37.0°C, and 5/10
+- Intended overlays: six independently positioned runtime value fields
+- The source quote tail and presentation clip overlap were removed so this is
+  a complete independent panel asset.
+
+L — PRESENTATION CLIPBOARD
+- File: 2026 0724l triageRush empty presentation clipboard.png
+- Raster dimensions: 539 x 250 pixels
+- CSS dimensions at 3x scale: approximately 179.67 x 83.33 CSS pixels
+- Approximate source position inside the panel:
+  left 25 px; top 1414 px
+- Approximate CSS position: left 8.33 px; top 471.33 px
+- Content retained: orange/brown frame, blank paper, metal clip, three-dot
+  expansion button
+- Content removed: all presentation text
+- Intended overlay: presentationShort text plus a separate interactive button
+  aligned over the visual three-dot control
+
+IMPLEMENTATION NOTES
+- Treat these positions as mockup-alignment starting points, not final game
+  constants, until the complete patient-column HTML layout is visually tested.
+- Anchor overlays to the 604 x 1680 patient-panel coordinate system.
+- When the complete game is scaled, scale the whole 360 x 640 canvas uniformly.
+- Do not independently stretch an overlay in only one direction.
+- Runtime text should remain HTML, not be baked into these images.
+- The visual three-dot button in the clipboard is artwork; place a semantic
+  HTML button over it with the same bounds for keyboard and touch interaction.
+
+HTML STRUCTURE
+
+<section class="patient-panel">
+  <img class="patient-panel__background" src="2026 0724h triageRush patient panel background.png" alt="">
+  <img class="patient-panel__name-plaque" src="2026 0724i triageRush empty patient name plaque.png" alt="">
+  <div class="patient-panel__name">Patient #1</div>
+
+  <!-- The current-patient image is a separate layer placed here. -->
+
+  <img class="patient-panel__quote-art" src="2026 0724j triageRush empty patient quote bubble.png" alt="">
+  <blockquote class="patient-panel__quote-text">Patient quote</blockquote>
+
+  <img class="patient-panel__vitals-art" src="2026 0724k triageRush vitals panel labels no values.png" alt="">
+  <div class="patient-panel__vital-value patient-panel__vital-value--hr">108</div>
+  <div class="patient-panel__vital-value patient-panel__vital-value--bp">108/70</div>
+  <div class="patient-panel__vital-value patient-panel__vital-value--rr">20</div>
+  <div class="patient-panel__vital-value patient-panel__vital-value--spo2">95%</div>
+  <div class="patient-panel__vital-value patient-panel__vital-value--temp">37.0°C</div>
+  <div class="patient-panel__vital-value patient-panel__vital-value--pain">5/10</div>
+
+  <img class="patient-panel__presentation-art" src="2026 0724l triageRush empty presentation clipboard.png" alt="">
+  <div class="patient-panel__presentation-text">Short presentation</div>
+  <button class="patient-panel__expand" type="button" aria-label="Open full patient information"></button>
+</section>
+
+CSS POSITIONING
+
+The percentage values below are calculated directly from the 604 x 1680
+patient-panel coordinate system. This is the recommended form because it scales
+with the complete fixed game canvas while retaining the mockup alignment.
+
+.patient-panel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.patient-panel__background {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.patient-panel__name-plaque {
+  position: absolute;
+  left: 28.6424%;
+  top: 1.25%;
+  width: 40.5629%;
+  height: 3.6310%;
+}
+
+.patient-panel__quote-art {
+  position: absolute;
+  left: 6.6225%;
+  top: 61.3690%;
+  width: 84.2715%;
+  height: 8.9881%;
+}
+
+.patient-panel__vitals-art {
+  position: absolute;
+  left: 3.9735%;
+  top: 70.2976%;
+  width: 89.4040%;
+  height: 13.9286%;
+}
+
+.patient-panel__presentation-art {
+  position: absolute;
+  left: 4.1391%;
+  top: 84.1667%;
+  width: 89.2384%;
+  height: 14.8810%;
+}
+
+EQUIVALENT CSS-PIXEL POSITIONS AT 3X SCALE
+
+The fixed patient panel is approximately 201.33 x 560 CSS pixels:
+
+- Name plaque:
+  left 57.67 px; top 7 px; width 81.67 px; height 20.33 px
+- Quote bubble:
+  left 13.33 px; top 343.67 px; width 169.67 px; height 50.33 px
+- Vitals panel:
+  left 8 px; top 393.67 px; width 180 px; height 78 px
+- Presentation clipboard:
+  left 8.33 px; top 471.33 px; width 179.67 px; height 83.33 px
+
+LAYER ORDER
+
+.patient-panel__background     { z-index: 0; }
+.patient-panel__patient-image  { z-index: 10; }
+.patient-panel__name-plaque,
+.patient-panel__quote-art,
+.patient-panel__vitals-art,
+.patient-panel__presentation-art { z-index: 20; }
+.patient-panel__name,
+.patient-panel__quote-text,
+.patient-panel__vital-value,
+.patient-panel__presentation-text,
+.patient-panel__expand         { z-index: 30; }
+
+All positioned layers must also use position: absolute. Runtime text bounds
+should be established during the next visual layout pass because their exact
+padding, font size, and line-height depend on the final game typography.
+
+CREATION METHOD
+- Built-in image editing removed or reconstructed text and overlap areas.
+- A #ff00ff chroma-key background was removed locally.
+- Each result was trimmed and normalized to the measured source footprint.
