@@ -1,28 +1,24 @@
 # triageRush
 
-triageRush is being redesigned as a seven-choice emergency-triage edu-game
-with separate Game and Edu modes.
+This repository is the development home for the triageRush Game/Edu
+application, its shared patient library, the preserved interactive prototype,
+and a future standalone patient CRUD pipeline.
 
-Current project documentation starts here:
+## Ownership
 
-[Single Source of Truth](docs/singleSourceOfTruth/README.md)
+- `index.html` is the public GitHub Pages entry point for triageRush.
+- `triageRush-app/` owns the Game, Edu, and read-only patient-viewer code,
+  styles, assets, tests, and application-specific documentation.
+- `patient-data/` owns the authoritative published patient JSON and final
+  patient images consumed by triageRush.
+- `patient-CRUD-app (standalone)/` is reserved for the future local patient
+  creation and CRUD pipeline. Its temporary descriptive folder name will be
+  reconsidered when work on that pipeline resumes.
+- `_testApp/` is the preserved, self-contained seven-room prototype and
+  temporary testing platform. It is not the production application.
+- `docs-project/` owns project-wide architecture, planning, status, migration,
+  and historical documentation.
 
-The current interactive design prototype is here:
-
-[First Game/Edu Prototype](docs/DESIGN/testApp/README.txt)
-
-The prototype is a disposable static HTML/CSS/JavaScript design test. It is not
-the production application.
-
-## Version snapshots
-
-- `v1` — Original five-room triageRush concept.
-- `v2` — First try at the seven-choice Game/Edu app and interactive prototype.
-
-The comprehensive v2 handoff is:
-
-[2026-07-26 v2 Project Handoff](docs/DESIGN/2026%200726%201940%20v2%20first%20edu-game%20prototype%20project%20handoff.md)
-
-Patient data and selected artwork remain in their operational folders. The
-canonical documentation index identifies every authoritative location and
-which decisions remain provisional.
+The production triageRush JavaScript and CSS have not yet been built. The
+current files under `triageRush-app/` are placeholders for that work; selected
+room-panel artwork has been collected under its `assets/` folder.
