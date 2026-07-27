@@ -1,6 +1,6 @@
 # triageRush — Patient Data Transition Status
 
-**Last reviewed:** 2026-07-26 11:13 PDT
+**Last reviewed:** 2026-07-26 17:33 PDT
 **Status:** Existing patient library authoritative; revised answer contract pending
 
 ## Operational sources
@@ -72,6 +72,8 @@ The revised design will probably need patient-specific data for:
 
 - The correct seven-choice treatment answer.
 - Close or near-miss choices.
+- Acceptable alternate ESI placements, especially for Psych and Discharge
+  patients.
 - Over-triage versus under-triage classification.
 - A concise Coach explanation.
 - The decisive evidence supporting the answer.

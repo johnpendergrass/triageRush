@@ -1,0 +1,170 @@
+triageRush seven-door CLOSED-state specification
+
+Companion image:
+2026 0726n triageRush inviting walnut psych door badges lowered mockup.png
+
+STATUS AND SCOPE
+- This image is the selected visual authority for the seven CLOSED choices.
+- It defines the appearance, ordering, dimensions, spacing, and surrounding
+  wall treatment for ESI 1-5, Psych, and Discharge.
+- The choices are gameplay treatment-assignment metaphors. They are presented
+  as doors even though ESI levels are not literal hospital destinations.
+- This sheet does not yet define the matching open-door artwork.
+
+CANVAS
+- Raster reference: 1080 x 1920 pixels
+- Logical design canvas: 360 x 640 CSS pixels
+- Raster scale: 3 image pixels per CSS pixel
+- Aspect ratio: 9:16
+- Header: y 0-119; 120 raster px / 40 CSS px
+- Play area: y 120-1799; 1680 raster px / 560 CSS px
+- Footer: y 1800-1919; 120 raster px / 40 CSS px
+- Runtime intent: uniformly scale the fixed game surface to the available
+  portrait viewport without scrolling or internal reflow.
+
+DOOR RAIL
+- Raster bounds: x 842-1079, y 120-1799
+- Raster size: 238 x 1680 pixels
+- Logical width: approximately 79.33 CSS px
+- Seven equal cells: 238 x 240 raster px each
+- Logical cell height: 80 CSS px
+- CSS row contract:
+  grid-template-rows: repeat(7, minmax(0, 1fr));
+- The complete cell is the interactive touch target. The illustrated door is
+  not a smaller independent hit target.
+
+ROW ORDER AND EXACT RASTER BOUNDS
+1. ESI 1 / RESUS:       x 842-1079, y 120-359
+2. ESI 2 / EMERGENT:    x 842-1079, y 360-599
+3. ESI 3 / URGENT:      x 842-1079, y 600-839
+4. ESI 4 / LESS URGENT: x 842-1079, y 840-1079
+5. ESI 5 / NON-URGENT:  x 842-1079, y 1080-1319
+6. PSYCH:               x 842-1079, y 1320-1559
+7. DISCHARGE:           x 842-1079, y 1560-1799
+
+STANDARD CLOSED-DOOR GEOMETRY
+- ESI 1-5 and Psych each use a 144 x 224 raster-pixel outer door frame.
+- Each frame is horizontally centered in its 238-pixel cell.
+- Horizontal wall margin: 47 raster px on each side.
+- Vertical inset: 8 raster px at the top and bottom.
+- Door-frame x bounds: 889-1032.
+- Row-specific door-frame y bounds:
+  - ESI 1: 128-351
+  - ESI 2: 368-591
+  - ESI 3: 608-831
+  - ESI 4: 848-1071
+  - ESI 5: 1088-1311
+  - Psych: 1328-1551
+- Decorative content must fit inside these dimensions. It must never change
+  the cell height, shift a row boundary, or make one door shorter.
+
+ESI 1-5 VISUAL CONTRACT
+- Use the dimensional illustrated door style established in the 2026 0726f
+  refinement: visible material texture, colored door slabs, narrow
+  institutional metal frames, treatment plaques, vision glass, and prominent
+  ESI badges.
+- Each ESI door is one continuous slab with no vertical center seam.
+- Door colors in order:
+  - ESI 1: deep red
+  - ESI 2: burnt orange
+  - ESI 3: golden amber
+  - ESI 4: institutional green
+  - ESI 5: medium hospital blue
+- Required treatment text, verbatim:
+  - RESUS
+  - EMERGENT
+  - URGENT
+  - LESS URGENT
+  - NON-URGENT
+- LESS URGENT and NON-URGENT may use two lines.
+- All treatment names use the same font size. Shorter labels are not enlarged.
+- Each door includes a shortened rectangular vision-glass panel.
+- Each door includes a high-contrast badge reading ESI plus its level number.
+- All five ESI badges use the same dimensions, materials, typography, and
+  placement. The large level number must remain easy to scan during play.
+- Keep the door lever and other hardware consistent across ESI 1-5.
+- Do not add IN USE lights or any other indicator lights.
+
+PSYCH / BEHAVIORAL HEALTH VISUAL CONTRACT
+- Outer frame: the same 144 x 224 raster pixels used by every ESI door.
+- Door material: rich, natural, medium-walnut wood grain with warm honey-brown
+  highlights, a soft satin finish, and gentle rather than severe contrast.
+- The door should feel like a welcoming professional behavioral-health office
+  while remaining recognizably institutional rather than residential.
+- Use a clean, narrow brushed-metal institutional frame.
+- Use one normal round brushed-nickel doorknob on the left.
+- The door is solid and windowless: no glass panel.
+- No indicator light.
+- Primary nameplate:
+  - Text: PSYCH
+  - Size: 58 x 19 raster px
+  - Position relative to the 144 x 224 door frame: x 43, y 28
+  - Global raster bounds: x 932-989, y 1356-1374
+  - Treatment: small, ordinary office-door nameplate
+- Subtitle badge:
+  - Text: BEHAVIORAL HEALTH
+  - Two lines
+  - Size: 76 x 23 raster px
+  - Position relative to the door frame: x 34, y 53
+  - Global raster bounds: x 923-998, y 1381-1403
+  - Treatment: quieter and less prominent than the PSYCH nameplate
+- Both plaques use warm ivory/tan materials with muted teal lettering.
+- Preserve clear breathing room between the top frame and the PSYCH plaque.
+- The artwork must contain no floor, steps, Discharge molding, neighboring
+  door fragments, or other source-image debris.
+- Supporting clean door source:
+  2026 0726l triageRush inviting walnut behavioral health door source artwork.png
+
+DISCHARGE VISUAL CONTRACT
+- Discharge is the intentional architectural exception to the 144 x 224
+  single-door frame.
+- It fills the complete seventh cell: 238 x 240 raster px at x 842, y 1560.
+- Use the selected glass double exit doors leading outside.
+- Preserve the central meeting seam, daylight, push bars, exterior view,
+  accessibility cues, and continuous hospital floor.
+- The source artwork already includes the word DISCHARGE. Do not add a second
+  label or overlay.
+- The walls and floor must span the full cell width so the doors do not look
+  inset into a separate alcove.
+
+WALL AND PROTECTIVE-BAND TREATMENT
+- Architectural reference:
+  2026 0724s triageRush waiting room background 4.png
+- The wall is a warm, light hospital beige.
+- The horizontal protective bands are intentionally lighter and more subdued
+  than the dark teal bands in the waiting-room reference.
+- Current implementation colors and vertical stops inside each 240-pixel cell:
+  - Warm upper wall: #efe5d4, 0%-58%
+  - Upper muted blue-gray band: #7c9091, 58%-63%
+  - Warm middle wall: #eadfcd, 63%-80%
+  - Lower muted blue-gray band: #748789, 80%-85%
+  - Warm lower wall: #e4d7c2, 85%-100%
+- Row separator: 4 raster px, dark blue-black #0c2530.
+- Keep the bands visually subordinate to the door colors and labels.
+
+CLOSED-STATE RULES
+- All seven choices shown here are closed and inactive.
+- There are no IN USE lights anywhere in the rail.
+- Do not bake green, orange, red, or correct-answer pulses into the base
+  artwork. Those are temporary runtime feedback effects.
+- Do not bake hover, focus, selected, disabled, or Coach states into this
+  reference.
+
+FUTURE OPEN/ACTIVATED STATES
+- Preserve the exact seven 238 x 240 cells and their row order.
+- Preserve the 144 x 224 outer opening/frame box for ESI 1-5 and Psych.
+- Discharge remains a full-cell architectural exception.
+- Open artwork must not change rail width, row height, label hierarchy, wall
+  alignment, or the complete-cell touch target.
+- Design each open state as a corresponding visual state of the approved
+  closed choice, not as a new layout.
+
+REFERENCE LINEAGE
+- ESI door texture, colors, plaques, and badges: 2026 0726f refinement
+- Equal seven-row geometry: 2026 0726h and later refinements
+- Subdued wall treatment: 2026 0724s waiting-room reference, finalized in
+  2026 0726j
+- Clean inviting Psych door source: 2026 0726l
+- Final Psych plaque positions and selected seven-door closed state:
+  2026 0726n
+- Integrated Discharge treatment: 2026 0726g and the selected Discharge source

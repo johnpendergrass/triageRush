@@ -1,6 +1,6 @@
 # triageRush — Single Source of Truth
 
-**Last reviewed:** 2026-07-26 11:13 PDT
+**Last reviewed:** 2026-07-26 19:40 PDT
 **Status:** Canonical transition-state documentation
 
 ## Current project state
@@ -10,8 +10,9 @@ hybrid game/education design. The new direction is the official path forward
 on `main`, but its detailed gameplay, data, layout, scoring, and feedback
 contracts are still being designed.
 
-The original concept remains permanently preserved by the Git tag `v1`. Its
-former canonical documents are archived together at:
+The original concept remains permanently preserved by the Git tag `v1`. The
+first interactive seven-choice Game/Edu prototype milestone is preserved by
+Git tag `v2`. The former v1 canonical documents are archived together at:
 
 [v1 Original Concept — Archived Single Source of Truth](../archive/v1-original-concept-single-source-of-truth/README.md)
 
@@ -45,7 +46,10 @@ The following direction has been accepted as the basis for the revised app:
 - Educational coaching is available only after the player commits to a
   decision.
 - The revised app has a timed, numerically scored Game mode and an untimed Edu
-  mode with Correct/Close/Wrong outcome tallies instead of points.
+  mode with Correct/Acceptable/Close/Wrong outcome tallies instead of points.
+- Psych and Discharge remain the intended answers for their designated
+  patients, while a numbered ESI placement at the patient's underlying level
+  or one level away is provisionally rated Acceptable.
 
 These statements establish direction, not a complete implementation contract.
 Open details are recorded in the subject-owning documents.
@@ -60,7 +64,14 @@ migration changes them:
 | Patient schema/template | `patientsCRUD-app/patient-data/docs/patient-schema.json` |
 | Patient JSON records | `patientsCRUD-app/patient-data/patient-json/` |
 | Patient images | `patientsCRUD-app/patient-data/patient-images/` |
-| Existing selected v1 artwork | `docs/DESIGN/REFINING IMAGES/SELECTED ARTWORK/` |
+| Selected artwork | `docs/DESIGN/SELECTED ARTWORK/` |
+
+The throwaway interactive prototype is:
+
+`docs/DESIGN/testApp/`
+
+Its behavior demonstrates the current working direction but does not override
+rules marked provisional or undecided in these canonical documents.
 
 The patient records and images remain valuable inputs. Their v1 room-answer
 fields and the selected v1 door artwork are not automatically valid for the
@@ -71,6 +82,10 @@ revised design.
 The detailed discussion that initiated this transition is recorded in:
 
 [2026 0726 1058 potential gamestyle change to edu, game.md](../DESIGN/2026%200726%201058%20potential%20gamestyle%20change%20to%20edu,%20game.md)
+
+The comprehensive `v2` prototype handoff is:
+
+[2026 0726 1940 v2 first edu-game prototype project handoff.md](../DESIGN/2026%200726%201940%20v2%20first%20edu-game%20prototype%20project%20handoff.md)
 
 That note preserves the discussion and alternatives. This folder owns the
 current status of any decision.
