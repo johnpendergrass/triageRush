@@ -24,8 +24,11 @@ a scaled-up mobile layout. Desktop may also offer the actual mobile
 presentation for testing and debugging by serving the mobile implementation
 directly; the exact mechanism remains to be discussed.
 
-The existing `_testApp/` is still a reference/demo implementation. Its old
-assets were deliberately excluded from this high-resolution replacement pass.
+The former `_testApp/` has been renamed `_testAppMobile/` and remains the
+mobile reference/demo implementation. Its old assets were deliberately
+excluded from this high-resolution replacement pass. `_testAppDesktop/` is a
+separate desktop demo scaffold. Each test app owns independent code, copied
+runtime assets, and a separate server.
 
 ## Active production artwork
 
@@ -138,20 +141,25 @@ The scoring consequences of those tolerance modes still require discussion.
 
 ## Immediate continuation checklist
 
-1. Inventory the current `_testApp/` behavior without treating its old artwork
-   as production assets.
-2. Define where the recreated mobile demo will live and whether `_testApp/`
-   will be replaced, retained, or supplemented.
+1. Inventory the current `_testAppMobile/` behavior without treating its old
+   artwork as production assets.
+2. Recreate the mobile demo in `_testAppMobile/` using its own copies of the
+   new assets.
 3. Wire the new waiting-room, patient-panel, room-background, and door layers
    into the mobile demo.
 4. Verify all open-door layering with room interior, patient, foreground door,
    and UI feedback.
-5. Create a desktop demo using the same asset files and shared game behavior,
-   with a layout designed specifically for a normal HD desktop viewport.
+5. Create the desktop demo in `_testAppDesktop/`, copying the approved artwork
+   into its own asset tree and designing for a normal HD desktop viewport.
 6. Test the desktop option that presents the actual mobile implementation for
    debugging.
 7. Keep the production implementation separate from the standalone patient
    CRUD application except for intentional shared patient data.
+
+During this pre-production phase, do not share runtime code or asset paths
+between the mobile and desktop test apps. Their intentional isolation allows
+each presentation to be tested without prematurely fixing the production
+architecture.
 
 ## Validation at this waypoint
 
@@ -161,4 +169,3 @@ The scoring consequences of those tolerance modes still require discussion.
 - Active patient-panel assets: 5 PNG files
 - Canonical patient images: 160 PNG files, all `1024 x 1024`
 - Patient JSON parse failures: 0
-

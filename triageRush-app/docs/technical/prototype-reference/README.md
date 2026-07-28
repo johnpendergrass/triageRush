@@ -1,7 +1,7 @@
 # Prototype Reference
 
-This folder documents the preserved interactive prototype at `_testApp/`
-for use while building the production triageRush application.
+This folder documents the preserved mobile interactive prototype at
+`_testAppMobile/` for use while rebuilding the mobile test application.
 
 Start with:
 
@@ -12,9 +12,9 @@ what the prototype does, which values are deliberate, and which rules remain
 provisional. The prototype source remains the exact authority for prototype
 behavior:
 
-- `_testApp/index.html`
-- `_testApp/styles.css`
-- `_testApp/app.js`
+- `_testAppMobile/index.html`
+- `_testAppMobile/styles.css`
+- `_testAppMobile/app.js`
 
 When the prototype changes materially, update the dated specification or add a
 newer dated revision. Production decisions promoted from the prototype belong

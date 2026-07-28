@@ -1,7 +1,7 @@
 # triageRush
 
 This repository is the development home for the triageRush Game/Edu
-application, its shared patient library, the preserved interactive prototype,
+application, its shared patient library, isolated mobile and desktop test apps,
 and a future standalone patient CRUD pipeline.
 
 ## Ownership
@@ -14,8 +14,12 @@ and a future standalone patient CRUD pipeline.
 - `patient-CRUD-app (standalone)/` is reserved for the future local patient
   creation and CRUD pipeline. Its temporary descriptive folder name will be
   reconsidered when work on that pipeline resumes.
-- `_testApp/` is the preserved, self-contained seven-room prototype and
-  temporary testing platform. It is not the production application.
+- `_testAppMobile/` is the preserved, self-contained mobile prototype and
+  mobile pre-production testing platform.
+- `_testAppDesktop/` is the separate, self-contained desktop pre-production
+  testing platform.
+- The two test apps have independent code, runtime assets, and preview servers.
+  Neither is the production application.
 - `docs-project/` owns project-wide architecture, planning, status, migration,
   and historical documentation.
 

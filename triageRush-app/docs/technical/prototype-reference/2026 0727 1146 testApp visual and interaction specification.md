@@ -1,7 +1,8 @@
 # testApp Visual and Interaction Specification
 
 **Recorded:** 2026-07-27 11:46 PDT
-**Describes:** `_testApp/` as preserved on this date
+**Describes:** the mobile prototype now located at `_testAppMobile/`, as
+preserved on this date
 **Status:** Descriptive prototype baseline; not a production contract
 
 ## Purpose and use
@@ -14,7 +15,7 @@ the executable source without duplicating every incidental CSS declaration.
 Use this order when resolving questions:
 
 1. This document explains design intent and important relationships.
-2. `_testApp/index.html`, `styles.css`, and `app.js` provide exact prototype
+2. `_testAppMobile/index.html`, `styles.css`, and `app.js` provide exact prototype
    implementation behavior.
 3. Current production technical documents, once written, override the
    prototype for the production app.
@@ -44,10 +45,10 @@ experiments. Do not promote them silently.
 
 | Concern | Prototype source |
 |---|---|
-| Semantic structure and accessibility labels | `_testApp/index.html` |
-| Geometry, visual appearance, responsive behavior, and animation | `_testApp/styles.css` |
-| Patient examples, room definitions, state, evaluation, scoring, and interaction | `_testApp/app.js` |
-| Prototype-only runtime artwork | `_testApp/assets/` |
+| Semantic structure and accessibility labels | `_testAppMobile/index.html` |
+| Geometry, visual appearance, responsive behavior, and animation | `_testAppMobile/styles.css` |
+| Patient examples, room definitions, state, evaluation, scoring, and interaction | `_testAppMobile/app.js` |
+| Prototype-only runtime artwork | `_testAppMobile/assets/` |
 
 ## Application shell
 
@@ -479,7 +480,7 @@ Important additional colors include queue runner `#778c8e`, header border
 - `patient-001`, `patient-004`, and `patient-013` are 1024 × 1024.
 - The other ten are 1254 × 1254.
 - These files are byte-identical copies of the corresponding authoritative
-  patient images, retained locally so `_testApp/` remains self-contained.
+  patient images, retained locally so `_testAppMobile/` remains self-contained.
 
 ## Accessibility behaviors already demonstrated
 
@@ -533,7 +534,7 @@ Before reproducing a prototype behavior in the production app:
 
 ## Updating this reference
 
-When `_testApp/` is refined:
+When `_testAppMobile/` is refined:
 
 1. Update the prototype source first.
 2. Compare the changed selectors, state variables, rules, and assets against

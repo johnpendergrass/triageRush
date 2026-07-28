@@ -14,7 +14,8 @@ triageRush/
 │   └── docs/
 ├── patient-data/
 ├── patient-CRUD-app (standalone)/
-├── _testApp/
+├── _testAppMobile/
+├── _testAppDesktop/
 └── docs-project/
 ```
 
@@ -26,8 +27,10 @@ triageRush/
 - `patient-data/` owns published patient JSON and final patient images.
 - `patient-CRUD-app (standalone)/` is a future local administrative pipeline
   and is not part of the public application.
-- `_testApp/` is the self-contained seven-room prototype and temporary testing
+- `_testAppMobile/` is the self-contained mobile prototype and mobile testing
   reference.
+- `_testAppDesktop/` is the independent desktop testing application.
+- Both test apps own separate code, runtime assets, and preview servers.
 - `docs-project/` owns project-wide development and technical documentation.
 
 ## Documentation rule

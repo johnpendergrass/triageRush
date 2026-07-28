@@ -1,14 +1,18 @@
-triageRush interactive design mockup
-====================================
+triageRush mobile interactive design mockup
+===========================================
 
 This is a disposable, self-contained HTML/CSS/JavaScript mockup. It does not
 change or depend on the production triageRush application, shared patient
 library, or standalone CRUD pipeline.
 
+This folder is exclusively for the mobile pre-production test app. Do not
+share code or runtime assets directly with _testAppDesktop. Each test app must
+remain independently runnable and self-contained.
+
 Quick desktop preview
 ---------------------
 
-Double-click start-iphone-preview.bat, then open:
+Double-click start-mobile-preview.bat, then open:
 
     http://localhost:8080
 
@@ -16,7 +20,7 @@ iPhone preview
 --------------
 
 1. Connect the iPhone and this computer to the same Wi-Fi network.
-2. Double-click start-iphone-preview.bat.
+2. Double-click start-mobile-preview.bat.
 3. Keep the black server window open.
 4. The window prints an iPhone address such as:
 

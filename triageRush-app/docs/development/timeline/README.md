@@ -16,6 +16,10 @@ Current continuation handoff:
 
 - [2026-07-28 high-resolution asset waypoint and demo continuation handoff](2026%200728%201418%20high-resolution%20asset%20waypoint%20and%20demo%20continuation%20handoff.md)
 
+Current test-app separation:
+
+- [2026-07-28 mobile and desktop test apps separated](2026%200728%20mobile%20and%20desktop%20test%20apps%20separated.md)
+
 Future production-coding considerations:
 
 - [2026-07-28 future platform, home, and program-structure considerations](2026%200728%201026%20future%20platform%20home%20and%20program%20structure%20considerations.md)
