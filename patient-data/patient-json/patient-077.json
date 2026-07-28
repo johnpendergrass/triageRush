@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-077",
   "number": 77,
-  "easterEgg": false,
-  "difficulty": 2,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Feverish, weak, barely responsive",
       "quoteShort": null,
       "quoteLong": "(Daughter) He spiked a high fever, he's burning up and shaking, and he's barely making sense — so weak he can't stand. He's been complaining his urine burns for days.",
-      "presentationShort": "79yo M — high fever, rigors, tachycardic, HYPOTENSIVE, altered, dysuria — urosepsis / septic shock.",
-      "presentationLong": "79-year-old male with high fever, rigors, tachycardia, hypotension, and altered mentation on a background of dysuria — urosepsis with septic shock."
+      "presentationShort": "79yo M ? fever 39.6?C, rigors, dysuria, confusion, profound weakness, HR 128 and BP 84/50.",
+      "presentationLong": "79-year-old male with several days of painful urination, now febrile with shaking chills, confusion, and weakness so severe he cannot stand. Heart rate is 128 and blood pressure is 84/50."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": [
-      "Resus"
-    ]
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

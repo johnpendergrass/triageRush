@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-044",
   "number": 44,
-  "easterEgg": false,
-  "difficulty": 1,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Bad cough and fever",
       "quoteShort": null,
       "quoteLong": "I've had a nasty cough for days, bringing up green gunk, and now it hurts to take a deep breath on my right side. I've been feverish and totally wiped out.",
-      "presentationShort": "55yo M — productive cough, R-sided pleuritic pain, fever, focal crackles/egophony — community-acquired pneumonia.",
-      "presentationLong": "55-year-old male with several days of productive cough, right-sided pleuritic chest pain, fever, and focal crackles — community-acquired pneumonia."
+      "presentationShort": "55yo M ? several days of productive cough, right pleuritic chest pain, fever 38.9?C, focal right-sided crackles and egophony, SpO2 94%.",
+      "presentationLong": "55-year-old male with several days of productive cough, fever, fatigue, and right-sided pain on deep inspiration. He has focal right-sided crackles and egophony, respiratory rate 22, and oxygen saturation 94%."
     },
     "vitals": {
       "hr": {
@@ -61,8 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": []
+    "correctRoom": "esi-3",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-065",
   "number": 65,
-  "easterEgg": false,
-  "difficulty": 1,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Nosebleed won't stop",
       "quoteShort": null,
       "quoteLong": "My nose started bleeding an hour ago and I can't get it to quit. I've been pinching it. It's the front of my nose, dripping out the front — not down my throat.",
-      "presentationShort": "60yo M — anterior epistaxis, dripping anteriorly, controllable with pressure, not on anticoagulants — benign anterior bleed.",
-      "presentationLong": "60-year-old male with an anterior nosebleed dripping from the front, controllable with pressure, not anticoagulated — benign anterior epistaxis."
+      "presentationShort": "60yo M ? nosebleed for 1 hour, blood dripping from front rather than throat, slows with pressure; not anticoagulated, hemodynamically stable.",
+      "presentationLong": "60-year-old male with one hour of bleeding from the front of his nose. It slows with sustained pressure and is not running down his throat. He is not taking anticoagulants and remains hemodynamically stable."
     },
     "vitals": {
       "hr": {
@@ -61,8 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Fast Track",
-    "otherAcceptableRooms": []
+    "correctRoom": "esi-5",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

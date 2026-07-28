@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-090",
   "number": 90,
-  "easterEgg": false,
-  "difficulty": 2,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Wheezy baby with a cold",
       "quoteShort": null,
       "quoteLong": "(Mom) She's had a cold for a few days and now she's breathing fast and wheezy, her little ribs suck in when she breathes. She's still taking some bottle and had wet diapers, but I'm worried.",
-      "presentationShort": "12mo F — URI then tachypnea, wheeze, mild retractions, mildly hypoxic, still feeding — bronchiolitis (RSV).",
-      "presentationLong": "12-month-old female with a preceding cold, now tachypneic and wheezy with mild retractions and mild hypoxia, still feeding — bronchiolitis."
+      "presentationShort": "12mo F ? cold symptoms followed by rapid breathing, wheeze, mild rib retractions and SpO2 92%; still taking some bottle with wet diapers.",
+      "presentationLong": "12-month-old female with several days of cold symptoms, now breathing rapidly with wheeze and mild chest retractions. Oxygen saturation is 92%; she is still taking part of her bottles and producing wet diapers."
     },
     "vitals": {
       "hr": {
@@ -61,8 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": []
+    "correctRoom": "esi-3",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

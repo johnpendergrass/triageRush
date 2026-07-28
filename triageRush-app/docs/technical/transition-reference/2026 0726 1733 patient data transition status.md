@@ -9,7 +9,7 @@ The existing patient library remains the current source for patient content:
 
 | Content | Location |
 |---|---|
-| Implemented schema/template | [patient-schema.json](../../patientsCRUD-app/patient-data/docs/patient-schema.json) |
+| Implemented schema/template | [patient-schema-template.json](../../../../patient-data/schema/patient-schema-template.json) |
 | Patient records | `patientsCRUD-app/patient-data/patient-json/` |
 | Patient images | `patientsCRUD-app/patient-data/patient-images/` |
 | Anchor images | `patientsCRUD-app/patient-data/anchorImages/` |

@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-030",
   "number": 30,
-  "easterEgg": false,
-  "difficulty": 3,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Bumped his head",
       "quoteShort": null,
       "quoteLong": "I tripped on the rug and bumped my head — barely anything, I feel completely fine. My wife made me come in. Oh, I take that blood thinner, warfarin, for my heart rhythm.",
-      "presentationShort": "78yo M on warfarin (AF) — ground-level fall w/ head strike, currently asymptomatic, GCS 15, no focal deficit.",
-      "presentationLong": "78-year-old male on warfarin for atrial fibrillation, ground-level fall with a head strike, currently asymptomatic with a normal exam — high risk for delayed intracranial hemorrhage."
+      "presentationShort": "78yo M on warfarin ? ground-level fall with head strike; feels well, GCS 15, no focal neurological deficit.",
+      "presentationLong": "78-year-old male taking warfarin for atrial fibrillation after a ground-level fall with a head strike. He feels well, has a GCS of 15, and has no focal neurological deficit."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": [
-      "Resus"
-    ]
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

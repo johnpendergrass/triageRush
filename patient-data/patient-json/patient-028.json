@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-028",
   "number": 28,
-  "easterEgg": false,
-  "difficulty": 3,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Fell off his bike, hit his head",
       "quoteShort": null,
       "quoteLong": "I wiped out on my bike and hit my head — I wasn't wearing my helmet. I felt okay at first, but now I've thrown up twice and I'm really sleepy and my head is pounding.",
-      "presentationShort": "10yo M — unhelmeted bike fall w/ head strike; initial lucid interval, now repeated vomiting, worsening headache & increasing drowsiness — c/f intracranial injury.",
-      "presentationLong": "10-year-old male, fell off a bike without a helmet and struck his head, seemed fine initially but now has repeated vomiting, a worsening headache, and progressive drowsiness — concerning for an evolving intracranial bleed."
+      "presentationShort": "10yo M ? unhelmeted bike fall with head strike; initially seemed well, now vomiting repeatedly with worsening headache and increasing drowsiness.",
+      "presentationLong": "10-year-old male who struck his head in an unhelmeted bicycle fall. He initially seemed well but has since vomited repeatedly and become increasingly drowsy with a worsening headache."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": [
-      "Resus"
-    ]
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

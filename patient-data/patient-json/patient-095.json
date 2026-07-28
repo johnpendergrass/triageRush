@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-095",
   "number": 95,
-  "easterEgg": false,
-  "difficulty": 1,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Heel pain in the mornings",
       "quoteShort": null,
       "quoteLong": "My heel has been killing me for weeks, worst with my first steps in the morning, then it eases up. No injury, no swelling, no numbness — I've just been on my feet a lot at work.",
-      "presentationShort": "46yo F — chronic plantar heel pain worst with first morning steps, no trauma/swelling/neuro deficit — plantar fasciitis.",
-      "presentationLong": "46-year-old female with weeks of plantar heel pain, worst with the first morning steps and eased with activity, without trauma, swelling, or neurologic deficit — plantar fasciitis."
+      "presentationShort": "46yo F ? weeks of plantar heel pain, worst with first morning steps and easing with activity; no trauma, swelling, redness, or neurological symptoms.",
+      "presentationLong": "46-year-old female with several weeks of pain under the heel, most severe on her first steps each morning and improving as she moves. She has no injury, swelling, redness, numbness, or weakness."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Discharge",
-    "otherAcceptableRooms": [
-      "Fast Track"
-    ]
+    "correctRoom": "discharge",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

@@ -1,9 +1,13 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-007",
   "number": 7,
-  "easterEgg": false,
-  "difficulty": 1,
   "johnsComments": "",
+
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
     "personal": {
@@ -55,16 +59,14 @@
       "esi": 2,
       "esi2roomsNotes": null,
       "disposition": "Acute → stroke code, STAT non-contrast head CT, check tPA/thrombectomy window before that clock runs out",
-      "why": "Time is brain — that 1-hour LKW is the whole ballgame. Slurred speech + droop + arm drift = don't let him wait. The vitals look calm; the deficit and the clock are the emergency.",
+      "why": "Time is brain — that 1-hour LKW is important. Slurred speech + droop + arm drift = don't let him wait. The vitals look calm; the deficit and the clock are the emergency.",
       "redFlag": "acute focal deficit, LKW 1h (tPA window)"
     }
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": [
-      "Resus"
-    ]
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

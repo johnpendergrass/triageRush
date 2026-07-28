@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-091",
   "number": 91,
-  "easterEgg": false,
-  "difficulty": 1,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Cold, but acting fine",
       "quoteShort": null,
       "quoteLong": "(Mom) She's got a runny nose and a little cough for a couple days, low-grade temp, but she's eating, drinking, and running around like normal. My daycare said to get her checked.",
-      "presentationShort": "5yo F — mild URI, well-appearing, playful, hydrated, no distress, normal exam — viral cold.",
-      "presentationLong": "5-year-old female with a mild cold, well-appearing and playful, well-hydrated with no respiratory distress and a normal exam — viral URI."
+      "presentationShort": "5yo F ? 2 days runny nose, mild cough and low-grade temperature; playful, eating and drinking normally, no breathing difficulty, normal exam.",
+      "presentationLong": "5-year-old female with two days of a runny nose, mild cough, and low-grade temperature. She remains playful, is eating and drinking normally, has no breathing difficulty, and has an otherwise normal examination."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Discharge",
-    "otherAcceptableRooms": [
-      "Fast Track"
-    ]
+    "correctRoom": "discharge",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

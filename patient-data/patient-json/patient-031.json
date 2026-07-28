@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-031",
   "number": 31,
-  "easterEgg": false,
-  "difficulty": 3,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Confused and not herself",
       "quoteShort": null,
       "quoteLong": "(Daughter) She's just not herself — confused, calling me by my sister's name, sleepy all day. No real fever, barely a cough. She keeps picking at her blanket and drifting off.",
-      "presentationShort": "85yo F — acute delirium over 2 days, quietly hypoxic (SpO2 91%), faint R-base crackles, afebrile — occult pneumonia.",
-      "presentationLong": "85-year-old female with acute confusion and delirium over two days, quietly hypoxic with faint right-base crackles and no fever — delirium as the sole herald of occult pneumonia."
+      "presentationShort": "85yo F ? 2 days of new confusion and drowsiness; SpO2 91%, faint right-base crackles, afebrile, minimal cough.",
+      "presentationLong": "85-year-old female with two days of new confusion and increasing drowsiness. Oxygen saturation is 91% with faint crackles at the right lung base; she is afebrile with only a slight cough."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": [
-      "Resus"
-    ]
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

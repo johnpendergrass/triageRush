@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-038",
   "number": 38,
-  "easterEgg": false,
-  "difficulty": 3,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "One-sided belly pain and spotting",
       "quoteShort": null,
       "quoteLong": "My lower belly's been hurting on one side and I've had some spotting. My period's a couple weeks late — I figured it was just a weird cycle. I got really dizzy standing up.",
-      "presentationShort": "26yo F — unilateral pelvic pain, vaginal spotting, LMP ~6 wks ago, orthostatic — ectopic pregnancy until excluded.",
-      "presentationLong": "26-year-old female with unilateral pelvic pain, vaginal spotting, a late menstrual period, and orthostatic lightheadedness — ectopic pregnancy until proven otherwise."
+      "presentationShort": "26yo F ? unilateral pelvic pain, vaginal spotting, LMP about 6 weeks ago, and lightheadedness on standing; BP 100/62.",
+      "presentationLong": "26-year-old female with one-sided pelvic pain, vaginal spotting, and a menstrual period about two weeks late. She becomes lightheaded when standing; heart rate is 104 and blood pressure is 100/62."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": [
-      "Resus"
-    ]
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

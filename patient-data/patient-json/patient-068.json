@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-068",
   "number": 68,
-  "easterEgg": false,
-  "difficulty": 2,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Severe upper belly pain",
       "quoteShort": null,
       "quoteLong": "I've got this boring pain in the pit of my stomach that goes straight through to my back, and I keep throwing up. It's a bit better if I lean forward. I do drink most nights.",
-      "presentationShort": "50yo M — epigastric pain radiating to the back, relieved leaning forward, vomiting, alcohol use — acute pancreatitis.",
-      "presentationLong": "50-year-old male with epigastric pain boring through to the back, partially relieved by leaning forward, with vomiting and a history of alcohol use — acute pancreatitis."
+      "presentationShort": "50yo M ? severe epigastric pain through to the back, repeated vomiting, partial relief leaning forward; drinks alcohol most nights.",
+      "presentationLong": "50-year-old male with severe upper abdominal pain radiating straight through to his back and repeated vomiting. Leaning forward gives partial relief. He reports drinking alcohol on most nights."
     },
     "vitals": {
       "hr": {
@@ -61,8 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": []
+    "correctRoom": "esi-3",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

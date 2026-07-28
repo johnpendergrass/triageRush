@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-083",
   "number": 83,
-  "easterEgg": false,
-  "difficulty": 2,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Bee sting, swelling and wheezing",
       "quoteShort": null,
       "quoteLong": "A bee stung me and within minutes I broke out in hives all over, my lips and throat feel swollen and tight, and I'm starting to wheeze. My chest feels tight — I've never reacted like this.",
-      "presentationShort": "27yo M — minutes after a bee sting: diffuse urticaria, lip/throat swelling, wheeze, tightness — anaphylaxis. Epi now.",
-      "presentationLong": "27-year-old male minutes after a bee sting with diffuse urticaria, lip and throat swelling, wheeze, and chest tightness — anaphylaxis requiring immediate epinephrine."
+      "presentationShort": "27yo M ? minutes after bee sting, diffuse hives, lip and throat swelling, wheeze and chest tightness; HR 122, SpO2 93%.",
+      "presentationLong": "27-year-old male who developed widespread hives, swelling of his lips and throat, wheeze, and chest tightness within minutes of a bee sting. Heart rate is 122 and oxygen saturation is 93%."
     },
     "vitals": {
       "hr": {
@@ -61,8 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Resus",
-    "otherAcceptableRooms": []
+    "correctRoom": "esi-1",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

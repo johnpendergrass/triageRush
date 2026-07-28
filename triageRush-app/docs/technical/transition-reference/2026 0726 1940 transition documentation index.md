@@ -27,7 +27,7 @@ revised app.
 | Current patient assets, legacy routing fields, and migration status | [patient-data.md](patient-data.md) |
 | Interface assumptions that remain valid and areas awaiting redesign | [interface-and-layout.md](interface-and-layout.md) |
 | Repository state and the next design/implementation sequence | [implementation-status.md](implementation-status.md) |
-| Exact currently implemented patient record shape | [patient-schema.json](../../patientsCRUD-app/patient-data/docs/patient-schema.json) |
+| Exact currently implemented patient record shape | [patient-schema-template.json](../../../../patient-data/schema/patient-schema-template.json) |
 
 During this transition, a document may explicitly say that a decision is open.
 That statement is authoritative: older notes must not be used to fill the gap.
@@ -61,7 +61,7 @@ migration changes them:
 
 | Content | Location |
 |---|---|
-| Patient schema/template | `patientsCRUD-app/patient-data/docs/patient-schema.json` |
+| Patient schema/template | `patient-data/schema/patient-schema-template.json` |
 | Patient JSON records | `patientsCRUD-app/patient-data/patient-json/` |
 | Patient images | `patientsCRUD-app/patient-data/patient-images/` |
 | Selected artwork | `docs/DESIGN/SELECTED ARTWORK/` |

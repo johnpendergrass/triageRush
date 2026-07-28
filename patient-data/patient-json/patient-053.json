@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-053",
   "number": 53,
-  "easterEgg": false,
-  "difficulty": 1,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Rolled her ankle",
       "quoteShort": null,
       "quoteLong": "I rolled my ankle jogging on a curb — it's swollen and sore on the outside, but I can limp on it a little. No numbness or anything.",
-      "presentationShort": "24yo F — inversion ankle injury, lateral swelling, able to bear weight a few steps, NV intact — Ottawa low-risk.",
-      "presentationLong": "24-year-old female with an inversion ankle injury, lateral malleolar swelling, able to take a few steps, neurovascularly intact — low risk by Ottawa rules."
+      "presentationShort": "24yo F ? inversion ankle injury with lateral swelling; can bear weight for a few steps, with intact distal circulation and sensation.",
+      "presentationLong": "24-year-old female who rolled her ankle stepping off a curb. She has lateral ankle swelling and tenderness but can take a few weight-bearing steps; distal movement, circulation, and sensation are intact."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Fast Track",
-    "otherAcceptableRooms": [
-      "Acute"
-    ]
+    "correctRoom": "esi-4",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-080",
   "number": 80,
-  "easterEgg": false,
-  "difficulty": 3,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Sudden chest pain, can't breathe",
       "quoteShort": null,
       "quoteLong": "I was just sitting there and suddenly got this sharp pain in the right side of my chest and couldn't catch my breath. It's worse when I breathe in. I'm tall and thin, it came out of nowhere.",
-      "presentationShort": "24yo M, tall/thin — sudden pleuritic chest pain & dyspnea, decreased breath sounds R side — spontaneous pneumothorax.",
-      "presentationLong": "24-year-old tall, thin male with sudden pleuritic right-sided chest pain and dyspnea, with decreased breath sounds on the right — spontaneous pneumothorax."
+      "presentationShort": "24yo tall, thin M ? sudden right pleuritic chest pain and dyspnea at rest; reduced breath sounds on right, RR 24, SpO2 92%.",
+      "presentationLong": "24-year-old tall, thin male with sudden sharp right-sided chest pain and shortness of breath while sitting at rest. Pain worsens on inspiration; breath sounds are reduced on the right and oxygen saturation is 92%."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": [
-      "Resus"
-    ]
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

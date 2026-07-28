@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-060",
   "number": 60,
-  "easterEgg": false,
-  "difficulty": 1,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Pulling at his ear",
       "quoteShort": null,
       "quoteLong": "(Mom) He's had a cold, and since last night he's been tugging his right ear, crying, and running a fever. He finally fell asleep on me but wakes up fussy.",
-      "presentationShort": "3yo M — URI then ear-tugging, fever, fussiness; erythematous bulging R TM — acute otitis media.",
-      "presentationLong": "3-year-old male with a preceding cold, now ear-tugging, febrile, and fussy, with an erythematous bulging right tympanic membrane — acute otitis media."
+      "presentationShort": "3yo M ? cold symptoms followed by fever, fussiness and right ear-tugging; right tympanic membrane is red and bulging.",
+      "presentationLong": "3-year-old male with a recent cold who developed fever, fussiness, and persistent pulling at his right ear overnight. The right tympanic membrane appears red and bulging."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Fast Track",
-    "otherAcceptableRooms": [
-      "Acute"
-    ]
+    "correctRoom": "esi-4",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-075",
   "number": 75,
-  "easterEgg": false,
-  "difficulty": 1,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -20,9 +23,9 @@
     "clinical": {
       "chiefComplaint": "Painful blistering rash on one side",
       "quoteShort": null,
-      "quoteLong": "I've got a burning, stabbing pain and now a blistery rash in a stripe across one side of my ribs. It stops right at my middle — doesn't cross over. It hurt for a couple days before the rash showed up.",
-      "presentationShort": "62yo F — painful vesicular rash in a single dermatome, does not cross midline, preceded by burning pain — herpes zoster.",
-      "presentationLong": "62-year-old female with a painful vesicular rash in a single thoracic dermatome that stops at the midline, preceded by burning pain — herpes zoster (shingles)."
+      "quoteLong": "I've got burning, stabbing pain and a blistery stripe along one side of my ribs. It stops at the middle and doesn't cross over. The pain started days before the rash.",
+      "presentationShort": "62yo F ? burning pain followed by a one-sided stripe of grouped blisters along the ribs; stops at midline, no eye or facial involvement.",
+      "presentationLong": "62-year-old female with several days of burning pain followed by grouped blisters in a narrow stripe along one side of her ribs. The rash stops at the midline, with no facial or eye involvement."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Fast Track",
-    "otherAcceptableRooms": [
-      "Acute"
-    ]
+    "correctRoom": "esi-4",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

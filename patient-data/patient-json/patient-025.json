@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-025",
   "number": 25,
-  "easterEgg": false,
-  "difficulty": 2,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Had a seizure with fever",
       "quoteShort": null,
       "quoteLong": "(Mom) He's had a cold and a fever, then his arms and legs shook for about a minute and his eyes rolled back. It stopped on its own. He's sleepy but waking up now. It was TERRIFYING.",
-      "presentationShort": "2yo M — brief (~1 min) generalized febrile seizure, now postictal but rousable; URI symptoms, NO rash, NO neck stiffness, fontanelle closed.",
-      "presentationLong": "2-year-old male, brief generalized seizure with fever during a viral URI, self-terminated in about a minute, now postictal but rousable, with no rash and no meningismus."
+      "presentationShort": "2yo M ? fever with about 1 minute of generalized shaking and eye-rolling, stopped spontaneously; now sleepy but rousable, no rash or neck stiffness.",
+      "presentationLong": "2-year-old male with a cold and high fever who had about one minute of whole-body shaking and eye-rolling that stopped without treatment. He is now sleepy but rousable, with no rash or neck stiffness."
     },
     "vitals": {
       "hr": {
@@ -61,8 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": []
+    "correctRoom": "esi-3",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

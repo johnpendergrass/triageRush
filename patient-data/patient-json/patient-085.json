@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-085",
   "number": 85,
-  "easterEgg": false,
-  "difficulty": 3,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Drowning in his own lungs",
       "quoteShort": null,
       "quoteLong": "I woke up gasping like I was drowning — I can't breathe lying down at all, I have to sit bolt upright. I'm coughing up frothy spit and my heart's pounding. Came on fast tonight.",
-      "presentationShort": "72yo M — acute severe dyspnea, orthopnea, frothy sputum, diffuse crackles, severe hypertension, hypoxic — flash pulmonary edema.",
-      "presentationLong": "72-year-old male with acute severe dyspnea, orthopnea, frothy sputum, diffuse crackles, severe hypertension, and hypoxia — flash (hypertensive) pulmonary edema."
+      "presentationShort": "72yo M ? abrupt severe dyspnea, unable to lie flat, frothy sputum, diffuse crackles, BP 212/118, RR 32, SpO2 85%.",
+      "presentationLong": "72-year-old male who woke suddenly gasping and cannot tolerate lying flat. He has frothy sputum and diffuse crackles; blood pressure is 212/118, respiratory rate 32, and oxygen saturation 85%."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": [
-      "Resus"
-    ]
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

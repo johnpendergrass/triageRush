@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-078",
   "number": 78,
-  "easterEgg": false,
-  "difficulty": 3,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Found barely breathing",
       "quoteShort": null,
       "quoteLong": "(Friend) I found him slumped over and I couldn't wake him up. He's barely breathing — really slow. There were pills around. Please help him.",
-      "presentationShort": "32yo M — depressed LOC, RR 6, pinpoint pupils, cyanotic, suspected opioid overdose — give naloxone.",
-      "presentationLong": "32-year-old male, minimally responsive with a respiratory rate of 6, pinpoint pupils, and cyanosis — opioid overdose requiring immediate naloxone and airway support."
+      "presentationShort": "32yo M ? minimally responsive, RR 6, SpO2 82%, pinpoint pupils and cyanosis; found slumped with pills nearby.",
+      "presentationLong": "32-year-old male found slumped beside loose pills. He is minimally responsive, breathing six times per minute, with oxygen saturation 82%, pinpoint pupils, and blue discoloration around the lips."
     },
     "vitals": {
       "hr": {
@@ -61,8 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Resus",
-    "otherAcceptableRooms": []
+    "correctRoom": "esi-1",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

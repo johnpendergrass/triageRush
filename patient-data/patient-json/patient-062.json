@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-062",
   "number": 62,
-  "easterEgg": false,
-  "difficulty": 1,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Bad sunburn",
       "quoteShort": null,
       "quoteLong": "I fell asleep at the beach and now my shoulders and back are bright red and sore. No blisters really, just red and hot. My wife told me to get it checked.",
-      "presentationShort": "34yo M — superficial (1st-degree) sunburn to shoulders/back, no blistering, no systemic symptoms — minor.",
-      "presentationLong": "34-year-old male with a superficial first-degree sunburn across the shoulders and back, no blistering and no systemic symptoms."
+      "presentationShort": "34yo M ? painful red shoulders and back after falling asleep at beach; skin intact without blisters, normal vitals, no systemic symptoms.",
+      "presentationLong": "34-year-old male who fell asleep at the beach and now has painful, uniformly red skin across his shoulders and back. The skin is intact without blisters; vital signs are normal and he has no systemic symptoms."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Discharge",
-    "otherAcceptableRooms": [
-      "Fast Track"
-    ]
+    "correctRoom": "discharge",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

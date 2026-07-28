@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-067",
   "number": 67,
-  "easterEgg": false,
-  "difficulty": 2,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Bad pain under right ribs",
       "quoteShort": null,
       "quoteLong": "After a greasy dinner I got this deep pain under my right ribs that won't let up — it wraps around to my shoulder blade. Makes me nauseous, and it hurts more when I breathe in deep.",
-      "presentationShort": "44yo F — RUQ pain radiating to the scapula after a fatty meal, Murphy's positive, low-grade fever — acute cholecystitis.",
-      "presentationLong": "44-year-old female with right-upper-quadrant pain radiating to the scapula after a fatty meal, a positive Murphy's sign, and a low-grade fever — acute cholecystitis."
+      "presentationShort": "44yo F ? persistent RUQ pain after fatty meal, radiating to right shoulder blade, nausea, fever, and marked tenderness with deep inspiration.",
+      "presentationLong": "44-year-old female with persistent pain beneath the right ribs after a fatty meal, radiating to the right shoulder blade. She is nauseated and febrile, with marked right-upper-quadrant tenderness that catches her breath on deep palpation."
     },
     "vitals": {
       "hr": {
@@ -61,8 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": []
+    "correctRoom": "esi-3",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-072",
   "number": 72,
-  "easterEgg": false,
-  "difficulty": 1,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Fainted at church",
       "quoteShort": null,
       "quoteLong": "I stood up in a hot, crowded church and felt hot and sweaty and my vision went gray, then I passed out for a few seconds. I feel totally fine now. It's happened once before, same way.",
-      "presentationShort": "20yo M — classic vasovagal syncope with prodrome (warm, diaphoretic, tunnel vision), quick recovery, normal exam — benign.",
-      "presentationLong": "20-year-old male with classic vasovagal syncope preceded by warmth, diaphoresis, and tunnel vision while standing, with rapid full recovery and a normal exam."
+      "presentationShort": "20yo M ? brief faint while standing in hot crowded church after warmth, sweating and tunnel vision; rapid full recovery, now asymptomatic with normal exam.",
+      "presentationLong": "20-year-old male who became hot and sweaty with tunnel vision while standing in a crowded church, then fainted for a few seconds. He recovered quickly, is now completely asymptomatic, and has a normal examination."
     },
     "vitals": {
       "hr": {
@@ -61,8 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Fast Track",
-    "otherAcceptableRooms": []
+    "correctRoom": "esi-5",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

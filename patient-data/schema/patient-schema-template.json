@@ -1,11 +1,13 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-001",
   "number": 1,
-  "easterEgg": false,
-  "difficulty": 1,
-  "johnsComments": "",
-
-
+  "johnsComments": "this is a demo patient",
+    
   "patient": {
     
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -50,8 +52,8 @@
 
     "_comment": "'answer' is answer for the game scoring.",
 
-    "correctRoom": "Fast Track",
-    "otherAcceptableRooms": ["Acute"]
+    "correctRoom": "esi-4",
+    "otherAcceptableRooms": null
   },
     
 
@@ -71,19 +73,5 @@
     "outputFolder": "images-hires",
     "outputFile": "patient-001.png",
     "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 10-year-old boy who looks his age (lean and athletic), in a white tennis outfit with a white wrist sweatband, a tennis racket propped beside him, seated on a blue padded clinic chair. Pose: sitting with arms crossed, one shoe off. Expression: an annoyed, cocky brave-face wince - one eye squinted shut, brow furrowed, mouth in a gritted half-grimace showing a bit of teeth, a tough kid toughing it out (NOT crying, NOT a soft happy smile). Clearly visible: a localized red, inflamed swelling ONLY around the right ankle joint - a red puffy patch right at the ankle bone, with the rest of the bare foot, toes, and leg a normal skin tone (bare foot, no sock, no bandage). No text, no logos."
-  },
-
-  "_documentMetadata": {
-    "documentType": "triageRush patient JSON template",
-    "lastModified": "2026-07-25T15:08:42-07:00",
-    "changeSummary": [
-      "Added patient.diagnosis.esi2roomsNotes with null as the default value.",
-      "Updated the ESI 4 example so Fast Track is correct and Acute is an acceptable higher-acuity room.",
-      "Updated patient.image.imageFlipped to use a boolean value.",
-      "Updated aiImageGeneration.anchor_image to the path used by current patient records.",
-      "Added this document metadata block at the end so patient information remains first.",
-      "Replaced patient.clinical.quote with patient.clinical.quoteShort and patient.clinical.quoteLong.",
-      "Added patient.image.imageScale as a numeric multiplier with 1.0 as the default."
-    ]
   }
 }

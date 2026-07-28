@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-076",
   "number": 76,
-  "easterEgg": false,
-  "difficulty": 2,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Swollen, painful calf",
       "quoteShort": null,
       "quoteLong": "My left calf has been swollen, warm, and achy for a couple of days — the other leg's totally normal. I was in a cast recently. No chest pain or trouble breathing though.",
-      "presentationShort": "58yo F — unilateral swollen, warm, tender calf after immobilization, no chest/respiratory symptoms — DVT.",
-      "presentationLong": "58-year-old female with a unilateral swollen, warm, tender calf after recent immobilization, without chest or respiratory symptoms — deep vein thrombosis."
+      "presentationShort": "58yo F ? 2 days unilateral warm, swollen, tender calf after recent immobilization in a cast; no chest pain or dyspnea.",
+      "presentationLong": "58-year-old female with two days of swelling, warmth, and tenderness confined to the left calf after recent immobilization in a cast. The opposite leg is normal; she denies chest pain and shortness of breath."
     },
     "vitals": {
       "hr": {
@@ -61,8 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": []
+    "correctRoom": "esi-3",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

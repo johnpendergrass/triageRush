@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-071",
   "number": 71,
-  "easterEgg": false,
-  "difficulty": 2,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Dizzy when she rolls over",
       "quoteShort": null,
       "quoteLong": "When I roll over in bed or tip my head back, the room spins hard for about 20 seconds, then it settles. I can walk fine otherwise. It's awful but it passes each time.",
-      "presentationShort": "55yo F — brief positional vertigo (<1 min), fatigable, normal gait & neuro exam, no other deficits — BPPV.",
-      "presentationLong": "55-year-old female with brief positional vertigo lasting under a minute, fatigable with position change, and a normal gait and neurologic exam — benign paroxysmal positional vertigo."
+      "presentationShort": "55yo F ? spinning episodes under 1 minute when rolling in bed or tipping head back; settles between episodes, normal gait and neurological exam.",
+      "presentationLong": "55-year-old female with brief spinning episodes triggered by rolling in bed or tipping her head back. Each lasts about 20 seconds and settles completely; she walks normally and has no focal neurological findings."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Fast Track",
-    "otherAcceptableRooms": [
-      "Acute"
-    ]
+    "correctRoom": "esi-4",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

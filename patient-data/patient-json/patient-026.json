@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-026",
   "number": 26,
-  "easterEgg": false,
-  "difficulty": 3,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Fever and bad headache",
       "quoteShort": null,
       "quoteLong": "My head really hurts and the lights are too bright. My neck is stiff and I feel yucky. I got these little red dots on my legs that don't go away when you press them.",
-      "presentationShort": "8yo F — fever, severe headache, photophobia, nuchal rigidity, and a NON-BLANCHING petechial rash — meningococcal until proven otherwise.",
-      "presentationLong": "8-year-old female, fever with severe headache, photophobia, neck stiffness, and a spreading non-blanching petechial rash — highly concerning for meningococcal meningitis and sepsis."
+      "presentationShort": "8yo F ? fever, severe headache, photophobia, stiff neck, and a spreading non-blanching petechial rash; tachycardic with BP 92/54.",
+      "presentationLong": "8-year-old female with high fever, severe headache, light sensitivity, neck stiffness, and a spreading non-blanching petechial rash. She is tachycardic and her blood pressure is 92/54."
     },
     "vitals": {
       "hr": {
@@ -61,25 +64,23 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": [
-      "Resus"
-    ]
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
-    "who": "8-year-old girl, clearly unwell, in a t-shirt and shorts",
-    "pose": "hunched over, shielding her eyes from the light",
-    "expression": "miserable and photophobic",
+    "who": "white 8-year-old girl, clearly unwell, in an off-white t-shirt, charcoal shorts, and brown shoes",
+    "pose": "seated and slumped forward, one hand shielding her closed eyes from light",
+    "expression": "flushed, miserable, and photophobic",
     "signs": [
-      "small dark-red spots on the legs",
-      "shielding eyes from light"
+      "many tiny, flat, pinpoint dark-red-to-purple petechiae scattered irregularly over both exposed lower legs",
+      "eyes squeezed shut with one hand shielding them from light"
     ],
     "lookSeverity": "clearly ill",
-    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "anchor_image": "patient-CRUD-app (standalone)/anchor-images/patient-143.png",
     "size": "1024x1024",
-    "outputFolder": "images-hires",
-    "outputFile": "patient-026.png",
-    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. ANATOMY AND OBJECTS (critical): exactly one head, exactly two arms ending in exactly two hands, exactly two legs ending in two feet, five fingers on each hand. No extra, duplicated, floating or partial limbs anywhere. Anything the character touches must be plausibly held by one of those two hands. All furniture is solid and fully opaque - the chair must never look transparent or see-through, and its back, seat and legs must all be completely drawn. Subject: a white 8-year-old girl in a t-shirt and shorts, clearly unwell, seated on a blue padded clinic chair. Pose: hunched over, one hand shielding her eyes from the light. Expression: miserable and photophobic. Clearly visible: small dark-red spots (petechiae) on her legs and a hand shielding her eyes. No text, no logos."
+    "outputFolder": "patient-data/patient-images",
+    "outputFile": "patient-026-new.png",
+    "prompt": "Create a new square patient character asset for patient 026, closely matching the softly shaded painterly semi-realistic animated clinical-illustration style, lighting, rounded forms, fine outlines, and blue padded clinic chair of the attached references. IMPORTANT BACKGROUND REQUIREMENT: place the isolated patient and chair against a perfectly uniform, solid pure chroma-key green background (#00FF00), edge to edge. No gradient, texture, scenery, vignette, floor, cast shadow, green spill, or green clothing. The green will be removed to transparency later. The existing patient image is an identity/composition reference; correct its rash depiction. Show exactly one white 8-year-old girl in a plain off-white T-shirt, charcoal shorts, and brown shoes, seated on the chair in a full-body three-quarter front view with the entire head, body, hands, legs, shoes, and chair inside frame. She is clearly very ill: slumped and hunched forward, eyes squeezed shut, one hand shielding her eyes from bright light, face flushed, miserable and photophobic. On both exposed lower legs, show a clinically plausible sparse-to-moderate scattering of many tiny pinpoint dark-red-to-purple petechiae, mostly 1–3 mm dots, flat and non-raised in appearance, irregularly distributed, with a few small clustered areas. They must look like fine pinprick petechiae—not large round spots, hives, pustules, bruises, measles, chickenpox, or decorative polka dots. Keep the rash secondary to the patient, but clearly visible at normal viewing size. Natural anatomy: exactly two arms, two hands, two legs, two feet; no extra digits or limbs. No medical equipment, text, labels, or logos. Do not copy the cheerful expression or toy from the child style anchor."
   }
 }

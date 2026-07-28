@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-033",
   "number": 33,
-  "easterEgg": false,
-  "difficulty": 2,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Diabetic, sweaty and confused",
       "quoteShort": null,
       "quoteLong": "(Wife) He's diabetic and took his insulin but then skipped lunch. Now he's drenched in sweat, shaky, and talking nonsense — he doesn't know where he is.",
-      "presentationShort": "68yo M diabetic — insulin without a meal; diaphoretic, tremulous, confused; fingerstick glucose 38 — neuroglycopenia.",
-      "presentationLong": "68-year-old diabetic male who took insulin then skipped a meal, now diaphoretic, tremulous, and confused with a fingerstick glucose of 38 — neuroglycopenia."
+      "presentationShort": "68yo M with diabetes ? took insulin then missed lunch; sweaty, tremulous, confused, fingerstick glucose 38.",
+      "presentationLong": "68-year-old male with diabetes who took insulin and then missed lunch. He is drenched in sweat, trembling, confused, and unable to state where he is; fingerstick glucose is 38."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": [
-      "Resus"
-    ]
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

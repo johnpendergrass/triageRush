@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-047",
   "number": 47,
-  "easterEgg": true,
-  "difficulty": 1,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -20,9 +23,9 @@
     "clinical": {
       "chiefComplaint": "Threw his back out",
       "quoteShort": null,
-      "quoteLong": "I threw my back out hard-carrying my team to Diamond — okay, actually it was lifting a couch right after ranked. Just my lower back, hurts to bend, but my legs feel totally normal — no numbness, everything works down there.",
-      "presentationShort": "35yo M — acute mechanical low back pain after lifting; paraspinal tenderness, NO red flags (normal strength/sensation, no saddle/bladder symptoms).",
-      "presentationLong": "35-year-old male with acute mechanical low back pain after lifting, paraspinal tenderness, and a reassuring exam — normal strength and sensation with no saddle anesthesia or bladder symptoms."
+      "quoteLong": "I threw my back out carrying my team to Diamond?okay, actually lifting a couch after ranked. It hurts to bend, but my legs feel normal: no numbness, and everything works down there.",
+      "presentationShort": "35yo M ? acute low back pain after lifting a couch; paraspinal tenderness, normal leg strength and sensation, no groin numbness or bladder symptoms.",
+      "presentationLong": "35-year-old male with lower back pain beginning while lifting a couch. Pain is worse with bending and there is paraspinal tenderness; leg strength and sensation are normal, with no groin numbness or bladder symptoms."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Fast Track",
-    "otherAcceptableRooms": [
-      "Acute"
-    ]
+    "correctRoom": "esi-4",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

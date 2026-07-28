@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-035",
   "number": 35,
-  "easterEgg": false,
-  "difficulty": 3,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Room won't stop spinning",
       "quoteShort": null,
       "quoteLong": "The room won't stop spinning and I keep listing to one side when I try to walk. It came on all of a sudden this morning. It's 'just' dizziness, but it won't quit and I can't stay upright.",
-      "presentationShort": "72yo M — sudden persistent vertigo with truncal ataxia, direction-changing nystagmus, unable to walk unaided — posterior circulation stroke.",
-      "presentationLong": "72-year-old male with sudden, persistent vertigo, truncal ataxia, and direction-changing nystagmus, unable to walk unaided — concerning for a cerebellar/posterior circulation stroke."
+      "presentationShort": "72yo M ? sudden persistent vertigo, truncal unsteadiness, direction-changing nystagmus, and inability to walk without assistance.",
+      "presentationLong": "72-year-old male with sudden persistent spinning dizziness. He lists to one side, has marked truncal unsteadiness and direction-changing nystagmus, and cannot stand or walk without assistance."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": [
-      "Resus"
-    ]
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

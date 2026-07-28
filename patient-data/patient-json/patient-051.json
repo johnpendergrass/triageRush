@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-051",
   "number": 51,
-  "easterEgg": false,
-  "difficulty": 1,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Red, goopy eye",
       "quoteShort": null,
       "quoteLong": "My eye's been red and goopy since yesterday, kind of crusty when I wake up. It's not really painful and my vision's totally fine — my kid had the exact same thing last week.",
-      "presentationShort": "28yo F — unilateral red eye with discharge, NO pain, normal vision, no photophobia; sick contact — conjunctivitis.",
-      "presentationLong": "28-year-old female with a red, discharging eye, no pain, normal visual acuity, and no photophobia, with a sick contact at home — conjunctivitis."
+      "presentationShort": "28yo F ? unilateral red eye with discharge and morning crusting; no pain, photophobia or vision change; child had same symptoms last week.",
+      "presentationLong": "28-year-old female with one day of unilateral eye redness, discharge, and crusting on waking. She has no pain, light sensitivity, or change in visual acuity, and her child had the same symptoms last week."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Discharge",
-    "otherAcceptableRooms": [
-      "Fast Track"
-    ]
+    "correctRoom": "discharge",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

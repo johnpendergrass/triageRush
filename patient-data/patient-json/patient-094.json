@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-094",
   "number": 94,
-  "easterEgg": false,
-  "difficulty": 1,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Lump on her wrist",
       "quoteShort": null,
       "quoteLong": "I've had this smooth, round lump on the back of my wrist for a few weeks. It doesn't really hurt, it's soft and squishy, and it seems to change size. I just want to know it's nothing bad.",
-      "presentationShort": "31yo F — soft, mobile, transilluminating dorsal wrist mass, painless, no functional limit — ganglion cyst.",
-      "presentationLong": "31-year-old female with a soft, mobile, transilluminating dorsal wrist mass, painless and without functional limitation — a ganglion cyst."
+      "presentationShort": "31yo F ? several-week painless dorsal wrist lump, soft, mobile, transilluminates and changes size; full function, no redness or neurological symptoms.",
+      "presentationLong": "31-year-old female with a smooth lump on the back of her wrist for several weeks. It is soft, mobile, painless, transilluminates, and varies in size; wrist function is normal with no redness or neurological symptoms."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Discharge",
-    "otherAcceptableRooms": [
-      "Fast Track"
-    ]
+    "correctRoom": "discharge",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

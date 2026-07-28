@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-056",
   "number": 56,
-  "easterEgg": false,
-  "difficulty": 1,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Fell on her wrist",
       "quoteShort": null,
       "quoteLong": "I slipped on the wet floor and caught myself on my hand. Now my wrist is swollen and bent a bit funny, and it really hurts to move. My fingers are fine though.",
-      "presentationShort": "63yo F — FOOSH with dorsally-angulated (dinner-fork) wrist deformity, swelling, NV intact — distal radius fracture.",
-      "presentationLong": "63-year-old female, fell onto an outstretched hand with a dorsally angulated 'dinner-fork' wrist deformity and swelling, neurovascularly intact — distal radius (Colles) fracture."
+      "presentationShort": "63yo F ? fell onto outstretched hand; swollen wrist with dorsal angulation and dinner-fork appearance, painful movement, NV intact.",
+      "presentationLong": "63-year-old female who fell onto an outstretched hand. Her wrist is swollen and dorsally angulated with a dinner-fork appearance; movement is painful, while finger movement, sensation, and distal circulation remain intact."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Fast Track",
-    "otherAcceptableRooms": [
-      "Acute"
-    ]
+    "correctRoom": "esi-4",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-057",
   "number": 57,
-  "easterEgg": false,
-  "difficulty": 1,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Something scratched her eye",
       "quoteShort": null,
       "quoteLong": "I think my contact lens tore and scratched my eye. It feels like there's sand in it, it's watering like crazy and the light hurts, but I can still see fine.",
-      "presentationShort": "27yo F — foreign-body sensation, tearing, photophobia after contact-lens trauma, vision intact — corneal abrasion.",
-      "presentationLong": "27-year-old female with foreign-body sensation, tearing, and photophobia after contact-lens trauma, with intact visual acuity — corneal abrasion."
+      "presentationShort": "27yo F ? eye pain, tearing, light sensitivity and gritty sensation after contact-lens trauma; visual acuity intact.",
+      "presentationLong": "27-year-old female who believes a torn contact lens scratched her eye. She has a persistent gritty sensation, tearing, and light sensitivity, but visual acuity remains intact."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Fast Track",
-    "otherAcceptableRooms": [
-      "Acute"
-    ]
+    "correctRoom": "esi-4",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

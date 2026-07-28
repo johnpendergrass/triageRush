@@ -5,8 +5,9 @@ and read-only patient-viewer application.
 
 - `development/` preserves the design timeline, experiments, handoffs, and
   artwork development.
-- `technical/` contains current or transitional implementation references.
-- `guides/` will contain player-facing instructions.
+- `technical/` contains current specifications and transitional implementation
+  references.
+- `guides/` contains player-facing instructions.
 
 Project-wide architecture and migration records belong under
 `../../docs-project/`.
@@ -17,3 +18,6 @@ but may contain obsolete paths and unresolved rules.
 
 For the exact visual and behavioral baseline demonstrated by the preserved
 prototype, start with `technical/prototype-reference/`.
+
+For the current production scoring rules, start with the
+[Strict and forgiving scoring specification](technical/2026%200727%201458%20strict%20and%20forgiving%20scoring%20specification.md).

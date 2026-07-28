@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-073",
   "number": 73,
-  "easterEgg": false,
-  "difficulty": 2,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Bleeding early in pregnancy",
       "quoteShort": null,
       "quoteLong": "I'm about 9 weeks pregnant and I've had some bleeding and mild cramping today. Not soaking pads, and the cramps are mild. I'm scared I'm losing the baby.",
-      "presentationShort": "29yo F — 9wk IUP, light vaginal bleeding, mild cramping, closed os, hemodynamically stable — threatened miscarriage.",
-      "presentationLong": "29-year-old female at 9 weeks with light vaginal bleeding and mild cramping, a closed cervical os, and stable vitals — threatened miscarriage."
+      "presentationShort": "29yo F, 9 weeks pregnant ? light vaginal bleeding and mild cramping today; not soaking pads, cervical os closed, vitals stable.",
+      "presentationLong": "29-year-old female at nine weeks of pregnancy with light vaginal bleeding and mild lower abdominal cramping today. She is not soaking pads; the cervical os is closed and her vital signs are stable."
     },
     "vitals": {
       "hr": {
@@ -61,8 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": []
+    "correctRoom": "esi-3",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

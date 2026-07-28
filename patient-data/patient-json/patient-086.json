@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-086",
   "number": 86,
-  "easterEgg": false,
-  "difficulty": 2,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Left lower belly pain and fever",
       "quoteShort": null,
       "quoteLong": "I've had a steady, achy pain low on the left side of my belly for two days, and now a fever. I'm not really hungry and my bowels have been off. It's tender right there when I press.",
-      "presentationShort": "58yo F — LLQ pain, localized tenderness, low-grade fever, altered bowel habit — acute diverticulitis.",
-      "presentationLong": "58-year-old female with two days of left-lower-quadrant pain, localized tenderness, a low-grade fever, and altered bowel habits — acute diverticulitis."
+      "presentationShort": "58yo F ? 2 days steady LLQ abdominal pain, localized tenderness, temperature 38.2?C, reduced appetite and altered bowel habit; no vomiting.",
+      "presentationLong": "58-year-old female with two days of steady left-lower abdominal pain, reduced appetite, and a change in bowel habits. She has localized tenderness and a temperature of 38.2?C, without vomiting or generalized guarding."
     },
     "vitals": {
       "hr": {
@@ -61,8 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": []
+    "correctRoom": "esi-3",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

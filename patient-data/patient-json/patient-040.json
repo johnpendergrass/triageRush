@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-040",
   "number": 40,
-  "easterEgg": false,
-  "difficulty": 2,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Vomiting, breathing hard",
       "quoteShort": null,
       "quoteLong": "I've been throwing up and my stomach hurts, and I can't stop breathing heavy and fast. I'm so thirsty and I'm peeing constantly. I ran out of my insulin a few days ago.",
-      "presentationShort": "19yo F T1DM out of insulin — vomiting, abdominal pain, Kussmaul breathing, fruity breath, dehydrated — DKA.",
-      "presentationLong": "19-year-old female with type 1 diabetes who ran out of insulin, now with vomiting, abdominal pain, deep rapid Kussmaul breathing, fruity breath, and dehydration — diabetic ketoacidosis."
+      "presentationShort": "19yo F with type 1 diabetes, out of insulin ? vomiting, abdominal pain, deep rapid breathing, fruity breath, thirst, polyuria, and dehydration.",
+      "presentationLong": "19-year-old female with type 1 diabetes who ran out of insulin several days ago. She has vomiting, abdominal pain, intense thirst, frequent urination, dehydration, fruity breath, and deep rapid respirations at 32/min."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": [
-      "Resus"
-    ]
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

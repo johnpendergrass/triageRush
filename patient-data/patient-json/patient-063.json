@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-063",
   "number": 63,
-  "easterEgg": false,
-  "difficulty": 1,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Itchy rash on hands",
       "quoteShort": null,
       "quoteLong": "I switched to a new dish soap and now both my hands are red, dry, and so itchy. It's just where the soap touched — no fever, I feel totally fine otherwise.",
-      "presentationShort": "40yo F — bilateral hand erythema/scaling in a contact distribution after a new soap, no systemic symptoms — contact dermatitis.",
-      "presentationLong": "40-year-old female with bilateral hand erythema and scaling in a contact distribution after switching soaps, with no systemic symptoms — allergic contact dermatitis."
+      "presentationShort": "40yo F ? itchy red, dry, scaling rash on both hands limited to areas exposed to a new dish soap; afebrile and otherwise well.",
+      "presentationLong": "40-year-old female with an itchy, red, dry, scaling rash on both hands after changing dish soap. The rash follows the contact areas; she is afebrile and has no facial swelling, breathing symptoms, or systemic illness."
     },
     "vitals": {
       "hr": {
@@ -61,8 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Fast Track",
-    "otherAcceptableRooms": []
+    "correctRoom": "esi-5",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

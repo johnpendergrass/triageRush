@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-097",
   "number": 97,
-  "easterEgg": false,
-  "difficulty": 2,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Can't breathe, hands tingling",
       "quoteShort": null,
       "quoteLong": "I got really overwhelmed during finals and suddenly couldn't breathe right — I'm breathing super fast, my hands and lips are tingling and cramping up. It's terrifying but there's no chest pain.",
-      "presentationShort": "22yo F — acute hyperventilation with perioral/carpopedal tingling in the setting of stress, clear lungs, normal SpO2 — anxiety-driven.",
-      "presentationLong": "22-year-old female with acute hyperventilation and perioral and carpopedal paresthesias during exam stress, with clear lungs and a normal oxygen saturation — hyperventilation syndrome (diagnosis of exclusion)."
+      "presentationShort": "22yo F ? rapid breathing during exam stress with tingling and cramping around mouth and hands; clear lungs, SpO2 100%, no chest pain.",
+      "presentationLong": "22-year-old female who began breathing rapidly while overwhelmed during finals, followed by tingling and cramping around her mouth and hands. Lungs are clear, oxygen saturation is 100%, and she reports no chest pain."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Fast Track",
-    "otherAcceptableRooms": [
-      "Acute"
-    ]
+    "correctRoom": "esi-4",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

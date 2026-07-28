@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-066",
   "number": 66,
-  "easterEgg": false,
-  "difficulty": 2,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Short of breath, wheezing",
       "quoteShort": null,
       "quoteLong": "My breathing's been getting worse for two days — more wheezy, coughing up yellow stuff. I'm a longtime smoker with emphysema. My rescue inhaler barely helps now.",
-      "presentationShort": "66yo M COPD/smoker — increased dyspnea, wheeze, purulent sputum, hypoxic, accessory muscle use — COPD exacerbation.",
-      "presentationLong": "66-year-old male with COPD and a smoking history, with two days of worsening dyspnea, wheeze, purulent sputum, hypoxia, and accessory muscle use — COPD exacerbation."
+      "presentationShort": "66yo M with COPD ? 2 days worsening dyspnea, wheeze, and yellow sputum; accessory muscle use, inhaler barely helping, SpO2 88%.",
+      "presentationLong": "66-year-old male with COPD and two days of worsening breathlessness, wheeze, and increased yellow sputum. His rescue inhaler is barely helping; he uses accessory muscles, breathes 26/min, and has oxygen saturation 88%."
     },
     "vitals": {
       "hr": {
@@ -61,8 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": []
+    "correctRoom": "esi-3",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

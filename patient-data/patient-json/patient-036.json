@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-036",
   "number": 36,
-  "easterEgg": false,
-  "difficulty": 3,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Sharp pain breathing in",
       "quoteShort": null,
       "quoteLong": "I get this sharp stab when I breathe in and I'm weirdly short of breath. My right calf's been sore and swollen for a few days. I'm on the pill and I just got back from a long flight.",
-      "presentationShort": "28yo F on OCPs, recent long-haul flight — pleuritic chest pain, dyspnea, tachycardia, unilateral swollen tender calf — PE with DVT.",
-      "presentationLong": "28-year-old female on oral contraceptives after a long-haul flight, with pleuritic chest pain, dyspnea, tachycardia, and a swollen tender calf — pulmonary embolism with DVT."
+      "presentationShort": "28yo F on OCPs after long-haul flight ? pleuritic chest pain, dyspnea, tachycardia, and a unilateral swollen tender calf.",
+      "presentationLong": "28-year-old female taking oral contraceptives after a recent long-haul flight. She has sharp pain on inspiration, shortness of breath, heart rate 118, oxygen saturation 93%, and a swollen tender right calf."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": [
-      "Resus"
-    ]
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

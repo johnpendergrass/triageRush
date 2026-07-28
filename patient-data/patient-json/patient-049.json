@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-049",
   "number": 49,
-  "easterEgg": true,
-  "difficulty": 1,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -20,9 +23,9 @@
     "clinical": {
       "chiefComplaint": "Thinks he's dying (it's a cold)",
       "quoteShort": null,
-      "quoteLong": "I've been grinding ranked for like 14 hours straight and now I've got a runny nose, sore throat, and I feel gross — I was sure I was dying. No fever, breathing's fine, I just needed someone to tell me it's not serious.",
-      "presentationShort": "26yo M — 2 days of rhinorrhea, sore throat, malaise; afebrile, no respiratory distress, normal exam — viral URI.",
-      "presentationLong": "26-year-old male with two days of runny nose, sore throat, and malaise, afebrile with no respiratory distress and a normal exam — a common cold."
+      "quoteLong": "I played ranked for 14 hours and now I've got a runny nose, sore throat, and feel gross. No fever, breathing's fine?I just need someone to say it's not serious.",
+      "presentationShort": "26yo M ? 2 days of runny nose, sore throat and malaise; afebrile, breathing comfortably, normal examination, consistent with an uncomplicated viral URI.",
+      "presentationLong": "26-year-old male with two days of runny nose, sore throat, and malaise. He is afebrile, breathing comfortably, and has a normal examination; the presentation is consistent with an uncomplicated viral upper respiratory illness."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Discharge",
-    "otherAcceptableRooms": [
-      "Fast Track"
-    ]
+    "correctRoom": "discharge",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-042",
   "number": 42,
-  "easterEgg": false,
-  "difficulty": 3,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Back pain, numb, can't pee",
       "quoteShort": null,
       "quoteLong": "My back's been killing me, but now both legs feel weak and I'm numb between my legs when I sit down. And — this is embarrassing — I couldn't pee for hours, then it just dribbled out.",
-      "presentationShort": "40yo M — low back pain with bilateral leg weakness, saddle anesthesia, urinary retention with overflow — cauda equina syndrome.",
-      "presentationLong": "40-year-old male with low back pain, bilateral leg weakness, saddle anesthesia, and urinary retention with overflow incontinence — cauda equina syndrome."
+      "presentationShort": "40yo M ? low back pain, new bilateral leg weakness, numbness around the groin, urinary retention, then dribbling overflow.",
+      "presentationLong": "40-year-old male with low back pain followed by new weakness in both legs and numbness around the groin and inner thighs. He was unable to urinate for hours and is now leaking small amounts."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": [
-      "Resus"
-    ]
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

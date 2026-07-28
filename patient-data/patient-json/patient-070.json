@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-070",
   "number": 70,
-  "easterEgg": false,
-  "difficulty": 2,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Heart suddenly racing",
       "quoteShort": null,
       "quoteLong": "Out of nowhere my heart started POUNDING super fast and steady — it just switched on. I feel it in my throat, a little dizzy, but no chest pain. It's happened once before.",
-      "presentationShort": "28yo F — abrupt regular narrow-complex tachycardia ~190, palpitations, mildly lightheaded, stable BP — SVT.",
-      "presentationLong": "28-year-old female with an abrupt onset of a regular fast heartbeat around 190, palpitations, and mild lightheadedness, hemodynamically stable — supraventricular tachycardia."
+      "presentationShort": "28yo F ? abrupt onset of rapid regular palpitations; pulse about 190, mild lightheadedness, no chest pain, BP 116/74.",
+      "presentationLong": "28-year-old female with abrupt onset of a very rapid, regular pounding heartbeat. Pulse is about 190; she is mildly lightheaded but has no chest pain or breathing difficulty, and blood pressure is 116/74."
     },
     "vitals": {
       "hr": {
@@ -61,8 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": []
+    "correctRoom": "esi-3",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

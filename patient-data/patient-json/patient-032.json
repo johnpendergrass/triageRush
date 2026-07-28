@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-032",
   "number": 32,
-  "easterEgg": false,
-  "difficulty": 3,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Passed out, belly and back pain",
       "quoteShort": null,
       "quoteLong": "I passed out cold at the store. Now I've got this deep tearing pain in my belly going through to my back, and it kind of throbs. Something feels really, really wrong.",
-      "presentationShort": "71yo M — syncope then severe abdominal/back pain, pulsatile abdominal mass, diaphoretic, borderline hypotensive — ruptured AAA.",
-      "presentationLong": "71-year-old male, syncope followed by severe tearing abdominal and back pain, a pulsatile abdominal mass, diaphoresis, and borderline hypotension — ruptured abdominal aortic aneurysm until excluded."
+      "presentationShort": "71yo M ? syncope followed by severe abdominal pain through to the back; pulsatile abdominal mass, diaphoresis, BP 88/54.",
+      "presentationLong": "71-year-old male who fainted before developing severe abdominal pain radiating through to his back. He is diaphoretic with a pulsatile abdominal mass, heart rate 118, and blood pressure 88/54."
     },
     "vitals": {
       "hr": {
@@ -61,8 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Resus",
-    "otherAcceptableRooms": []
+    "correctRoom": "esi-1",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

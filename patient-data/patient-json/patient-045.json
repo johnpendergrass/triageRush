@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-045",
   "number": 45,
-  "easterEgg": false,
-  "difficulty": 1,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Red, hot, swollen leg",
       "quoteShort": null,
       "quoteLong": "My lower leg is red, hot, and swollen, and it's spreading — I circled the edge this morning and it's already bigger. It started from a little scratch.",
-      "presentationShort": "50yo F — expanding warm erythema of the L lower leg from a skin break, tender, low-grade fever — cellulitis.",
-      "presentationLong": "50-year-old female with an expanding area of warm, tender erythema on the left lower leg originating from a small skin break, with a low-grade fever — cellulitis."
+      "presentationShort": "50yo F ? expanding warm, tender redness of left lower leg from a small skin break, with swelling and temperature 38.1?C.",
+      "presentationLong": "50-year-old female with an expanding area of warm, tender redness and swelling on the left lower leg arising from a small scratch. She marked the edge this morning and it has spread; temperature is 38.1?C."
     },
     "vitals": {
       "hr": {
@@ -61,8 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": []
+    "correctRoom": "esi-3",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

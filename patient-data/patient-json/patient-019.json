@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-019",
   "number": 19,
-  "easterEgg": false,
-  "difficulty": 1,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Burned hand",
       "quoteShort": null,
       "quoteLong": "I wanted to help make pancakes and I touched the hot pan. It's all red and puffy and it STINGS.",
-      "presentationShort": "4yo F — grabbed a hot pan; superficial partial-thickness burn to R palm ~1% TBSA, small blisters, brisk cap refill, moving hand.",
-      "presentationLong": "4-year-old female, touched a hot stovetop pan, superficial partial-thickness burn to the right palm about 1% body surface area with small blisters, sensation and movement intact."
+      "presentationShort": "4yo F ? touched a hot pan; red, blistered area on right palm covering about 1% TBSA, brisk capillary refill, moving hand.",
+      "presentationLong": "4-year-old female who touched a hot pan, with a small superficial partial-thickness burn on the right palm covering about 1% of body surface area. Small blisters are present; sensation, circulation, and movement are intact."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Fast Track",
-    "otherAcceptableRooms": [
-      "Acute"
-    ]
+    "correctRoom": "esi-4",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

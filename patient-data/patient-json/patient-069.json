@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-069",
   "number": 69,
-  "easterEgg": false,
-  "difficulty": 2,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Heart racing and fluttering",
       "quoteShort": null,
       "quoteLong": "My heart's been racing and fluttering for a few hours — it feels irregular, like it's skipping all over. I'm a little short of breath and lightheaded but no chest pain.",
-      "presentationShort": "68yo M — palpitations, irregularly irregular pulse, rate ~140, mild dyspnea, no chest pain, stable BP — AF with RVR.",
-      "presentationLong": "68-year-old male with palpitations, an irregularly irregular pulse around 140, mild dyspnea, and no chest pain, hemodynamically stable — atrial fibrillation with rapid ventricular response."
+      "presentationShort": "68yo M ? several hours of palpitations; pulse irregularly irregular at 142, mild dyspnea and lightheadedness, no chest pain, BP 118/76.",
+      "presentationLong": "68-year-old male with several hours of a racing, fluttering heartbeat. His pulse is irregularly irregular at 142; he is mildly short of breath and lightheaded, without chest pain, and blood pressure is 118/76."
     },
     "vitals": {
       "hr": {
@@ -61,8 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": []
+    "correctRoom": "esi-3",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

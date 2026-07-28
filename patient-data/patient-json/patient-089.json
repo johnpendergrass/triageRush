@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-089",
   "number": 89,
-  "easterEgg": false,
-  "difficulty": 1,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Barky cough",
       "quoteShort": null,
       "quoteLong": "(Dad) He's got this awful barky, seal-like cough and a hoarse voice, worse tonight. He's breathing okay at rest — no whistling when he's calm — but that cough is scary.",
-      "presentationShort": "2yo M — barky (seal-like) cough, hoarse voice, NO stridor at rest, comfortable, well-hydrated — mild croup.",
-      "presentationLong": "2-year-old male with a barky seal-like cough and hoarse voice, no stridor at rest, comfortable and well-hydrated — mild croup."
+      "presentationShort": "2yo M ? barky seal-like cough and hoarse voice, worse tonight; no noisy breathing at rest, comfortable and well hydrated.",
+      "presentationLong": "2-year-old male with a barky, seal-like cough and hoarse voice that worsened tonight. He has no stridor while resting, appears comfortable, is drinking, and remains well hydrated."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Fast Track",
-    "otherAcceptableRooms": [
-      "Acute"
-    ]
+    "correctRoom": "esi-4",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

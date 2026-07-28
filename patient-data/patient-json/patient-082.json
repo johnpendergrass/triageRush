@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-082",
   "number": 82,
-  "easterEgg": false,
-  "difficulty": 3,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Very sleepy and dried out",
       "quoteShort": null,
       "quoteLong": "(Son) She's a diabetic and she's been getting more and more out of it over a week — so sleepy, so thirsty, peeing constantly. Her skin looks all dried up. Now she barely responds.",
-      "presentationShort": "80yo F diabetic — days of polyuria/polydipsia, profound dehydration, lethargy, glucose very high, no ketosis — HHS.",
-      "presentationLong": "80-year-old diabetic female with a week of polyuria and polydipsia, profound dehydration, and progressive lethargy, with a markedly elevated glucose and no significant ketosis — hyperosmolar hyperglycemic state."
+      "presentationShort": "80yo F with diabetes ? days of thirst and frequent urination, profound dehydration, very high glucose, and progressive lethargy; now barely responsive.",
+      "presentationLong": "80-year-old female with diabetes and a week of increasing thirst and urination. She is profoundly dehydrated with markedly elevated glucose and has become progressively sleepy; she now responds only briefly to stimulation."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": [
-      "Resus"
-    ]
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

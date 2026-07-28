@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-092",
   "number": 92,
-  "easterEgg": false,
-  "difficulty": 1,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Sore, red fingernail",
       "quoteShort": null,
       "quoteLong": "The side of my fingernail has been red, swollen, and sore for a few days — I bite my nails. There's a little pocket of pus by the nail now. It throbs but I feel fine otherwise.",
-      "presentationShort": "19yo M — localized paronychia with a small pointing abscess at the nail fold, no spreading cellulitis, systemically well.",
-      "presentationLong": "19-year-old male with a localized paronychia and a small pointing abscess at the nail fold, without spreading cellulitis, systemically well."
+      "presentationShort": "19yo M ? red, swollen, tender nail fold with a small visible pus pocket after nail-biting; no spreading redness, fever, or systemic symptoms.",
+      "presentationLong": "19-year-old male with several days of redness, swelling, and throbbing tenderness along one fingernail after nail-biting. A small pus pocket is visible at the nail fold, without spreading redness, fever, or systemic illness."
     },
     "vitals": {
       "hr": {
@@ -61,8 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Fast Track",
-    "otherAcceptableRooms": []
+    "correctRoom": "esi-5",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

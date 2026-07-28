@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-052",
   "number": 52,
-  "easterEgg": false,
-  "difficulty": 2,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Vomited blood, black stools",
       "quoteShort": null,
       "quoteLong": "I threw up something that looked like coffee grounds, and my stools have been black and tarry. I get lightheaded when I stand. I drink a fair bit, and I take ibuprofen for my knees.",
-      "presentationShort": "55yo M — coffee-ground emesis and melena, orthostatic, NSAID + alcohol use — upper GI bleed.",
-      "presentationLong": "55-year-old male with coffee-ground emesis, melena, and orthostatic lightheadedness on a background of NSAID and alcohol use — an upper gastrointestinal bleed."
+      "presentationShort": "55yo M ? coffee-ground vomiting, black tarry stools, and lightheadedness on standing; uses ibuprofen and drinks alcohol regularly.",
+      "presentationLong": "55-year-old male with coffee-ground vomit, black tarry stools, and lightheadedness when standing. Heart rate is 108 and blood pressure is 104/64; he regularly uses ibuprofen and drinks alcohol."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": [
-      "Resus"
-    ]
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

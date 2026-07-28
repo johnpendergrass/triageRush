@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-084",
   "number": 84,
-  "easterEgg": false,
-  "difficulty": 2,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Sudden weakness and slurred speech",
       "quoteShort": null,
       "quoteLong": "(Husband) All of a sudden the left side of her face drooped, her left arm went weak, and her words got slurred. It started exactly 40 minutes ago while we were eating.",
-      "presentationShort": "70yo F — acute L facial droop, L arm weakness, dysarthria, clear last-known-well 40 min ago — acute stroke, tPA window.",
-      "presentationLong": "70-year-old female with acute left facial droop, left arm weakness, and dysarthria, with a clear last-known-well time 40 minutes ago — acute ischemic stroke within the treatment window."
+      "presentationShort": "70yo F ? sudden left facial droop, left arm weakness and slurred speech; onset witnessed 40 minutes ago, BP 182/100.",
+      "presentationLong": "70-year-old female with sudden left facial droop, left arm weakness, and slurred speech witnessed by her husband during a meal. She was last normal 40 minutes ago; blood pressure is 182/100."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": [
-      "Resus"
-    ]
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

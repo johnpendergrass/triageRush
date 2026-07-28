@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-037",
   "number": 37,
-  "easterEgg": false,
-  "difficulty": 3,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Tearing chest pain to the back",
       "quoteShort": null,
       "quoteLong": "It hit me all at once — a ripping, tearing pain in my chest that shot straight through to my back. Worst thing I've ever felt. It's not pressure, it's tearing.",
-      "presentationShort": "58yo M hypertensive — abrupt tearing chest pain radiating to the back, unequal arm BPs, diaphoretic — aortic dissection.",
-      "presentationLong": "58-year-old hypertensive male with abrupt tearing chest pain radiating to the back, unequal blood pressures between the arms, and diaphoresis — acute aortic dissection."
+      "presentationShort": "58yo M with hypertension ? abrupt severe tearing chest pain through to the back, unequal arm pressures, diaphoresis, BP 196/108.",
+      "presentationLong": "58-year-old male with hypertension and abrupt, severe tearing chest pain radiating through to his back. He is diaphoretic, has unequal blood pressures between his arms, and a measured pressure of 196/108."
     },
     "vitals": {
       "hr": {
@@ -61,8 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Resus",
-    "otherAcceptableRooms": []
+    "correctRoom": "esi-1",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

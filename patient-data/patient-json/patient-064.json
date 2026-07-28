@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-064",
   "number": 64,
-  "easterEgg": false,
-  "difficulty": 1,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Painful lump on his thigh",
       "quoteShort": null,
       "quoteLong": "I've got this red, hot lump on my thigh that's gotten bigger over a few days. It's really tender and there's a soft squishy spot in the middle now. Low fever maybe.",
-      "presentationShort": "45yo M — fluctuant, erythematous, tender thigh abscess with central softening, low-grade fever — needs I&D.",
-      "presentationLong": "45-year-old male with a fluctuant, erythematous, tender thigh abscess with central softening and a low-grade fever — requires incision and drainage."
+      "presentationShort": "45yo M ? enlarging red, hot, tender thigh lump with central fluctuance and low-grade fever; no spreading redness beyond the local area.",
+      "presentationLong": "45-year-old male with several days of an enlarging red, hot, tender lump on his thigh. The center is soft and fluctuant; temperature is 38.0?C, without extensive surrounding redness or systemic instability."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Fast Track",
-    "otherAcceptableRooms": [
-      "Acute"
-    ]
+    "correctRoom": "esi-4",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

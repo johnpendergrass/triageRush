@@ -1,8 +1,11 @@
 {
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
   "id": "patient-041",
   "number": 41,
-  "easterEgg": false,
-  "difficulty": 3,
   "johnsComments": "",
   "patient": {
     "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
@@ -21,8 +24,8 @@
       "chiefComplaint": "Worst headache of his life",
       "quoteShort": null,
       "quoteLong": "The worst headache of my entire life hit me like a thunderclap — instant, full force, like I got hit in the back of the head. It's a little better now, but I feel awful and my neck's stiff.",
-      "presentationShort": "45yo M — thunderclap 'worst headache of life,' maximal at onset, neck stiffness, now improving — subarachnoid hemorrhage.",
-      "presentationLong": "45-year-old male with a thunderclap headache, maximal at onset and the worst of his life, with neck stiffness, now somewhat improved — subarachnoid hemorrhage until excluded."
+      "presentationShort": "45yo M ? instantaneous worst-ever headache, maximal at onset, with neck stiffness; pain has eased slightly but remains severe.",
+      "presentationLong": "45-year-old male with an instantaneous, worst-ever headache that was maximal from the first moment. He describes being struck in the back of the head, has neck stiffness, and remains in severe pain despite slight improvement."
     },
     "vitals": {
       "hr": {
@@ -61,10 +64,8 @@
   },
   "answer": {
     "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "Acute",
-    "otherAcceptableRooms": [
-      "Resus"
-    ]
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
