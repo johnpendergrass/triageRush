@@ -12,7 +12,9 @@ and read-only patient-viewer application.
 Project-wide architecture and migration records belong under
 `../../docs-project/`.
 
-The production technical contract is still being rebuilt. Documents under
+The current production interface direction is recorded in the
+[Production gameplay and responsive interface contract](technical/2026%200729%20production%20gameplay%20and%20responsive%20interface%20contract.md).
+Documents under
 `technical/transition-reference/` preserve the latest pre-restructure state
 but may contain obsolete paths and unresolved rules.
 

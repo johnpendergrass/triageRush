@@ -14,12 +14,11 @@ and a future standalone patient CRUD pipeline.
 - `patient-CRUD-app (standalone)/` is reserved for the future local patient
   creation and CRUD pipeline. Its temporary descriptive folder name will be
   reconsidered when work on that pipeline resumes.
-- `_testAppMobile/` is the preserved, self-contained mobile prototype and
-  mobile pre-production testing platform.
-- `_testAppDesktop/` is the separate, self-contained desktop pre-production
-  testing platform.
+- `_testAppMobile/` is the preserved, self-contained mobile prototype.
+- `_testAppDesktop/` is the self-contained responsive-layout experiment.
 - The two test apps have independent code, runtime assets, and preview servers.
-  Neither is the production application.
+  Neither is the production application; both are now design references for
+  one responsive production game.
 - `docs-project/` owns project-wide architecture, planning, status, migration,
   and historical documentation.
 

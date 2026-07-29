@@ -4,6 +4,10 @@ Read this folder chronologically. Earlier entries describe abandoned
 five-room or consolidated-room directions; the seven-choice Game/Edu direction
 becomes the approved path in the entries dated 2026-07-26 and later.
 
+Current demo milestone and production direction:
+
+- [2026-07-29 demo milestone and production direction](2026%200729%20demo%20milestone%20and%20production%20direction.md)
+
 Current patient-text review:
 
 - [2026-07-27 patient text diagnosis-cue review](2026%200727%201628%20patient%20text%20diagnosis-cue%20review.md)

@@ -1,24 +1,49 @@
-# triageRush Desktop Test App
+# triageRush Responsive Test App
 
-This is the isolated, self-contained desktop pre-production test app.
+This folder contains a complete, self-contained responsive triageRush demo.
+It uses one gameplay implementation and two fluid presentation modes:
 
-It will be used to explore and validate a desktop-native triageRush
-presentation before production game development begins. It must not import
-code or runtime assets from `_testAppMobile`, `triageRush-app`, or
-`patient-data`. Assets needed at runtime should be copied into this folder
-deliberately.
+- A wide layout for desktop, laptop, and landscape-tablet viewports
+- The established compact mobile layout when the viewport can no longer
+  support three comfortably sized panels
 
-The initial files are only an independent scaffold. The desktop game has not
-yet been implemented.
+No runtime file is loaded from `_testAppMobile`, `triageRush-app`, or the
+repository-level patient-data folder.
 
-Desktop-specific design and implementation notes are indexed in
-[`docs/README.md`](docs/README.md).
+## Run the demo
 
-## Preview
+Run:
 
-Run `start-desktop-preview.bat`, then open:
+```text
+start-desktop-preview.bat
+```
 
-    http://localhost:8081
+Then open:
 
-The desktop server uses port `8081`; the mobile test app uses port `8080`.
-Both can therefore run at the same time.
+```text
+http://localhost:8081
+```
+
+The demo supports mouse, touch, stylus, and trackpad pointer interaction. No
+keyboard interaction is required.
+
+## Responsive behavior
+
+At wide viewport sizes, the same top/middle/bottom hierarchy is retained:
+
+1. Header with branding, mode switch, score/timer, and sound
+2. Waiting room, patient presentation, and treatment-room panels
+3. Selection, Coach, and reset controls
+
+The wide presentation gives the patient stage and clinical information more
+room, presents the waiting queue as a two-column scene, and arranges the seven
+treatment destinations in a more spacious room grid.
+
+When the viewport is narrower than the safe wide-layout threshold, or is too
+portrait-oriented, the game returns to the compact 9:16 composition. This is
+a layout change only; gameplay state, data, controls, and interaction rules are
+the same.
+
+This README is operational documentation for the temporary demo. The
+authoritative production decisions are stored under `triageRush-app/docs/` so
+they survive removal of the test apps.

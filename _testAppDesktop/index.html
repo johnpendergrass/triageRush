@@ -1,20 +1,148 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>triageRush Desktop Test App</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#071822" />
+    <title>triageRush - Responsive Demo</title>
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="placeholder">
-      <p class="eyebrow">Pre-production test</p>
-      <h1>triageRush Desktop</h1>
-      <p>
-        Independent desktop demo scaffold. The desktop-native game presentation
-        will be built here using its own copied assets and its own code.
-      </p>
+    <main class="app-shell" aria-label="triageRush responsive game demo">
+      <header class="game-header">
+        <div class="brand" aria-label="triageRush">
+          <span>TRIAGE</span><strong>RUSH!</strong>
+        </div>
+
+        <div class="mode-switch" role="group" aria-label="Play mode">
+          <button class="mode-button is-active" type="button" data-mode="game">GAME</button>
+          <button class="mode-button" type="button" data-mode="edu">EDU</button>
+        </div>
+
+        <div class="status-box" aria-live="polite">
+          <span id="statusLabel">TIME</span>
+          <strong id="statusValue">60</strong>
+        </div>
+
+        <button class="sound-button" id="soundButton" type="button" aria-label="Mute sounds" aria-pressed="false">
+          ♪
+        </button>
+      </header>
+
+      <section class="play-area">
+        <aside class="waiting-panel" aria-label="Waiting room">
+          <div class="waiting-list" id="waitingList"></div>
+        </aside>
+
+        <section class="patient-panel" aria-label="Current patient">
+          <div class="patient-scene">
+            <div class="patient-nameplate">
+              <strong id="patientName">Patient</strong>
+              <span id="patientDemographics"></span>
+            </div>
+            <img id="patientImage" class="patient-image" alt="" />
+            <div class="complaint-chip" id="complaintChip"></div>
+          </div>
+
+          <blockquote class="patient-quote" id="patientQuote"></blockquote>
+
+          <section class="vitals-card" aria-label="Patient vital signs">
+            <div><span>HR</span><strong id="vitalHr"></strong></div>
+            <div><span>BP</span><strong id="vitalBp"></strong></div>
+            <div><span>RR</span><strong id="vitalRr"></strong></div>
+            <div><span>SpO₂</span><strong id="vitalSpo2"></strong></div>
+            <div><span>TEMP</span><strong id="vitalTemp"></strong></div>
+            <div><span>PAIN</span><strong id="vitalPain"></strong></div>
+          </section>
+
+          <section class="presentation-card" aria-label="Triage presentation">
+            <div class="clipboard-clip" aria-hidden="true"></div>
+            <span class="card-kicker">TRIAGE NOTE</span>
+            <p id="presentationText"></p>
+          </section>
+
+          <div class="result-toast" id="resultToast" role="status" aria-live="assertive"></div>
+
+          <aside class="room-info-popover" id="roomInfoPopover" role="tooltip" hidden>
+            <span class="room-info-kicker">ROOM GUIDE</span>
+            <h2 id="roomInfoTitle"></h2>
+            <p id="roomInfoText"></p>
+            <small>Release to close · no patient hint</small>
+          </aside>
+
+          <div class="patient-empty-state" id="patientEmptyState" hidden>
+            <span id="emptyStateKicker">READY</span>
+            <strong id="emptyStateTitle">SELECT A PATIENT</strong>
+            <small id="emptyStateHint">Tap a patient in the triage queue</small>
+          </div>
+        </section>
+
+        <aside class="rooms-panel" id="roomsPanel" aria-label="Treatment choices"></aside>
+      </section>
+
+      <footer class="game-footer">
+        <button class="footer-button next-button" id="nextButton" type="button">
+          <span>NEXT</span>
+          <small>PATIENT</small>
+        </button>
+        <button class="footer-button coach-button" id="coachButton" type="button" disabled>
+          <span>COACH</span>
+          <small>LOCKED</small>
+        </button>
+        <button class="footer-button reset-button" id="resetButton" type="button">
+          <span>RESET</span>
+          <small>ROUND</small>
+        </button>
+      </footer>
+
+      <section class="coach-overlay" id="coachOverlay" hidden>
+        <div class="coach-frame" role="dialog" aria-modal="true" aria-labelledby="coachTitle">
+          <article class="coach-card" id="coachCard">
+            <span class="coach-eyebrow">POST-DECISION COACH</span>
+            <header class="coach-patient-header">
+              <img id="coachPatientImage" src="" alt="" />
+              <div>
+                <h2 id="coachTitle">Patient review</h2>
+                <p class="coach-demographics" id="coachDemographics"></p>
+                <strong class="coach-complaint" id="coachComplaint"></strong>
+              </div>
+            </header>
+            <blockquote class="coach-quote" id="coachQuote"></blockquote>
+            <section class="coach-vitals-section" aria-labelledby="coachVitalsTitle">
+              <h3 id="coachVitalsTitle">Vitals</h3>
+              <div class="coach-vitals" id="coachVitals"></div>
+            </section>
+            <section class="coach-triage-section" aria-labelledby="coachTriageTitle">
+              <h3 id="coachTriageTitle">Triage comment</h3>
+              <p id="coachTriage"></p>
+            </section>
+            <h3>Placement review</h3>
+            <div class="coach-summary">
+              <div><span>YOU CHOSE</span><strong id="coachChoice"></strong></div>
+              <div><span>BEST CHOICE</span><strong id="coachCorrect"></strong></div>
+            </div>
+            <p class="coach-result" id="coachResult"></p>
+            <h3>Coach suggestion</h3>
+            <p id="coachReason"></p>
+            <p class="coach-caution">
+              Prototype educational explanation. Final clinical wording and near-miss rules still require review.
+            </p>
+          </article>
+          <button class="coach-close" id="coachClose" type="button" aria-label="Close Coach card">×</button>
+          <button
+            class="coach-scroll-hint"
+            id="coachScrollHint"
+            type="button"
+            aria-label="Scroll for more Coach information"
+            hidden
+          >
+            <span>MORE BELOW</span>
+            <b aria-hidden="true">↓</b>
+          </button>
+        </div>
+      </section>
     </main>
+
     <script src="assets.js"></script>
     <script src="app.js"></script>
   </body>
