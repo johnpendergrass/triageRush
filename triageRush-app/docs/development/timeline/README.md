@@ -20,6 +20,10 @@ Current test-app separation:
 
 - [2026-07-28 mobile and desktop test apps separated](2026%200728%20mobile%20and%20desktop%20test%20apps%20separated.md)
 
+Current program-state discussion:
+
+- [2026-07-28 lightweight state model discussion](2026%200728%201704%20lightweight%20state%20model%20discussion.md)
+
 Future production-coding considerations:
 
 - [2026-07-28 future platform, home, and program-structure considerations](2026%200728%201026%20future%20platform%20home%20and%20program%20structure%20considerations.md)

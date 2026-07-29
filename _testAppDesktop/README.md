@@ -11,6 +11,9 @@ deliberately.
 The initial files are only an independent scaffold. The desktop game has not
 yet been implemented.
 
+Desktop-specific design and implementation notes are indexed in
+[`docs/README.md`](docs/README.md).
+
 ## Preview
 
 Run `start-desktop-preview.bat`, then open:
@@ -19,4 +22,3 @@ Run `start-desktop-preview.bat`, then open:
 
 The desktop server uses port `8081`; the mobile test app uses port `8080`.
 Both can therefore run at the same time.
-

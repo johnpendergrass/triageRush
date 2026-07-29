@@ -1,0 +1,86 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-012",
+  "number": 12,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Carlos",
+      "age": 23,
+      "sex": "M",
+      "race": "asian"
+    },
+    "image": {
+      "imageFilename": "patient-012.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Something in my eye",
+      "quoteShort": null,
+      "quoteLong": "I was grinding metal without goggles because goggles 'aren't cool.' Breaking news: goggles are extremely cool. My right eye won't open and it's crying without my permission.",
+      "presentationShort": "23yo M — R eye FB sensation after grinding metal, no goggles. Vision intact.",
+      "presentationLong": "23-year-old male, right-eye foreign-body sensation after grinding metal without goggles, vision intact."
+    },
+    "vitals": {
+      "hr": {
+        "value": 78,
+        "color": "green"
+      },
+      "bp": {
+        "value": "122/76",
+        "color": "green"
+      },
+      "rr": {
+        "value": 14,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 100,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.7,
+        "color": "green"
+      },
+      "pain": {
+        "value": 5,
+        "color": "yellow"
+      }
+    },
+    "diagnosis": {
+      "primary": "Corneal foreign body (metallic)",
+      "esi": 4,
+      "esi2roomsNotes": null,
+      "disposition": "Fast Track → topical anesthetic, fluorescein + slit lamp, remove FB, check for rust ring, antibiotic drops",
+      "why": "Always evert the lid and rule out globe penetration first. High-speed metal-on-metal is the classic corneal FB — one-resource ESI 4.",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-4",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "23-year-old guy in a dusty work t-shirt",
+    "pose": "sitting, tilting his head, cupping his right eye",
+    "expression": "squinting hard, one eye clamped shut and watering",
+    "signs": [
+      "right eye squeezed shut",
+      "tear streak down that cheek"
+    ],
+    "lookSeverity": "uncomfortable but stable",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-012.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: an Asian 23-year-old guy in a dusty work t-shirt, on the same blue clinic chair. Pose: sitting, tilting his head, cupping his right eye. Expression: squinting hard, one eye clamped shut and watering. Clearly visible: right eye squeezed shut, a tear streak down that cheek. Overall uncomfortable but stable. No text, no logos."
+  }
+}

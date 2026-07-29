@@ -1,0 +1,88 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-005",
+  "number": 5,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Marcus",
+      "age": 52,
+      "sex": "M",
+      "race": "black"
+    },
+    "image": {
+      "imageFilename": "patient-005.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Severe indigestion",
+      "quoteShort": null,
+      "quoteLong": "Twenty years of job-site burritos never bothered me — this ain't that. Came on sudden, like a truck. Hurts to move, so I'm not movin'.",
+      "presentationShort": "52yo M — sudden severe epigastric pain, won't move, daily NSAIDs.",
+      "presentationLong": "52-year-old male, sudden severe epigastric pain, now refusing to move, takes NSAIDs daily for his back."
+    },
+    "vitals": {
+      "hr": {
+        "value": 112,
+        "color": "yellow"
+      },
+      "bp": {
+        "value": "108/68",
+        "color": "green"
+      },
+      "rr": {
+        "value": 24,
+        "color": "yellow"
+      },
+      "spo2": {
+        "value": 97,
+        "color": "green"
+      },
+      "temp": {
+        "value": 38.0,
+        "color": "yellow"
+      },
+      "pain": {
+        "value": 9,
+        "color": "red"
+      }
+    },
+    "diagnosis": {
+      "primary": "Perforated peptic ulcer with peritonitis (chronic NSAID use) — surgical emergency; also exclude cardiac",
+      "esi": 2,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → NPO, large-bore IV + fluids, upright CXR / CT for free air, IV PPI + broad-spectrum antibiotics, analgesia, urgent surgical consult; ECG to rule out ACS",
+      "why": "🎯 Tough guy who won't move + sudden 'indigestion' + fever = perforation till proven otherwise. Peritonitis lies STILL; colic writhes. And always ECG the epigastric pain.",
+      "redFlag": "Sudden severe epigastric pain + rigid & still + fever = surgical abdomen, not heartburn. Movement-averse = peritonitis"
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "bald man about 50, stocky and slightly overweight, in dusty construction clothes — work shirt and hi-vis vest",
+    "pose": "sitting bolt upright and very still, rigid, one hand hovering just above his upper abdomen without pressing, reluctant to move",
+    "expression": "NOT a grimace — quiet dread and fear: wide, worried eyes, brows raised, jaw set, mouth closed; a sheen of sweat on his brow and scalp; a tough man unsettled because something is clearly wrong",
+    "signs": [
+      "holding very still, braced and rigid",
+      "hand hovering protectively over the upper belly, not pressing",
+      "diaphoretic — sweat on brow and bald scalp",
+      "frightened, wary eyes rather than an active wince"
+    ],
+    "lookSeverity": "a tough guy who's clearly scared — stays rigid, afraid to move",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-005.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a bald Black man about 50, stocky and slightly overweight, in dusty construction clothes (work shirt and hi-vis vest), seated on a blue padded clinic chair. Pose: sitting bolt upright and very still, rigid, one hand hovering just above his upper abdomen without pressing. Expression: quiet dread and fear - wide worried eyes, raised brows, jaw set, mouth closed (NOT a grimace, NOT gritted teeth). Clearly visible: braced rigid stillness, hand hovering over the upper belly, sweat on brow and bald scalp. Overall a tough guy who is clearly scared and afraid to move. No text, no logos."
+  }
+}

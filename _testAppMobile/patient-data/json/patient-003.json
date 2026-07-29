@@ -1,0 +1,87 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-003",
+  "number": 3,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Sylvester",
+      "age": 41,
+      "sex": "M",
+      "race": "hispanic"
+    },
+    "image": {
+      "imageFilename": "patient-003.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "GSW to arm",
+      "quoteShort": null,
+      "quoteLong": "Was cleaning my own gun — don't tell my wife. Bleeding's basically stopped though. It's not that bad... right?",
+      "presentationShort": "41yo M — single GSW to upper arm, bleeding controlled, distal pulse & sensation intact.",
+      "presentationLong": "41-year-old male, single gunshot wound to the upper arm, bleeding controlled with direct pressure, distal pulse and sensation intact."
+    },
+    "vitals": {
+      "hr": {
+        "value": 104,
+        "color": "yellow"
+      },
+      "bp": {
+        "value": "128/82",
+        "color": "green"
+      },
+      "rr": {
+        "value": 18,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 98,
+        "color": "green"
+      },
+      "temp": {
+        "value": 37.0,
+        "color": "green"
+      },
+      "pain": {
+        "value": 8,
+        "color": "red"
+      }
+    },
+    "diagnosis": {
+      "primary": "Isolated extremity gunshot wound — penetrating trauma; rule out vascular/nerve injury & fracture",
+      "esi": 2,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → distal neurovascular exam, X-ray for fracture/retained fragment, IV access, tetanus + antibiotics, trauma/surgery consult; watch for delayed bleed & compartment syndrome",
+      "why": "Not a Fast Track — a quiet extremity GSW can hide an arterial or nerve injury. Mechanism sets acuity, not the size of the hole. 🎯",
+      "redFlag": "Penetrating GSW — 'bleeding stopped' doesn't downgrade it. Occult arterial/nerve injury until proven otherwise"
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "41-year-old man in a plaid button-up shirt, one sleeve torn/rolled up at the upper arm",
+    "pose": "sitting, pressing a folded hand-towel firmly over his upper arm with his opposite hand",
+    "expression": "teeth gritted, grimacing, pale and anxious",
+    "signs": [
+      "folded towel held firmly over the upper arm — wound covered",
+      "small blood spot soaked into the towel, no dripping, no pool",
+      "clearly in pain"
+    ],
+    "lookSeverity": "in real pain and anxious, but conscious, alert, and stable",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-003.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a Hispanic 41-year-old man in a plaid button-up shirt with one sleeve torn and rolled up at the upper arm, seated on a blue padded clinic chair. Pose: sitting, pressing a folded hand-towel firmly over his upper arm with his opposite hand. Expression: gritted teeth, grimacing, pale and anxious. Clearly visible: a folded towel held over the upper arm with a small blood spot soaked in (no dripping, no pool). Overall in real pain and anxious but conscious, alert, and stable. No text, no logos."
+  }
+}

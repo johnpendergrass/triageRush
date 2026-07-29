@@ -1,0 +1,86 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-098",
+  "number": 98,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Marcus",
+      "age": 36,
+      "sex": "M",
+      "race": "black"
+    },
+    "image": {
+      "imageFilename": "patient-098.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Agitated, talking a mile a minute",
+      "quoteShort": null,
+      "quoteLong": "I feel INCREDIBLE, I haven't slept in three days and I don't need to — my mind is racing with brilliant plans. My family freaked out and dragged me here. I'm fine, better than fine, I just can't sit still.",
+      "presentationShort": "36yo M with bipolar disorder ? pressured speech, grandiosity, racing thoughts, 3 days without sleep and marked restlessness; not violent, medically stable.",
+      "presentationLong": "36-year-old male with bipolar disorder who has slept very little for three days. He has rapid pressured speech, racing thoughts, grandiose plans, and marked restlessness; he is not violent and has no evident medical instability."
+    },
+    "vitals": {
+      "hr": {
+        "value": 104,
+        "color": "yellow"
+      },
+      "bp": {
+        "value": "134/84",
+        "color": "green"
+      },
+      "rr": {
+        "value": 16,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 99,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.9,
+        "color": "green"
+      },
+      "pain": {
+        "value": 0,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Acute manic episode (bipolar disorder)",
+      "esi": 4,
+      "esi2roomsNotes": "ESI 4: medically stable and low risk; Psych is preferred for a behavioral-health evaluation, and Fast Track is acceptable.",
+      "disposition": "Psych → calm environment, psychiatric evaluation, mood stabilization; screen for stimulants/organic causes. Behavioral, currently non-dangerous.",
+      "why": "Pressured speech + no sleep + grandiosity, stable and non-violent → the Psych lane. Escalating agitation/violence would raise acuity.",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "psych",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "36-year-old man, energized",
+    "pose": "leaning forward, animated, gesturing, restless",
+    "expression": "wired, over-bright, restless",
+    "signs": [
+      "animated, gesturing",
+      "wired, restless"
+    ],
+    "lookSeverity": "agitated but stable",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-098.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a black 36-year-old man, energized and restless, seated on a blue padded clinic chair. Pose: leaning forward, mid-gesture, animated and restless. Expression: wired and over-bright. Clearly visible: an animated, gesturing, restless posture. No text, no logos."
+  }
+}

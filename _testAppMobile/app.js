@@ -1,3 +1,9 @@
+const ASSETS = window.TRIAGE_RUSH_ASSETS;
+
+if (!ASSETS) {
+  throw new Error("Mobile asset manifest failed to load.");
+}
+
 const patients = [
   {
     id: "patient-006",
@@ -177,8 +183,8 @@ const rooms = [
     badge: "ESI 1",
     label: "RESUS",
     description: "Immediate life-saving treatment is required.",
-    closed: "esi1-closed.png",
-    open: "esi1-open.png"
+    closed: ASSETS.roomsPanel.rooms.esi1.closedDoor,
+    open: ASSETS.roomsPanel.rooms.esi1.openDoor
   },
   {
     key: "esi2",
@@ -186,8 +192,8 @@ const rooms = [
     badge: "ESI 2",
     label: "EMERGENT",
     description: "High-risk or severe symptoms that should not wait.",
-    closed: "esi2-closed.png",
-    open: "esi2-open.png"
+    closed: ASSETS.roomsPanel.rooms.esi2.closedDoor,
+    open: ASSETS.roomsPanel.rooms.esi2.openDoor
   },
   {
     key: "esi3",
@@ -195,8 +201,8 @@ const rooms = [
     badge: "ESI 3",
     label: "URGENT",
     description: "Stable now, but likely needs several tests or treatments.",
-    closed: "esi3-closed.png",
-    open: "esi3-open.png"
+    closed: ASSETS.roomsPanel.rooms.esi3.closedDoor,
+    open: ASSETS.roomsPanel.rooms.esi3.openDoor
   },
   {
     key: "esi4",
@@ -204,8 +210,8 @@ const rooms = [
     badge: "ESI 4",
     label: "LESS URGENT",
     description: "Stable and likely needs one test or treatment.",
-    closed: "esi4-closed.png",
-    open: "esi4-open.png"
+    closed: ASSETS.roomsPanel.rooms.esi4.closedDoor,
+    open: ASSETS.roomsPanel.rooms.esi4.openDoor
   },
   {
     key: "esi5",
@@ -213,33 +219,30 @@ const rooms = [
     badge: "ESI 5",
     label: "NON-URGENT",
     description: "Stable and generally needs examination or simple care only.",
-    closed: "esi5-closed.png",
-    open: "esi5-open.png"
+    closed: ASSETS.roomsPanel.rooms.esi5.closedDoor,
+    open: ASSETS.roomsPanel.rooms.esi5.openDoor
   },
   {
     key: "psych",
     badge: "",
     label: "PSYCH",
     description: "Behavioral-health evaluation for a medically stable patient. The patient still has an underlying ESI level.",
-    closed: "psych-closed.png",
-    open: "psych-open.png"
+    closed: ASSETS.roomsPanel.rooms.psych.closedDoor,
+    open: ASSETS.roomsPanel.rooms.psych.openDoor
   },
   {
     key: "discharge",
     badge: "",
     label: "DISCHARGE",
     description: "Emergency treatment is not needed. Provide guidance, follow-up, or routine care.",
-    closed: "discharge-closed.png",
-    open: "discharge-open.png"
+    closed: ASSETS.roomsPanel.rooms.discharge.closedDoor,
+    open: ASSETS.roomsPanel.rooms.discharge.openDoor
   }
 ];
 
 const roomNames = Object.fromEntries(rooms.map((room) => [room.key, `${room.badge} ${room.label}`.trim()]));
 const queueSlotCount = 5;
-const waitingRoomBackgrounds = Array.from(
-  { length: 16 },
-  (_, index) => `waiting/waiting-${String(index + 1).padStart(2, "0")}.png`
-);
+const waitingRoomBackgrounds = ASSETS.waitingRooms;
 
 const ui = {
   waitingList: document.querySelector("#waitingList"),
@@ -348,7 +351,7 @@ function renderPatient() {
 
   ui.patientName.textContent = patient.name;
   ui.patientDemographics.textContent = `${patient.age}${patient.sex}`;
-  ui.patientImage.src = `assets/patients/${patient.id}.png`;
+  ui.patientImage.src = ASSETS.patientData.image(patient.id);
   ui.patientImage.alt = `${patient.name}, current patient`;
   ui.complaintChip.textContent = patient.complaint;
   ui.patientQuote.textContent = `“${patient.quote}”`;
@@ -384,10 +387,10 @@ function renderWaiting() {
     button.innerHTML = `
       <img
         class="queue-background"
-        src="assets/backgrounds/${queueEntry.background}"
+        src="${queueEntry.background}"
         alt=""
       />
-      <img class="queue-patient-image" src="assets/patients/${patient.id}.png" alt="" />
+      <img class="queue-patient-image" src="${ASSETS.patientData.image(patient.id)}" alt="" />
       <span class="queue-cell-frame" aria-hidden="true"></span>
       <span class="queue-complaint">${patient.complaint}</span>
       <span
@@ -439,7 +442,7 @@ function renderRooms() {
         ${room.badge ? `<span>${room.badge}</span>` : ""}
         <strong>${room.label}</strong>
       </span>
-      <img class="door-art" src="assets/doors/${isOpen ? room.open : room.closed}" alt="" />
+      <img class="door-art" src="${isOpen ? room.open : room.closed}" alt="" />
     `;
     installRoomHover(button, room);
     ui.roomsPanel.append(button);
@@ -727,7 +730,7 @@ function openCoach() {
   if (!decision) return;
   const patient = activePatient();
   const sexLabel = patient.sex === "F" ? "female" : patient.sex === "M" ? "male" : patient.sex;
-  document.querySelector("#coachPatientImage").src = `assets/patients/${patient.id}.png`;
+  document.querySelector("#coachPatientImage").src = ASSETS.patientData.image(patient.id);
   document.querySelector("#coachPatientImage").alt = `${patient.name}, reviewed patient`;
   document.querySelector("#coachTitle").textContent = patient.name;
   document.querySelector("#coachDemographics").textContent =

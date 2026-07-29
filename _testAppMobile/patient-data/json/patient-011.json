@@ -1,0 +1,86 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-011",
+  "number": 11,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Gerry",
+      "age": 45,
+      "sex": "M",
+      "race": "white"
+    },
+    "image": {
+      "imageFilename": "patient-011.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Cut my hand",
+      "quoteShort": null,
+      "quoteLong": "Avocado. The avocado won. I looked away for one second, and now there is more of me on the cutting board than I am comfortable with. It's not squirting, I checked. I can still bend everything.",
+      "presentationShort": "45yo M — palmar laceration from a knife, bleeding controlled, full flexion & sensation.",
+      "presentationLong": "45-year-old male, palm laceration from a kitchen knife, bleeding controlled, full finger flexion and sensation intact."
+    },
+    "vitals": {
+      "hr": {
+        "value": 84,
+        "color": "green"
+      },
+      "bp": {
+        "value": "130/82",
+        "color": "green"
+      },
+      "rr": {
+        "value": 16,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 99,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.8,
+        "color": "green"
+      },
+      "pain": {
+        "value": 4,
+        "color": "yellow"
+      }
+    },
+    "diagnosis": {
+      "primary": "Palmar laceration ('avocado hand'), no tendon/nerve/vascular injury",
+      "esi": 4,
+      "esi2roomsNotes": null,
+      "disposition": "Fast Track → irrigate, confirm tendon/nerve/vascular intact, suture, tetanus update",
+      "why": "'Avocado hand' is a real named injury. Not squirting + full finger motion = a one-resource ESI 4. Always still test distal tendon and nerve first.",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-4",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "45-year-old man in a weekend apron",
+    "pose": "sitting, holding his hand wrapped in a blood-spotted kitchen towel",
+    "expression": "sheepish half-smile, embarrassed",
+    "signs": [
+      "hand wrapped in a lightly bloodstained towel",
+      "calm and composed"
+    ],
+    "lookSeverity": "minor and stable",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-011.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 45-year-old man in a weekend cooking apron, on the same blue clinic chair. Pose: sitting, holding one hand wrapped in a blood-spotted kitchen towel. Expression: sheepish half-smile, embarrassed. Clearly visible: hand wrapped in a lightly bloodstained towel, calm and composed. Overall minor and stable. No text, no logos."
+  }
+}
