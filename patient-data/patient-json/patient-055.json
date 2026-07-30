@@ -77,7 +77,7 @@
       "flattened, squared-off lateral shoulder contour with a subtle hollow below the acromion"
     ],
     "lookSeverity": "in pain, alert",
-    "anchor_image": "patient-CRUD-app (standalone)/anchor-images/patient-055.png",
+    "anchor_image": "patient-CRUD (standalone)/anchor-images/patient-055.png",
     "size": "1254x1254",
     "outputFolder": "patient-data/patient-images",
     "outputFile": "patient-055.png",

@@ -168,3 +168,16 @@ This specification does not decide:
 
 Those rules may be specified separately without changing the room-selection
 logic above.
+
+
+[john's comments:   there have been changes to this.  basically now there are three modes:
+
+STRICT: this is the same as in the document above.
+
+TOLERANT: - name TBD - this is a new strictness level; basically it only tolerates one over-triage level, and there are no points for under-triaging a patient.  For example a patient assigned ESI 3 would get full points for an ESI 3 answer, half points for an ESI 2 answer, but -0- point for an ESI 4 answer.
+
+FORGIVING: this is the same as in the document above.
+
+]
+
+[john's comments: reviewed on 07-29-2026]

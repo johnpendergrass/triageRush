@@ -1,27 +1,43 @@
 # triageRush
 
-This repository is the development home for the triageRush Game/Edu
-application, its shared patient library, isolated mobile and desktop test apps,
-and a future standalone patient CRUD pipeline.
+This repository is the development home for the responsive triageRush
+Game/Edu application, its shared patient library, temporary design-reference
+apps, and a future standalone Patient CRUD tool.
+
+## Current structure
+
+```text
+triageRush/
+├── docs/
+├── docs-archive/
+├── triageRush/
+├── patient-data/
+├── patient-CRUD (standalone)/
+├── _testAppMobile/
+├── _testAppDesktop/
+└── index.html
+```
 
 ## Ownership
 
-- `index.html` is the public GitHub Pages entry point for triageRush.
-- `triageRush-app/` owns the Game, Edu, and read-only patient-viewer code,
-  styles, assets, tests, and application-specific documentation.
-- `patient-data/` owns the authoritative published patient JSON and final
-  patient images consumed by triageRush.
-- `patient-CRUD-app (standalone)/` is reserved for the future local patient
-  creation and CRUD pipeline. Its temporary descriptive folder name will be
-  reconsidered when work on that pipeline resumes.
-- `_testAppMobile/` is the preserved, self-contained mobile prototype.
-- `_testAppDesktop/` is the self-contained responsive-layout experiment.
-- The two test apps have independent code, runtime assets, and preview servers.
-  Neither is the production application; both are now design references for
-  one responsive production game.
-- `docs-project/` owns project-wide architecture, planning, status, migration,
-  and historical documentation.
+- Root `index.html` is the GitHub Pages entry point.
+- `docs/` contains the small authoritative set of current project
+  specifications.
+- `docs-archive/` preserves superseded specifications, development history,
+  prototype references, and artwork development.
+- `triageRush/` owns the responsive Game/Edu application and production game
+  assets.
+- `patient-data/` owns authoritative patient JSON and final patient images.
+- `patient-CRUD (standalone)/` is reserved for the future independent local
+  patient creation and editing tool.
+- `_testAppMobile/` and `_testAppDesktop/` are temporary self-contained design
+  references. They will be removed after production development is complete
+  and their accepted behavior has been verified in `triageRush/`.
 
-The production triageRush JavaScript and CSS have not yet been built. The
-current files under `triageRush-app/` are placeholders for that work; selected
-room-panel artwork has been collected under its `assets/` folder.
+Start with [the current documentation index](docs/README.md).
+
+## Current milestone
+
+The demo-design phase is complete. Production development begins under
+`triageRush/` with one centered responsive game whose compact form preserves
+the established mobile composition.

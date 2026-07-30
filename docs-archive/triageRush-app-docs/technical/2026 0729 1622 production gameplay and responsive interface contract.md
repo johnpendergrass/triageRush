@@ -1,8 +1,10 @@
 # Production Gameplay and Responsive Interface Contract
 
-**Recorded:** 2026-07-29
+**Recorded:** 2026-07-29 16:22 PDT
 
 **Status:** Current production direction at the demo milestone
+
+**Supersedes:** `2026 0729 production gameplay and responsive interface contract.md`
 
 **Replaces:** Separate mobile-versus-desktop presentation planning
 
@@ -75,10 +77,18 @@ the accepted production direction.
 - The game frame primarily responds to available height.
 - On tall viewports, the frame may grow taller without being forced to remain
   at an exact 9:16 ratio.
+- The iPhone 16 Pro is the precise primary mobile design target.
+- The game must also remain attractive and usable across most current mobile
+  screen dimensions.
 - Frame width remains within a controlled mobile-like range.
 - If the viewport becomes too narrow or too short, the complete frame scales
   down to remain visible.
-- The active game page should not require page-level scrolling.
+- The active game screen itself should not require page-level scrolling.
+- Expanded triage information, Coach, and Stats content may scroll within
+  their own bounded panels.
+- Scrollable panels use the demonstrated mobile pattern: a close control
+  anchored at the upper right and a `MORE BELOW` indicator at the bottom while
+  additional content remains.
 - Mobile browser safe areas and visible browser controls must be respected.
 
 ### Provisional
@@ -120,9 +130,9 @@ an avoidable internal scrollbar.
 ### Accepted content and relative placement
 
 - `TRIAGE RUSH!` identity
-- GAME/EDU or the eventual active-mode presentation
-- Current score/timer or corresponding EDU status
-- Sound control
+- Current GAME/EDU mode indicator
+- Compact current-session status
+- Simple sound on/off control
 
 The header remains inside the game frame at every viewport size. Its final
 settings behavior must agree with the HOME/settings rules below.
@@ -130,8 +140,13 @@ settings behavior must agree with the HOME/settings rules below.
 ### Provisional
 
 - Exact status formatting
-- Whether gameplay mode can be changed directly in the header during a round
+- A compact summary such as Patients Seen, Correct, Close, and Missed
+- Abbreviations needed to fit the available header width
+- Separate music and effects controls within HOME
 - Final timer presentation and end-of-round behavior
+
+GAME/EDU selection belongs in HOME. The game header indicates the current mode
+rather than changing it directly.
 
 ## Footer and primary navigation
 
@@ -161,6 +176,10 @@ The footer becomes:
 - Each provides a clear return to the game.
 - The left/game/right spatial relationship may be reinforced with restrained
   transitions, subject to reduced-motion preferences.
+
+HOME presents `START NEW GAME` when the application first opens and when the
+player is resetting or restarting. When HOME is opened during an active game,
+the corresponding action is `RETURN TO GAME`.
 
 ### Wide viewports
 
@@ -223,10 +242,18 @@ Several pending changes may be applied together.
 - Complete screen contents and hierarchy
 - Player identity entry
 - Settings grouping and terminology
-- Saved preferences and persistence
 - Round reset/end controls
 - Help, instructions, and accessibility details
 - Which frequently used settings also appear in the wide summary panel
+
+### Local persistence
+
+- The application is standalone and requires no persistent server.
+- There is no network leaderboard.
+- Preferences and session-continuation data may be stored locally on the
+  device.
+- A future local `BEST SCORES` feature may retain scores separately on each
+  device.
 
 ## STATS
 
@@ -256,9 +283,14 @@ patients seen, accuracy, and a compact patient history.
 
 - Five visible patients in one vertical column
 - Each waiting cell combines a waiting-room background, patient art, complaint
-  label, institutional frame, and directional transfer cue
+  label, institutional frame, and a visible selectable-state treatment
 - Visible patients and waiting-room backgrounds should not duplicate while
   alternatives remain
+- The patient store is randomly ordered, then consumed in that order.
+- Near the end of the stored order, the patient list is reshuffled and
+  consumption begins from the new beginning.
+- The ordered patient identifiers and current position are stored locally so a
+  later session can continue where the previous session stopped.
 - Selecting a patient into an empty center compacts and refills the queue
 - Selecting a waiting patient while another unassigned patient is active
   swaps them in place
@@ -267,8 +299,13 @@ patients seen, accuracy, and a compact patient history.
 ### Provisional
 
 - Exact cell proportions and complaint-label treatment
-- Final animation and transfer-arrow treatment
-- Final patient-background pairing rules
+- Whether selection is communicated by demo-style arrows, a border/color
+  change, or another non-hold treatment
+- Final animation
+- Waiting-room backgrounds are initially selected randomly and travel with
+  their assigned patients while those patients remain in the active queue.
+- Whether background assignments should be stored alongside the persistent
+  randomized patient list remains undecided.
 
 ## Patient presentation panel
 
@@ -278,7 +315,8 @@ patients seen, accuracy, and a compact patient history.
 - Patient image
 - Chief complaint
 - Patient quote
-- Six vital signs
+- Six vital signs, rendered as text layered over the vital-signs background
+  artwork
 - Triage note/presentation
 
 The existing high-resolution background and overlay assets establish the
@@ -288,6 +326,20 @@ paper, clinical cards, and restrained dimensional framing.
 The quote and triage note should benefit most from added vertical space.
 Patient artwork may retain a relatively stable magnification while its stage
 grows or crops independently.
+
+### Expanded patient views
+
+- The patient image is clickable/tappable at every viewport size.
+- Activating it opens a larger, near-full-frame patient-image modal.
+- The enlarged image closes through an anchored upper-right `X` or by
+  activating the backdrop outside the image.
+- The game interface is frozen while the image modal is open.
+- The triage note is clickable/tappable.
+- Activating it opens an expanded patient-summary modal containing the
+  available patient information, including longer quote and triage text when
+  present.
+- The expanded summary may scroll internally and follows the established
+  close-control and `MORE BELOW` behavior.
 
 ### Provisional
 
@@ -317,15 +369,19 @@ General room education must be accessible without revealing the correct
 answer for the current patient:
 
 - Mouse: hover
-- Touch or pen: deliberate hold
 - Keyboard/focus accessibility may be supported even though gameplay never
   requires keyboard interaction
+
+The touch/pen discovery method remains undecided. A hold is demonstrated in
+the mobile prototype, but it is the game's only hold gesture and may not be
+worth teaching. Alternatives include presenting room definitions in Help or
+using another explicit information affordance.
 
 ## Input and accessibility
 
 ### Accepted
 
-- All required gameplay uses pointer interaction.
+- All required placement gameplay uses ordinary pointer activation.
 - The same controls support mouse click, touchscreen tap, stylus, and trackpad.
 - No keyboard interaction is required to play.
 - No essential function may depend only on hover.
@@ -336,14 +392,22 @@ answer for the current patient:
 - Semantic controls, meaningful labels, live feedback regions, safe areas, and
   visible focus treatment remain production requirements.
 
-### Production work still required
+### Accessibility scope
 
-- Full keyboard operability as an accessibility enhancement
-- Focus trapping and restoration for dialogs
-- Screen-reader testing
-- Color-contrast audit
-- Zoom and text-scaling tests
-- Testing on physical phones and tablets
+This is a small standalone application not intended for broad public release,
+so a formal accessibility program is not planned. Basic good practices should
+still be retained where inexpensive:
+
+- Semantic buttons and useful labels
+- Non-color feedback
+- Touch-sized controls
+- Reduced-motion handling
+- Predictable modal close behavior
+- Reasonable contrast and text scaling
+- Physical-phone and tablet testing
+
+Full screen-reader certification, comprehensive keyboard gameplay, and a
+formal accessibility audit are not current requirements.
 
 ## Assignment, feedback, recall, and Coach
 
@@ -352,12 +416,16 @@ answer for the current patient:
 - Selecting a room evaluates the assignment immediately.
 - The selected door opens.
 - The patient leaves the center presentation after assignment.
-- Outcome feedback identifies Correct, Acceptable, Close, or Wrong using
-  redundant visual/textual cues.
-- The intended room may be revealed when the choice differs.
-- The open assigned room can recall the patient.
+- Outcome vocabulary and available partial-credit states depend on the selected
+  scoring mode.
+- The intended room reveal depends on scoring mode and GAME/EDU mode.
+- The assigned door stays open while the patient panel is empty.
+- Filling the patient panel with another patient closes the previously open
+  door.
+- The open assigned room can recall its patient before another patient fills
+  the center panel.
 - Recall restores the patient, closes the door, and permits another choice.
-- Coach unlocks only after a real decision.
+- Coach availability after a real decision depends on GAME/EDU mode.
 - Coach presents post-decision patient evidence, the player's choice, intended
   placement, outcome explanation, and educational suggestion.
 - Coach must remain usable at short mobile heights and may scroll internally.
@@ -374,8 +442,8 @@ answer for the current patient:
 
 ### Accepted direction
 
-- The authoritative seven-destination and strict/forgiving evaluation rules
-  are defined in `2026 0727 1458 strict and forgiving scoring specification.md`.
+- The authoritative seven-destination and three-mode evaluation rules are
+  defined in `2026 0729 1622 three-mode scoring specification.md`.
 - Production must consume reviewed patient data rather than embedding demo
   patient objects in application code.
 - Psych and Discharge remain special destinations with underlying ESI
@@ -385,7 +453,7 @@ answer for the current patient:
 
 - Final numeric point values
 - Timer duration and round-completion behavior
-- Rush-mode rules
+- Rush-mode rules and how to create genuinely fast-paced play
 - GAME versus EDU differences beyond presentation
 - First-choice versus final-placement statistics
 - Clinical thresholds and patient-specific alternative placements

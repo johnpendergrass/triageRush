@@ -77,7 +77,7 @@
       "mild same-side lower-eyelid puffiness with the eye remaining open"
     ],
     "lookSeverity": "uncomfortable, stable",
-    "anchor_image": "patient-CRUD-app (standalone)/anchor-images/patient-073.png",
+    "anchor_image": "patient-CRUD (standalone)/anchor-images/patient-073.png",
     "size": "1254x1254",
     "outputFolder": "patient-data/patient-images",
     "outputFile": "patient-100.png",

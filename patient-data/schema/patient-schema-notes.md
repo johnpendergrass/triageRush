@@ -57,7 +57,7 @@ apply each later version's changes in numerical order.
   from `answer.correctRoom`, `patient.diagnosis.esi`, and the player's scoring
   configuration. They are not preassigned in patient JSON.
 - The authoritative implementation behavior is documented in the
-  [Strict and forgiving scoring specification](../../triageRush-app/docs/technical/2026%200727%201458%20strict%20and%20forgiving%20scoring%20specification.md).
+  [current scoring specification](../../docs/scoring-specification--2026-07-29-1655.md).
 - The field is reserved for a future exceptional-patient override. A non-null
   format and its scoring semantics must be defined in a later schema version
   before the application uses it.
@@ -240,7 +240,7 @@ before automated validation.
   visible findings, severity, and composition.
 - Any referenced anchor image must exist within the patient CRUD workflow.
 - Generator-specific paths may describe the CRUD pipeline and are not
-  necessarily runtime paths used by `triageRush-app`.
+  necessarily runtime paths used by `triageRush`.
 
 ### Schema identification
 
