@@ -48,18 +48,13 @@ patient-data/
 └── images/
 ```
 
-The test snapshot contains 21 patients:
+The active demo rotation uses ten draft-schema records, `patient-001.json`
+through `patient-010.json`. These are local copies of the experimental files
+under `patientsNewSchema/` and include the proposed `triageReasoning` object.
+The original production patient records remain unchanged.
 
-- Three ESI 1
-- Three ESI 2
-- Three ESI 3
-- Three ESI 4
-- Three ESI 5
-- Three Psych
-- Three Discharge
-
-Every JSON file has its corresponding local image. The copied files matched
-the authoritative source by SHA-256 when the snapshot was created.
+Every active JSON file has its corresponding local image. Additional older
+snapshot files remain in the folder but are not loaded by the current demo.
 
 The demo must not fetch patient data from the repository-level
 `patient-data/` folder at runtime.
@@ -68,9 +63,9 @@ The demo must not fetch patient data from the repository-level
 
 | File | Current purpose |
 |---|---|
-| `index.html` | Placeholder page and script loading |
-| `styles.css` | Placeholder desktop styling |
-| `app.js` | Initial `appState` and debug accessor |
+| `index.html` | Responsive game structure and hospital-chart Coach markup |
+| `styles.css` | Responsive game and Coach-chart styling |
+| `app.js` | Demo gameplay, draft-schema loading, and Coach rendering |
 | `assets.js` | Local asset-path manifest |
 | `start-desktop-preview.bat` | Independent port-8081 preview server |
 
@@ -87,10 +82,13 @@ working sequence is:
 6. Add the patient panel and its layered high-resolution artwork.
 7. Prototype one treatment room with full interior/patient/door layering.
 8. Apply the proven room structure to the remaining destinations.
-9. Add result feedback, recall, Coach, timer, scoring, and settings one
-   transition at a time.
+9. Refine the Coach chart and reuse its structure for future patient review.
 10. Use the completed demo to settle the desktop design before production
     coding begins.
+
+The Coach chart's current design, behavior, data mapping, and Patient Review
+reuse rules are recorded in `coach-and-patient-review-panel.md`. The design is
+accepted as the working pattern except for final vital-value alignment.
 
 Do not copy the mobile layout or mobile source code into the desktop app. The
 approved artwork may be the same, but its desktop composition should be

@@ -6,7 +6,7 @@ if (!ASSETS) {
   throw new Error("Mobile asset manifest failed to load.");
 }
 
-const patients = [
+const legacyPatients = [
   {
     id: "patient-006",
     name: "Priya",
@@ -178,6 +178,8 @@ const patients = [
   }
 ];
 
+let patients = [];
+
 const rooms = [
   {
     key: "esi1",
@@ -268,7 +270,12 @@ const ui = {
   coachButton: document.querySelector("#coachButton"),
   coachOverlay: document.querySelector("#coachOverlay"),
   coachCard: document.querySelector("#coachCard"),
+  coachScrollAbove: document.querySelector("#coachScrollAbove"),
   coachScrollHint: document.querySelector("#coachScrollHint"),
+  coachPatientImageButton: document.querySelector("#coachPatientImageButton"),
+  coachImageOverlay: document.querySelector("#coachImageOverlay"),
+  coachLargePatientImage: document.querySelector("#coachLargePatientImage"),
+  coachImageClose: document.querySelector("#coachImageClose"),
   statusLabel: document.querySelector("#statusLabel"),
   statusValue: document.querySelector("#statusValue"),
   soundButton: document.querySelector("#soundButton"),
@@ -277,7 +284,7 @@ const ui = {
 
 let currentPatientIndex = null;
 let currentPatientQueueBackground = null;
-let waiting = makeWaitingQueue(currentPatientIndex);
+let waiting = [];
 let decision = null;
 let openRoom = null;
 let mode = "game";
@@ -289,6 +296,63 @@ let timerId = null;
 let holdGesture = null;
 let awaitingPatient = true;
 let previouslyAssigned = false;
+
+const newSchemaPatientIds = Array.from(
+  { length: 10 },
+  (_, index) => `patient-${String(index + 1).padStart(3, "0")}`
+);
+
+function normalizeNewSchemaPatient(record) {
+  const { personal, clinical, vitals, triageReasoning } = record.patient;
+  return {
+    id: record.id,
+    name: personal.name,
+    age: personal.age,
+    sex: personal.sex,
+    complaint: clinical.chiefComplaint,
+    quote: clinical.quoteShort || clinical.quoteLong,
+    presentation: clinical.presentationShort || clinical.presentationLong,
+    vitals: {
+      hr: vitals.hr.value,
+      bp: vitals.bp.value,
+      rr: vitals.rr.value,
+      spo2: vitals.spo2.value,
+      temp: vitals.temp.value,
+      pain: vitals.pain.value
+    },
+    answer: record.answer.correctRoom.replace("-", ""),
+    esi: triageReasoning.correctEsi,
+    triageReasoning
+  };
+}
+
+async function loadNewSchemaPatients() {
+  const records = await Promise.all(
+    newSchemaPatientIds.map(async (patientId) => {
+      const response = await fetch(ASSETS.patientData.json(patientId));
+      if (!response.ok) {
+        throw new Error(`Could not load ${patientId}: HTTP ${response.status}`);
+      }
+      return response.json();
+    })
+  );
+  return records.map(normalizeNewSchemaPatient);
+}
+
+async function initializeDemo() {
+  try {
+    patients = await loadNewSchemaPatients();
+    waiting = makeWaitingQueue(currentPatientIndex);
+    renderAll();
+    startTimer();
+  } catch (error) {
+    console.error("New-schema patient data could not be loaded.", error);
+    document.querySelector(".app-shell").classList.add("has-load-error");
+    ui.emptyStateKicker.textContent = "DATA ERROR";
+    ui.emptyStateTitle.textContent = "PATIENT CHARTS UNAVAILABLE";
+    ui.emptyStateHint.textContent = "Run the desktop preview from the repository root.";
+  }
+}
 
 function randomIndex(exclude = []) {
   const blocked = new Set(Array.isArray(exclude) ? exclude : [exclude]);
@@ -731,12 +795,15 @@ function setMode(nextMode) {
 function openCoach() {
   if (!decision) return;
   const patient = activePatient();
+  const reasoning = patient.triageReasoning;
   const sexLabel = patient.sex === "F" ? "female" : patient.sex === "M" ? "male" : patient.sex;
   document.querySelector("#coachPatientImage").src = ASSETS.patientData.image(patient.id);
   document.querySelector("#coachPatientImage").alt = `${patient.name}, reviewed patient`;
+  ui.coachLargePatientImage.src = ASSETS.patientData.image(patient.id);
+  ui.coachLargePatientImage.alt = `Larger view of ${patient.name}`;
   document.querySelector("#coachTitle").textContent = patient.name;
   document.querySelector("#coachDemographics").textContent =
-    `${patient.age}-year-old ${sexLabel} · underlying ESI ${patient.esi}`;
+    `${patient.age}-year-old ${sexLabel}`;
   document.querySelector("#coachComplaint").textContent = patient.complaint;
   document.querySelector("#coachQuote").textContent = `“${patient.quote}”`;
   document.querySelector("#coachTriage").textContent = patient.presentation;
@@ -755,32 +822,97 @@ function openCoach() {
       </div>
     `)
     .join("");
+
+  const assignedRoom = rooms.find((room) => room.key === decision.room);
+  const assignedEsi = assignedRoom?.esi ?? null;
   document.querySelector("#coachChoice").textContent = roomNames[decision.room];
-  document.querySelector("#coachCorrect").textContent = roomNames[patient.answer];
-  document.querySelector("#coachResult").textContent =
-    decision.outcome === "correct"
-      ? "You selected the intended treatment level."
-      : decision.outcome === "acceptable"
-        ? "This numbered ESI placement is acceptable for this patient, although the special pathway remains the intended choice."
-      : decision.outcome === "close"
-        ? "Your ESI choice was one level from the intended answer."
-        : "This choice differs materially from the intended treatment level.";
-  document.querySelector("#coachReason").textContent = patient.why;
+  document.querySelector("#coachCorrect").textContent = `ESI ${reasoning.correctEsi}`;
+  document.querySelector("#coachResult").textContent = evaluateTriageChoice(
+    assignedEsi,
+    reasoning.correctEsi,
+    decision.room,
+    patient.answer
+  );
+
+  document.querySelector("#coachSummaryText").textContent = reasoning.summary;
+  document.querySelector("#coachAcuityReason").textContent = reasoning.acuityReason;
+  document.querySelector("#coachDestinationReason").textContent = reasoning.destinationReason;
+  document.querySelector("#coachDisposition").textContent =
+    reasoning.possibleClinicalOutcome.disposition;
+
+  renderCoachList("coachResources", reasoning.expectedResources);
+  renderCoachList("coachKeyFindings", reasoning.keyFindings);
+  renderCoachList("coachTeachingPoints", reasoning.teachingPoints);
+  renderCoachList(
+    "coachPossibleDiagnoses",
+    reasoning.possibleClinicalOutcome.possibleDiagnoses
+  );
+
+  const redFlags = reasoning.redFlags || [];
+  document.querySelector("#coachRedFlagsSection").hidden = redFlags.length === 0;
+  renderCoachList("coachRedFlags", redFlags);
+
+  ui.coachCard.dataset.result = getTriageDirection(assignedEsi, reasoning.correctEsi);
+  ui.coachImageOverlay.hidden = true;
   ui.coachOverlay.hidden = false;
   ui.coachCard.scrollTop = 0;
   window.requestAnimationFrame(updateCoachScrollHint);
   document.querySelector("#coachClose").focus();
 }
 
+function renderCoachList(elementId, items) {
+  const list = document.querySelector(`#${elementId}`);
+  list.replaceChildren();
+  items.forEach((item) => {
+    const entry = document.createElement("li");
+    entry.textContent = item;
+    if (item.startsWith("(maybe) ")) entry.classList.add("is-maybe");
+    list.append(entry);
+  });
+}
+
+function getTriageDirection(assignedEsi, correctEsi) {
+  if (!Number.isInteger(assignedEsi)) return "wrong";
+  if (assignedEsi === correctEsi) return "correct";
+  return assignedEsi < correctEsi ? "over" : "under";
+}
+
+function evaluateTriageChoice(assignedEsi, correctEsi, assignedRoom, correctRoom) {
+  if (assignedRoom === correctRoom || assignedEsi === correctEsi) {
+    return "You correctly triaged this patient.";
+  }
+  if (!Number.isInteger(assignedEsi)) {
+    return "You assigned this patient to an incorrect destination.";
+  }
+  return assignedEsi < correctEsi
+    ? "You over-triaged this patient."
+    : "You under-triaged this patient.";
+}
+
 function closeCoach() {
+  ui.coachImageOverlay.hidden = true;
   ui.coachOverlay.hidden = true;
 }
 
 function updateCoachScrollHint() {
   const hasMore = ui.coachCard.scrollHeight > ui.coachCard.clientHeight + 4;
+  const isAtTop = ui.coachCard.scrollTop <= 4;
   const isAtBottom =
     ui.coachCard.scrollTop + ui.coachCard.clientHeight >= ui.coachCard.scrollHeight - 4;
+  ui.coachScrollAbove.hidden = !hasMore || isAtTop;
   ui.coachScrollHint.hidden = !hasMore || isAtBottom;
+}
+
+function openCoachImage() {
+  if (ui.coachOverlay.hidden) return;
+  ui.coachImageOverlay.hidden = false;
+  ui.coachImageClose.focus();
+}
+
+function closeCoachImage() {
+  if (ui.coachImageOverlay.hidden) return;
+  ui.coachImageOverlay.hidden = true;
+  ui.coachPatientImageButton.focus();
 }
 
 function resetRound() {
@@ -813,11 +945,22 @@ document.querySelector("#resetButton").addEventListener("click", resetRound);
 ui.coachButton.addEventListener("click", openCoach);
 document.querySelector("#coachClose").addEventListener("click", closeCoach);
 ui.coachCard.addEventListener("scroll", updateCoachScrollHint, { passive: true });
+ui.coachScrollAbove.addEventListener("click", () => {
+  ui.coachCard.scrollBy({
+    top: -ui.coachCard.clientHeight * 0.7,
+    behavior: "smooth"
+  });
+});
 ui.coachScrollHint.addEventListener("click", () => {
   ui.coachCard.scrollBy({
     top: ui.coachCard.clientHeight * 0.7,
     behavior: "smooth"
   });
+});
+ui.coachPatientImageButton.addEventListener("click", openCoachImage);
+ui.coachImageClose.addEventListener("click", closeCoachImage);
+ui.coachImageOverlay.addEventListener("click", (event) => {
+  if (event.target === ui.coachImageOverlay) closeCoachImage();
 });
 document.querySelector("#coachPatientImage").addEventListener("load", updateCoachScrollHint);
 window.addEventListener("resize", updateCoachScrollHint);
@@ -833,8 +976,9 @@ ui.soundButton.addEventListener("click", () => {
 });
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") closeCoach();
+  if (event.key !== "Escape") return;
+  if (!ui.coachImageOverlay.hidden) closeCoachImage();
+  else closeCoach();
 });
 
-renderAll();
-startTimer();
+initializeDemo();

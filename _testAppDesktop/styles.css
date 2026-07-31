@@ -1262,6 +1262,618 @@ button {
   font-style: italic;
 }
 
+/* New-schema Coach chart */
+.coach-overlay {
+  padding: 3%;
+  background: rgb(0 16 25 / 86%);
+}
+
+.coach-frame {
+  width: 100%;
+  height: 94%;
+  display: block;
+  overflow: hidden;
+  transform: none;
+}
+
+.coach-card {
+  height: 100%;
+  max-height: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 30px 16px 54px;
+  border: 4px solid #87959b;
+  border-radius: 9px;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0 25px,
+      rgb(56 120 147 / 9%) 25px 26px
+    ),
+    linear-gradient(90deg, transparent 0 34px, rgb(190 62 53 / 12%) 34px 35px, transparent 35px),
+    #f7f3e9;
+  box-shadow:
+    inset 0 0 0 2px #d7dcde,
+    inset 0 0 24px rgb(77 68 49 / 12%),
+    0 20px 65px #000e;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+  scrollbar-color: #506d79 #ddd4c4;
+}
+
+.coach-chart-rail {
+  position: absolute;
+  z-index: 2;
+  top: 5px;
+  left: 50%;
+  width: 42%;
+  height: 18px;
+  border: 2px solid #56656c;
+  border-radius: 4px 4px 8px 8px;
+  background: linear-gradient(#f7f8f8, #89979d 48%, #d7dcde 52%, #69777d);
+  box-shadow: 0 2px 4px #0007;
+  transform: translateX(-50%);
+}
+
+.coach-eyebrow {
+  margin: 2px 34px 8px;
+  color: #345462;
+  font-family: Arial, sans-serif;
+  font-size: clamp(7px, 2.3cqw, 10px);
+  letter-spacing: 0.12em;
+  text-align: center;
+}
+
+.coach-close {
+  top: 8px;
+  right: 9px;
+  width: 34px;
+  height: 34px;
+  border: 2px solid white;
+  border-radius: 7px;
+  background: linear-gradient(#ef594d, #9d150e);
+  box-shadow: 0 2px 6px #0008;
+  font-size: 26px;
+}
+
+.coach-patient-header {
+  grid-template-columns: clamp(72px, 24cqw, 104px) minmax(0, 1fr);
+  gap: 12px;
+  margin: 0 0 9px;
+  padding: 9px 11px;
+  border: 1px solid #9ba8ad;
+  border-left: 7px solid #1b657f;
+  border-radius: 3px;
+  background: rgb(255 255 255 / 82%);
+  box-shadow: 0 2px 5px rgb(39 50 54 / 18%);
+}
+
+.coach-patient-header img {
+  border: 2px solid #91a2a9;
+  border-radius: 3px;
+  background: linear-gradient(#dce8eb, #f8f5ed);
+}
+
+.coach-card h2 {
+  color: #153b4b;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(22px, 6.3cqw, 30px);
+}
+
+.coach-demographics {
+  color: #53646b;
+  font-family: Arial, sans-serif;
+  font-size: clamp(9px, 2.9cqw, 13px) !important;
+  text-transform: uppercase;
+}
+
+.coach-complaint {
+  margin-top: 6px;
+  color: #862e24;
+  font-size: clamp(11px, 3.5cqw, 16px);
+}
+
+.coach-quote-sheet {
+  margin-top: 8px;
+}
+
+.coach-section-tab {
+  position: absolute;
+  z-index: 1;
+  top: 5px;
+  left: 9%;
+  display: inline-block;
+  margin: 0 !important;
+  padding: 3px 8px;
+  border-radius: 3px;
+  color: #fff !important;
+  background: #1d6079;
+  font-family: Arial, sans-serif;
+  font-size: clamp(7px, 2.1cqw, 10px) !important;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  box-shadow: 0 1px 3px #0005;
+}
+
+.coach-quote {
+  margin: 0;
+  padding: 8px 10px;
+  border: 0;
+  border-left: 4px solid #b07a2c;
+  background: #fff9e8;
+  color: #293940;
+  font-family: Arial, sans-serif;
+  font-size: clamp(9px, 3cqw, 13px);
+  font-style: italic;
+  line-height: 1.3;
+  text-align: left;
+}
+
+.coach-vitals-section {
+  position: relative;
+  margin-top: 8px;
+  padding-top: 18px;
+}
+
+.coach-vitals-section .coach-section-tab {
+  top: 8px;
+  left: 4%;
+}
+
+.coach-vitals {
+  position: relative;
+  aspect-ratio: 810 / 352;
+  display: block;
+  padding: 0;
+  background: url("assets/patient-panel/backgrounds/patient-panel-vitals-bubble-hires.png") center / 100% 100% no-repeat;
+}
+
+.coach-vital {
+  position: absolute;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  width: 31%;
+  height: 44%;
+  padding: 0 7% 8%;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  text-align: right;
+}
+
+.coach-vital:nth-child(1) { top: 3%; left: 1%; }
+.coach-vital:nth-child(2) { top: 3%; left: 34%; width: 33%; }
+.coach-vital:nth-child(3) { top: 3%; left: 68%; }
+.coach-vital:nth-child(4) { top: 52%; left: 1%; }
+.coach-vital:nth-child(5) { top: 52%; left: 34%; width: 33%; }
+.coach-vital:nth-child(6) { top: 52%; left: 68%; }
+
+.coach-vital span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.coach-vital strong {
+  margin: 0;
+  color: #102d43;
+  font-size: clamp(11px, 3.6cqw, 17px);
+  line-height: 1;
+  text-shadow: 0 1px white;
+}
+
+.coach-triage-section {
+  position: relative;
+  min-height: clamp(120px, 46cqw, 188px);
+  margin-top: 10px;
+  padding: 14% 8% 8%;
+  border-radius: 0;
+  background: url("assets/patient-panel/backgrounds/patient-panel-clipboard-bubble-hires.png") center / 100% 100% no-repeat;
+}
+
+.coach-triage-section .coach-section-tab {
+  top: 13%;
+  left: 8%;
+}
+
+.coach-triage-section p {
+  margin: 10px 0 0;
+  color: #24363e;
+}
+
+.coach-chart-section {
+  position: relative;
+  margin-top: 10px;
+  padding: 10px 11px 11px;
+  border: 1px solid #aab4b7;
+  border-radius: 3px;
+  background: rgb(255 255 255 / 76%);
+  box-shadow: 0 2px 4px rgb(47 58 61 / 14%);
+}
+
+.coach-chart-section h3 {
+  margin: -10px -11px 8px;
+  padding: 6px 10px;
+  border-bottom: 1px solid #9faeb3;
+  color: white;
+  background: linear-gradient(90deg, #1a607a, #3c7f94);
+  font-family: Arial, sans-serif;
+  font-size: clamp(9px, 2.8cqw, 13px);
+  letter-spacing: 0.08em;
+}
+
+.coach-chart-section h4 {
+  margin: 9px 0 3px;
+  color: #5c3b1d;
+  font-family: Arial, sans-serif;
+  font-size: clamp(9px, 2.8cqw, 13px);
+  text-transform: uppercase;
+}
+
+.coach-chart-section p {
+  margin: 4px 0;
+}
+
+.coach-lead {
+  color: #173f50;
+  font-weight: 900;
+}
+
+.coach-summary {
+  gap: 8px;
+}
+
+.coach-summary div {
+  border: 1px solid #879ba3;
+  border-radius: 3px;
+  background: #edf4f5;
+}
+
+.coach-summary span {
+  color: #65777e;
+}
+
+.coach-summary strong {
+  color: #10394b;
+}
+
+.coach-result {
+  margin: 8px 0 0 !important;
+  border-left: 6px solid #1d7694;
+  background: #dcecf1;
+}
+
+.coach-card[data-result="correct"] .coach-result {
+  border-left-color: #19864c;
+  background: #d8efe1;
+}
+
+.coach-card[data-result="over"] .coach-result {
+  border-left-color: #d4a01d;
+  background: #fff1bd;
+}
+
+.coach-card[data-result="under"] .coach-result,
+.coach-card[data-result="wrong"] .coach-result {
+  border-left-color: #c3372d;
+  background: #f6dcd8;
+}
+
+.coach-list {
+  margin: 4px 0 0;
+  padding-left: 20px;
+  color: #26383f;
+  font-family: Arial, sans-serif;
+  font-size: clamp(10px, 3.15cqw, 14px);
+  line-height: 1.34;
+}
+
+.coach-list li + li {
+  margin-top: 4px;
+}
+
+.coach-list li::marker {
+  color: #1a6e8b;
+}
+
+.coach-red-flags li::marker {
+  color: #c3372d;
+}
+
+.coach-teaching-section {
+  border-color: #c89538;
+  background: #fff7de;
+}
+
+.coach-teaching-section h3 {
+  border-bottom-color: #b3791b;
+  background: linear-gradient(90deg, #9a6719, #c38a30);
+}
+
+.coach-outcome-section {
+  background: #f2f6f6;
+}
+
+.coach-disclaimer {
+  padding: 8px 9px;
+  border-left: 4px solid #7c8d94;
+  background: #e2e8e9;
+  color: #485b62;
+  font-size: clamp(9px, 2.9cqw, 13px) !important;
+  font-style: italic;
+}
+
+.coach-list .is-maybe {
+  color: #5f6d72;
+  font-style: italic;
+}
+
+.coach-caution {
+  padding: 8px 4px 0;
+  text-align: center;
+}
+
+/* Three-level Coach information hierarchy */
+.coach-info-group {
+  margin-top: 10px;
+  overflow: hidden;
+  border: 2px solid;
+  border-radius: 5px;
+  box-shadow: 0 2px 6px rgb(36 47 51 / 20%);
+}
+
+.coach-group-title {
+  margin: 0 !important;
+  padding: 8px 11px;
+  color: white !important;
+  font-family: Arial, sans-serif !important;
+  font-size: clamp(10px, 3.1cqw, 14px) !important;
+  line-height: 1 !important;
+  letter-spacing: 0.1em;
+}
+
+.coach-known-group {
+  padding: 0 10px 10px;
+  border-color: #a58c69;
+  background: #eee3d2;
+}
+
+.coach-known-group > .coach-group-title {
+  margin-inline: -10px !important;
+  background: linear-gradient(90deg, #6c5841, #958063);
+}
+
+.coach-patient-header {
+  margin-top: 10px;
+}
+
+.coach-patient-image-button {
+  position: relative;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  cursor: zoom-in;
+}
+
+.coach-patient-image-button::after {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  content: "+";
+  border: 1px solid white;
+  border-radius: 50%;
+  color: white;
+  background: rgb(17 74 96 / 88%);
+  box-shadow: 0 1px 4px #0008;
+  font: 900 17px/1 Arial, sans-serif;
+}
+
+.coach-patient-image-button:focus-visible {
+  outline: 3px solid #147ca3;
+  outline-offset: 2px;
+}
+
+.coach-patient-image-button img {
+  display: block;
+}
+
+.coach-known-section {
+  margin-top: 9px;
+  overflow: hidden;
+  border: 1px solid #afa089;
+  border-radius: 4px;
+  background: rgb(255 253 248 / 82%);
+}
+
+.coach-known-section > h3,
+.coach-decision-group > h3,
+.coach-explanation-section > h3 {
+  margin: 0;
+  padding: 7px 10px;
+  border: 0;
+  border-bottom: 1px solid rgb(45 63 70 / 28%);
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: clamp(9px, 2.8cqw, 13px);
+  line-height: 1;
+  letter-spacing: 0.08em;
+}
+
+.coach-known-section > h3 {
+  background: linear-gradient(90deg, #766147, #9c8769);
+}
+
+.coach-vitals-section {
+  padding-top: 0;
+}
+
+.coach-vitals {
+  margin: 7px;
+}
+
+.coach-triage-section {
+  min-height: 0;
+  padding: 0;
+  background: rgb(255 253 248 / 82%);
+}
+
+.coach-triage-section p {
+  margin: 0;
+  padding: 10px 11px 12px;
+}
+
+.coach-decision-group {
+  padding: 0 11px 11px;
+  border-color: #bd831d;
+  background: #fff0c8;
+}
+
+.coach-decision-group > h3 {
+  margin-inline: -11px;
+  margin-bottom: 10px;
+  background: linear-gradient(90deg, #a7670c, #d49b32);
+}
+
+.coach-decision-group .coach-summary div {
+  border-color: #c89436;
+  background: rgb(255 252 238 / 88%);
+}
+
+.coach-explanation-group {
+  padding: 0 10px 10px;
+  border-color: #698d9d;
+  background: #dde9ed;
+}
+
+.coach-explanation-group > .coach-group-title {
+  margin-inline: -10px !important;
+  background: linear-gradient(90deg, #205d75, #4b8498);
+}
+
+.coach-explanation-section {
+  padding: 0 1px 11px;
+  border-bottom: 1px solid #9db2ba;
+  background: transparent;
+}
+
+.coach-explanation-section:last-child {
+  border-bottom: 0;
+  padding-bottom: 2px;
+}
+
+.coach-explanation-section > h3 {
+  margin: 0 -1px 8px;
+  color: #17475a;
+  background: rgb(255 255 255 / 48%);
+}
+
+.coach-explanation-section > h4 {
+  margin: 11px 10px 3px;
+  color: #315968;
+  font-family: Arial, sans-serif;
+  font-size: clamp(9px, 2.8cqw, 13px);
+  text-transform: uppercase;
+}
+
+.coach-explanation-section > p,
+.coach-explanation-section > ul {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.coach-teaching-section {
+  border-color: #c3a262;
+  background: #f8edc9;
+}
+
+.coach-outcome-section {
+  background: transparent;
+}
+
+.coach-scroll-hint--above {
+  top: 7px;
+  bottom: auto;
+  grid-template-columns: 18px auto;
+}
+
+.coach-scroll-hint--below {
+  top: auto;
+  bottom: 7px;
+}
+
+.coach-scroll-hint--above b {
+  animation: coach-point-up 650ms ease-in-out infinite alternate;
+}
+
+@keyframes coach-point-up {
+  from { transform: translateY(3px); }
+  to { transform: translateY(-2px); }
+}
+
+.coach-image-overlay {
+  position: absolute;
+  z-index: 40;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgb(0 16 25 / 94%);
+  backdrop-filter: blur(4px);
+}
+
+.coach-image-overlay[hidden] {
+  display: none;
+}
+
+.coach-image-card {
+  position: relative;
+  width: min(90%, 76vh, 720px);
+  aspect-ratio: 1;
+  border: 4px solid #87959b;
+  border-radius: 8px;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 25px, rgb(56 120 147 / 9%) 25px 26px),
+    #f7f3e9;
+  box-shadow: 0 20px 70px #000f;
+}
+
+.coach-image-card img {
+  width: 100%;
+  height: 100%;
+  padding: 3%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 8px rgb(0 21 31 / 30%));
+}
+
+.coach-image-close {
+  position: absolute;
+  top: 3%;
+  right: 3%;
+  width: 42px;
+  height: 42px;
+  padding: 0 0 4px;
+  border: 2px solid white;
+  border-radius: 7px;
+  color: white;
+  background: linear-gradient(#ef594d, #9d150e);
+  box-shadow: 0 2px 7px #000a;
+  font: 900 31px/1 Arial, sans-serif;
+  cursor: pointer;
+}
+
+.coach-image-close:focus-visible {
+  outline: 3px solid white;
+  outline-offset: 2px;
+}
+
 @media (max-height: 590px) {
   .app-shell {
     border-radius: 4px;
@@ -1588,7 +2200,7 @@ button {
 
   .coach-frame {
     width: min(92%, 760px);
-    height: min(88%, 820px);
+    height: min(94%, 880px);
   }
 }
 
