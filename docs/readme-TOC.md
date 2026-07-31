@@ -27,6 +27,16 @@ These are the authoritative current specifications.
    Repository ownership, state and actions, documentation workflow,
    implementation sequence, persistence, verification, and unresolved work.
 
+6. [Production-start development handoff](development-handoff--2026-07-29-1824.md)
+
+   Current milestone, settled direction, verified baseline, unresolved
+   decisions, and the recommended first production implementation slice.
+
+7. [HOME screen specification](home-screen-specification--2026-07-30-1933.md)
+
+   Approved HOME artwork, registered overlay coordinates, sidewalk-board and
+   ABOUT behavior, boombox placement, and Classical KING streaming controls.
+
 See [README.md](README.md) for the documentation versioning workflow.
 Superseded material is cataloged in
 [the archive table of contents](../docs-archive/readme-TOC.md).

@@ -13,6 +13,8 @@ gameplay-specification--YYYY-MM-DD-HHMM.md
 scoring-specification--YYYY-MM-DD-HHMM.md
 patient-data-and-assets--YYYY-MM-DD-HHMM.md
 implementation-reference--YYYY-MM-DD-HHMM.md
+development-handoff--YYYY-MM-DD-HHMM.md
+home-screen-specification--YYYY-MM-DD-HHMM.md
 ```
 
 The timestamp records when that current version was established. When a

@@ -1,0 +1,49 @@
+triageRush HOME screen boombox
+================================
+
+Approved asset:
+  boombox.png
+
+Image:
+  2298 x 1415 pixels
+  RGBA PNG with transparent background
+  Aspect ratio: 2298 / 1415
+
+Current test placement:
+  Background coordinate system: 852 x 1515
+  Anchor: top-left corner
+  X: 357
+  Y: 1256
+  Scale: 100%
+  Base displayed width: 480 background pixels
+  Displayed height at 100%: approximately 296 background pixels
+
+The position and scale remain provisional and can be adjusted with the controls
+in _testAppHomeScreen. Scaling must keep the top-left corner anchored.
+
+Interactive controls:
+  POWER center: 18.0% from asset left, 16.4% from asset top
+  MUSIC center: 46.9% from asset left, 21.3% from asset top
+  UI center:    77.3% from asset left, 28.7% from asset top
+
+The HTML prototype uses a minimum 44 x 44 CSS-pixel tap target centered over
+each button. POWER highlights red; MUSIC and UI highlight green. Each target
+currently toggles its own highlight/dehighlight state only.
+
+The lower chrome buttons, knobs, and equalizer-style display are decorative.
+There is no in-app volume control. Device/browser volume controls overall
+loudness. The tuner display is fixed artwork reading 98.1 FM.
+
+Classical KING stream:
+  https://classicalking.streamguys1.com/KING-FM-128KAAC
+
+POWER starts/stops the radio. MUSIC pauses/resumes the stream while powered.
+UI is reserved for app sound effects and is visual-only in the demo. Playback
+must start from a user tap; do not autoplay.
+
+Full specification:
+  docs/home-screen-specification--2026-07-30-1933.md
+
+Fallback:
+  The previous simpler boombox and its notes were renamed boomboxOLD.png and
+  boomboxOLD.txt.

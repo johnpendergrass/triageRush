@@ -15,6 +15,7 @@ triageRush/
 ├── patient-CRUD (standalone)/
 ├── _testAppMobile/
 ├── _testAppDesktop/
+├── _testAppHomeScreen/
 └── index.html
 ```
 
@@ -33,6 +34,9 @@ triageRush/
 - `_testAppMobile/` and `_testAppDesktop/` are temporary self-contained design
   references. They will be removed after production development is complete
   and their accepted behavior has been verified in `triageRush/`.
+- `_testAppHomeScreen/` is the temporary HOME-panel composition and live-sound
+  reference. Its accepted behavior is recorded in
+  `docs/home-screen-specification--2026-07-30-1933.md`.
 
 Start with [the current documentation index](docs/README.md).
 
@@ -40,4 +44,5 @@ Start with [the current documentation index](docs/README.md).
 
 The demo-design phase is complete. Production development begins under
 `triageRush/` with one centered responsive game whose compact form preserves
-the established mobile composition.
+the established mobile composition. The HOME-panel artwork, registered state
+overlays, and Classical KING sound-control prototype are ready for integration.
