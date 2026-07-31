@@ -36,7 +36,7 @@ triageRush/
   and their accepted behavior has been verified in `triageRush/`.
 - `_testAppHomeScreen/` is the temporary HOME-panel composition and live-sound
   reference. Its accepted behavior is recorded in
-  `docs/home-screen-specification--2026-07-30-1933.md`.
+  `docs/home-screen-specification--2026-07-31-1113.md`.
 
 Start with [the current documentation index](docs/README.md).
 

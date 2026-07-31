@@ -11,20 +11,25 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="home-frame" aria-label="triageRush HOME screen sound-control preview">
+    <main class="home-frame" aria-label="triageRush HOME screen preview">
       <img
         class="home-background"
-        src="../triageRush/assets/home-screen/backgrounds/HOME-open-doors%20852x1515.png"
+        src="../triageRush/assets/home-screen/backgrounds/background-w-open-glass-doors%20852x1515.png"
         alt=""
       />
 
-      <section class="boombox" id="boombox" aria-label="Sound controls">
+      <nav class="popup-preview-controls" aria-label="Preview HOME popups">
+        <button type="button" data-popup="player">PLAYER</button>
+        <button type="button" data-popup="shift">SHIFT</button>
+        <button type="button" data-popup="about">ABOUT</button>
+      </nav>
+
+      <section class="boombox" aria-label="Sound controls">
         <img
           class="boombox-art"
           src="../triageRush/assets/home-screen/backgrounds/boombox.png"
           alt="A chrome 1990s boombox sound control center"
         />
-
         <button
           class="sound-toggle sound-toggle--power"
           id="powerToggle"
@@ -32,7 +37,6 @@
           aria-label="Turn radio power on"
           aria-pressed="false"
         ></button>
-
         <button
           class="sound-toggle is-on sound-toggle--music"
           id="musicToggle"
@@ -40,7 +44,6 @@
           aria-label="Music on"
           aria-pressed="true"
         ></button>
-
         <button
           class="sound-toggle is-on sound-toggle--ui"
           id="uiToggle"
@@ -48,7 +51,6 @@
           aria-label="User interface sounds on"
           aria-pressed="true"
         ></button>
-
       </section>
 
       <audio
@@ -57,71 +59,25 @@
         src="https://classicalking.streamguys1.com/KING-FM-128KAAC"
       ></audio>
 
-      <section class="position-controller" aria-label="Position boombox cutout">
-        <output class="coordinate-readout" id="coordinateReadout">
-          X 447 · Y 1270 · SCALE 137%
-        </output>
-
-        <div class="direction-controls">
+      <section
+        class="popup-layer"
+        id="popupLayer"
+        role="dialog"
+        aria-modal="true"
+        aria-label="HOME screen popup preview"
+        hidden
+      >
+        <div class="popup-card">
+          <img class="popup-art" id="popupArt" alt="" />
           <button
-            class="move-button"
+            class="popup-close"
+            id="popupClose"
             type="button"
-            data-dx="-1"
-            data-dy="0"
-            aria-label="Move boombox left one pixel"
+            aria-label="Close popup"
           >
-            &#9664;
-          </button>
-          <button
-            class="move-button"
-            type="button"
-            data-dx="0"
-            data-dy="-1"
-            aria-label="Move boombox up one pixel"
-          >
-            &#9650;
-          </button>
-          <button
-            class="move-button"
-            type="button"
-            data-dx="0"
-            data-dy="1"
-            aria-label="Move boombox down one pixel"
-          >
-            &#9660;
-          </button>
-          <button
-            class="move-button"
-            type="button"
-            data-dx="1"
-            data-dy="0"
-            aria-label="Move boombox right one pixel"
-          >
-            &#9654;
+            ×
           </button>
         </div>
-
-        <div class="scale-controls" aria-label="Scale boombox">
-          <button
-            class="scale-button"
-            id="scaleDown"
-            type="button"
-            aria-label="Make boombox one percent smaller"
-          >
-            &minus;
-          </button>
-          <output class="scale-readout" id="scaleReadout">137%</output>
-          <button
-            class="scale-button"
-            id="scaleUp"
-            type="button"
-            aria-label="Make boombox one percent larger"
-          >
-            +
-          </button>
-        </div>
-
-        <small>MOVE 1 PX · SCALE 1% · HOLD SHIFT FOR 10</small>
       </section>
     </main>
 

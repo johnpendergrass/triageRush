@@ -42,7 +42,7 @@ UI is reserved for app sound effects and is visual-only in the demo. Playback
 must start from a user tap; do not autoplay.
 
 Full specification:
-  docs/home-screen-specification--2026-07-30-1933.md
+  docs/home-screen-specification--2026-07-31-1113.md
 
 Fallback:
   The previous simpler boombox and its notes were renamed boomboxOLD.png and

@@ -22,7 +22,7 @@ GAME DESIGN
    
    In Triage mode the game will start with the waiting room fully occupied (five patients), and the waiting room will stay filled the entire time (ie. will have five patients in the queue all the time, plus up to one in the patient panel)
    
-   2. TriageRUSH - will be the new and only 'game' mode.  It will have a 60 second shift timer (configurable from the settings).  RUSH mode will start with only two patients in the waiting room.  As the timer progressed new patients will be added at an increasing pace.  My starting idea there is -- the queue starts with two patients, and then the queue lenght is increased by one after an interval of 10 seconds, then increased by one more at an interval of 9 seconds, then another one at an interval of 8 seconds... etc.  until the queue has 10 patients.  The idea is to simulate a rapidly filling waiting room.  These times are not firm, but just first educated guesses.  
+   2. TriageRUSH - will be the new and only 'game' mode.  It will have a settings selected 60/120 second shift timer (configurable from the settings).  RUSH mode will start with only two patients in the waiting room.  As the timer progressed new patients will be added at an increasing pace.  My starting idea there is -- the queue starts with two patients, and then the queue lenght is increased by one after an interval of 10 seconds, then increased by one more at an interval of 9 seconds, then another one at an interval of 8 seconds... etc.  until the queue has 10 patients.  The idea is to simulate a rapidly filling waiting room.  These times are not firm, but just first educated guesses.
 
         There will be actual scoring during RUSH mode.  A correct room is full points, a close room is half points - See item #2 above for the new scoring method.   
 
@@ -34,7 +34,7 @@ GAME DESIGN
 
         Each time there is a decision by the player there should be a sound and visual.  1. for correct 'ding' + bold green outline around the correct room.  2. for close 'bing' (and a bold yellow around the close room.) 3. for wrong 'buzz' and a bold red around the wrong room.  No highlighting of the 'correct' room (this is a change from now).  The highlighting should stay in place for several seconds.
 
-   3. Both game modes will track below, and show these in the STATS/REVIEW panel..
+   3. Both game modes will track below, and show these in the STATS/REVIEW panel..  which we will now call and display as 'Shift Review'.
       1.  total patients seen -- those that were actually assigned to a room during the session, if a patient is recalled and re-assigned to a room again it only counts as one patient
       2. total patients assigned to correct room - those assigned originally to the correct room, not recalled and reassigned.
       3. total patients assigned to over-triaged room - those assigned originally to the an over-triaged room, not recalled and reassigned.
@@ -67,7 +67,17 @@ GAME DESIGN
                    8. There should next be a button at the bottom to review all the patients seen during the shift.  It might be easy to do, just a non-interactive scrolling list of seen patients in the last shift.  It would give the image, quote, triage notes, vitals, diagnosis notes, correct room, ESI level info (ie why, notes, diagnosis), correct assigned room(s), player assigned room, and a CORRECT/CLOSE/INCORRECT indication.  A popup would appear, similar to the coaching panel, showing that info.  Forward/back arrows at the top to move from patient to patient.  A close box at the top.  Same scrolling effects as the coach panel.
 
     4. The HOME/SETTINGS panel.
-       1. the overall look will be the courtyard curved driveway of a hospital ED settings.  The buildings/driveway are off to the top-left, with the driveway/sidewalk coming toward the view and down.  The hospital sigage (on the front of the covered entryway) should read Triage RUSH! in nice hospital ED dept lettering.  The sidewalks coming towards the viewer should have two of those walkway signs that are the black background with horizontal grooves to press letters into for the sign.  We will use those for stylistic 'settings' options. and to start/resume the game.  There should be a bold 'Enter' door that actually starts the game.
-
-        2. 
+       1. we just deigned the look and feel of the HOME panel.  The controls on the HOME panel are two sets of settings, displayed as two sidewalk signs; a front door with options of Start Shift, Resume Shift and open doors; an ABOUT button, displayed as a cover to a water spinkler system; and a sound control, displayed as a boombox.
+          1. The left signboard will be player name settings.  It will display "Welcome - ready to start your shift?".
+             1. then have a 'title' control that allows the player to select between - Doctor (default), Nurse, RN, LPN, RES, EMS, PA, MS1, MS2, MS3, MS4.   The control will be those old style arcade game rolling odometer type displays, with up/down arrows just above and below the display.  In this case the entire word is the choice - and the odometer rolls from choice to choice.
+             2. then there will be a three character odometer for patient initials - upper case alpha only.  Arrow keys above and below each character.
+             3. At some point the title and the player 'name' must be copied to the local variable and to local storage for the current player, so that it is useful later in the game.
+          2. The right signboard will be game control settings.  It will display "Shift Settings" at the top.  then...
+             1. the prefix "Mode:" then a toggle switch with 'Triage' on the left, 'RUSH' on the right.  Game mode selector.
+             2. the prefix "Difficulty:" then a toggle switch with 'Strict' on the left, 'Forgiving' on the right.  Strictness selector.
+             3. the prefix "Shift Length:" then timer buttons (below that prefix, centered in the horizontal space),  What button values are displayed is context dependent on the 'Game Mode' above.  The buttons themselves need no title, just the button text is sufficient.
+                1. if 'Triage' Mode then two buttons with '300' (default) and 'No Timer' (which sets the game timer display to '---')
+                2. if 'RUSH' Mode then 60 second (default) and 120 seconds.
+             4. At the bottom a prefix of "UI Hints?" and a checkbox on/off.  This is to allow the player to choose whether to display the UI hints on what is available to click.
+          3.
 

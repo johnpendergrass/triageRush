@@ -32,7 +32,7 @@ These are the authoritative current specifications.
    Current milestone, settled direction, verified baseline, unresolved
    decisions, and the recommended first production implementation slice.
 
-7. [HOME screen specification](home-screen-specification--2026-07-30-1933.md)
+7. [HOME screen specification](home-screen-specification--2026-07-31-1113.md)
 
    Approved HOME artwork, registered overlay coordinates, sidewalk-board and
    ABOUT behavior, boombox placement, and Classical KING streaming controls.

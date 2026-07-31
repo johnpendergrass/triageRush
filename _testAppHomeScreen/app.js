@@ -1,53 +1,56 @@
-const boombox = document.querySelector("#boombox");
-const coordinateReadout = document.querySelector("#coordinateReadout");
-const moveButtons = document.querySelectorAll(".move-button");
-const scaleDown = document.querySelector("#scaleDown");
-const scaleUp = document.querySelector("#scaleUp");
-const scaleReadout = document.querySelector("#scaleReadout");
 const powerToggle = document.querySelector("#powerToggle");
 const musicToggle = document.querySelector("#musicToggle");
 const uiToggle = document.querySelector("#uiToggle");
 const kingStream = document.querySelector("#kingStream");
+const popupLayer = document.querySelector("#popupLayer");
+const popupArt = document.querySelector("#popupArt");
+const popupClose = document.querySelector("#popupClose");
+const popupButtons = document.querySelectorAll("[data-popup]");
 
-let boomboxX = 357;
-let boomboxY = 1256;
-let boomboxScale = 100;
-const boomboxBaseWidth = 480;
+const popupDefinitions = {
+  player: {
+    title: "PLAYER SETTINGS",
+    src: "../triageRush/assets/home-screen/backgrounds/popup-settings-player-board.png"
+  },
+  shift: {
+    title: "SHIFT SETTINGS",
+    src: "../triageRush/assets/home-screen/backgrounds/popup-settings-shift-settings-board.png"
+  },
+  about: {
+    title: "ABOUT TRIAGERUSH",
+    src: "../triageRush/assets/home-screen/backgrounds/popup-about-whiteboard.png"
+  }
+};
 
-function renderPosition() {
-  boombox.style.setProperty("--boombox-x", `${(boomboxX / 852) * 100}%`);
-  boombox.style.setProperty("--boombox-y", `${(boomboxY / 1515) * 100}%`);
-  boombox.style.setProperty(
-    "--boombox-width",
-    `${((boomboxBaseWidth * boomboxScale) / 100 / 852) * 100}%`
-  );
-  coordinateReadout.value =
-    `X ${boomboxX} · Y ${boomboxY} · SCALE ${boomboxScale}%`;
-  coordinateReadout.textContent =
-    `X ${boomboxX} · Y ${boomboxY} · SCALE ${boomboxScale}%`;
-  scaleReadout.value = `${boomboxScale}%`;
-  scaleReadout.textContent = `${boomboxScale}%`;
+let popupTrigger = null;
+
+function openPopup(name, trigger) {
+  const popup = popupDefinitions[name];
+  if (!popup) return;
+
+  popupTrigger = trigger;
+  popupArt.src = popup.src;
+  popupArt.alt = `${popup.title} background`;
+  popupLayer.setAttribute("aria-label", `${popup.title} popup preview`);
+  popupLayer.hidden = false;
+  popupClose.focus();
 }
 
-function moveBoombox(dx, dy, amount = 1) {
-  boomboxX += dx * amount;
-  boomboxY += dy * amount;
-  renderPosition();
+function closePopup() {
+  popupLayer.hidden = true;
+  popupArt.removeAttribute("src");
+  popupTrigger?.focus();
 }
 
-moveButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    moveBoombox(Number(button.dataset.dx), Number(button.dataset.dy));
-  });
+popupButtons.forEach((button) => {
+  button.addEventListener("click", () => openPopup(button.dataset.popup, button));
 });
 
-function scaleBoombox(direction, amount = 1) {
-  boomboxScale = Math.min(180, Math.max(40, boomboxScale + direction * amount));
-  renderPosition();
-}
+popupClose.addEventListener("click", closePopup);
 
-scaleDown.addEventListener("click", () => scaleBoombox(-1));
-scaleUp.addEventListener("click", () => scaleBoombox(1));
+popupLayer.addEventListener("click", (event) => {
+  if (event.target === popupLayer) closePopup();
+});
 
 let radioPowered = false;
 let musicEnabled = true;
@@ -114,27 +117,7 @@ kingStream.addEventListener("error", () => {
 });
 
 document.addEventListener("keydown", (event) => {
-  const directionByKey = {
-    ArrowUp: [0, -1],
-    ArrowDown: [0, 1],
-    ArrowLeft: [-1, 0],
-    ArrowRight: [1, 0]
-  };
-  const direction = directionByKey[event.key];
-
-  if (direction) {
-    event.preventDefault();
-    moveBoombox(direction[0], direction[1], event.shiftKey ? 10 : 1);
-  }
-
-  if (event.key === "-" || event.key === "_") {
-    scaleBoombox(-1, event.shiftKey ? 10 : 1);
-  }
-
-  if (event.key === "+" || event.key === "=") {
-    scaleBoombox(1, event.shiftKey ? 10 : 1);
-  }
+  if (event.key === "Escape" && !popupLayer.hidden) closePopup();
 });
 
-renderPosition();
 renderSoundControls();
