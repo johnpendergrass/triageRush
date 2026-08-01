@@ -404,6 +404,10 @@ button {
   box-shadow: inset 0 0 0 1px #71848d;
 }
 
+.patient-panel:not(.is-awaiting-patient) {
+  cursor: zoom-in;
+}
+
 .patient-scene,
 .patient-quote,
 .vitals-card,
@@ -613,6 +617,67 @@ button {
   line-height: 1.18;
 }
 
+.patient-expand-hitbox {
+  position: absolute;
+  z-index: 7;
+  inset: 0;
+  overflow: visible;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  cursor: zoom-in;
+  touch-action: manipulation;
+}
+
+.patient-expand-hitbox[hidden] {
+  display: none;
+}
+
+.patient-expand-icon {
+  position: absolute;
+  right: 7px;
+  bottom: 7px;
+  width: clamp(30px, 8cqw, 34px);
+  aspect-ratio: 1;
+  border: 2px solid #fff3cf;
+  border-radius: 50%;
+  color: white;
+  background: rgb(17 74 96 / 88%);
+  box-shadow: 0 2px 6px #0009;
+  pointer-events: none;
+}
+
+.patient-expand-icon::before {
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 43%;
+  aspect-ratio: 1;
+  border: 2px solid white;
+  border-radius: 50%;
+  content: "";
+}
+
+.patient-expand-icon::after {
+  position: absolute;
+  top: 62%;
+  left: 57%;
+  width: 30%;
+  height: 2px;
+  transform: rotate(45deg);
+  transform-origin: left center;
+  border-radius: 999px;
+  background: white;
+  content: "";
+}
+
+.patient-expand-hitbox:focus-visible {
+  outline: 3px solid white;
+  outline-offset: 2px;
+  border-color: #147ca3;
+}
+
 .result-toast {
   position: absolute;
   z-index: 8;
@@ -725,15 +790,15 @@ button {
   z-index: 6;
   top: 50%;
   left: 50%;
-  width: max-content;
-  max-width: 88%;
+  width: calc(100% - 10px);
+  box-sizing: border-box;
   transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 12px 14px 10px;
-  border: 2px dashed #91a7b0;
+  padding: 18px 15px 19px;
+  border: 2px dashed #d4e4e9;
   border-radius: 12px;
   background: #06202dcc;
   color: white;
@@ -746,7 +811,7 @@ button {
 }
 
 .patient-empty-state span {
-  color: #9cb0b8;
+  color: white;
   font-size: clamp(7px, 2.2cqw, 10px);
   font-weight: 900;
   letter-spacing: 0.12em;
@@ -761,10 +826,139 @@ button {
 }
 
 .patient-empty-state small {
-  margin-top: 7px;
-  color: #c5d4d9;
+  margin-top: 3em;
+  display: block;
+  width: 100%;
+  color: white;
   font-size: clamp(8px, 2.5cqw, 11px);
-  font-weight: 700;
+  font-weight: 900;
+  line-height: 1.35;
+  text-shadow: 0 1px 2px #000;
+}
+
+.empty-state-action {
+  width: 100%;
+  display: grid;
+  align-items: center;
+  gap: 6px;
+}
+
+.empty-state-action--from-waiting {
+  grid-template-columns: 32px minmax(0, 1fr);
+}
+
+.empty-state-action--recall,
+.empty-state-action--definition {
+  grid-template-columns: minmax(0, 1fr) 32px;
+}
+
+.empty-state-action > span {
+  color: white;
+  font-size: inherit;
+  line-height: 1.28;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+.empty-state-divider {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 7px;
+  margin: 2em 0;
+  color: #d4e4e9;
+  font-size: 0.78em;
+  line-height: 1;
+  text-shadow: none;
+}
+
+.empty-state-divider::before,
+.empty-state-divider::after {
+  height: 1px;
+  flex: 1;
+  background: rgb(212 228 233 / 48%);
+  content: "";
+}
+
+.empty-state-divider b {
+  font-weight: 900;
+}
+
+.empty-state-divider--before-definition {
+  margin-top: 2em;
+  margin-bottom: 4em;
+}
+
+.empty-state-divider--before-coach {
+  margin-top: 5em;
+  margin-bottom: 2em;
+}
+
+.empty-state-coach-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 9px;
+  color: white;
+  line-height: 1.28;
+  text-align: center;
+}
+
+.empty-state-arrow-down {
+  position: relative;
+  display: block;
+  width: 2px;
+  height: 24px;
+  border-radius: 999px;
+  background: white;
+  filter: drop-shadow(0 1px 1px #000);
+}
+
+.empty-state-arrow-down::after {
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: translateX(-50%);
+  border-top: 7px solid white;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+  content: "";
+}
+
+.empty-state-arrow {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 2px;
+  border-radius: 999px;
+  background: white;
+  filter: drop-shadow(0 1px 1px #000);
+}
+
+.empty-state-arrow::after {
+  position: absolute;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform: translateY(-50%);
+  content: "";
+}
+
+.empty-state-arrow--right::after {
+  right: -1px;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 7px solid white;
+}
+
+.empty-state-arrow--left::after {
+  left: -1px;
+  border-top: 4px solid transparent;
+  border-right: 7px solid white;
+  border-bottom: 4px solid transparent;
 }
 
 .rooms-panel {
@@ -837,44 +1031,6 @@ button {
 
 .room-choice:active .door-art {
   transform: translateX(-50%) scale(0.96);
-}
-
-.room-label {
-  position: absolute;
-  z-index: 5;
-  top: 2px;
-  left: 50%;
-  width: 83%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  pointer-events: none;
-}
-
-.room-label span,
-.room-label strong {
-  padding: 1px 3px;
-  border: 1px solid #91a1a8;
-  border-radius: 4px;
-  background: #051722e8;
-  color: white;
-  line-height: 1;
-  text-shadow: 0 1px 1px #000;
-  white-space: nowrap;
-}
-
-.room-label span {
-  font-size: clamp(5px, 1.65cqw, 7px);
-  font-weight: 900;
-}
-
-.room-label strong {
-  overflow: hidden;
-  font-size: clamp(5px, 1.58cqw, 7px);
-  font-weight: 900;
-  text-overflow: ellipsis;
 }
 
 .room-choice.is-open .door-art {
@@ -1257,6 +1413,315 @@ button {
   color: #6f7476;
   font-size: clamp(8px, 2.55cqw, 11px) !important;
   font-style: italic;
+}
+
+/* Schema 2.0 Coach chart: the same visual system as the pre-decision chart. */
+.coach-overlay {
+  padding: 3%;
+  background: rgb(0 16 25 / 90%);
+}
+
+.coach-frame {
+  height: 94%;
+  display: block;
+  overflow: hidden;
+  transform: none;
+}
+
+.coach-card {
+  height: 100%;
+  max-height: none;
+  padding: 32px 13px 58px;
+  border: 4px solid #87959b;
+  border-radius: 9px;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 25px, rgb(56 120 147 / 9%) 25px 26px),
+    linear-gradient(90deg, transparent 0 34px, rgb(190 62 53 / 12%) 34px 35px, transparent 35px),
+    #f7f3e9;
+  box-shadow:
+    inset 0 0 0 2px #d7dcde,
+    inset 0 0 24px rgb(77 68 49 / 12%),
+    0 20px 65px #000e;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+  scrollbar-color: #506d79 #ddd4c4;
+}
+
+.chart-rail {
+  position: absolute;
+  z-index: 2;
+  top: 5px;
+  left: 50%;
+  width: 42%;
+  height: 18px;
+  transform: translateX(-50%);
+  border: 2px solid #56656c;
+  border-radius: 4px 4px 8px 8px;
+  background: linear-gradient(#f7f8f8, #89979d 48%, #d7dcde 52%, #69777d);
+  box-shadow: 0 2px 4px #0007;
+  pointer-events: none;
+}
+
+.coach-eyebrow {
+  margin: 0 38px 8px;
+  color: #345462;
+  text-align: center;
+}
+
+.coach-close {
+  top: 8px;
+  right: 9px;
+  width: 34px;
+  height: 34px;
+  padding: 0 0 3px;
+  border: 2px solid white;
+  border-radius: 7px;
+  background: linear-gradient(#ef594d, #9d150e);
+  box-shadow: 0 2px 6px #0008;
+  font: 900 26px/1 Arial, sans-serif;
+}
+
+.coach-info-group {
+  margin-top: 10px;
+  overflow: hidden;
+  border: 2px solid;
+  border-radius: 5px;
+  box-shadow: 0 2px 6px rgb(36 47 51 / 20%);
+}
+
+.coach-group-title {
+  margin: 0 !important;
+  padding: 8px 10px;
+  color: white !important;
+  font-family: Arial, sans-serif !important;
+  font-size: clamp(9px, 2.9cqw, 13px) !important;
+  line-height: 1 !important;
+  letter-spacing: 0.08em;
+}
+
+.coach-known-group {
+  padding: 0 9px 9px;
+  border-color: #a58c69;
+  background: #eee3d2;
+}
+
+.coach-known-group > .coach-group-title {
+  margin-inline: -9px !important;
+  background: linear-gradient(90deg, #6c5841, #958063);
+}
+
+.coach-patient-portrait {
+  width: 100%;
+  aspect-ratio: 1;
+  margin: 9px 0 0;
+  overflow: hidden;
+  border: 2px solid #91a2a9;
+  border-radius: 4px;
+  background: linear-gradient(#dce8eb, #f8f5ed);
+  box-shadow: 0 2px 6px rgb(39 50 54 / 24%);
+}
+
+.coach-patient-portrait img {
+  width: 100%;
+  height: 100%;
+  padding: 2%;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(0 8px 8px rgb(0 21 31 / 25%));
+}
+
+.coach-patient-header {
+  margin: 9px 0 0;
+  display: block;
+  padding: 10px 12px;
+  border: 1px solid #9ba8ad;
+  border-left: 7px solid #1b657f;
+  border-radius: 3px;
+  background: rgb(255 255 255 / 82%);
+}
+
+.coach-card h2 {
+  color: #153b4b;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.coach-quote {
+  margin: 8px 0 0;
+  padding: 10px 11px;
+  border-left: 4px solid #b07a2c;
+  border-radius: 3px;
+  background: #fff9e8;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(10px, 3.2cqw, 14px);
+  line-height: 1.35;
+}
+
+.coach-known-section {
+  margin-top: 9px;
+  overflow: hidden;
+  border: 1px solid #afa089;
+  border-radius: 4px;
+  background: rgb(255 253 248 / 82%);
+}
+
+.coach-known-section > h3,
+.coach-decision-group > h3,
+.coach-explanation-section > h3 {
+  margin: 0;
+  padding: 7px 10px;
+  border: 0;
+  border-bottom: 1px solid rgb(45 63 70 / 28%);
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: clamp(9px, 2.8cqw, 13px);
+  line-height: 1;
+  letter-spacing: 0.08em;
+}
+
+.coach-known-section > h3 {
+  background: linear-gradient(90deg, #766147, #9c8769);
+}
+
+.coach-known-section .coach-vitals {
+  padding: 8px;
+}
+
+.coach-known-section > p {
+  margin: 0;
+  padding: 10px 11px 12px;
+}
+
+.coach-decision-group {
+  padding: 0 10px 10px;
+  border-color: #bd831d;
+  background: #fff0c8;
+}
+
+.coach-decision-group > h3 {
+  margin-inline: -10px;
+  margin-bottom: 9px;
+  background: linear-gradient(90deg, #a7670c, #d49b32);
+}
+
+.coach-decision-group .coach-summary div {
+  border-color: #c89436;
+  background: rgb(255 252 238 / 88%);
+}
+
+.coach-card[data-result="correct"] .coach-result {
+  border-left-color: #19864c;
+  background: #d8efe1;
+}
+
+.coach-card[data-result="over"] .coach-result {
+  border-left-color: #d4a01d;
+  background: #fff1bd;
+}
+
+.coach-card[data-result="under"] .coach-result,
+.coach-card[data-result="wrong"] .coach-result {
+  border-left-color: #c3372d;
+  background: #f6dcd8;
+}
+
+.coach-explanation-group {
+  padding: 0 9px 9px;
+  border-color: #698d9d;
+  background: #dde9ed;
+}
+
+.coach-explanation-group > .coach-group-title {
+  margin-inline: -9px !important;
+  background: linear-gradient(90deg, #205d75, #4b8498);
+}
+
+.coach-explanation-section {
+  padding: 0 0 10px;
+  border-bottom: 1px solid #9db2ba;
+}
+
+.coach-explanation-section:last-child {
+  border-bottom: 0;
+}
+
+.coach-explanation-section > h3 {
+  margin: 0 0 8px;
+  color: #17475a;
+  background: rgb(255 255 255 / 48%);
+}
+
+.coach-explanation-section > h4 {
+  margin: 10px 10px 3px;
+  color: #315968;
+  font-family: Arial, sans-serif;
+  font-size: clamp(9px, 2.8cqw, 13px);
+  text-transform: uppercase;
+}
+
+.coach-explanation-section > p,
+.coach-explanation-section > ul {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.coach-lead {
+  color: #173f50;
+  font-weight: 900;
+}
+
+.coach-list {
+  margin-top: 4px;
+  padding-left: 21px;
+  color: #26383f;
+  font-family: Arial, sans-serif;
+  font-size: clamp(10px, 3.15cqw, 14px);
+  line-height: 1.34;
+}
+
+.coach-list li + li {
+  margin-top: 4px;
+}
+
+.coach-list li::marker {
+  color: #1a6e8b;
+}
+
+.coach-red-flags li::marker {
+  color: #c3372d;
+}
+
+.coach-list .is-maybe {
+  color: #5f6d72;
+  font-style: italic;
+}
+
+.coach-disclaimer {
+  padding: 8px 9px;
+  border-left: 4px solid #7c8d94;
+  background: #e2e8e9;
+  color: #485b62;
+  font-size: clamp(9px, 2.9cqw, 13px) !important;
+  font-style: italic;
+}
+
+.coach-scroll-hint--above {
+  top: 7px;
+  bottom: auto;
+  grid-template-columns: 18px auto;
+}
+
+.coach-scroll-hint--below {
+  top: auto;
+  bottom: 7px;
+}
+
+.coach-scroll-hint--above b {
+  animation: coach-point-up 650ms ease-in-out infinite alternate;
+}
+
+@keyframes coach-point-up {
+  from { transform: translateY(3px); }
+  to { transform: translateY(-2px); }
 }
 
 @media (max-height: 590px) {

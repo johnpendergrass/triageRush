@@ -2,7 +2,8 @@
 
 **Status:** Coach design accepted as the working pattern, except for final
 vital-value positioning  
-**Applies to:** Post-decision Coach and future Patient Review panels
+**Applies to:** The shared detailed-patient chart used during presentation,
+post-decision Coach, and future Patient Review
 
 ## Purpose
 
@@ -11,10 +12,25 @@ patient. It is not a diagnosis screen. Its primary job is to answer:
 
 > Why is this the correct ESI level, based on the information the player had?
 
-The future Patient Review panel should use essentially the same patient-chart
-component, content order, visual hierarchy, and interactions. Coach is the
-immediate post-decision use of the component; Patient Review is the later
-historical use.
+The game uses one detailed patient-chart component for every context. Before a
+room assignment it exposes only the presentation section. Coach is the
+immediate post-decision mode with all three sections exposed; Patient Review is
+the later historical use of the same component.
+
+## Application-controlled section switches
+
+The schema supplies `patient.presentation`, `patient.answer`, and
+`patient.clinical`. It does not store display state. Application presets expose
+the appropriate sections:
+
+```text
+Before assignment: presentation ON, answer OFF, clinical OFF
+After assignment:  presentation ON, answer ON,  clinical ON
+```
+
+The presentation section always begins with the full-size patient image. The
+application must not maintain a second detailed-patient popup or a separate
+small-image Coach layout.
 
 ## Evidence and teaching rules
 
@@ -31,7 +47,7 @@ historical use.
   under-triage.
 
 The complete patient-writing rules live in
-`patient-data/schema/proposed-schema-changes.md`.
+`patient-data/schema/patient-schema-notes.md`.
 
 ## Three information levels
 
@@ -113,25 +129,26 @@ The application-owned disclaimer currently reads:
 
 ## Data mapping
 
-The current demo maps the draft patient record as follows:
+Schema 2.1 maps the patient record as follows:
 
 | Displayed content | Source |
 |---|---|
 | Image | Local patient image selected by patient ID |
-| Name, age, sex | `patient.personal` |
-| Chief complaint | `patient.clinical.chiefComplaint` |
-| Quote | `quoteShort`, falling back to `quoteLong` |
-| Triage note | `presentationShort`, falling back to `presentationLong` |
-| Vital signs | `patient.vitals`; temperature is stored in Celsius and displayed as `37.0°C / 98.6°F` |
-| Correct level | `triageReasoning.correctEsi` |
-| Why this level | `summary` and `acuityReason` |
-| Why this destination | `destinationReason` |
-| Expected resources | `expectedResources[]` |
-| Key findings | `keyFindings[]` |
-| Optional red flags | `redFlags[]` or `null` |
-| Remember | `teachingPoints[]` |
-| Possible diagnoses | `possibleClinicalOutcome.possibleDiagnoses[]` |
-| Possible disposition | `possibleClinicalOutcome.disposition` |
+| Name, age, sex | `patient.presentation.personal` |
+| Chief complaint | `patient.presentation.chiefComplaint` |
+| Quote | `patient.presentation.quote` |
+| Triage note | `patient.presentation.triageNote` |
+| Vital signs | `patient.presentation.vitals`; temperature is stored in Celsius and displayed as `37.0°C / 98.6°F` |
+| Correct level | `patient.answer.correctEsi` |
+| Correct room | `patient.answer.correctRoom` |
+| Why this level | `patient.clinical.summary` and `acuityReason` |
+| Why this destination | `patient.clinical.destinationReason` |
+| Expected resources | `patient.clinical.expectedResources[]` |
+| Key findings | `patient.clinical.keyFindings[]` |
+| Optional red flags | `patient.clinical.redFlags[]` or `null` |
+| Remember | `patient.clinical.teachingPoints[]` |
+| Possible diagnoses | `patient.clinical.possibleClinicalOutcome.possibleDiagnoses[]` |
+| Possible disposition | `patient.clinical.possibleClinicalOutcome.disposition` |
 | Player assignment | Current game/session decision, not patient JSON |
 
 Patient-authored prose is displayed as written. The application supplies

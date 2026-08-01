@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#071822" />
     <title>triageRush - Interactive Design Mockup</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=20260731d" />
   </head>
   <body>
     <main class="app-shell" aria-label="triageRush interactive game mockup">
@@ -59,7 +59,16 @@
             <div class="clipboard-clip" aria-hidden="true"></div>
             <span class="card-kicker">TRIAGE NOTE</span>
             <p id="presentationText"></p>
+            <span class="patient-expand-icon" aria-hidden="true"></span>
           </section>
+
+          <button
+            class="patient-expand-hitbox"
+            id="patientExpandButton"
+            type="button"
+            aria-label="Expand the current patient chart"
+            hidden
+          ></button>
 
           <div class="result-toast" id="resultToast" role="status" aria-live="assertive"></div>
 
@@ -98,42 +107,95 @@
       <section class="coach-overlay" id="coachOverlay" hidden>
         <div class="coach-frame" role="dialog" aria-modal="true" aria-labelledby="coachTitle">
           <article class="coach-card" id="coachCard">
-            <span class="coach-eyebrow">POST-DECISION COACH</span>
-            <header class="coach-patient-header">
-              <img id="coachPatientImage" src="" alt="" />
-              <div>
+            <span class="chart-rail" aria-hidden="true"></span>
+            <span class="coach-eyebrow" id="detailEyebrow">PATIENT CHART</span>
+
+            <section class="coach-info-group coach-known-group" aria-labelledby="coachKnownTitle">
+              <h2 class="coach-group-title" id="coachKnownTitle">PATIENT PRESENTATION</h2>
+              <figure class="coach-patient-portrait">
+                <img id="coachPatientImage" src="" alt="" />
+              </figure>
+              <header class="coach-patient-header">
                 <h2 id="coachTitle">Patient review</h2>
                 <p class="coach-demographics" id="coachDemographics"></p>
                 <strong class="coach-complaint" id="coachComplaint"></strong>
+              </header>
+              <blockquote class="coach-quote" id="coachQuote"></blockquote>
+              <section class="coach-known-section" aria-labelledby="coachVitalsTitle">
+                <h3 id="coachVitalsTitle">VITAL SIGNS</h3>
+                <div class="coach-vitals" id="coachVitals"></div>
+              </section>
+              <section class="coach-known-section" aria-labelledby="coachTriageTitle">
+                <h3 id="coachTriageTitle">TRIAGE NOTE</h3>
+                <p id="coachTriage"></p>
+              </section>
+            </section>
+
+            <section class="coach-info-group coach-decision-group" id="detailAnswerSection" aria-labelledby="coachDecisionTitle" hidden>
+              <h3 id="coachDecisionTitle">YOUR TRIAGE DECISION</h3>
+              <div class="coach-summary">
+                <div><span>YOU ASSIGNED</span><strong id="coachChoice"></strong></div>
+                <div><span>CORRECT LEVEL</span><strong id="coachCorrect"></strong></div>
               </div>
-            </header>
-            <blockquote class="coach-quote" id="coachQuote"></blockquote>
-            <section class="coach-vitals-section" aria-labelledby="coachVitalsTitle">
-              <h3 id="coachVitalsTitle">Vitals</h3>
-              <div class="coach-vitals" id="coachVitals"></div>
+              <p class="coach-result" id="coachResult"></p>
             </section>
-            <section class="coach-triage-section" aria-labelledby="coachTriageTitle">
-              <h3 id="coachTriageTitle">Triage comment</h3>
-              <p id="coachTriage"></p>
+
+            <section class="coach-info-group coach-explanation-group" id="detailClinicalSection" aria-labelledby="coachExplanationTitle" hidden>
+              <h2 class="coach-group-title" id="coachExplanationTitle">CLINICAL EXPLANATION</h2>
+              <section class="coach-explanation-section" aria-labelledby="coachWhyTitle">
+                <h3 id="coachWhyTitle">WHY THIS TRIAGE LEVEL?</h3>
+                <p class="coach-lead" id="coachSummaryText"></p>
+                <p id="coachAcuityReason"></p>
+                <h4>Why this destination?</h4>
+                <p id="coachDestinationReason"></p>
+              </section>
+              <section class="coach-explanation-section" aria-labelledby="coachResourcesTitle">
+                <h3 id="coachResourcesTitle">EXPECTED RESOURCES</h3>
+                <ul class="coach-list" id="coachResources"></ul>
+              </section>
+              <section class="coach-explanation-section" aria-labelledby="coachFindingsTitle">
+                <h3 id="coachFindingsTitle">KEY FINDINGS AVAILABLE TO YOU</h3>
+                <ul class="coach-list" id="coachKeyFindings"></ul>
+              </section>
+              <section class="coach-explanation-section" id="coachRedFlagsSection" aria-labelledby="coachRedFlagsTitle">
+                <h3 id="coachRedFlagsTitle">RED FLAGS</h3>
+                <ul class="coach-list coach-red-flags" id="coachRedFlags"></ul>
+              </section>
+              <section class="coach-explanation-section coach-teaching-section" aria-labelledby="coachTeachingTitle">
+                <h3 id="coachTeachingTitle">REMEMBER</h3>
+                <ul class="coach-list" id="coachTeachingPoints"></ul>
+              </section>
+              <section class="coach-explanation-section" aria-labelledby="coachOutcomeTitle">
+                <h3 id="coachOutcomeTitle">POSSIBLE CLINICAL OUTCOMES</h3>
+                <p class="coach-disclaimer">
+                  Possible diagnoses are only possibilities. They help you reflect on eventual clinical outcomes;
+                  they are not confirmed diagnoses and were not required for the triage decision.
+                </p>
+                <h4>Possible diagnoses</h4>
+                <ul class="coach-list" id="coachPossibleDiagnoses"></ul>
+                <h4>Possible disposition</h4>
+                <p id="coachDisposition"></p>
+              </section>
             </section>
-            <h3>Placement review</h3>
-            <div class="coach-summary">
-              <div><span>YOU CHOSE</span><strong id="coachChoice"></strong></div>
-              <div><span>BEST CHOICE</span><strong id="coachCorrect"></strong></div>
-            </div>
-            <p class="coach-result" id="coachResult"></p>
-            <h3>Coach suggestion</h3>
-            <p id="coachReason"></p>
-            <p class="coach-caution">
-              Prototype educational explanation. Final clinical wording and near-miss rules still require review.
-            </p>
+
+            <p class="coach-caution" id="detailCaution">Educational prototype · Patient-specific reasoning remains subject to clinical review.</p>
           </article>
-          <button class="coach-close" id="coachClose" type="button" aria-label="Close Coach card">×</button>
+          <button class="coach-close" id="coachClose" type="button" aria-label="Close patient chart">×</button>
           <button
-            class="coach-scroll-hint"
+            class="coach-scroll-hint coach-scroll-hint--above"
+            id="coachScrollAbove"
+            type="button"
+            aria-label="Scroll for earlier patient chart information"
+            hidden
+          >
+            <b aria-hidden="true">↑</b>
+            <span>MORE ABOVE</span>
+          </button>
+          <button
+            class="coach-scroll-hint coach-scroll-hint--below"
             id="coachScrollHint"
             type="button"
-            aria-label="Scroll for more Coach information"
+            aria-label="Scroll for more patient chart information"
             hidden
           >
             <span>MORE BELOW</span>
@@ -143,7 +205,7 @@
       </section>
     </main>
 
-    <script src="assets.js"></script>
-    <script src="app.js"></script>
+    <script src="assets.js?v=20260731d"></script>
+    <script src="app.js?v=20260731d"></script>
   </body>
 </html>

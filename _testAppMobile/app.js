@@ -4,7 +4,7 @@ if (!ASSETS) {
   throw new Error("Mobile asset manifest failed to load.");
 }
 
-const patients = [
+let patients = [
   {
     id: "patient-006",
     name: "Priya",
@@ -176,6 +176,52 @@ const patients = [
   }
 ];
 
+const reviewedPatientIds = Array.from(
+  { length: 10 },
+  (_, index) => `patient-${String(index + 1).padStart(3, "0")}`
+);
+
+function normalizePatientRecord(record) {
+  if (record.schema?.version !== "2.1") {
+    throw new Error(`${record.id || "Patient record"} is not schema version 2.1.`);
+  }
+
+  const { presentation, answer, clinical } = record.patient;
+  const { personal, image, vitals } = presentation;
+  const correctRoom = answer.correctRoom.replace("esi-", "esi");
+
+  return {
+    id: record.id,
+    name: personal.name,
+    age: personal.age,
+    sex: personal.sex,
+    complaint: presentation.chiefComplaint,
+    quote: presentation.quote,
+    presentation: presentation.triageNote,
+    vitals: Object.fromEntries(
+      Object.entries(vitals).map(([key, vital]) => [key, vital.value])
+    ),
+    answer: correctRoom,
+    esi: answer.correctEsi,
+    clinical,
+    imageFilename: image.imageFilename
+  };
+}
+
+async function loadReviewedPatients() {
+  const records = await Promise.all(
+    reviewedPatientIds.map(async (patientId) => {
+      const response = await fetch(ASSETS.patientData.json(patientId));
+      if (!response.ok) {
+        throw new Error(`Could not load ${patientId} (${response.status}).`);
+      }
+      return response.json();
+    })
+  );
+
+  return records.map(normalizePatientRecord);
+}
+
 const rooms = [
   {
     key: "esi1",
@@ -253,6 +299,7 @@ const ui = {
   complaintChip: document.querySelector("#complaintChip"),
   patientQuote: document.querySelector("#patientQuote"),
   presentationText: document.querySelector("#presentationText"),
+  patientExpandButton: document.querySelector("#patientExpandButton"),
   roomsPanel: document.querySelector("#roomsPanel"),
   resultToast: document.querySelector("#resultToast"),
   patientPanel: document.querySelector(".patient-panel"),
@@ -266,6 +313,11 @@ const ui = {
   coachButton: document.querySelector("#coachButton"),
   coachOverlay: document.querySelector("#coachOverlay"),
   coachCard: document.querySelector("#coachCard"),
+  detailEyebrow: document.querySelector("#detailEyebrow"),
+  detailAnswerSection: document.querySelector("#detailAnswerSection"),
+  detailClinicalSection: document.querySelector("#detailClinicalSection"),
+  detailCaution: document.querySelector("#detailCaution"),
+  coachScrollAbove: document.querySelector("#coachScrollAbove"),
   coachScrollHint: document.querySelector("#coachScrollHint"),
   statusLabel: document.querySelector("#statusLabel"),
   statusValue: document.querySelector("#statusValue"),
@@ -287,6 +339,7 @@ let timerId = null;
 let holdGesture = null;
 let awaitingPatient = true;
 let previouslyAssigned = false;
+let detailReturnFocus = null;
 
 function randomIndex(exclude = []) {
   const blocked = new Set(Array.isArray(exclude) ? exclude : [exclude]);
@@ -334,11 +387,35 @@ function renderPatient() {
   const isAssignedCase = Boolean(decision);
   ui.patientPanel.classList.toggle("is-awaiting-patient", isCleared);
   ui.patientEmptyState.hidden = !isCleared;
-  ui.emptyStateKicker.textContent = isAssignedCase ? "ROOM ASSIGNED" : "READY";
-  ui.emptyStateTitle.textContent = isAssignedCase ? "SELECT ANOTHER PATIENT" : "SELECT A PATIENT";
-  ui.emptyStateHint.textContent = isAssignedCase
-    ? "Tap the triage queue · or tap the open room to recall"
-    : "Tap a patient in the triage queue";
+  ui.patientExpandButton.hidden = isCleared || !patient;
+  ui.emptyStateKicker.hidden = isAssignedCase;
+  ui.emptyStateKicker.textContent = "READY";
+  ui.emptyStateTitle.textContent = "SELECT A PATIENT";
+  ui.emptyStateHint.innerHTML = `
+    <span class="empty-state-action empty-state-action--from-waiting">
+      <b class="empty-state-arrow empty-state-arrow--right" aria-hidden="true"></b>
+      <span>FROM WAITING ROOM</span>
+    </span>
+    ${isAssignedCase ? `
+      <span class="empty-state-divider"><b>or</b></span>
+      <span class="empty-state-action empty-state-action--recall">
+        <span>RECALL FROM THE LAST TREATMENT ROOM</span>
+        <b class="empty-state-arrow empty-state-arrow--left" aria-hidden="true"></b>
+      </span>
+    ` : ""}
+    <span class="empty-state-divider empty-state-divider--before-definition"><b>or</b></span>
+    <span class="empty-state-action empty-state-action--definition">
+      <span>PRESS AND HOLD DOOR FOR ESI DEFINITION</span>
+      <b class="empty-state-arrow empty-state-arrow--right" aria-hidden="true"></b>
+    </span>
+    ${isAssignedCase ? `
+      <span class="empty-state-divider empty-state-divider--before-coach"><b>or</b></span>
+      <span class="empty-state-coach-action">
+        <span>TAP 'COACH' BELOW TO REVIEW THE LAST PATIENT</span>
+        <b class="empty-state-arrow-down" aria-hidden="true"></b>
+      </span>
+    ` : ""}
+  `;
   ui.patientPanel
     .querySelectorAll(".patient-scene, .patient-quote, .vitals-card, .presentation-card")
     .forEach((element) => element.setAttribute("aria-hidden", String(isCleared)));
@@ -361,8 +438,27 @@ function renderPatient() {
   setVital("vitalBp", patient.vitals.bp, Number.parseInt(patient.vitals.bp, 10) < 90);
   setVital("vitalRr", patient.vitals.rr, patient.vitals.rr > 24 || patient.vitals.rr < 10);
   setVital("vitalSpo2", `${patient.vitals.spo2}%`, patient.vitals.spo2 < 92);
-  setVital("vitalTemp", `${patient.vitals.temp.toFixed(1)}°`, patient.vitals.temp >= 38);
+  setVital("vitalTemp", formatTemperature(patient.vitals.temp), patient.vitals.temp >= 38);
   setVital("vitalPain", `${patient.vitals.pain}/10`, patient.vitals.pain >= 8, patient.vitals.pain >= 5);
+
+  window.requestAnimationFrame(() => {
+    fitTextToBox(ui.patientQuote, 6.5);
+    fitTextToBox(ui.presentationText, 6.5);
+  });
+}
+
+function formatTemperature(celsius) {
+  const fahrenheit = celsius * 9 / 5 + 32;
+  return `${celsius.toFixed(1)} / ${fahrenheit.toFixed(1)}`;
+}
+
+function fitTextToBox(element, minimumSize) {
+  element.style.removeProperty("font-size");
+  let size = Number.parseFloat(window.getComputedStyle(element).fontSize);
+  while (size > minimumSize && element.scrollHeight > element.clientHeight + 1) {
+    size -= 0.25;
+    element.style.fontSize = `${size}px`;
+  }
 }
 
 function setVital(id, value, alert = false, watch = false) {
@@ -438,10 +534,6 @@ function renderRooms() {
     button.setAttribute("aria-pressed", String(isOpen));
     button.innerHTML = `
       ${canRecallPatient ? `<span class="recall-arrow" aria-hidden="true"><b>←</b></span>` : ""}
-      <span class="room-label">
-        ${room.badge ? `<span>${room.badge}</span>` : ""}
-        <strong>${room.label}</strong>
-      </span>
       <img class="door-art" src="${isOpen ? room.open : room.closed}" alt="" />
     `;
     installRoomHover(button, room);
@@ -726,26 +818,34 @@ function setMode(nextMode) {
   renderAll();
 }
 
-function openCoach() {
-  if (!decision) return;
-  const patient = activePatient();
-  const sexLabel = patient.sex === "F" ? "female" : patient.sex === "M" ? "male" : patient.sex;
-  document.querySelector("#coachPatientImage").src = ASSETS.patientData.image(patient.id);
-  document.querySelector("#coachPatientImage").alt = `${patient.name}, reviewed patient`;
-  document.querySelector("#coachTitle").textContent = patient.name;
-  document.querySelector("#coachDemographics").textContent =
-    `${patient.age}-year-old ${sexLabel} · underlying ESI ${patient.esi}`;
-  document.querySelector("#coachComplaint").textContent = patient.complaint;
-  document.querySelector("#coachQuote").textContent = `“${patient.quote}”`;
-  document.querySelector("#coachTriage").textContent = patient.presentation;
-  document.querySelector("#coachVitals").innerHTML = [
+function patientSexLabel(sex) {
+  if (sex === "F") return "female";
+  if (sex === "M") return "male";
+  return sex;
+}
+
+function patientVitalRows(patient) {
+  return [
     ["HR", patient.vitals.hr],
     ["BP", patient.vitals.bp],
     ["RR", patient.vitals.rr],
     ["SpO₂", `${patient.vitals.spo2}%`],
-    ["TEMP", `${patient.vitals.temp.toFixed(1)}°C`],
+    ["TEMP °C / °F", formatTemperature(patient.vitals.temp)],
     ["PAIN", `${patient.vitals.pain}/10`]
-  ]
+  ];
+}
+
+function populateDetailedPresentation(patient) {
+  const sexLabel = patientSexLabel(patient.sex);
+  document.querySelector("#coachPatientImage").src = ASSETS.patientData.image(patient.id);
+  document.querySelector("#coachPatientImage").alt = `${patient.name}, current patient`;
+  document.querySelector("#coachTitle").textContent = patient.name;
+  document.querySelector("#coachDemographics").textContent =
+    `${patient.age}-year-old ${sexLabel}`;
+  document.querySelector("#coachComplaint").textContent = patient.complaint;
+  document.querySelector("#coachQuote").textContent = `“${patient.quote}”`;
+  document.querySelector("#coachTriage").textContent = patient.presentation;
+  document.querySelector("#coachVitals").innerHTML = patientVitalRows(patient)
     .map(([label, value]) => `
       <div class="coach-vital">
         <span>${label}</span>
@@ -753,31 +853,122 @@ function openCoach() {
       </div>
     `)
     .join("");
+}
+
+function populateDetailedAnswer(patient) {
+  const assignedRoom = rooms.find((room) => room.key === decision.room);
+  const assignedEsi = assignedRoom?.esi ?? null;
   document.querySelector("#coachChoice").textContent = roomNames[decision.room];
-  document.querySelector("#coachCorrect").textContent = roomNames[patient.answer];
-  document.querySelector("#coachResult").textContent =
-    decision.outcome === "correct"
-      ? "You selected the intended treatment level."
-      : decision.outcome === "acceptable"
-        ? "This numbered ESI placement is acceptable for this patient, although the special pathway remains the intended choice."
-      : decision.outcome === "close"
-        ? "Your ESI choice was one level from the intended answer."
-        : "This choice differs materially from the intended treatment level.";
-  document.querySelector("#coachReason").textContent = patient.why;
+  document.querySelector("#coachCorrect").textContent = `ESI ${patient.esi}`;
+  document.querySelector("#coachResult").textContent = evaluateTriageChoice(
+    assignedEsi,
+    patient.esi,
+    decision.room,
+    patient.answer
+  );
+  ui.coachCard.dataset.result = getTriageDirection(assignedEsi, patient.esi);
+}
+
+function populateDetailedClinical(patient) {
+  const clinical = patient.clinical;
+  document.querySelector("#coachSummaryText").textContent = clinical.summary;
+  document.querySelector("#coachAcuityReason").textContent = clinical.acuityReason;
+  document.querySelector("#coachDestinationReason").textContent = clinical.destinationReason;
+  document.querySelector("#coachDisposition").textContent =
+    clinical.possibleClinicalOutcome.disposition;
+  renderCoachList("coachResources", clinical.expectedResources);
+  renderCoachList("coachKeyFindings", clinical.keyFindings);
+  renderCoachList("coachTeachingPoints", clinical.teachingPoints);
+  renderCoachList(
+    "coachPossibleDiagnoses",
+    clinical.possibleClinicalOutcome.possibleDiagnoses
+  );
+
+  const redFlags = clinical.redFlags || [];
+  document.querySelector("#coachRedFlagsSection").hidden = redFlags.length === 0;
+  renderCoachList("coachRedFlags", redFlags);
+}
+
+function openDetailedPatient({ showAnswer, showClinical, returnFocus, eyebrow }) {
+  const patient = activePatient();
+  if (!patient) return;
+
+  detailReturnFocus = returnFocus;
+  ui.detailEyebrow.textContent = eyebrow;
+  ui.detailAnswerSection.hidden = !showAnswer;
+  ui.detailClinicalSection.hidden = !showClinical;
+  ui.detailCaution.hidden = !showClinical;
+  populateDetailedPresentation(patient);
+  if (showAnswer) populateDetailedAnswer(patient);
+  if (showClinical) populateDetailedClinical(patient);
   ui.coachOverlay.hidden = false;
   ui.coachCard.scrollTop = 0;
   window.requestAnimationFrame(updateCoachScrollHint);
   document.querySelector("#coachClose").focus();
 }
 
+function openPatientReview() {
+  if (!activePatient() || awaitingPatient) return;
+  openDetailedPatient({
+    showAnswer: false,
+    showClinical: false,
+    returnFocus: ui.patientExpandButton,
+    eyebrow: "PATIENT CHART · AVAILABLE AT TRIAGE"
+  });
+}
+
+function openCoach() {
+  if (!decision) return;
+  openDetailedPatient({
+    showAnswer: true,
+    showClinical: true,
+    returnFocus: ui.coachButton,
+    eyebrow: "TRIAGE COACH · COMPLETE PATIENT CHART"
+  });
+}
+
+function renderCoachList(elementId, items) {
+  const list = document.querySelector(`#${elementId}`);
+  list.replaceChildren();
+  items.forEach((item) => {
+    const entry = document.createElement("li");
+    entry.textContent = item;
+    if (item.startsWith("(maybe) ")) entry.classList.add("is-maybe");
+    list.append(entry);
+  });
+}
+
+function getTriageDirection(assignedEsi, correctEsi) {
+  if (!Number.isInteger(assignedEsi)) return "wrong";
+  if (assignedEsi === correctEsi) return "correct";
+  return assignedEsi < correctEsi ? "over" : "under";
+}
+
+function evaluateTriageChoice(assignedEsi, correctEsi, assignedRoom, correctRoom) {
+  if (assignedRoom === correctRoom || assignedEsi === correctEsi) {
+    return "You correctly triaged this patient.";
+  }
+  if (!Number.isInteger(assignedEsi)) {
+    return "You assigned this patient to an incorrect destination.";
+  }
+  return assignedEsi < correctEsi
+    ? "You over-triaged this patient."
+    : "You under-triaged this patient.";
+}
+
 function closeCoach() {
+  if (ui.coachOverlay.hidden) return;
   ui.coachOverlay.hidden = true;
+  if (detailReturnFocus?.isConnected) detailReturnFocus.focus();
+  detailReturnFocus = null;
 }
 
 function updateCoachScrollHint() {
   const hasMore = ui.coachCard.scrollHeight > ui.coachCard.clientHeight + 4;
+  const isAtTop = ui.coachCard.scrollTop <= 4;
   const isAtBottom =
     ui.coachCard.scrollTop + ui.coachCard.clientHeight >= ui.coachCard.scrollHeight - 4;
+  ui.coachScrollAbove.hidden = !hasMore || isAtTop;
   ui.coachScrollHint.hidden = !hasMore || isAtBottom;
 }
 
@@ -808,9 +999,16 @@ document.querySelectorAll(".mode-button").forEach((button) => {
 });
 
 document.querySelector("#resetButton").addEventListener("click", resetRound);
+ui.patientPanel.addEventListener("click", openPatientReview);
 ui.coachButton.addEventListener("click", openCoach);
 document.querySelector("#coachClose").addEventListener("click", closeCoach);
 ui.coachCard.addEventListener("scroll", updateCoachScrollHint, { passive: true });
+ui.coachScrollAbove.addEventListener("click", () => {
+  ui.coachCard.scrollBy({
+    top: -ui.coachCard.clientHeight * 0.7,
+    behavior: "smooth"
+  });
+});
 ui.coachScrollHint.addEventListener("click", () => {
   ui.coachCard.scrollBy({
     top: ui.coachCard.clientHeight * 0.7,
@@ -818,7 +1016,9 @@ ui.coachScrollHint.addEventListener("click", () => {
   });
 });
 document.querySelector("#coachPatientImage").addEventListener("load", updateCoachScrollHint);
-window.addEventListener("resize", updateCoachScrollHint);
+window.addEventListener("resize", () => {
+  updateCoachScrollHint();
+});
 ui.coachOverlay.addEventListener("click", (event) => {
   if (event.target === ui.coachOverlay) closeCoach();
 });
@@ -831,8 +1031,30 @@ ui.soundButton.addEventListener("click", () => {
 });
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") closeCoach();
+  if (event.key !== "Escape") return;
+  closeCoach();
 });
 
-renderAll();
-startTimer();
+async function initializeDemo() {
+  waiting = [];
+  renderAll();
+  ui.emptyStateKicker.textContent = "LOADING";
+  ui.emptyStateTitle.textContent = "PATIENT RECORDS";
+  ui.emptyStateHint.textContent = "Loading reviewed patients 001–010";
+
+  try {
+    patients = await loadReviewedPatients();
+    currentPatientIndex = null;
+    waiting = makeWaitingQueue(currentPatientIndex);
+    awaitingPatient = true;
+    renderAll();
+    startTimer();
+  } catch (error) {
+    console.error(error);
+    ui.emptyStateKicker.textContent = "DATA ERROR";
+    ui.emptyStateTitle.textContent = "PATIENTS NOT LOADED";
+    ui.emptyStateHint.textContent = "Start the mobile preview server and refresh.";
+  }
+}
+
+initializeDemo();

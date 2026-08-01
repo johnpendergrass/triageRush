@@ -15,4 +15,11 @@ but does not override the current specifications under `../docs/`.
    Repository migration records, ownership conventions, collaboration notes,
    and the original five-room concept.
 
+## Superseded current specifications
+
+- [Production-start development handoff, 2026-07-29](development-handoff--2026-07-29-1824.md)
+
+  Baseline recorded immediately after the `v4` production-start restructuring;
+  superseded by the schema 2.1 and mobile detailed-patient handoff.
+
 Git history and milestone tags preserve the original paths and chronology.

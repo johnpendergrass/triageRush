@@ -27,10 +27,10 @@ These are the authoritative current specifications.
    Repository ownership, state and actions, documentation workflow,
    implementation sequence, persistence, verification, and unresolved work.
 
-6. [Production-start development handoff](development-handoff--2026-07-29-1824.md)
+6. [Schema 2.1 and mobile detailed-patient handoff](development-handoff--2026-07-31-1935.md)
 
-   Current milestone, settled direction, verified baseline, unresolved
-   decisions, and the recommended first production implementation slice.
+   Work completed since the last checkpoint, current schema and panel state,
+   verification, and the next-session TODO/discussion checklist.
 
 7. [HOME screen specification](home-screen-specification--2026-07-31-1113.md)
 

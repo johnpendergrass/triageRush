@@ -1,0 +1,113 @@
+{
+  "schema": {
+    "version": "2.1",
+    "date": "2026-07-31"
+  },
+  "id": "patient-007",
+  "number": 7,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "Information available to the player before assigning a room. This is the only detailed-patient section exposed before the first assignment.",
+      "personal": {
+        "name": "Walter",
+        "age": 72,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-007.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Face drooping",
+      "quote": "My wife says my smile went crooked and my right arm stopped cooperating. We were doing the crossword about an hour ago when it started.",
+      "triageNote": "72-year-old man with sudden right facial droop, right arm weakness, and slurred speech. His wife reports that he was last known well approximately one hour ago while doing a crossword.",
+      "vitals": {
+        "hr": {
+          "value": 88,
+          "color": "green"
+        },
+        "bp": {
+          "value": "178/96",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 16,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 97,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.9,
+          "color": "green"
+        },
+        "pain": {
+          "value": 0,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. The player's assigned room is session state and is not stored in the patient record.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null
+    },
+    "clinical": {
+      "_comment": "Display-ready educational explanation of why the correct ESI applies, using only evidence in patient.presentation. Used by Coach and Patient Review after the answer is available; does not participate in scoring.",
+      "summary": "This is a high-risk, time-sensitive focal neurologic presentation requiring immediate evaluation even though the vital signs do not show respiratory or circulatory collapse.",
+      "acuityReason": "Sudden unilateral facial and arm weakness with dysarthria and a last-known-well time of approximately one hour creates a threat to brain function and a narrow treatment window.",
+      "expectedResources": [
+        "Immediate bedside glucose testing",
+        "Emergency brain imaging",
+        "IV access and laboratory testing",
+        "Continuous cardiac monitoring",
+        "Urgent stroke-team or neurology evaluation"
+      ],
+      "destinationReason": "ESI 2 is appropriate because signs of an acute stroke without a current need for a lifesaving intervention are a high-risk presentation.",
+      "keyFindings": [
+        "Sudden right facial droop",
+        "Sudden right arm weakness",
+        "Dysarthria",
+        "Last known well approximately one hour ago",
+        "Elevated blood pressure without presented hypoperfusion"
+      ],
+      "redFlags": [
+        "Acute unilateral neurologic deficit",
+        "Time-sensitive last-known-well interval"
+      ],
+      "teachingPoints": [
+        "Normal oxygenation and heart rate do not make a new focal neurologic deficit safe to wait.",
+        "Brain imaging is diagnostic rather than a lifesaving intervention, so a stable stroke presentation is generally ESI 2 rather than ESI 1."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Acute ischemic stroke",
+          "Intracranial hemorrhage",
+          "Hypoglycemia or another metabolic stroke mimic"
+        ],
+        "disposition": "A stroke alert would prompt immediate glucose testing and brain imaging, followed by time-sensitive neurologic treatment and monitored admission if an acute cerebrovascular event is identified."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "72-year-old man in a cardigan, newspaper folded on his lap",
+    "pose": "sitting, right arm drifting limp off the armrest",
+    "expression": "confused, one side of the mouth drooping",
+    "signs": [
+      "right-sided facial droop",
+      "right arm hanging weak and low"
+    ],
+    "lookSeverity": "alert but with an obvious new focal deficit",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-007.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 72-year-old man in a cardigan with a folded newspaper on his lap, on the same blue clinic chair. Pose: sitting, right arm drifting limp off the armrest. Expression: mildly confused, the right side of his mouth drooping — NOT a grimace. Clearly visible: right-sided facial droop, right arm hanging weak and low. Overall alert but with an obvious new one-sided weakness. No text, no logos."
+  }
+}

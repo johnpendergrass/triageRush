@@ -6,7 +6,7 @@
 
 **Supersedes:** `2026 0727 1458 strict and forgiving scoring specification.md`
 
-**Applies to:** triageRush schema version 1.2 and later until superseded
+**Applies to:** triageRush schema versions 1.2 and 2.0 until superseded
 
 ## Purpose
 
@@ -32,16 +32,21 @@ Scoring mode is application configuration, not patient data.
 
 The scoring algorithm reads:
 
-- `answer.correctRoom`
-- `diagnosis.esi`
+- The version-appropriate correct-room field:
+  - `answer.correctRoom` in schema version 1.2
+  - `patient.answer.correctRoom` in schema version 2.1
+- The patient's underlying ESI:
+  - `patient.diagnosis.esi` in schema version 1.2
+  - `patient.answer.correctEsi` in schema version 2.1
 
-`answer.correctRoom` must be one of the seven room identifiers above.
-`diagnosis.esi` must be an integer from 1 through 5.
+The version-appropriate `correctRoom` must be one of the seven room identifiers above.
+The version-appropriate underlying ESI must be an integer from 1 through 5.
 
-`answer.otherAcceptableRooms` remains present in schema version 1.2 but is
-`null` for all current patients. The scoring algorithm must ignore it. It is
-reserved for a possible future exceptional-patient override whose schema and
-behavior must be defined before use.
+`otherAcceptableRooms` remains present at `answer.otherAcceptableRooms` in
+schema 1.2 and `patient.answer.otherAcceptableRooms` in schema 2.1,
+but is `null` for all current patients. The scoring algorithm must ignore it.
+It is reserved for a possible future exceptional-patient override whose schema
+and behavior must be defined before use.
 
 The patient-data contract and its version history are maintained in
 [Patient schema notes](../patient-data/schema/patient-schema-notes.md).
@@ -50,19 +55,19 @@ The patient-data contract and its version history are maintained in
 
 ### Ordinary ESI patient
 
-When `answer.correctRoom` is `esi-1` through `esi-5`, that room is the only
+When the version-appropriate `correctRoom` is `esi-1` through `esi-5`, that room is the only
 full-credit room.
 
-The data validator should require the numeric suffix of `answer.correctRoom`
-to equal `diagnosis.esi`.
+The data validator should require the numeric suffix of `correctRoom`
+to equal the version-appropriate underlying ESI.
 
 ### Psych or Discharge patient
 
-When `answer.correctRoom` is `psych` or `discharge`, two rooms receive full
+When `correctRoom` is `psych` or `discharge`, two rooms receive full
 credit:
 
-1. The special room named by `answer.correctRoom`.
-2. The ESI room derived from `diagnosis.esi`.
+1. The special room named by `correctRoom`.
+2. The ESI room derived from the version-appropriate underlying ESI.
 
 This dual full-credit rule applies in all three scoring modes.
 
@@ -80,7 +85,7 @@ For an ESI 3 patient:
 
 Psych and Discharge are special destinations and are not adjacent to any room.
 Any partial-credit ESI choice for a Psych or Discharge patient is calculated
-from that patient's underlying `diagnosis.esi`.
+from that patient's underlying ESI.
 
 ## Strict mode
 
@@ -153,10 +158,17 @@ Discharge patient from being reduced to partial credit.
 ## Reference algorithm
 
 ```text
-assignedEsiRoom = "esi-" + patient.diagnosis.esi
-fullCreditRooms = { patient.answer.correctRoom }
+if patient schema is 2.1:
+    patientEsi = patient.answer.correctEsi
+    correctRoom = patient.answer.correctRoom
+else if patient schema is 1.2:
+    patientEsi = patient.diagnosis.esi
+    correctRoom = answer.correctRoom
 
-if patient.answer.correctRoom is "psych" or "discharge":
+assignedEsiRoom = "esi-" + patientEsi
+fullCreditRooms = { correctRoom }
+
+if correctRoom is "psych" or "discharge":
     add assignedEsiRoom to fullCreditRooms
 
 if selectedRoom is in fullCreditRooms:

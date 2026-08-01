@@ -41,6 +41,19 @@ What is interactive
 -------------------
 
 - Tap a waiting-room portrait to make that person the active patient.
+- The demo patient store is now the reviewed schema 2.1 set, patients 001-010.
+  The JSON records and matching images are copied into this test app so it
+  remains independently runnable.
+- The complete quote and complete triage note are shown in the compact patient
+  panel. Text is fitted down only to a readability floor.
+- Tap the occupied patient panel or the magnifying-glass icon in the lower-right
+  of its triage note to open the sole
+  detailed-patient chart. Before assignment, its presentation section contains
+  only the large image, identity and complaint, quote, vital signs, and triage
+  note available to the player; answer and clinical sections are switched off.
+- The detailed patient chart scrolls smoothly. MORE ABOVE and MORE BELOW appear
+  only when useful, Close stays anchored at the upper-right, and the game timer
+  pauses while the chart is open.
 - Browser refresh and Reset Round start with an empty patient panel and five
   patients in the five compact queue slots.
 - Each queued patient receives one of the 16 selected waiting-room backgrounds.
@@ -56,7 +69,9 @@ What is interactive
 - Tap a treatment door to commit the choice and open the door.
 - On a computer, hover over a room to see its simple definition.
 - On a phone, press and hold a room for about half a second to see the same
-  definition; releasing closes it and does not commit the room choice.
+  definition; releasing closes it and does not commit the room choice. The
+  empty patient-panel instructions identify the waiting-room and recall
+  directions and advertise this gesture.
 - Keyboard focus also displays the room definition.
 - After assigning a room, tap that still-open room to recall the same patient
   into the patient panel. The door closes and the patient can be assigned
@@ -76,16 +91,16 @@ What is interactive
   position.
 - Selecting a queued patient after an assignment finalizes the assigned case;
   that patient is not returned to the queue.
-- Coach remains locked until a door choice has been made. Once unlocked, its
-  case-review card includes the patient image and identity, complaint, quote,
-  vitals, triage comment, placement comparison, result, and explanation.
+- Coach remains locked until a door choice has been made. Once unlocked, it
+  reopens the same schema 2.1 detailed-patient chart with presentation, answer,
+  and clinical sections all switched on. The latter includes resources,
+  findings, teaching points, and possible outcomes.
 - When the Coach card has more content below the visible area, a bouncing
   MORE BELOW arrow appears at its lower edge. It disappears at the bottom and
   can also be tapped to scroll forward.
-- The Coach window uses 82 percent of the overlay's available height. It grows
-  upward while retaining its established lower edge for a more balanced mobile
-  composition. Close remains fixed at the upper-right while only the case
-  content scrolls.
+- The detailed-patient window uses 94 percent of the overlay's available
+  height. Close remains fixed at the upper-right while only the chart content
+  scrolls.
 - Game mode shows a timer and numeric prototype score.
 - Edu mode shows Correct / Acceptable / Close / Wrong tallies.
 - The disabled footer control reminds you to select or switch patients from

@@ -1,6 +1,6 @@
 # triageRush Patient Data and Assets
 
-**Current version:** 2026-07-29 16:55 PDT
+**Current version:** 2026-07-31
 
 ## Ownership
 
@@ -13,6 +13,9 @@
 
 The repository currently contains 160 authoritative patient JSON records and
 their corresponding final patient images.
+
+Schema version 2.0 is the current contract. The existing records remain at
+version 1.2 until the deliberate per-patient migration is completed.
 
 Production must load reviewed records from `patient-data/`; demo patient
 objects embedded in JavaScript are not production data.
@@ -34,20 +37,23 @@ Important game fields include:
 - Complaint and quote
 - Triage presentation
 - Six vital signs
-- `diagnosis.esi`
-- `answer.correctRoom`
-- `answer.otherAcceptableRooms`
+- `patient.presentation` evidence available before assignment
+- `patient.answer.correctEsi`
+- `patient.answer.correctRoom`
+- `patient.answer.otherAcceptableRooms`
+- Evidence-based `patient.clinical` content for Coach and Patient Review
 - Image metadata and provenance
 
-`answer.correctRoom` uses one of:
+`patient.answer.correctRoom` uses one of:
 
 ```text
 esi-1, esi-2, esi-3, esi-4, esi-5, psych, discharge
 ```
 
-`answer.otherAcceptableRooms` is currently required but `null`. The active
-three-mode scoring rules derive credit from `answer.correctRoom` and
-`diagnosis.esi`.
+`patient.answer.otherAcceptableRooms` is currently required but `null`. The
+active three-mode scoring rules derive credit from `patient.answer.correctRoom`
+and `patient.answer.correctEsi` in version 2.1. Legacy 1.2 records retain their
+older locations until deliberately migrated.
 
 ## Patient validation
 
@@ -57,8 +63,11 @@ Production checks should verify:
 - Every identifier is unique.
 - Every final patient image exists.
 - ESI is an integer from 1 through 5.
-- Ordinary ESI room identifiers agree with diagnosis ESI.
+- Ordinary ESI room identifiers agree with the version-appropriate underlying
+  ESI.
 - Psych and Discharge retain a valid underlying ESI.
+- Version 2.1 clinical explanations use only `patient.presentation` facts or reasonable
+  inferences from them.
 - Unknown room identifiers are rejected or reported.
 - Schema-version changes are deliberate.
 
@@ -140,5 +149,9 @@ stored in the root `docs-archive/`. Production code must use
 
 ## Change history
 
+- **2026-07-31:** Established schema 2.1 with explicit `presentation`, `answer`,
+  and `clinical` patient-display sections and single quote/triage-note fields.
+- **2026-07-31:** Established schema 2.0 with `triageReasoning` and documented
+  the controlled transition from version 1.2 records.
 - **2026-07-29 16:55 PDT:** Consolidated patient ownership, schema essentials,
   production assets, anchor-image meaning, and application boundaries.
