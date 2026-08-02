@@ -1,48 +1,46 @@
 # triageRush
 
 This repository is the development home for the responsive triageRush
-Game/Edu application, its shared patient library, temporary design-reference
-apps, and a future standalone Patient CRUD tool.
+Triage/TriageRUSH application, its shared patient library, temporary
+design-reference apps, and a future standalone Patient CRUD tool.
 
 ## Current structure
 
 ```text
 triageRush/
-├── docs/
-│   └── archive/
-├── triageRush/
-├── patient-data/
-├── patient-CRUD (standalone)/
-├── _testAppMobile/
-├── _testAppDesktop/
-├── _testAppHomeScreen/
-└── index.html
+|-- docs/
+|   `-- archive/
+|-- triageRush/
+|-- patient-data/
+|-- ___patient-CRUD (standalone)/
+|-- _testAppMobile/
+|-- _testAppDesktop/
+|-- _testAppHomeScreen/
+`-- index.html
 ```
 
 ## Ownership
 
 - Root `index.html` is the GitHub Pages entry point.
-- `docs/` contains the small authoritative set of current project
-  specifications.
+- `docs/` contains the small numbered set of current project documentation.
 - `docs/archive/` preserves superseded specifications, development history,
   prototype references, and artwork development.
-- `triageRush/` owns the responsive Game/Edu application and production game
-  assets.
+- `triageRush/` owns the responsive production application and game assets.
 - `patient-data/` owns authoritative patient JSON and final patient images.
-- `patient-CRUD (standalone)/` is reserved for the future independent local
+- `___patient-CRUD (standalone)/` is reserved for the future independent local
   patient creation and editing tool.
 - `_testAppMobile/` and `_testAppDesktop/` are temporary self-contained design
-  references. They will be removed after production development is complete
-  and their accepted behavior has been verified in `triageRush/`.
-- `_testAppHomeScreen/` is the temporary HOME-panel composition and live-sound
-  reference. Its accepted behavior is recorded in
-  `docs/home-screen-specification--2026-07-31-1113.md`.
+  references. Remove them only after accepted behavior has been verified in
+  production.
+- `_testAppHomeScreen/` is the temporary HOME composition and live-sound
+  reference.
 
-Start with [the current documentation index](docs/README.md).
+Start with [the current project map](docs/1-start-here-toc.md).
 
 ## Current milestone
 
-The demo-design phase is complete. Production development begins under
-`triageRush/` with one centered responsive game whose compact form preserves
-the established mobile composition. The HOME-panel artwork, registered state
-overlays, and Classical KING sound-control prototype are ready for integration.
+The demo-design phase is substantially complete. Production development begins
+under `triageRush/` with one centered responsive application whose compact form
+preserves the established mobile composition. The HOME artwork, registered
+state overlays, patient library, and sound-control prototype are ready for
+integration.
