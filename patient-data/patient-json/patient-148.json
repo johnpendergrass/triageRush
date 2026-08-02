@@ -1,71 +1,88 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-148",
   "number": 148,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Ethan",
-      "age": 17,
-      "sex": "M",
-      "race": "asian"
-    },
-    "image": {
-      "imageFilename": "patient-148.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Ethan",
+        "age": 17,
+        "sex": "M",
+        "race": "asian"
+      },
+      "image": {
+        "imageFilename": "patient-148.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "My hand keeps going numb",
-      "quoteShort": null,
-      "quoteLong": "It wakes me up at night and I have to shake it out. Ranked grind, like six hours a night. My little finger's totally fine though — it's the other three that go dead.",
-      "presentationShort": "17yo M — 6 weeks of nocturnal numbness in thumb, index and middle fingers, relieved by shaking. Little finger spared. Tinel's and Phalen's positive.",
-      "presentationLong": "17-year-old male with six weeks of night-time numbness in the thumb, index and middle fingers relieved by shaking the hand, with the little finger entirely spared and positive Tinel's and Phalen's tests."
-    },
-    "vitals": {
-      "hr": {
-        "value": 72,
-        "color": "green"
-      },
-      "bp": {
-        "value": "118/70",
-        "color": "green"
-      },
-      "rr": {
-        "value": 14,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 99,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.7,
-        "color": "green"
-      },
-      "pain": {
-        "value": 3,
-        "color": "green"
+      "quote": "It wakes me up at night and I have to shake it out. Ranked grind, like six hours a night. My little finger's totally fine though — it's the other three that go dead.",
+      "triageNote": "17-year-old male with six weeks of night-time numbness in the thumb, index and middle fingers relieved by shaking the hand, with the little finger entirely spared and positive Tinel's and Phalen's tests.",
+      "vitals": {
+        "hr": {
+          "value": 72,
+          "color": "green"
+        },
+        "bp": {
+          "value": "118/70",
+          "color": "green"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.7,
+          "color": "green"
+        },
+        "pain": {
+          "value": 3,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Carpal tunnel syndrome (median nerve compression)",
-      "esi": 5,
-      "esi2roomsNotes": null,
-      "disposition": "Fast Track → night wrist splint, activity and ergonomics advice, GP follow-up; no imaging needed",
-      "why": "The spared little finger is the whole diagnosis: the median nerve serves the thumb, index, middle and half the ring finger, so ulnar-side sparing points straight at the carpal tunnel. History and exam only — a true ESI 5.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "esi-5",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because this chronic classic median-nerve compression pattern requires history, examination, and outpatient treatment only."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This adolescent has nocturnal median-distribution hand numbness without acute weakness or vascular findings.",
+      "acuityReason": "This chronic classic median-nerve compression pattern requires history, examination, and outpatient treatment only.",
+      "expectedResources": [],
+      "keyFindings": [
+        "Six weeks of nocturnal numbness",
+        "Thumb, index, and middle fingers affected",
+        "Little finger spared",
+        "Relieved by shaking hand",
+        "Positive provocative tests"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "The spared little finger is the whole diagnosis: the median nerve serves the thumb, index, middle and half the ring finger, so ulnar-side sparing points straight at the carpal tunnel. History and exam only — no emergency resources at all.",
+        "Triage should be based on the current presentation and expected care, with reassessment if new warning signs appear."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Median nerve compression at the wrist",
+          "Other overuse neuropathy"
+        ],
+        "disposition": "Night splinting, activity modification, and outpatient follow-up would allow discharge."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-5",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

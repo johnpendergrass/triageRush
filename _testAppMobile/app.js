@@ -176,14 +176,23 @@ let patients = [
   }
 ];
 
-const reviewedPatientIds = Array.from(
-  { length: 10 },
-  (_, index) => `patient-${String(index + 1).padStart(3, "0")}`
-);
+const reviewedPatientIds = [
+  ...Array.from(
+    { length: 16 },
+    (_, index) => `patient-${String(index + 1).padStart(3, "0")}`
+  ),
+  "patient-021",
+  "patient-022",
+  "patient-023",
+  "patient-032",
+  "patient-037",
+  "patient-043",
+  "patient-098"
+];
 
 function normalizePatientRecord(record) {
-  if (record.schema?.version !== "2.1") {
-    throw new Error(`${record.id || "Patient record"} is not schema version 2.1.`);
+  if (record.schema?.version !== "2.2") {
+    throw new Error(`${record.id || "Patient record"} is not schema version 2.2.`);
   }
 
   const { presentation, answer, clinical } = record.patient;
@@ -203,6 +212,7 @@ function normalizePatientRecord(record) {
     ),
     answer: correctRoom,
     esi: answer.correctEsi,
+    destinationReason: answer.destinationReason,
     clinical,
     imageFilename: image.imageFilename
   };
@@ -314,8 +324,10 @@ const ui = {
   coachOverlay: document.querySelector("#coachOverlay"),
   coachCard: document.querySelector("#coachCard"),
   detailEyebrow: document.querySelector("#detailEyebrow"),
+  detailPresentationSection: document.querySelector("#detailPresentationSection"),
   detailAnswerSection: document.querySelector("#detailAnswerSection"),
   detailClinicalSection: document.querySelector("#detailClinicalSection"),
+  detailSectionFeedback: document.querySelector("#detailSectionFeedback"),
   detailCaution: document.querySelector("#detailCaution"),
   coachScrollAbove: document.querySelector("#coachScrollAbove"),
   coachScrollHint: document.querySelector("#coachScrollHint"),
@@ -336,6 +348,7 @@ let seconds = 60;
 let score = 0;
 let tally = { correct: 0, acceptable: 0, close: 0, wrong: 0 };
 let timerId = null;
+let sectionFeedbackTimerId = null;
 let holdGesture = null;
 let awaitingPatient = true;
 let previouslyAssigned = false;
@@ -866,6 +879,7 @@ function populateDetailedAnswer(patient) {
     decision.room,
     patient.answer
   );
+  document.querySelector("#coachDestinationReason").textContent = patient.destinationReason;
   ui.coachCard.dataset.result = getTriageDirection(assignedEsi, patient.esi);
 }
 
@@ -873,7 +887,6 @@ function populateDetailedClinical(patient) {
   const clinical = patient.clinical;
   document.querySelector("#coachSummaryText").textContent = clinical.summary;
   document.querySelector("#coachAcuityReason").textContent = clinical.acuityReason;
-  document.querySelector("#coachDestinationReason").textContent = clinical.destinationReason;
   document.querySelector("#coachDisposition").textContent =
     clinical.possibleClinicalOutcome.disposition;
   renderCoachList("coachResources", clinical.expectedResources);
@@ -889,18 +902,62 @@ function populateDetailedClinical(patient) {
   renderCoachList("coachRedFlags", redFlags);
 }
 
-function openDetailedPatient({ showAnswer, showClinical, returnFocus, eyebrow }) {
+function setDetailedSectionState(sectionName, state) {
+  const section = document.querySelector(`[data-section="${sectionName}"]`);
+  const toggle = section.querySelector("[data-section-toggle]");
+  const content = section.querySelector(":scope > .coach-section-content");
+  const control = toggle.querySelector(".coach-section-control");
+  const isExpanded = state === "expanded";
+
+  section.dataset.sectionState = state;
+  content.hidden = !isExpanded;
+  toggle.setAttribute("aria-expanded", String(isExpanded));
+  if (state === "locked") {
+    toggle.setAttribute("aria-disabled", "true");
+    control.textContent = "LOCKED";
+  } else {
+    toggle.removeAttribute("aria-disabled");
+    control.textContent = isExpanded ? "COLLAPSE" : "EXPAND";
+  }
+}
+
+function showSectionFeedback(message) {
+  window.clearTimeout(sectionFeedbackTimerId);
+  ui.detailSectionFeedback.textContent = message;
+  sectionFeedbackTimerId = window.setTimeout(() => {
+    ui.detailSectionFeedback.textContent = "";
+  }, 1800);
+}
+
+function toggleDetailedSection(sectionName) {
+  const section = document.querySelector(`[data-section="${sectionName}"]`);
+  if (section.dataset.sectionState === "locked") {
+    showSectionFeedback("This section is locked");
+    return;
+  }
+  setDetailedSectionState(
+    sectionName,
+    section.dataset.sectionState === "expanded" ? "collapsed" : "expanded"
+  );
+  window.requestAnimationFrame(updateCoachScrollHint);
+}
+
+function openDetailedPatient({ sectionStates, returnFocus, eyebrow }) {
   const patient = activePatient();
   if (!patient) return;
 
   detailReturnFocus = returnFocus;
   ui.detailEyebrow.textContent = eyebrow;
-  ui.detailAnswerSection.hidden = !showAnswer;
-  ui.detailClinicalSection.hidden = !showClinical;
-  ui.detailCaution.hidden = !showClinical;
+  ui.detailSectionFeedback.textContent = "";
+  Object.entries(sectionStates).forEach(([sectionName, state]) => {
+    setDetailedSectionState(sectionName, state);
+  });
+  const answerAvailable = sectionStates.answer !== "locked";
+  const clinicalAvailable = sectionStates.clinical !== "locked";
+  ui.detailCaution.hidden = !clinicalAvailable;
   populateDetailedPresentation(patient);
-  if (showAnswer) populateDetailedAnswer(patient);
-  if (showClinical) populateDetailedClinical(patient);
+  if (answerAvailable) populateDetailedAnswer(patient);
+  if (clinicalAvailable) populateDetailedClinical(patient);
   ui.coachOverlay.hidden = false;
   ui.coachCard.scrollTop = 0;
   window.requestAnimationFrame(updateCoachScrollHint);
@@ -910,8 +967,11 @@ function openDetailedPatient({ showAnswer, showClinical, returnFocus, eyebrow })
 function openPatientReview() {
   if (!activePatient() || awaitingPatient) return;
   openDetailedPatient({
-    showAnswer: false,
-    showClinical: false,
+    sectionStates: {
+      presentation: "expanded",
+      clinical: "collapsed",
+      answer: "locked"
+    },
     returnFocus: ui.patientExpandButton,
     eyebrow: "PATIENT CHART · AVAILABLE AT TRIAGE"
   });
@@ -920,8 +980,11 @@ function openPatientReview() {
 function openCoach() {
   if (!decision) return;
   openDetailedPatient({
-    showAnswer: true,
-    showClinical: true,
+    sectionStates: {
+      presentation: "expanded",
+      clinical: "expanded",
+      answer: "expanded"
+    },
     returnFocus: ui.coachButton,
     eyebrow: "TRIAGE COACH · COMPLETE PATIENT CHART"
   });
@@ -1002,6 +1065,9 @@ document.querySelector("#resetButton").addEventListener("click", resetRound);
 ui.patientPanel.addEventListener("click", openPatientReview);
 ui.coachButton.addEventListener("click", openCoach);
 document.querySelector("#coachClose").addEventListener("click", closeCoach);
+document.querySelectorAll("[data-section-toggle]").forEach((button) => {
+  button.addEventListener("click", () => toggleDetailedSection(button.dataset.sectionToggle));
+});
 ui.coachCard.addEventListener("scroll", updateCoachScrollHint, { passive: true });
 ui.coachScrollAbove.addEventListener("click", () => {
   ui.coachCard.scrollBy({
@@ -1040,7 +1106,7 @@ async function initializeDemo() {
   renderAll();
   ui.emptyStateKicker.textContent = "LOADING";
   ui.emptyStateTitle.textContent = "PATIENT RECORDS";
-  ui.emptyStateHint.textContent = "Loading reviewed patients 001–010";
+  ui.emptyStateHint.textContent = "Loading all 23 provisional 2.2 demo patients";
 
   try {
     patients = await loadReviewedPatients();

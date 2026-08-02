@@ -1,71 +1,97 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-145",
   "number": 145,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Grant",
-      "age": 41,
-      "sex": "M",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-145.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Grant",
+        "age": 41,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-145.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Caught chickenpox off my kid",
-      "quoteShort": null,
-      "quoteLong": "My daughter had it two weeks ago and now I've got it, which is humiliating enough. But since yesterday I can't get a proper breath and I've got this dry cough that won't stop.",
-      "presentationShort": "41yo M, smoker — day 4 of adult varicella, now dry cough and dyspnoea. Widespread vesicular rash, crackles on auscultation.",
-      "presentationLong": "41-year-old male smoker on day four of adult chickenpox, now with a dry cough and breathlessness, a widespread vesicular rash and crackles on auscultation."
-    },
-    "vitals": {
-      "hr": {
-        "value": 112,
-        "color": "yellow"
-      },
-      "bp": {
-        "value": "126/76",
-        "color": "green"
-      },
-      "rr": {
-        "value": 28,
-        "color": "red"
-      },
-      "spo2": {
-        "value": 91,
-        "color": "yellow"
-      },
-      "temp": {
-        "value": 38.6,
-        "color": "yellow"
-      },
-      "pain": {
-        "value": 4,
-        "color": "yellow"
+      "quote": "My daughter had it two weeks ago and now I've got it, which is humiliating enough. But since yesterday I can't get a proper breath and I've got this dry cough that won't stop.",
+      "triageNote": "41-year-old male smoker on day four of adult chickenpox, now with a dry cough and breathlessness, a widespread vesicular rash and crackles on auscultation.",
+      "vitals": {
+        "hr": {
+          "value": 112,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "126/76",
+          "color": "green"
+        },
+        "rr": {
+          "value": 28,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 91,
+          "color": "red"
+        },
+        "temp": {
+          "value": 38.6,
+          "color": "yellow"
+        },
+        "pain": {
+          "value": 4,
+          "color": "yellow"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Varicella pneumonia in an adult",
-      "esi": 2,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → negative-pressure isolation, oxygen, chest X-ray and IV aciclovir; admission likely",
-      "why": "Adults get far sicker than children, and this patient is already hypoxaemic and tachypnoeic with varicella pneumonia. The oxygen requirement and risk of respiratory deterioration make this a high-risk ESI 2 presentation.",
-      "redFlag": "Respiratory symptoms in adult chickenpox — varicella pneumonia, and smokers do worst of all."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because adult varicella with cough, crackles, tachypnea, oxygen saturation 91%, and systemic illness is high risk for respiratory deterioration."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This adult smoker has varicella complicated by lower-respiratory disease and hypoxemia.",
+      "acuityReason": "Adult varicella with cough, crackles, tachypnea, oxygen saturation 91%, and systemic illness is high risk for respiratory deterioration.",
+      "expectedResources": [
+        "Immediate isolation and oxygen",
+        "Chest imaging",
+        "CBC and metabolic testing",
+        "IV antiviral treatment",
+        "Respiratory monitoring"
+      ],
+      "keyFindings": [
+        "Adult with widespread varicella",
+        "Dry cough and breathlessness",
+        "Crackles",
+        "Respiratory rate 28",
+        "Oxygen saturation 91%",
+        "Temperature 38.6 C"
+      ],
+      "redFlags": [
+        "Hypoxemic viral pneumonia"
+      ],
+      "teachingPoints": [
+        "Adults get far sicker than children, and this patient is already hypoxaemic and tachypnoeic with varicella pneumonia. The oxygen requirement and risk of respiratory deterioration make this a high-risk presentation.",
+        "Triage should be based on the current presentation and expected care, with reassessment if new warning signs appear."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Varicella pneumonia",
+          "Secondary bacterial pneumonia"
+        ],
+        "disposition": "Isolation, oxygen, antiviral treatment, and respiratory monitoring would require hospital admission."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-2",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

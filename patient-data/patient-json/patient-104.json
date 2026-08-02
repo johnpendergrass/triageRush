@@ -1,71 +1,87 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-104",
   "number": 104,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Chloe",
-      "age": 24,
-      "sex": "F",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-104.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Lauren",
+        "age": 24,
+        "sex": "F",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-104.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Think I have COVID",
-      "quoteShort": null,
-      "quoteLong": "My roommate tested positive and now I've got the sniffles. Do I need a test? A note for work? Antivirals? Should I be worried?",
-      "presentationShort": "24yo F, healthy — 2 days mild URI symptoms, positive home test. No dyspnoea, chest clear.",
-      "presentationLong": "24-year-old healthy female with two days of mild upper respiratory symptoms and a positive home test, no breathlessness and a clear chest."
-    },
-    "vitals": {
-      "hr": {
-        "value": 78,
-        "color": "green"
-      },
-      "bp": {
-        "value": "118/72",
-        "color": "green"
-      },
-      "rr": {
-        "value": 16,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 99,
-        "color": "green"
-      },
-      "temp": {
-        "value": 37.4,
-        "color": "green"
-      },
-      "pain": {
-        "value": 1,
-        "color": "green"
+      "quote": "My roommate tested positive and now I've got the sniffles. Do I need a test? A note for work? Antivirals? Should I be worried?",
+      "triageNote": "24-year-old healthy female with two days of mild upper respiratory symptoms and a positive home test, no breathlessness and a clear chest.",
+      "vitals": {
+        "hr": {
+          "value": 78,
+          "color": "green"
+        },
+        "bp": {
+          "value": "118/72",
+          "color": "green"
+        },
+        "rr": {
+          "value": 16,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37.4,
+          "color": "green"
+        },
+        "pain": {
+          "value": 1,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Mild COVID-19 in a healthy young adult",
-      "esi": 5,
-      "esi2roomsNotes": "ESI 5: no ED treatment-area resources are expected; brief evaluation, counseling, and discharge are appropriate.",
-      "disposition": "Discharge → rest, fluids, return precautions; no ED workup required",
-      "why": "Mild COVID in a healthy 24-year-old is a home illness. Six green circles and a normal saturation IS the assessment.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "discharge",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because this healthy young adult has mild upper-respiratory symptoms, normal oxygenation, and no expected counted emergency resource."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has a mild self-limited viral respiratory illness without lower-respiratory findings.",
+      "acuityReason": "Normal breathing, clear lungs, and oxygen saturation 99% support home care.",
+      "expectedResources": [],
+      "keyFindings": [
+        "Two days of mild upper-respiratory symptoms",
+        "Positive home viral test",
+        "No breathlessness",
+        "Clear chest",
+        "Oxygen saturation 99%"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Worsening breathing, dehydration, chest pain, confusion, or persistent severe fever should prompt reassessment.",
+        "Home isolation and treatment guidance should reflect current public-health recommendations."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Mild viral respiratory infection"
+        ],
+        "disposition": "Supportive home care and return precautions would allow discharge without testing."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "discharge",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

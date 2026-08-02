@@ -1,71 +1,89 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-094",
   "number": 94,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Priya",
-      "age": 31,
-      "sex": "F",
-      "race": "asian"
-    },
-    "image": {
-      "imageFilename": "patient-094.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Anjali",
+        "age": 31,
+        "sex": "F",
+        "race": "asian"
+      },
+      "image": {
+        "imageFilename": "patient-094.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Lump on her wrist",
-      "quoteShort": null,
-      "quoteLong": "I've had this smooth, round lump on the back of my wrist for a few weeks. It doesn't really hurt, it's soft and squishy, and it seems to change size. I just want to know it's nothing bad.",
-      "presentationShort": "31yo F ? several-week painless dorsal wrist lump, soft, mobile, transilluminates and changes size; full function, no redness or neurological symptoms.",
-      "presentationLong": "31-year-old female with a smooth lump on the back of her wrist for several weeks. It is soft, mobile, painless, transilluminates, and varies in size; wrist function is normal with no redness or neurological symptoms."
-    },
-    "vitals": {
-      "hr": {
-        "value": 72,
-        "color": "green"
-      },
-      "bp": {
-        "value": "116/72",
-        "color": "green"
-      },
-      "rr": {
-        "value": 14,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 99,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.8,
-        "color": "green"
-      },
-      "pain": {
-        "value": 0,
-        "color": "green"
+      "quote": "I've had this smooth, round lump on the back of my wrist for a few weeks. It doesn't really hurt, it's soft and squishy, and it seems to change size. I just want to know it's nothing bad.",
+      "triageNote": "31-year-old female with a smooth lump on the back of her wrist for several weeks. It is soft, mobile, painless, transilluminates, and varies in size; wrist function is normal with no redness or neurological symptoms.",
+      "vitals": {
+        "hr": {
+          "value": 72,
+          "color": "green"
+        },
+        "bp": {
+          "value": "116/72",
+          "color": "green"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 0,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Ganglion cyst",
-      "esi": 5,
-      "esi2roomsNotes": "ESI 5: no ED treatment-area resources are expected; brief evaluation, counseling, and discharge are appropriate.",
-      "disposition": "Discharge → reassurance, observation, elective referral if bothersome; benign. No ED workup needed.",
-      "why": "Soft, mobile, transilluminating, painless wrist bump = ganglion cyst. Reassure; it's benign. A clean discharge.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "discharge",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because this benign-appearing painless wrist cyst with normal function requires no counted emergency resource."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has a chronic smooth, mobile, transilluminating dorsal wrist lump with normal function and no inflammatory or neurologic features.",
+      "acuityReason": "The stable benign characteristics support reassurance and outpatient management.",
+      "expectedResources": [],
+      "keyFindings": [
+        "Present for several weeks",
+        "Smooth dorsal wrist lump",
+        "Soft, mobile, and painless",
+        "Transilluminates and varies in size",
+        "Normal wrist function",
+        "No redness or neurologic symptoms"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Pain, rapid growth, firmness, fixation, neurologic symptoms, or atypical location warrant reassessment.",
+        "Aspiration or surgery is usually reserved for persistent symptoms or functional limitation."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Ganglion cyst",
+          "Other benign soft-tissue mass"
+        ],
+        "disposition": "Reassurance and optional outpatient hand or primary-care follow-up would allow discharge."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "discharge",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

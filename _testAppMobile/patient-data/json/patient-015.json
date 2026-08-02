@@ -1,71 +1,93 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-015",
   "number": 15,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Kevin",
-      "age": 31,
-      "sex": "M",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-015.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Kevin",
+        "age": 31,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-015.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Panic attack",
-      "quoteShort": null,
-      "quoteLong": "I Googled my symptoms and I am 100% dying. Heart's pounding, my fingers are tingling. This is the fourth time this month — the cardiologist already said my heart's fine. I'm not dying, right? ...Right?",
-      "presentationShort": "31yo M — recurrent palpitations & tingling, 4th episode this month, prior cardiac w/u negative.",
-      "presentationLong": "31-year-old male, recurrent palpitations and finger tingling, his fourth episode this month, with a prior negative cardiac workup."
-    },
-    "vitals": {
-      "hr": {
-        "value": 104,
-        "color": "yellow"
-      },
-      "bp": {
-        "value": "128/80",
-        "color": "green"
-      },
-      "rr": {
-        "value": 22,
-        "color": "yellow"
-      },
-      "spo2": {
-        "value": 100,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.8,
-        "color": "green"
-      },
-      "pain": {
-        "value": 0,
-        "color": "green"
+      "quote": "I Googled my symptoms and I am 100% dying. Heart's pounding, my fingers are tingling. This is the fourth time this month — the cardiologist already said my heart's fine. I'm not dying, right? ...Right?",
+      "triageNote": "31-year-old male, recurrent palpitations and finger tingling, his fourth episode this month, with a prior negative cardiac workup.",
+      "vitals": {
+        "hr": {
+          "value": 104,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "128/80",
+          "color": "green"
+        },
+        "rr": {
+          "value": 22,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 100,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 0,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Panic attack (recurrent, prior negative cardiac workup)",
-      "esi": 4,
-      "esi2roomsNotes": "ESI 4: medically stable and low risk; Psych is preferred for a behavioral-health evaluation, and Fast Track is acceptable.",
-      "disposition": "Psych → calm environment, coached breathing, screen for suicidality (negative), outpatient psychiatry referral",
-      "why": "Hyperventilation blows off CO2 → perioral and fingertip tingling. Panic is a diagnosis of exclusion, but a documented pattern earns the stable Psych lane — not Resus.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player assignment remains session state.",
+      "correctEsi": 4,
+      "correctRoom": "psych",
+      "otherAcceptableRooms": null,
+      "destinationReason": "Psych is the preferred destination for this medically stable behavioral-health presentation; the underlying clinical acuity is ESI 4."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This is a recurrent episode of palpitations, tingling, and rapid breathing in a medically stable patient with a previously negative cardiac evaluation.",
+      "acuityReason": "The recurrent pattern, normal oxygenation, absence of pain, and prior reassuring workup reduce immediate medical concern, although current safety and medical red flags still require screening.",
+      "expectedResources": [
+        "Focused medical screening",
+        "Behavioral-health assessment and coached breathing"
+      ],
+      "keyFindings": [
+        "Fourth similar episode this month",
+        "Prior cardiac workup reported negative",
+        "Palpitations and finger tingling",
+        "Respiratory rate of 22",
+        "Oxygen saturation of 100%",
+        "No pain"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Rapid breathing can produce fingertip or perioral tingling through reduced carbon dioxide levels.",
+        "A recurrent anxiety pattern remains a diagnosis of exclusion, so new medical or safety concerns should still be screened."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Panic attack with hyperventilation",
+          "Anxiety disorder",
+          "Cardiac or metabolic cause if new findings emerge"
+        ],
+        "disposition": "After medical and safety screening, the patient could receive a calm environment, breathing coaching, and outpatient behavioral-health follow-up."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "psych",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

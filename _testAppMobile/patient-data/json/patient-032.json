@@ -1,71 +1,97 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-032",
   "number": 32,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Ronald",
-      "age": 71,
-      "sex": "M",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-032.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Ronald",
+        "age": 71,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-032.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Passed out, belly and back pain",
-      "quoteShort": null,
-      "quoteLong": "I passed out cold at the store. Now I've got this deep tearing pain in my belly going through to my back, and it kind of throbs. Something feels really, really wrong.",
-      "presentationShort": "71yo M ? syncope followed by severe abdominal pain through to the back; pulsatile abdominal mass, diaphoresis, BP 88/54.",
-      "presentationLong": "71-year-old male who fainted before developing severe abdominal pain radiating through to his back. He is diaphoretic with a pulsatile abdominal mass, heart rate 118, and blood pressure 88/54."
-    },
-    "vitals": {
-      "hr": {
-        "value": 118,
-        "color": "red"
-      },
-      "bp": {
-        "value": "88/54",
-        "color": "red"
-      },
-      "rr": {
-        "value": 22,
-        "color": "yellow"
-      },
-      "spo2": {
-        "value": 97,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.8,
-        "color": "green"
-      },
-      "pain": {
-        "value": 9,
-        "color": "red"
+      "quote": "I passed out cold at the store. Now I've got this deep tearing pain in my belly going through to my back, and it kind of throbs. Something feels really, really wrong.",
+      "triageNote": "71-year-old male who fainted before developing severe abdominal pain radiating through to his back. He is diaphoretic with a pulsatile abdominal mass, heart rate 118, and blood pressure 88/54.",
+      "vitals": {
+        "hr": {
+          "value": 118,
+          "color": "red"
+        },
+        "bp": {
+          "value": "88/54",
+          "color": "red"
+        },
+        "rr": {
+          "value": 22,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 97,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 9,
+          "color": "red"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Ruptured abdominal aortic aneurysm (AAA)",
-      "esi": 1,
-      "esi2roomsNotes": null,
-      "disposition": "Resus → immediate bedside ultrasound, large-bore IVs, type & cross, vascular surgery STAT; do NOT delay for CT if unstable.",
-      "why": "The triad that kills fast: syncope, back/belly pain, pulsatile mass. Unstable → straight to the OR, not the CT scanner.",
-      "redFlag": "Syncope + abdominal/back pain + pulsatile mass + hypotension = ruptured AAA."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player assignment remains session state.",
+      "correctEsi": 1,
+      "correctRoom": "esi-1",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 1 / Resuscitation is required because hypotensive circulatory collapse demands immediate lifesaving intervention."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has syncope, severe abdominal and back pain, a pulsatile abdominal mass, and hypotension requiring immediate lifesaving care.",
+      "acuityReason": "Blood pressure of 88/54 with tachycardia, diaphoresis, severe pain, and a pulsatile mass indicates active circulatory instability and a rapidly fatal vascular emergency until proven otherwise.",
+      "expectedResources": [
+        "Immediate resuscitation and continuous monitoring",
+        "Large-bore IV access, blood preparation, and bedside imaging",
+        "Immediate vascular-surgery activation"
+      ],
+      "keyFindings": [
+        "Syncope",
+        "Severe abdominal pain radiating to the back",
+        "Pulsatile abdominal mass",
+        "Diaphoresis",
+        "Blood pressure of 88/54",
+        "Heart rate of 118"
+      ],
+      "redFlags": [
+        "Syncope with abdominal or back pain",
+        "Pulsatile abdominal mass",
+        "Hypotension with tachycardia"
+      ],
+      "teachingPoints": [
+        "An unstable patient with this vascular pattern requires simultaneous resuscitation and surgical activation.",
+        "Definitive imaging must not delay operative management when instability makes transport unsafe."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Ruptured abdominal aortic aneurysm",
+          "Other catastrophic intra-abdominal hemorrhage"
+        ],
+        "disposition": "The patient would require immediate blood-product preparation, bedside assessment, vascular-surgery involvement, and emergency operative management."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-1",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

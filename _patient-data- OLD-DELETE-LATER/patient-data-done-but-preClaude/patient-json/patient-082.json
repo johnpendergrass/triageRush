@@ -1,0 +1,112 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-082",
+  "number": 82,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Gloria",
+        "age": 80,
+        "sex": "F",
+        "race": "hispanic"
+      },
+      "image": {
+        "imageFilename": "patient-082.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Very sleepy and dried out",
+      "quote": "(Son) She's a diabetic and she's been getting more and more out of it over a week — so sleepy, so thirsty, peeing constantly. Her skin looks all dried up. Now she barely responds.",
+      "triageNote": "80-year-old female with diabetes and a week of increasing thirst and urination. She is profoundly dehydrated with markedly elevated glucose and has become progressively sleepy; she now responds only briefly to stimulation.",
+      "vitals": {
+        "hr": {
+          "value": 116,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "98/58",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 20,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 96,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37,
+          "color": "green"
+        },
+        "pain": {
+          "value": 0,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 1,
+      "correctRoom": "esi-1",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 1 is appropriate because profound dehydration with severely depressed responsiveness requires immediate significant fluid resuscitation and close airway and perfusion support."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This older adult with diabetes has prolonged osmotic symptoms, extreme dehydration, marked hyperglycemia, and now responds only briefly to stimulation.",
+      "acuityReason": "Severely altered consciousness and major volume depletion indicate unstable perfusion and require immediate resuscitation.",
+      "expectedResources": [
+        "Immediate IV access and significant fluid resuscitation",
+        "Bedside glucose, blood gas, osmolality, electrolytes, and renal testing",
+        "Continuous cardiac and neurologic monitoring",
+        "Careful insulin and electrolyte treatment after initial fluids"
+      ],
+      "keyFindings": [
+        "One week of thirst and frequent urination",
+        "Profound dehydration",
+        "Markedly elevated glucose",
+        "Progressive sleepiness",
+        "Responds only briefly to stimulation"
+      ],
+      "redFlags": [
+        "Markedly depressed consciousness",
+        "Severe volume depletion"
+      ],
+      "teachingPoints": [
+        "Fluid replacement is the initial priority in profound hyperosmolar dehydration.",
+        "Sodium, potassium, osmolality, renal function, and neurologic status require careful serial monitoring."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Hyperosmolar hyperglycemic state",
+          "Mixed hyperglycemic crisis",
+          "Sepsis or another precipitating illness"
+        ],
+        "disposition": "Immediate resuscitation and controlled metabolic correction would require intensive monitored admission."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "80-year-old woman, frail and dried-out looking",
+    "pose": "slumped, drowsy, barely responsive",
+    "expression": "drowsy, sunken",
+    "signs": [
+      "drowsy, sunken features",
+      "dry, cracked lips"
+    ],
+    "lookSeverity": "very unwell, obtunded",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-082.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a hispanic 80-year-old woman, frail and dehydrated, slumped drowsily on a blue padded clinic chair. Pose: slumped and barely responsive. Expression: drowsy with sunken features. Clearly visible: sunken, drowsy features and dry cracked lips. No text, no logos."
+  }
+}

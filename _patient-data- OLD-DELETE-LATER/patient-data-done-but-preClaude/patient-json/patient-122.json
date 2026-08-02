@@ -1,0 +1,112 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-122",
+  "number": 122,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Josh",
+        "age": 20,
+        "sex": "M",
+        "race": "asian"
+      },
+      "image": {
+        "imageFilename": "patient-122.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Collapsed in the mascot suit",
+      "quote": "(slurring) ...is the game over? I'm okay, I just need to... what quarter is it? It's so hot inside the head...",
+      "triageNote": "20-year-old male who collapsed after two hours in a full mascot costume in the sun, now confused with hot skin and a core temperature above 41 degrees.",
+      "vitals": {
+        "hr": {
+          "value": 152,
+          "color": "red"
+        },
+        "bp": {
+          "value": "92/54",
+          "color": "red"
+        },
+        "rr": {
+          "value": 30,
+          "color": "red"
+        },
+        "spo2": {
+          "value": 96,
+          "color": "green"
+        },
+        "temp": {
+          "value": 41.2,
+          "color": "red"
+        },
+        "pain": {
+          "value": 2,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 1,
+      "correctRoom": "esi-1",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 1 is appropriate because core temperature 41.2 C with confusion after exertion in heat requires immediate aggressive cooling."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This young adult has exertional hyperthermia with central nervous system dysfunction after prolonged heat exposure in an insulating costume.",
+      "acuityReason": "Hyperthermia plus altered mental status defines life-threatening heat stroke; cooling must begin before extended diagnostic workup.",
+      "expectedResources": [
+        "Immediate whole-body cooling",
+        "Airway and circulatory support",
+        "Continuous core-temperature monitoring",
+        "Electrolyte, renal, liver, coagulation, and muscle-injury testing"
+      ],
+      "keyFindings": [
+        "Collapsed after two hours in sun",
+        "Full mascot costume impaired heat loss",
+        "Confused",
+        "Hot skin",
+        "Core temperature 41.2 C",
+        "Heart rate 152 and blood pressure 92/54"
+      ],
+      "redFlags": [
+        "Extreme hyperthermia with altered mental status"
+      ],
+      "teachingPoints": [
+        "Rapid cooling is the definitive time-critical intervention.",
+        "Antipyretic medication does not treat environmental heat stroke."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Exertional heat stroke",
+          "Severe heat illness with multiorgan risk"
+        ],
+        "disposition": "Immediate cooling and organ-supportive care would require intensive monitored admission."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "an asian 20-year-old college student still wearing the furry scarlet-and-white terrier mascot body suit with the oversized mascot head removed and resting on the floor beside the chair, slumped on a blue padded clinic chair",
+    "pose": "slumped back with legs splayed out, arms hanging limply, the big mascot head sitting on the floor beside his feet",
+    "expression": "dazed, unfocused and only half-aware",
+    "signs": [
+      "bright red flushed face",
+      "hair plastered flat with sweat",
+      "an oversized scarlet-and-white terrier mascot head on the floor beside the chair"
+    ],
+    "lookSeverity": "critically overheated and clearly not thinking straight",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-122.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. ANATOMY AND OBJECTS (critical): exactly one head, exactly two arms ending in exactly two hands, exactly two legs ending in two feet, five fingers on each hand. No extra, duplicated, floating or partial limbs anywhere. Anything the character touches must be plausibly held by one of those two hands. All furniture is solid and fully opaque - the chair must never look transparent or see-through, and its back, seat and legs must all be completely drawn. Subject: an asian 20-year-old college student still wearing the furry scarlet-and-white terrier mascot body suit, with the oversized mascot head removed and resting on the floor beside the chair, slumped on a blue padded clinic chair. Across the chest of the scarlet mascot suit are two large, bold, clean white block letters: 'BU'. Pose: slumped back with legs splayed out and arms hanging limply, the big mascot head sitting on the floor beside his feet. Expression: dazed, unfocused and only half-aware. Clearly visible: a bright red flushed face; hair plastered flat with sweat; the two white letters 'BU' printed large and clearly legible across the chest of the scarlet mascot suit; the oversized scarlet-and-white terrier mascot head on the floor beside the chair. Overall: critically overheated and clearly not thinking straight. The ONLY text anywhere in the picture is the two letters 'BU' - no other lettering, no watermarks, no border."
+  }
+}

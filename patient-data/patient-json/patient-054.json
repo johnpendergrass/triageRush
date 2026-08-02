@@ -1,71 +1,89 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-054",
   "number": 54,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Diego",
-      "age": 38,
-      "sex": "M",
-      "race": "hispanic"
-    },
-    "image": {
-      "imageFilename": "patient-054.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Diego",
+        "age": 38,
+        "sex": "M",
+        "race": "hispanic"
+      },
+      "image": {
+        "imageFilename": "patient-054.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Cut his finger",
-      "quoteShort": null,
-      "quoteLong": "I was chopping onions and the knife slipped. It's a clean cut on my finger, bled a lot but stopped with pressure. I can still bend it fine and feel everything.",
-      "presentationShort": "38yo M — clean 1.5 cm volar finger laceration, bleeding controlled, flexion intact, sensation intact distally.",
-      "presentationLong": "38-year-old male with a clean 1.5 cm volar finger laceration from a kitchen knife, bleeding controlled, with intact flexion and distal sensation."
-    },
-    "vitals": {
-      "hr": {
-        "value": 76,
-        "color": "green"
-      },
-      "bp": {
-        "value": "124/78",
-        "color": "green"
-      },
-      "rr": {
-        "value": 14,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 99,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.8,
-        "color": "green"
-      },
-      "pain": {
-        "value": 3,
-        "color": "yellow"
+      "quote": "I was chopping onions and the knife slipped. It's a clean cut on my finger, bled a lot but stopped with pressure. I can still bend it fine and feel everything.",
+      "triageNote": "38-year-old male with a clean 1.5 cm volar finger laceration from a kitchen knife, bleeding controlled, with intact flexion and distal sensation.",
+      "vitals": {
+        "hr": {
+          "value": 76,
+          "color": "green"
+        },
+        "bp": {
+          "value": "124/78",
+          "color": "green"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 3,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Simple finger laceration",
-      "esi": 4,
-      "esi2roomsNotes": null,
-      "disposition": "Fast Track → irrigate, check tendon/nerve, sutures, tetanus; discharge.",
-      "why": "Always document tendon and nerve function before you close. Intact here → simple repair.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 4,
+      "correctRoom": "esi-4",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 4 is appropriate because this stable uncomplicated finger laceration is expected to require one resource for wound repair."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has a small clean finger laceration with controlled bleeding and intact tendon and nerve function.",
+      "acuityReason": "The wound needs irrigation and closure, but there is no uncontrolled hemorrhage, tendon injury, sensory deficit, or contamination concern.",
+      "expectedResources": [
+        "Laceration irrigation and closure"
+      ],
+      "keyFindings": [
+        "Clean 1.5 cm volar finger wound",
+        "Bleeding controlled",
+        "Flexion intact",
+        "Distal sensation intact"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Tendon movement and distal sensation should be documented before local anesthetic and closure.",
+        "The wound should be explored for depth, contamination, and foreign material."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Simple finger laceration",
+          "Partial tendon injury if examination changes"
+        ],
+        "disposition": "After irrigation and closure, tetanus status and wound precautions would be addressed before discharge."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-4",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

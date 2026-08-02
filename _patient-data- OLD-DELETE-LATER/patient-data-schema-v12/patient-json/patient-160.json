@@ -1,0 +1,87 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-160",
+  "number": 160,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Amir",
+      "age": 34,
+      "sex": "M",
+      "race": "asian"
+    },
+    "image": {
+      "imageFilename": "patient-160.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Fever and pain behind my eyes",
+      "quoteShort": null,
+      "quoteLong": "I'm visiting from Malaysia. Three days ago the fever hit all at once, then the headache behind my eyes and every bone started aching. I feel nauseated, but I haven't had any bleeding or bad stomach pain.",
+      "presentationShort": "34yo M visiting from Malaysia - 3 days high fever, severe retro-orbital headache, myalgia, nausea and faint macular rash. No warning-sign abdominal pain, persistent vomiting or bleeding.",
+      "presentationLong": "34-year-old male visitor from Malaysia with three days of abrupt high fever, severe retro-orbital headache, diffuse myalgia, nausea and a faint macular rash, without bleeding, severe abdominal pain or persistent vomiting."
+    },
+    "vitals": {
+      "hr": {
+        "value": 108,
+        "color": "yellow"
+      },
+      "bp": {
+        "value": "112/70",
+        "color": "green"
+      },
+      "rr": {
+        "value": 18,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 99,
+        "color": "green"
+      },
+      "temp": {
+        "value": 39.0,
+        "color": "red"
+      },
+      "pain": {
+        "value": 7,
+        "color": "yellow"
+      }
+    },
+    "diagnosis": {
+      "primary": "Suspected dengue fever without current warning signs",
+      "esi": 4,
+      "esi2roomsNotes": null,
+      "disposition": "Fast Track -> CBC/hematocrit, dengue testing and hydration assessment; acetaminophen only, avoid NSAIDs, reassess carefully for warning signs",
+      "why": "Abrupt fever, severe retro-orbital pain, myalgia and rash after time in a dengue-endemic region support dengue. He is stable and has no warning signs, so outpatient management after one laboratory resource category and hydration assessment is appropriate, with explicit return precautions.",
+      "redFlag": "Watch for severe abdominal pain, persistent vomiting, bleeding, lethargy or fluid accumulation as the fever begins to fall."
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-4",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a Malaysian 34-year-old man in a lightweight travel shirt and chinos, seated on a blue padded clinic chair",
+    "pose": "sitting slumped with one hand shielding his eyes from the light and the other resting on an aching thigh",
+    "expression": "feverish, light-sensitive and deeply achy",
+    "signs": [
+      "flushed face and tired eyes",
+      "a very faint sparse pink macular rash on the forearms",
+      "a small plain carry-on bag beside the chair"
+    ],
+    "lookSeverity": "unwell with high fever but currently hemodynamically stable",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-160.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style with smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines, warm detailed rendering and natural realistic proportions. Match the attached reference image's painterly style. Full-body wide shot, square 1:1, 3/4 front view, centered. Show the entire person, entire blue padded clinic chair and a small plain carry-on bag with all shoes and chair legs and generous margin. Subject: a Malaysian 34-year-old man in a lightweight travel shirt and chinos. Pose: sitting slumped, one hand shielding his eyes from light, the other resting on an aching thigh. Expression: feverish, photophobic and deeply achy. Visible signs: flushed face, tired eyes and only a very faint sparse pink macular rash on the forearms; the rash must be subtle and not visually dominant. No bleeding, bruising, dramatic spots, mosquito, text, logos, shadows, floor plane, watermark or border. Perfectly flat solid #00ff00 chroma-key background."
+  }
+}

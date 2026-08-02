@@ -1,7 +1,7 @@
 {
   "schema": {
-    "version": "2.1",
-    "date": "2026-07-31"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
   "id": "patient-010",
   "number": 10,
@@ -9,7 +9,7 @@
   "patient": {
     "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
     "presentation": {
-      "_comment": "Information available to the player before assigning a room. This is the only detailed-patient section exposed before the first assignment.",
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
       "personal": {
         "name": "Dmitri",
         "age": 34,
@@ -52,21 +52,21 @@
       }
     },
     "answer": {
-      "_comment": "The authoritative game answer. The player's assigned room is session state and is not stored in the patient record.",
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player assignment remains session state.",
       "correctEsi": 2,
       "correctRoom": "esi-2",
-      "otherAcceptableRooms": null
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because current ESI guidance specifically treats severe flank pain as a level-2 presentation requiring rapid assessment and symptom relief."
     },
     "clinical": {
-      "_comment": "Display-ready educational explanation of why the correct ESI applies, using only evidence in patient.presentation. Used by Coach and Patient Review after the answer is available; does not participate in scoring.",
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
       "summary": "This patient has severe flank pain with marked distress and requires prompt evaluation and pain control despite otherwise stable vital signs.",
-      "acuityReason": "Abrupt 10-out-of-10 flank pain radiating to the groin with inability to remain still meets the ESI high-risk severe-pain criterion. The absence of fever or hypotension is reassuring but does not make this a resource-based ESI-3 presentation.",
+      "acuityReason": "Abrupt 10-out-of-10 flank pain radiating to the groin with inability to remain still requires rapid assessment and symptom relief. The absence of fever or hypotension is reassuring but does not make the severe distress safe to delay.",
       "expectedResources": [
         "IV analgesia and antiemetic medication",
         "Urinalysis and laboratory testing",
         "Renal ultrasound or CT imaging"
       ],
-      "destinationReason": "ESI 2 is appropriate because current ESI guidance specifically treats severe flank pain as a level-2 presentation requiring rapid assessment and symptom relief.",
       "keyFindings": [
         "Abrupt severe left flank pain",
         "Radiation toward the groin",
@@ -79,8 +79,8 @@
         "Severe flank pain with marked distress"
       ],
       "teachingPoints": [
-        "Severe flank pain is assigned ESI 2 because the patient's pain and distress require rapid care.",
-        "Stable blood pressure and absence of fever help frame the differential but do not override the severe-pain criterion."
+        "Severe flank pain with marked distress requires rapid care and effective pain control.",
+        "Stable blood pressure and absence of fever help frame the differential but do not override the severity of the current symptoms."
       ],
       "possibleClinicalOutcome": {
         "possibleDiagnoses": [

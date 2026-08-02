@@ -1,0 +1,86 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-017",
+  "number": 17,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Jaden",
+      "age": 16,
+      "sex": "M",
+      "race": "hispanic"
+    },
+    "image": {
+      "imageFilename": "patient-017.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Groin pain",
+      "quoteShort": null,
+      "quoteLong": "Okay this is SO embarrassing but... my left one, down there, really hurts. It woke me straight up out of sleep. Kinda feel like I'm gonna throw up. Can I just get some ibuprofen and go home? Please?",
+      "presentationShort": "16yo M — sudden severe L testicular pain, woke from sleep, now nauseated.",
+      "presentationLong": "16-year-old male, sudden severe left testicular pain that woke him from sleep, now with nausea."
+    },
+    "vitals": {
+      "hr": {
+        "value": 100,
+        "color": "yellow"
+      },
+      "bp": {
+        "value": "126/78",
+        "color": "green"
+      },
+      "rr": {
+        "value": 18,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 99,
+        "color": "green"
+      },
+      "temp": {
+        "value": 37.0,
+        "color": "green"
+      },
+      "pain": {
+        "value": 8,
+        "color": "red"
+      }
+    },
+    "diagnosis": {
+      "primary": "Testicular torsion",
+      "esi": 2,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → STAT urology, Doppler ultrasound (don't delay surgery for it if classic), possible manual detorsion / OR",
+      "why": "The embarrassment IS the trap — he wants to leave. Sudden teen testicular pain is torsion until proven otherwise, and the salvage clock is ~6 hours. Never fast-track this. 🎯",
+      "redFlag": "sudden testicular pain + nausea in a teen (torsion until proven otherwise)"
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "16-year-old boy in gaming-logo pajama pants",
+    "pose": "sitting hunched and slightly turned away, hands protective in his lap",
+    "expression": "pale and queasy, trying to downplay it and look fine",
+    "signs": [
+      "pale, faintly sweaty",
+      "guarded, embarrassed posture, wincing when he shifts"
+    ],
+    "lookSeverity": "downplaying a real surgical emergency",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-017.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a Hispanic 16-year-old boy in gaming-logo pajama pants, on the same blue clinic chair. Pose: sitting hunched and slightly turned away, hands protective in his lap. Expression: pale and queasy, trying to downplay it and look fine — NOT a big grimace. Clearly visible: pale faintly-sweaty face, guarded embarrassed posture. Overall a teen downplaying something that is actually serious. No text, no logos."
+  }
+}

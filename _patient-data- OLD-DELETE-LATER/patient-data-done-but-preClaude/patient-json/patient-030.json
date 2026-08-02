@@ -1,0 +1,111 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-030",
+  "number": 30,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Herbert",
+        "age": 78,
+        "sex": "M",
+        "race": "black"
+      },
+      "image": {
+        "imageFilename": "patient-030.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Bumped his head",
+      "quote": "I tripped on the rug and bumped my head — barely anything, I feel completely fine. My wife made me come in. Oh, I take that blood thinner, warfarin, for my heart rhythm.",
+      "triageNote": "78-year-old male taking warfarin for atrial fibrillation after a ground-level fall with a head strike. He feels well, has a GCS of 15, and has no focal neurological deficit.",
+      "vitals": {
+        "hr": {
+          "value": 78,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "152/88",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 16,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 97,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.7,
+          "color": "green"
+        },
+        "pain": {
+          "value": 2,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because head trauma in a patient taking warfarin is high risk despite a normal examination and minimal symptoms."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This anticoagulated older adult struck his head in a fall but currently has normal alertness and no focal neurologic deficit.",
+      "acuityReason": "Anticoagulation raises the risk of immediate or delayed intracranial bleeding, so a reassuring appearance cannot justify delay.",
+      "expectedResources": [
+        "Immediate neurologic assessment and serial checks",
+        "Non-contrast head CT",
+        "Coagulation testing",
+        "Reversal treatment and specialty consultation if bleeding is found"
+      ],
+      "keyFindings": [
+        "Age 78",
+        "Ground-level fall with head strike",
+        "Current warfarin use",
+        "Alert with normal neurologic examination",
+        "Minimal pain"
+      ],
+      "redFlags": [
+        "Head strike while anticoagulated"
+      ],
+      "teachingPoints": [
+        "Minor mechanisms can cause clinically important intracranial hemorrhage in anticoagulated patients.",
+        "Delayed deterioration instructions and an anticoagulation plan are essential even if initial imaging is reassuring."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Occult traumatic intracranial hemorrhage",
+          "Minor head injury without bleeding",
+          "Scalp contusion"
+        ],
+        "disposition": "Urgent CT and observation planning would be followed by reversal and admission if bleeding is present, or carefully instructed discharge when evaluation remains reassuring."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "78-year-old man, well-dressed, a small bruise on his forehead",
+    "pose": "sitting comfortably, looking mildly annoyed at being here",
+    "expression": "calm, a little exasperated",
+    "signs": [
+      "small bruise on the forehead",
+      "looks well and unbothered"
+    ],
+    "lookSeverity": "looks completely well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-030.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a black 78-year-old man, well-dressed, with a small bruise on his forehead, seated on a blue padded clinic chair. Pose: sitting comfortably, arms relaxed, looking mildly annoyed to be here. Expression: calm and a little exasperated. Clearly visible: a small bruise on the forehead; he otherwise looks completely well. No text, no logos."
+  }
+}

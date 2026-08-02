@@ -1,71 +1,98 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-077",
   "number": 77,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Harold",
-      "age": 79,
-      "sex": "M",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-077.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Harold",
+        "age": 79,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-077.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Feverish, weak, barely responsive",
-      "quoteShort": null,
-      "quoteLong": "(Daughter) He spiked a high fever, he's burning up and shaking, and he's barely making sense — so weak he can't stand. He's been complaining his urine burns for days.",
-      "presentationShort": "79yo M ? fever 39.6?C, rigors, dysuria, confusion, profound weakness, HR 128 and BP 84/50.",
-      "presentationLong": "79-year-old male with several days of painful urination, now febrile with shaking chills, confusion, and weakness so severe he cannot stand. Heart rate is 128 and blood pressure is 84/50."
-    },
-    "vitals": {
-      "hr": {
-        "value": 128,
-        "color": "red"
-      },
-      "bp": {
-        "value": "84/50",
-        "color": "red"
-      },
-      "rr": {
-        "value": 24,
-        "color": "yellow"
-      },
-      "spo2": {
-        "value": 94,
-        "color": "yellow"
-      },
-      "temp": {
-        "value": 39.6,
-        "color": "red"
-      },
-      "pain": {
-        "value": 3,
-        "color": "yellow"
+      "quote": "(Daughter) He spiked a high fever, he's burning up and shaking, and he's barely making sense — so weak he can't stand. He's been complaining his urine burns for days.",
+      "triageNote": "79-year-old male with several days of painful urination, now febrile with shaking chills, confusion, and weakness so severe he cannot stand. Heart rate is 128 and blood pressure is 84/50.",
+      "vitals": {
+        "hr": {
+          "value": 128,
+          "color": "red"
+        },
+        "bp": {
+          "value": "84/50",
+          "color": "red"
+        },
+        "rr": {
+          "value": 24,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 94,
+          "color": "yellow"
+        },
+        "temp": {
+          "value": 39.6,
+          "color": "red"
+        },
+        "pain": {
+          "value": 3,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Septic shock (urinary source)",
-      "esi": 2,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → sepsis bundle: cultures, broad-spectrum antibiotics within the hour, 30 mL/kg fluids, lactate, source control; monitor.",
-      "why": "Sepsis is a vitals diagnosis: fever, fast heart, low pressure. Antibiotics + fluids in the first hour save lives.",
-      "redFlag": "Fever + hypotension + tachycardia + altered = septic shock; the vitals are screaming."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 1,
+      "correctRoom": "esi-1",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 1 is appropriate because hypotension with confusion and severe weakness from suspected infection requires immediate fluid resuscitation and other lifesaving sepsis treatment."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This older adult has urinary symptoms followed by fever, rigors, confusion, profound weakness, tachycardia, and shock-level hypotension.",
+      "acuityReason": "Blood pressure 84/50 with altered mental status indicates impaired perfusion requiring immediate resuscitation rather than delayed diagnostic sorting.",
+      "expectedResources": [
+        "Immediate IV access and significant fluid resuscitation",
+        "Blood cultures, lactate, CBC, metabolic and urine testing",
+        "Immediate broad-spectrum IV antibiotics",
+        "Vasopressor support if hypotension persists"
+      ],
+      "keyFindings": [
+        "Several days of dysuria",
+        "Fever with shaking chills",
+        "Confusion",
+        "Too weak to stand",
+        "Heart rate 128",
+        "Blood pressure 84/50"
+      ],
+      "redFlags": [
+        "Hypotension with altered mental status",
+        "Suspected septic shock"
+      ],
+      "teachingPoints": [
+        "Sepsis severity is reflected in perfusion and mental status, not fever alone.",
+        "Cultures should be obtained promptly when feasible, but antibiotics and resuscitation must not be delayed."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Septic shock from urinary infection",
+          "Obstructed infected urinary tract",
+          "Other source of distributive shock"
+        ],
+        "disposition": "Immediate resuscitation, antibiotics, source assessment, and vasopressor support would require intensive monitored admission."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-2",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

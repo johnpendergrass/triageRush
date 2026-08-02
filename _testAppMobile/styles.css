@@ -1489,6 +1489,69 @@ button {
   box-shadow: 0 2px 6px rgb(36 47 51 / 20%);
 }
 
+.coach-section-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0;
+  padding: 8px 10px;
+  border: 0;
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: clamp(9px, 2.9cqw, 13px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-align: left;
+  cursor: pointer;
+}
+
+.coach-section-toggle:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: -4px;
+}
+
+.coach-section-control {
+  flex: 0 0 auto;
+  padding: 4px 6px;
+  border: 1px solid rgb(255 255 255 / 65%);
+  border-radius: 999px;
+  background: rgb(0 0 0 / 18%);
+  font-size: clamp(6px, 2cqw, 9px);
+  letter-spacing: 0.04em;
+}
+
+.coach-info-group[data-section-state="locked"] {
+  border-color: #7a8589;
+  background: #d8dcdd;
+}
+
+.coach-info-group[data-section-state="locked"] .coach-section-toggle {
+  background: repeating-linear-gradient(135deg, #59666b 0 8px, #4d595e 8px 16px);
+  color: #edf0f1;
+  cursor: not-allowed;
+}
+
+.coach-section-feedback:empty {
+  display: none;
+}
+
+.coach-section-feedback {
+  position: sticky;
+  bottom: 2px;
+  z-index: 3;
+  margin: 10px 0 0 !important;
+  padding: 8px 10px;
+  border: 2px solid #fff0c2;
+  border-radius: 5px;
+  background: #273a43ee;
+  color: white;
+  font-weight: 900;
+  text-align: center;
+}
+
 .coach-group-title {
   margin: 0 !important;
   padding: 8px 10px;
@@ -1601,6 +1664,21 @@ button {
   margin-inline: -10px;
   margin-bottom: 9px;
   background: linear-gradient(90deg, #a7670c, #d49b32);
+}
+
+.coach-decision-group > .coach-section-toggle {
+  margin-inline: -10px;
+  width: calc(100% + 20px);
+  margin-bottom: 9px;
+  background: linear-gradient(90deg, #a7670c, #d49b32);
+}
+
+.coach-decision-group > .coach-section-content > h4 {
+  margin: 10px 0 3px;
+  color: #6f4516;
+  font-family: Arial, sans-serif;
+  font-size: clamp(9px, 2.8cqw, 13px);
+  text-transform: uppercase;
 }
 
 .coach-decision-group .coach-summary div {

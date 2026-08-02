@@ -41,16 +41,17 @@ What is interactive
 -------------------
 
 - Tap a waiting-room portrait to make that person the active patient.
-- The demo patient store is now the reviewed schema 2.1 set, patients 001-010.
+- The demo patient store is temporarily the complete provisional schema 2.2
+  mobile set: patients 001-016, 021-023, 032, 037, 043, and 098.
   The JSON records and matching images are copied into this test app so it
   remains independently runnable.
 - The complete quote and complete triage note are shown in the compact patient
   panel. Text is fitted down only to a readability floor.
 - Tap the occupied patient panel or the magnifying-glass icon in the lower-right
   of its triage note to open the sole
-  detailed-patient chart. Before assignment, its presentation section contains
-  only the large image, identity and complaint, quote, vital signs, and triage
-  note available to the player; answer and clinical sections are switched off.
+  detailed-patient chart. Before assignment, Presentation is expanded,
+  Clinical is collapsed but expandable, and Answer is visibly locked. Activating
+  the locked Answer header displays `This section is locked`.
 - The detailed patient chart scrolls smoothly. MORE ABOVE and MORE BELOW appear
   only when useful, Close stays anchored at the upper-right, and the game timer
   pauses while the chart is open.
@@ -92,9 +93,9 @@ What is interactive
 - Selecting a queued patient after an assignment finalizes the assigned case;
   that patient is not returned to the queue.
 - Coach remains locked until a door choice has been made. Once unlocked, it
-  reopens the same schema 2.1 detailed-patient chart with presentation, answer,
-  and clinical sections all switched on. The latter includes resources,
-  findings, teaching points, and possible outcomes.
+  reopens the same schema 2.2 detailed-patient chart with Presentation,
+  Answer, and Clinical expanded. Every available section can then be collapsed
+  and expanded from the same persistent header controls.
 - When the Coach card has more content below the visible area, a bouncing
   MORE BELOW arrow appears at its lower edge. It disappears at the bottom and
   can also be tapped to scroll forward.
@@ -110,6 +111,16 @@ What is interactive
 
 Prototype limitations
 ---------------------
+
+The prototype currently expresses each section with one combined state of
+expanded, collapsed, or locked. The intended production model has three
+independent in-memory view profiles: PATIENT ASSIGNMENT, PATIENT-ROOM, and
+PATIENT-REVIEW. Each profile has its own hard-coded section defaults and retains
+player expansion/collapse changes only for later patients opened in that same
+view. Application rules control locked/unlocked access; a locked section is
+always collapsed and cannot expose its content. Resetting or restarting the
+game, or closing/reloading the tab, restores all three profiles. No state is
+written to local storage or promoted to a new default.
 
 For Psych and Discharge patients, the named special destination is Correct. A
 numbered ESI assignment matching the patient's underlying ESI or differing by

@@ -1,71 +1,97 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-025",
   "number": 25,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Elijah",
-      "age": 2,
-      "sex": "M",
-      "race": "black"
-    },
-    "image": {
-      "imageFilename": "patient-025.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Elijah",
+        "age": 2,
+        "sex": "M",
+        "race": "black"
+      },
+      "image": {
+        "imageFilename": "patient-025.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Had a seizure with fever",
-      "quoteShort": null,
-      "quoteLong": "(Mom) He's had a cold and a fever, then his arms and legs shook for about a minute and his eyes rolled back. It stopped on its own. He's sleepy but waking up now. It was TERRIFYING.",
-      "presentationShort": "2yo M ? fever with about 1 minute of generalized shaking and eye-rolling, stopped spontaneously; now sleepy but rousable, no rash or neck stiffness.",
-      "presentationLong": "2-year-old male with a cold and high fever who had about one minute of whole-body shaking and eye-rolling that stopped without treatment. He is now sleepy but rousable, with no rash or neck stiffness."
-    },
-    "vitals": {
-      "hr": {
-        "value": 150,
-        "color": "yellow"
-      },
-      "bp": {
-        "value": "94/58",
-        "color": "green"
-      },
-      "rr": {
-        "value": 30,
-        "color": "yellow"
-      },
-      "spo2": {
-        "value": 98,
-        "color": "green"
-      },
-      "temp": {
-        "value": 39.5,
-        "color": "red"
-      },
-      "pain": {
-        "value": 1,
-        "color": "green"
+      "quote": "(Mom) He has had a cold and fever, then his arms and legs shook for about a minute and his eyes rolled back. It stopped on its own. He is still sleepy but wakes when I talk to him. It was terrifying.",
+      "triageNote": "2-year-old boy with a temperature of 39.5 C after approximately one minute of generalized shaking and eye-rolling that stopped without treatment. He remains sleepy but rousable, with no rash or neck stiffness.",
+      "vitals": {
+        "hr": {
+          "value": 150,
+          "color": "green"
+        },
+        "bp": {
+          "value": "94/58",
+          "color": "green"
+        },
+        "rr": {
+          "value": 30,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 98,
+          "color": "green"
+        },
+        "temp": {
+          "value": 39.5,
+          "color": "red"
+        },
+        "pain": {
+          "value": 1,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Simple febrile seizure (viral URI source)",
-      "esi": 3,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → antipyretics, identify the fever source, parental education; discharge if simple and back to baseline.",
-      "why": "Simple febrile seizure: brief, generalized, single, back to baseline, NO meningismus → benign. The scary look isn't high acuity. (Meningitis is the one to exclude.)",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because the child remains postictal with altered responsiveness after a seizure and has a high fever, requiring rapid reassessment rather than routine resource-based sorting."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This febrile toddler had a brief generalized seizure and remains sleepy but rousable, requiring prompt reassessment of neurologic recovery and the fever source.",
+      "acuityReason": "The seizure has stopped and breathing is adequate, but the child has not yet returned to baseline responsiveness and has a temperature of 39.5 C.",
+      "expectedResources": [
+        "Frequent neurologic and vital-sign reassessment",
+        "Antipyretic treatment",
+        "Focused evaluation for the source of fever",
+        "Laboratory or other testing if examination suggests serious infection"
+      ],
+      "keyFindings": [
+        "Approximately one minute of generalized shaking",
+        "Stopped without treatment",
+        "Still sleepy but rousable",
+        "Temperature 39.5 C",
+        "No rash or neck stiffness reported"
+      ],
+      "redFlags": [
+        "Persistent postictal altered responsiveness",
+        "High fever in a young child"
+      ],
+      "teachingPoints": [
+        "A brief generalized febrile seizure may ultimately be benign, but triage must reflect the child's current mental status rather than the eventual diagnosis.",
+        "Failure to return to baseline, focal seizure activity, recurrence, meningismus, petechiae, or respiratory compromise would heighten concern."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Simple febrile seizure with ongoing postictal recovery",
+          "Viral febrile illness",
+          "Serious infection if additional findings emerge"
+        ],
+        "disposition": "The child would be observed until back to baseline while the fever source is assessed; discharge may be appropriate after reassuring recovery and examination, with caregiver education and return precautions."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-3",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

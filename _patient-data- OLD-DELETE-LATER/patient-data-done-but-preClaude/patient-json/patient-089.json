@@ -1,0 +1,104 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-089",
+  "number": 89,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Owen",
+        "age": 2,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-089.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Barky cough",
+      "quote": "(Dad) He's got this awful barky, seal-like cough and a hoarse voice, worse tonight. He's breathing okay at rest — no whistling when he's calm — but that cough is scary.",
+      "triageNote": "2-year-old male with a barky, seal-like cough and hoarse voice that worsened tonight. He has no stridor while resting, appears comfortable, is drinking, and remains well hydrated.",
+      "vitals": {
+        "hr": {
+          "value": 120,
+          "color": "green"
+        },
+        "bp": {
+          "value": "96/60",
+          "color": "green"
+        },
+        "rr": {
+          "value": 26,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 98,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37.8,
+          "color": "yellow"
+        },
+        "pain": {
+          "value": 1,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "esi-5",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because this mild croup presentation has no stridor at rest, respiratory distress, dehydration, or counted emergency resource need."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This toddler has a barky cough and hoarse voice but is comfortable, drinking, hydrated, and free of resting stridor.",
+      "acuityReason": "The absence of resting noise or increased work of breathing supports a mild upper-airway illness manageable with oral medication.",
+      "expectedResources": [],
+      "keyFindings": [
+        "Barky seal-like cough",
+        "Hoarse voice",
+        "Worse at night",
+        "No stridor at rest",
+        "Comfortable and drinking",
+        "Well hydrated"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Stridor at rest, retractions, fatigue, cyanosis, drooling, or toxic appearance would require escalation.",
+        "A single oral steroid dose reduces symptom duration and return visits."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Mild viral croup",
+          "Other viral laryngitis"
+        ],
+        "disposition": "Oral medication, home comfort measures, and airway return precautions would allow discharge."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "2-year-old boy in pajamas",
+    "pose": "on a parent's lap-style seat, mid barky cough",
+    "expression": "tired, a little teary",
+    "signs": [
+      "mid-cough",
+      "flushed"
+    ],
+    "lookSeverity": "uncomfortable but stable",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-089.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 2-year-old boy in pajamas, seated on a blue padded clinic chair. Pose: mid-cough, hand near his mouth. Expression: tired and a little teary. Clearly visible: a barky-cough posture and flushed cheeks. No text, no logos."
+  }
+}

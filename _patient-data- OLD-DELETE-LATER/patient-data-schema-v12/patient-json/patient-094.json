@@ -1,0 +1,85 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-094",
+  "number": 94,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Priya",
+      "age": 31,
+      "sex": "F",
+      "race": "asian"
+    },
+    "image": {
+      "imageFilename": "patient-094.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Lump on her wrist",
+      "quoteShort": null,
+      "quoteLong": "I've had this smooth, round lump on the back of my wrist for a few weeks. It doesn't really hurt, it's soft and squishy, and it seems to change size. I just want to know it's nothing bad.",
+      "presentationShort": "31yo F ? several-week painless dorsal wrist lump, soft, mobile, transilluminates and changes size; full function, no redness or neurological symptoms.",
+      "presentationLong": "31-year-old female with a smooth lump on the back of her wrist for several weeks. It is soft, mobile, painless, transilluminates, and varies in size; wrist function is normal with no redness or neurological symptoms."
+    },
+    "vitals": {
+      "hr": {
+        "value": 72,
+        "color": "green"
+      },
+      "bp": {
+        "value": "116/72",
+        "color": "green"
+      },
+      "rr": {
+        "value": 14,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 99,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.8,
+        "color": "green"
+      },
+      "pain": {
+        "value": 0,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Ganglion cyst",
+      "esi": 5,
+      "esi2roomsNotes": "ESI 5: no ED treatment-area resources are expected; brief evaluation, counseling, and discharge are appropriate.",
+      "disposition": "Discharge → reassurance, observation, elective referral if bothersome; benign. No ED workup needed.",
+      "why": "Soft, mobile, transilluminating, painless wrist bump = ganglion cyst. Reassure; it's benign. A clean discharge.",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "discharge",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "31-year-old woman",
+    "pose": "seated, holding out her wrist, showing a small bump",
+    "expression": "calm, curious",
+    "signs": [
+      "small round bump on the wrist"
+    ],
+    "lookSeverity": "completely well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-094.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: an asian 31-year-old woman, seated on a blue padded clinic chair. Pose: holding out her wrist to show a small round bump. Expression: calm and curious. Clearly visible: a small round bump on the back of the wrist. No text, no logos."
+  }
+}

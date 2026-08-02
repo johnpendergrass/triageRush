@@ -1,0 +1,87 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-103",
+  "number": 103,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Rosa",
+      "age": 74,
+      "sex": "F",
+      "race": "hispanic"
+    },
+    "image": {
+      "imageFilename": "patient-103.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Weak, can't keep anything down",
+      "quoteShort": null,
+      "quoteLong": "Four days of this. I can't even keep water down, and my sugars are all over the place. My legs feel like water.",
+      "presentationShort": "74yo F, T2DM — 4 days COVID with vomiting and poor intake. Dry mucous membranes, weak.",
+      "presentationLong": "74-year-old female with type 2 diabetes, four days of COVID with vomiting and poor oral intake, now weak with dry mucous membranes."
+    },
+    "vitals": {
+      "hr": {
+        "value": 104,
+        "color": "yellow"
+      },
+      "bp": {
+        "value": "104/62",
+        "color": "yellow"
+      },
+      "rr": {
+        "value": 20,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 94,
+        "color": "yellow"
+      },
+      "temp": {
+        "value": 38.1,
+        "color": "yellow"
+      },
+      "pain": {
+        "value": 3,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "COVID-19 with dehydration and hyperglycaemia in a diabetic",
+      "esi": 3,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → IV fluids, glucose, electrolytes and ketones, likely admission",
+      "why": "COVID plus diabetes plus nothing staying down is a DKA setup. She needs labs and fluids, not reassurance — but she is stable enough for the Acute lane.",
+      "redFlag": "Diabetic with vomiting and no oral intake — check ketones before calling it simple dehydration."
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-3",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a hispanic 74-year-old woman in a cardigan, seated on a blue padded clinic chair",
+    "pose": "sitting slumped slightly to one side, a small basin held in her lap",
+    "expression": "drained and weary",
+    "signs": [
+      "dry cracked lips",
+      "sunken tired eyes",
+      "pale washed-out skin"
+    ],
+    "lookSeverity": "unwell and depleted but not in extremis",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-103.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. Subject: a hispanic 74-year-old woman in a cardigan, seated on a blue padded clinic chair. Pose: sitting slumped slightly to one side, a small basin held in her lap. Expression: drained and weary. Clearly visible: dry cracked lips; sunken tired eyes; pale washed-out skin. Overall: unwell and depleted but not in extremis. No text, no logos, no watermarks, no border."
+  }
+}

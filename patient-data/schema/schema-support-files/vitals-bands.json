@@ -1,0 +1,37 @@
+{
+  "conventions": {
+    "purpose": "Machine-readable mirror of vitals-bands.md. Defines the fixed color thresholds for every vital sign by age band. The audit script audit-vitals-bands.mjs uses this file to verify (and optionally fix) the stored colors in patient-json/.",
+    "authority": "vitals-bands.md is the authoritative human-readable definition; keep this file in sync with it.",
+    "lookup": "Find the band row for the vital where ageLow <= floor(age) <= ageHigh (inclusive). If the value is inside the green [low, high] range (inclusive) the color is green; else if inside any yellow [low, high] range it is yellow; otherwise it is red.",
+    "bp": "bp is colored by the systolic value only (the number before the slash). Diastolic is displayed but never drives color.",
+    "temp": "temp values are Celsius, compared as decimals (e.g. 38.9 is yellow, 39.0 is red).",
+    "ages": "Ages 65+ deliberately use the adult band. Infant means under 1 year (floor(age) = 0).",
+    "established": "2026-08-01"
+  },
+  "bands": [
+    { "vital": "hr",   "ageClass": "infant",    "ageLow": 0,  "ageHigh": 0,   "green": [100, 160],  "yellow": [[80, 99], [161, 180]] },
+    { "vital": "hr",   "ageClass": "toddler",   "ageLow": 1,  "ageHigh": 2,   "green": [90, 150],   "yellow": [[75, 89], [151, 170]] },
+    { "vital": "hr",   "ageClass": "preschool", "ageLow": 3,  "ageHigh": 5,   "green": [80, 140],   "yellow": [[65, 79], [141, 160]] },
+    { "vital": "hr",   "ageClass": "school",    "ageLow": 6,  "ageHigh": 12,  "green": [70, 120],   "yellow": [[60, 69], [121, 140]] },
+    { "vital": "hr",   "ageClass": "teen",      "ageLow": 13, "ageHigh": 17,  "green": [60, 105],   "yellow": [[50, 59], [106, 130]] },
+    { "vital": "hr",   "ageClass": "adult",     "ageLow": 18, "ageHigh": 120, "green": [60, 100],   "yellow": [[50, 59], [101, 120]] },
+
+    { "vital": "rr",   "ageClass": "infant",    "ageLow": 0,  "ageHigh": 0,   "green": [30, 55],    "yellow": [[25, 29], [56, 65]] },
+    { "vital": "rr",   "ageClass": "toddler",   "ageLow": 1,  "ageHigh": 2,   "green": [22, 37],    "yellow": [[18, 21], [38, 45]] },
+    { "vital": "rr",   "ageClass": "preschool", "ageLow": 3,  "ageHigh": 5,   "green": [20, 30],    "yellow": [[16, 19], [31, 40]] },
+    { "vital": "rr",   "ageClass": "school",    "ageLow": 6,  "ageHigh": 12,  "green": [16, 25],    "yellow": [[12, 15], [26, 30]] },
+    { "vital": "rr",   "ageClass": "teen",      "ageLow": 13, "ageHigh": 17,  "green": [12, 20],    "yellow": [[9, 11], [21, 28]] },
+    { "vital": "rr",   "ageClass": "adult",     "ageLow": 18, "ageHigh": 120, "green": [12, 20],    "yellow": [[9, 11], [21, 29]] },
+
+    { "vital": "bp",   "ageClass": "infant",    "ageLow": 0,  "ageHigh": 0,   "green": [72, 104],   "yellow": [[65, 71], [105, 115]] },
+    { "vital": "bp",   "ageClass": "toddler",   "ageLow": 1,  "ageHigh": 2,   "green": [84, 110],   "yellow": [[75, 83], [111, 120]] },
+    { "vital": "bp",   "ageClass": "preschool", "ageLow": 3,  "ageHigh": 5,   "green": [88, 112],   "yellow": [[80, 87], [113, 125]] },
+    { "vital": "bp",   "ageClass": "school",    "ageLow": 6,  "ageHigh": 12,  "green": [95, 120],   "yellow": [[85, 94], [121, 135]] },
+    { "vital": "bp",   "ageClass": "teen",      "ageLow": 13, "ageHigh": 17,  "green": [100, 130],  "yellow": [[90, 99], [131, 150]] },
+    { "vital": "bp",   "ageClass": "adult",     "ageLow": 18, "ageHigh": 120, "green": [100, 139],  "yellow": [[90, 99], [140, 179]] },
+
+    { "vital": "spo2", "ageClass": "all",       "ageLow": 0,  "ageHigh": 120, "green": [95, 100],   "yellow": [[92, 94]] },
+    { "vital": "temp", "ageClass": "all",       "ageLow": 0,  "ageHigh": 120, "green": [36.0, 37.9], "yellow": [[35.0, 35.9], [38.0, 38.9]] },
+    { "vital": "pain", "ageClass": "all",       "ageLow": 0,  "ageHigh": 120, "green": [0, 3],      "yellow": [[4, 6]] }
+  ]
+}

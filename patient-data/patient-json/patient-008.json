@@ -1,71 +1,102 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-008",
   "number": 8,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Mary",
-      "age": 84,
-      "sex": "F",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-008.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Mary",
+        "age": 84,
+        "sex": "F",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-008.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Confused",
-      "quoteShort": null,
-      "quoteLong": "She keeps calling me by her late sister's name and she's burning up. She does the crossword in pen every morning — today she didn't know the pen. That's not her.",
-      "presentationShort": "84yo F — acute confusion per family, off baseline. No localizing complaint.",
-      "presentationLong": "84-year-old female, brought by family for acute confusion, a sharp change from her baseline, with no complaint of her own."
-    },
-    "vitals": {
-      "hr": {
-        "value": 112,
-        "color": "yellow"
-      },
-      "bp": {
-        "value": "92/60",
-        "color": "yellow"
-      },
-      "rr": {
-        "value": 24,
-        "color": "yellow"
-      },
-      "spo2": {
-        "value": 94,
-        "color": "yellow"
-      },
-      "temp": {
-        "value": 38.9,
-        "color": "red"
-      },
-      "pain": {
-        "value": 2,
-        "color": "green"
+      "quote": "(Daughter) She keeps calling me by her late sister's name, and she is burning up. She does the crossword in pen every morning; today she did not know what the pen was. This is not her normal self.",
+      "triageNote": "84-year-old woman brought by family for an abrupt change from her normally sharp baseline. She is confused without a localizing complaint and has a temperature of 38.9°C, heart rate of 112, respiratory rate of 24, and blood pressure of 92/60.",
+      "vitals": {
+        "hr": {
+          "value": 112,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "92/60",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 24,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 94,
+          "color": "yellow"
+        },
+        "temp": {
+          "value": 38.9,
+          "color": "yellow"
+        },
+        "pain": {
+          "value": 2,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Urosepsis with delirium",
-      "esi": 2,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → sepsis bundle: lactate, blood + urine cultures, early fluids and broad-spectrum antibiotics",
-      "why": "In elders, sepsis wears a disguise: no chief complaint of 'infection,' just new confusion. The dazed face and the family's 'that's not her' ARE the presentation. 🎯",
-      "redFlag": "fever + soft pressure + acute AMS = sepsis"
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because acute confusion is high risk and the abnormal vital signs make prolonged waiting unsafe."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This is an acute change in mental status with fever and abnormal vital signs in an older adult, making the presentation high risk regardless of the absent localizing complaint.",
+      "acuityReason": "New confusion combined with fever, tachycardia, tachypnea, low blood pressure, and reduced oxygen saturation raises concern for systemic infection and deterioration.",
+      "expectedResources": [
+        "Immediate bedside glucose testing",
+        "IV access and broad laboratory testing",
+        "Blood and urine cultures",
+        "Urinalysis and chest imaging",
+        "IV fluids and empiric antimicrobial therapy"
+      ],
+      "keyFindings": [
+        "Abrupt confusion compared with a normally sharp baseline",
+        "Temperature of 38.9°C",
+        "Heart rate of 112",
+        "Respiratory rate of 24",
+        "Blood pressure of 92/60",
+        "Oxygen saturation of 94%",
+        "No localizing complaint"
+      ],
+      "redFlags": [
+        "Acute altered mental status",
+        "Fever with tachycardia and tachypnea",
+        "Low blood pressure in an older adult"
+      ],
+      "teachingPoints": [
+        "An abrupt change from baseline can be the principal sign of serious illness in an older adult.",
+        "Do not require a localizing complaint before treating new confusion with systemic abnormalities as high risk."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Sepsis from an occult infection",
+          "Urinary tract infection with systemic illness",
+          "Pneumonia",
+          "(maybe) Dehydration with acute delirium"
+        ],
+        "disposition": "The patient would receive rapid metabolic and infection evaluation, IV fluids, cultures, and early empiric treatment when indicated, with monitored admission likely if systemic illness or persistent delirium is confirmed."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-2",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

@@ -1,71 +1,89 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-089",
   "number": 89,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Owen",
-      "age": 2,
-      "sex": "M",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-089.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Owen",
+        "age": 2,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-089.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Barky cough",
-      "quoteShort": null,
-      "quoteLong": "(Dad) He's got this awful barky, seal-like cough and a hoarse voice, worse tonight. He's breathing okay at rest — no whistling when he's calm — but that cough is scary.",
-      "presentationShort": "2yo M ? barky seal-like cough and hoarse voice, worse tonight; no noisy breathing at rest, comfortable and well hydrated.",
-      "presentationLong": "2-year-old male with a barky, seal-like cough and hoarse voice that worsened tonight. He has no stridor while resting, appears comfortable, is drinking, and remains well hydrated."
-    },
-    "vitals": {
-      "hr": {
-        "value": 120,
-        "color": "green"
-      },
-      "bp": {
-        "value": "96/60",
-        "color": "green"
-      },
-      "rr": {
-        "value": 26,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 98,
-        "color": "green"
-      },
-      "temp": {
-        "value": 37.8,
-        "color": "yellow"
-      },
-      "pain": {
-        "value": 1,
-        "color": "green"
+      "quote": "(Mom) He's got this awful barky, seal-like cough and a hoarse voice, worse tonight. He's breathing okay at rest — no whistling when he's calm — but that cough is scary.",
+      "triageNote": "2-year-old male with a barky, seal-like cough and hoarse voice that worsened tonight. He has no stridor while resting, appears comfortable, is drinking, and remains well hydrated.",
+      "vitals": {
+        "hr": {
+          "value": 120,
+          "color": "green"
+        },
+        "bp": {
+          "value": "96/60",
+          "color": "green"
+        },
+        "rr": {
+          "value": 26,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 98,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 1,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Croup (mild)",
-      "esi": 4,
-      "esi2roomsNotes": null,
-      "disposition": "Fast Track → single-dose dexamethasone, cool mist/reassurance; discharge. (Stridor at rest → nebulized epi + higher acuity.)",
-      "why": "Barky cough, no stridor at rest, comfortable = mild croup. Dexamethasone and home. Stridor at rest bumps the acuity.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "esi-5",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because this mild croup presentation has no stridor at rest, respiratory distress, dehydration, or counted emergency resource need."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This toddler has a barky cough and hoarse voice but is comfortable, drinking, hydrated, and free of resting stridor.",
+      "acuityReason": "The absence of resting noise or increased work of breathing supports a mild upper-airway illness manageable with oral medication.",
+      "expectedResources": [],
+      "keyFindings": [
+        "Barky seal-like cough",
+        "Hoarse voice",
+        "Worse at night",
+        "No stridor at rest",
+        "Comfortable and drinking",
+        "Well hydrated"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Stridor at rest, retractions, fatigue, cyanosis, drooling, or toxic appearance would require escalation.",
+        "A single oral steroid dose reduces symptom duration and return visits."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Mild viral croup",
+          "Other viral laryngitis"
+        ],
+        "disposition": "Oral medication, home comfort measures, and airway return precautions would allow discharge."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-4",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

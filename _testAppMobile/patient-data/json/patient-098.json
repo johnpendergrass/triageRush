@@ -1,71 +1,93 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-098",
   "number": 98,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Marcus",
-      "age": 36,
-      "sex": "M",
-      "race": "black"
-    },
-    "image": {
-      "imageFilename": "patient-098.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Marcus",
+        "age": 36,
+        "sex": "M",
+        "race": "black"
+      },
+      "image": {
+        "imageFilename": "patient-098.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Agitated, talking a mile a minute",
-      "quoteShort": null,
-      "quoteLong": "I feel INCREDIBLE, I haven't slept in three days and I don't need to — my mind is racing with brilliant plans. My family freaked out and dragged me here. I'm fine, better than fine, I just can't sit still.",
-      "presentationShort": "36yo M with bipolar disorder ? pressured speech, grandiosity, racing thoughts, 3 days without sleep and marked restlessness; not violent, medically stable.",
-      "presentationLong": "36-year-old male with bipolar disorder who has slept very little for three days. He has rapid pressured speech, racing thoughts, grandiose plans, and marked restlessness; he is not violent and has no evident medical instability."
-    },
-    "vitals": {
-      "hr": {
-        "value": 104,
-        "color": "yellow"
-      },
-      "bp": {
-        "value": "134/84",
-        "color": "green"
-      },
-      "rr": {
-        "value": 16,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 99,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.9,
-        "color": "green"
-      },
-      "pain": {
-        "value": 0,
-        "color": "green"
+      "quote": "I feel INCREDIBLE, I haven't slept in three days and I don't need to — my mind is racing with brilliant plans. My family freaked out and dragged me here. I'm fine, better than fine, I just can't sit still.",
+      "triageNote": "36-year-old male with bipolar disorder who has slept very little for three days. He has rapid pressured speech, racing thoughts, grandiose plans, and marked restlessness; he is not violent and has no evident medical instability.",
+      "vitals": {
+        "hr": {
+          "value": 104,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "134/84",
+          "color": "green"
+        },
+        "rr": {
+          "value": 16,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.9,
+          "color": "green"
+        },
+        "pain": {
+          "value": 0,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Acute manic episode (bipolar disorder)",
-      "esi": 4,
-      "esi2roomsNotes": "ESI 4: medically stable and low risk; Psych is preferred for a behavioral-health evaluation, and Fast Track is acceptable.",
-      "disposition": "Psych → calm environment, psychiatric evaluation, mood stabilization; screen for stimulants/organic causes. Behavioral, currently non-dangerous.",
-      "why": "Pressured speech + no sleep + grandiosity, stable and non-violent → the Psych lane. Escalating agitation/violence would raise acuity.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player assignment remains session state.",
+      "correctEsi": 4,
+      "correctRoom": "psych",
+      "otherAcceptableRooms": null,
+      "destinationReason": "Psych is the preferred destination for this medically stable behavioral-health presentation; the underlying clinical acuity is ESI 4."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This is a medically stable patient with bipolar disorder, three days of minimal sleep, pressured speech, grandiosity, racing thoughts, and marked restlessness.",
+      "acuityReason": "The patient is not violent and has no presented medical instability, but the sustained activation requires safety assessment, evaluation for contributing substances or illness, and psychiatric treatment.",
+      "expectedResources": [
+        "Focused medical and substance screening",
+        "Psychiatric and safety assessment",
+        "Medication-based mood stabilization as indicated"
+      ],
+      "keyFindings": [
+        "Known bipolar disorder",
+        "Minimal sleep for three days",
+        "Rapid pressured speech",
+        "Racing thoughts and grandiose plans",
+        "Marked restlessness",
+        "No violence or medical instability"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Reduced need for sleep, pressured speech, grandiosity, and racing thoughts form a characteristic manic pattern.",
+        "Escalating agitation, inability to cooperate, dangerous behavior, intoxication, or medical abnormalities would increase urgency."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Acute manic episode",
+          "Substance-induced mood symptoms if screening identifies stimulant exposure"
+        ],
+        "disposition": "The patient would receive a calm environment, safety and medical screening, psychiatric evaluation, and mood-stabilizing treatment with disposition based on risk and response."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "psych",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

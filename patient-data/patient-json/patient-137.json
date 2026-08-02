@@ -1,71 +1,88 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-137",
   "number": 137,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Liam",
-      "age": 3,
-      "sex": "M",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-137.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Noah",
+        "age": 3,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-137.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Something in his ear",
-      "quoteShort": null,
-      "quoteLong": "(his mother) He informed me he put a raisin in there to keep it safe. He is extremely pleased with himself. I can actually see it.",
-      "presentationShort": "3yo M — visible raisin in the external auditory canal, placed 1h ago. No pain, no bleeding, drum not visualised.",
-      "presentationLong": "Three-year-old male with a visible raisin in the external ear canal placed an hour ago, with no pain or bleeding."
-    },
-    "vitals": {
-      "hr": {
-        "value": 104,
-        "color": "green"
-      },
-      "bp": {
-        "value": "94/58",
-        "color": "green"
-      },
-      "rr": {
-        "value": 22,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 99,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.9,
-        "color": "green"
-      },
-      "pain": {
-        "value": 0,
-        "color": "green"
+      "quote": "(his mother) He informed me he put a raisin in there to keep it safe. He is extremely pleased with himself. I can actually see it.",
+      "triageNote": "Three-year-old male with a visible raisin in the external ear canal placed an hour ago, with no pain or bleeding.",
+      "vitals": {
+        "hr": {
+          "value": 104,
+          "color": "green"
+        },
+        "bp": {
+          "value": "94/58",
+          "color": "green"
+        },
+        "rr": {
+          "value": 22,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.9,
+          "color": "green"
+        },
+        "pain": {
+          "value": 0,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Aural foreign body (organic)",
-      "esi": 4,
-      "esi2roomsNotes": null,
-      "disposition": "Fast Track → removal under direct vision, then inspect the canal and eardrum",
-      "why": "One procedure, one resource. Never irrigate an organic foreign body — a raisin or a bean swells with water and becomes far harder to remove.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 4,
+      "correctRoom": "esi-4",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 4 is appropriate because this visible organic ear-canal foreign body requires one removal procedure."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This toddler has a recent raisin in the external ear canal without pain, bleeding, or deeper injury.",
+      "acuityReason": "This visible organic ear-canal foreign body requires one removal procedure.",
+      "expectedResources": [
+        "Aural foreign-body removal"
+      ],
+      "keyFindings": [
+        "Visible raisin in ear canal",
+        "Placed one hour ago",
+        "No pain",
+        "No bleeding"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "One procedure, one resource. Never irrigate an organic foreign body — a raisin or a bean swells with water and becomes far harder to remove.",
+        "Triage should be based on the current presentation and expected care, with reassessment if new warning signs appear."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Organic external-ear foreign body"
+        ],
+        "disposition": "Careful dry removal and canal reassessment would allow discharge; irrigation should be avoided because organic material can swell."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-4",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

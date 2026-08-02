@@ -1,0 +1,87 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-124",
+  "number": 124,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Amaya",
+      "age": 21,
+      "sex": "F",
+      "race": "black"
+    },
+    "image": {
+      "imageFilename": "patient-124.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Fell from the top of the pyramid",
+      "quoteShort": null,
+      "quoteLong": "I was literally mid 'Go Boston U' and the base wobbled. I landed on my head and shoulders. Everything moves fine, it just really hurts right here in my neck.",
+      "presentationShort": "21yo F — fell ~10ft from a cheer stunt onto head and shoulders. Midline C-spine tenderness, GCS 15, no deficit.",
+      "presentationLong": "21-year-old female who fell about ten feet from a cheerleading stunt onto her head and shoulders, with midline cervical tenderness, GCS 15 and no neurological deficit."
+    },
+    "vitals": {
+      "hr": {
+        "value": 96,
+        "color": "green"
+      },
+      "bp": {
+        "value": "118/72",
+        "color": "green"
+      },
+      "rr": {
+        "value": 18,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 99,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.9,
+        "color": "green"
+      },
+      "pain": {
+        "value": 7,
+        "color": "yellow"
+      }
+    },
+    "diagnosis": {
+      "primary": "Suspected cervical spine injury after an axial-load fall",
+      "esi": 3,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → cervical immobilisation, CT cervical spine per the Canadian C-spine rule, serial neurological checks",
+      "why": "A dangerous mechanism plus midline tenderness fails the Canadian C-spine rule, so she needs imaging. She is alert and neurologically intact, which makes her an ESI 3 rather than a Resus.",
+      "redFlag": "Midline cervical tenderness after a dangerous axial-load mechanism — cannot be cleared clinically."
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-3",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a 21-year-old black woman, a university senior, in a scarlet-and-white cheerleading uniform with 'BU' on the front, seated upright on a blue padded clinic chair",
+    "pose": "sitting very upright and still, holding her own neck with one hand, afraid to turn her head",
+    "expression": "tense and carefully controlled, trying not to move",
+    "signs": [
+      "one hand supporting the back of her own neck",
+      "head held rigidly straight",
+      "a scarlet-and-white cheer uniform"
+    ],
+    "lookSeverity": "alert and stable, holding herself deliberately still",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-124.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. ANATOMY AND OBJECTS (critical): exactly one head, exactly two arms ending in exactly two hands, exactly two legs ending in two feet, five fingers on each hand. No extra, duplicated, floating or partial limbs. All furniture is solid and fully opaque - the chair must never look transparent, and its back, seat and legs must all be completely drawn. Subject: a 21-year-old black woman - a fully grown ADULT WOMAN in her early twenties, a university senior. Draw adult facial structure: defined cheekbones, a defined adult jawline, adult proportions with a head that is proportionally smaller relative to her body than a child's, and the height and build of a grown woman athlete. She is emphatically NOT a child and NOT a high-school teenager - she should read instantly as a woman in her twenties. She wears a scarlet-and-white cheerleading uniform with two bold white block letters 'BU' across the front of the top, and is seated upright on a blue padded clinic chair. Pose: sitting very upright and rigidly still, one hand supporting the back of her own neck, plainly afraid to turn her head. Expression: tense and carefully controlled, trying hard not to move. Clearly visible: one hand supporting the back of her own neck; the head held rigidly straight; the letters 'BU' across the front of a scarlet-and-white cheer uniform; a young adult woman in her twenties. Overall: alert and stable, holding herself deliberately still. The ONLY text anywhere in the picture is the two letters 'BU' - no other lettering, no watermarks, no border."
+  }
+}

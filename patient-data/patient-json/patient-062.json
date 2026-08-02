@@ -1,71 +1,87 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-062",
   "number": 62,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Brett",
-      "age": 34,
-      "sex": "M",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-062.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Brett",
+        "age": 34,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-062.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Bad sunburn",
-      "quoteShort": null,
-      "quoteLong": "I fell asleep at the beach and now my shoulders and back are bright red and sore. No blisters really, just red and hot. My wife told me to get it checked.",
-      "presentationShort": "34yo M ? painful red shoulders and back after falling asleep at beach; skin intact without blisters, normal vitals, no systemic symptoms.",
-      "presentationLong": "34-year-old male who fell asleep at the beach and now has painful, uniformly red skin across his shoulders and back. The skin is intact without blisters; vital signs are normal and he has no systemic symptoms."
-    },
-    "vitals": {
-      "hr": {
-        "value": 72,
-        "color": "green"
-      },
-      "bp": {
-        "value": "122/78",
-        "color": "green"
-      },
-      "rr": {
-        "value": 14,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 99,
-        "color": "green"
-      },
-      "temp": {
-        "value": 37.0,
-        "color": "green"
-      },
-      "pain": {
-        "value": 3,
-        "color": "yellow"
+      "quote": "I fell asleep at the beach and now my shoulders and back are bright red and sore. No blisters really, just red and hot. My wife told me to get it checked.",
+      "triageNote": "34-year-old male who fell asleep at the beach and now has painful, uniformly red skin across his shoulders and back. The skin is intact without blisters; vital signs are normal and he has no systemic symptoms.",
+      "vitals": {
+        "hr": {
+          "value": 72,
+          "color": "green"
+        },
+        "bp": {
+          "value": "122/78",
+          "color": "green"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37,
+          "color": "green"
+        },
+        "pain": {
+          "value": 3,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "First-degree sunburn",
-      "esi": 5,
-      "esi2roomsNotes": "ESI 5: no ED treatment-area resources are expected; brief evaluation, counseling, and discharge are appropriate.",
-      "disposition": "Discharge → cool compresses, moisturizer, NSAIDs, sun precautions; reassurance.",
-      "why": "Red, no blisters, no systemic signs = superficial burn. Supportive care and reassurance — this one's a go-home.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "discharge",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because this superficial sunburn has intact skin, normal vital signs, and no systemic illness, so no counted emergency resource is expected."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has a large but superficial ultraviolet burn without blistering or systemic symptoms.",
+      "acuityReason": "Uniform erythema with intact skin and stable physiology supports supportive outpatient care rather than burn-center treatment.",
+      "expectedResources": [],
+      "keyFindings": [
+        "Fell asleep at the beach",
+        "Uniformly red shoulders and back",
+        "Painful skin",
+        "No blisters",
+        "Normal vital signs and no systemic symptoms"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Blistering, dehydration, altered mental status, heat illness, or extensive deeper injury would change management.",
+        "Sun protection and hydration reduce recurrence and associated risk."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Superficial ultraviolet burn"
+        ],
+        "disposition": "Cooling measures, moisturizer, oral analgesia, hydration, and sun-avoidance guidance would allow discharge."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "discharge",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

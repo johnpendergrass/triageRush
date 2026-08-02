@@ -1,0 +1,114 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-046",
+  "number": 46,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Imani",
+        "age": 24,
+        "sex": "F",
+        "race": "black"
+      },
+      "image": {
+        "imageFilename": "patient-046.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Can't catch a full breath",
+      "quote": "My chest is tight and I can't... catch... a full breath. My inhaler isn't cutting it. I can only get a few words out at a time.",
+      "triageNote": "24-year-old female with asthma whose inhaler is no longer relieving her breathing difficulty. She has widespread wheeze, uses accessory muscles, and can speak only three words at a time; oxygen saturation is 93%.",
+      "vitals": {
+        "hr": {
+          "value": 112,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "128/78",
+          "color": "green"
+        },
+        "rr": {
+          "value": 28,
+          "color": "red"
+        },
+        "spo2": {
+          "value": 93,
+          "color": "yellow"
+        },
+        "temp": {
+          "value": 36.9,
+          "color": "green"
+        },
+        "pain": {
+          "value": 2,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because inability to speak more than a few words with accessory-muscle use indicates severe respiratory distress requiring rapid treatment."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient with asthma has persistent dyspnea despite her inhaler, widespread wheeze, tachypnea, accessory-muscle use, and oxygen saturation 93%.",
+      "acuityReason": "Limited speech and increased work of breathing are high-risk signs even before oxygen saturation becomes profoundly low.",
+      "expectedResources": [
+        "Immediate bronchodilator treatment",
+        "Systemic corticosteroids",
+        "Supplemental oxygen",
+        "Continuous respiratory reassessment",
+        "Escalation of ventilatory support if fatigue develops"
+      ],
+      "keyFindings": [
+        "Known asthma",
+        "Rescue inhaler no longer effective",
+        "Speaks only three words at a time",
+        "Accessory-muscle use",
+        "Respiratory rate 28",
+        "Oxygen saturation 93%"
+      ],
+      "redFlags": [
+        "Severe work of breathing with limited speech",
+        "Risk of fatigue or silent chest"
+      ],
+      "teachingPoints": [
+        "A quieter chest in a tiring patient may indicate worsening airflow rather than improvement.",
+        "Treatment response must be reassessed frequently using speech, air movement, work of breathing, and oxygenation."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Severe asthma exacerbation",
+          "Other obstructive airway exacerbation",
+          "Pulmonary embolism or pneumothorax if the course is atypical"
+        ],
+        "disposition": "Rapid inhaled therapy, steroids, oxygen, and repeated reassessment would determine whether discharge after sustained improvement or monitored admission is appropriate."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "24-year-old woman",
+    "pose": "leaning forward, hands on knees (tripod), working to breathe",
+    "expression": "anxious, breathless",
+    "signs": [
+      "tripod position, hands on knees",
+      "working hard to breathe"
+    ],
+    "lookSeverity": "in respiratory distress",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-046.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a black 24-year-old woman, seated on a blue padded clinic chair. Pose: leaning forward in a tripod position, hands braced on her knees, working to breathe. Expression: anxious and breathless. Clearly visible: a hunched tripod posture and the effort of hard breathing. No text, no logos."
+  }
+}

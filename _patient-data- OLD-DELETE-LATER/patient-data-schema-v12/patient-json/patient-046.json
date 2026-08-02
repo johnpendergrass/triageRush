@@ -1,0 +1,86 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-046",
+  "number": 46,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Imani",
+      "age": 24,
+      "sex": "F",
+      "race": "black"
+    },
+    "image": {
+      "imageFilename": "patient-046.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Can't catch a full breath",
+      "quoteShort": null,
+      "quoteLong": "My chest is tight and I can't... catch... a full breath. My inhaler isn't cutting it. I can only get a few words out at a time.",
+      "presentationShort": "24yo F with asthma ? marked wheeze, accessory muscle use, speaking in three-word phrases; rescue inhaler no longer helping, SpO2 93%.",
+      "presentationLong": "24-year-old female with asthma whose inhaler is no longer relieving her breathing difficulty. She has widespread wheeze, uses accessory muscles, and can speak only three words at a time; oxygen saturation is 93%."
+    },
+    "vitals": {
+      "hr": {
+        "value": 112,
+        "color": "yellow"
+      },
+      "bp": {
+        "value": "128/78",
+        "color": "green"
+      },
+      "rr": {
+        "value": 28,
+        "color": "red"
+      },
+      "spo2": {
+        "value": 93,
+        "color": "yellow"
+      },
+      "temp": {
+        "value": 36.9,
+        "color": "green"
+      },
+      "pain": {
+        "value": 2,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Acute asthma exacerbation (moderate-severe)",
+      "esi": 2,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → continuous albuterol/ipratropium, systemic steroids, oxygen, reassess; watch for fatigue or a silent chest.",
+      "why": "Speaking in short phrases + accessory muscles = severe asthma. Stack bronchodilators and give steroids early. A silent chest is crashing.",
+      "redFlag": "Can't finish a sentence + accessory muscles = severe; a quiet chest is worse, not better."
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "24-year-old woman",
+    "pose": "leaning forward, hands on knees (tripod), working to breathe",
+    "expression": "anxious, breathless",
+    "signs": [
+      "tripod position, hands on knees",
+      "working hard to breathe"
+    ],
+    "lookSeverity": "in respiratory distress",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-046.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a black 24-year-old woman, seated on a blue padded clinic chair. Pose: leaning forward in a tripod position, hands braced on her knees, working to breathe. Expression: anxious and breathless. Clearly visible: a hunched tripod posture and the effort of hard breathing. No text, no logos."
+  }
+}

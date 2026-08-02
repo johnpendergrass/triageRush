@@ -1,0 +1,86 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-048",
+  "number": 48,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Priya",
+      "age": 30,
+      "sex": "F",
+      "race": "asian"
+    },
+    "image": {
+      "imageFilename": "patient-048.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Her usual migraine",
+      "quoteShort": null,
+      "quoteLong": "It's my usual migraine — throbbing on one side, and I saw the shimmery zigzag aura first like I always do. The light's killing me. Same as I get a few times a year; my meds are at home.",
+      "presentationShort": "30yo F known migraineur — typical unilateral throbbing headache with preceding visual aura, identical to prior, normal neuro exam.",
+      "presentationLong": "30-year-old female with a known migraine history, a typical unilateral throbbing headache preceded by her usual visual aura, identical to prior episodes, with a normal neurologic exam."
+    },
+    "vitals": {
+      "hr": {
+        "value": 76,
+        "color": "green"
+      },
+      "bp": {
+        "value": "122/76",
+        "color": "green"
+      },
+      "rr": {
+        "value": 14,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 99,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.8,
+        "color": "green"
+      },
+      "pain": {
+        "value": 6,
+        "color": "yellow"
+      }
+    },
+    "diagnosis": {
+      "primary": "Migraine with aura (typical)",
+      "esi": 4,
+      "esi2roomsNotes": null,
+      "disposition": "Fast Track → dark room, antiemetic + NSAID/triptan, IV fluids; no imaging for a typical, unchanged pattern.",
+      "why": "Typical, same-as-always migraine with a normal exam → treat, don't scan. (The thunderclap 'worst-ever' headache is the one to image.)",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-4",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "30-year-old woman",
+    "pose": "seated, one hand shielding her eyes, fingers to temple",
+    "expression": "squinting against the light",
+    "signs": [
+      "hand shielding the eyes",
+      "fingers to the temple"
+    ],
+    "lookSeverity": "uncomfortable but well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-048.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: an asian 30-year-old woman, seated on a blue padded clinic chair. Pose: seated, one hand shielding her eyes with fingers pressed to her temple. Expression: squinting against the light. Clearly visible: a hand shielding the eyes and fingers at the temple. No text, no logos."
+  }
+}

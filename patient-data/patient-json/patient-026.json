@@ -1,71 +1,99 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-026",
   "number": 26,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Chloe",
-      "age": 8,
-      "sex": "F",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-026.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Chloe",
+        "age": 8,
+        "sex": "F",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-026.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Fever and bad headache",
-      "quoteShort": null,
-      "quoteLong": "My head really hurts and the lights are too bright. My neck is stiff and I feel yucky. I got these little red dots on my legs that don't go away when you press them.",
-      "presentationShort": "8yo F ? fever, severe headache, photophobia, stiff neck, and a spreading non-blanching petechial rash; tachycardic with BP 92/54.",
-      "presentationLong": "8-year-old female with high fever, severe headache, light sensitivity, neck stiffness, and a spreading non-blanching petechial rash. She is tachycardic and her blood pressure is 92/54."
-    },
-    "vitals": {
-      "hr": {
-        "value": 132,
-        "color": "red"
-      },
-      "bp": {
-        "value": "92/54",
-        "color": "yellow"
-      },
-      "rr": {
-        "value": 28,
-        "color": "yellow"
-      },
-      "spo2": {
-        "value": 96,
-        "color": "green"
-      },
-      "temp": {
-        "value": 39.8,
-        "color": "red"
-      },
-      "pain": {
-        "value": 8,
-        "color": "red"
+      "quote": "My head really hurts and the lights are too bright. My neck is stiff and I feel yucky. I got these little red dots on my legs that don't go away when you press them.",
+      "triageNote": "8-year-old female with high fever, severe headache, light sensitivity, neck stiffness, and a spreading non-blanching petechial rash. She is tachycardic and her blood pressure is 92/54.",
+      "vitals": {
+        "hr": {
+          "value": 132,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "92/54",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 28,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 96,
+          "color": "green"
+        },
+        "temp": {
+          "value": 39.8,
+          "color": "red"
+        },
+        "pain": {
+          "value": 8,
+          "color": "red"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Meningococcal meningitis / meningococcemia",
-      "esi": 2,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → isolate, blood cultures, empiric ceftriaxone + vancomycin NOW (do not wait for LP), IV fluids; admit/ICU.",
-      "why": "The petechial rash that doesn't blanch is the tell. Antibiotics BEFORE the LP — minutes matter. A classic missed killer.",
-      "redFlag": "Non-blanching petechiae + meningismus + fever = meningococcal sepsis."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because a high-risk febrile illness with meningismus and a non-blanching petechial rash requires rapid isolation, resuscitative assessment, and empiric treatment."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This child has high fever, severe headache, photophobia, neck stiffness, petechiae, tachycardia, and borderline blood pressure.",
+      "acuityReason": "The non-blanching rash combined with meningismus may represent invasive bacterial infection; treatment cannot safely wait for diagnostic confirmation.",
+      "expectedResources": [
+        "Droplet isolation",
+        "IV access, blood cultures, and laboratory testing",
+        "Immediate empiric IV antibiotics",
+        "IV fluid assessment and treatment",
+        "Lumbar puncture only when clinically safe"
+      ],
+      "keyFindings": [
+        "Temperature 39.8 C",
+        "Severe headache and photophobia",
+        "Neck stiffness",
+        "Spreading non-blanching petechiae",
+        "Heart rate 132",
+        "Blood pressure 92/54"
+      ],
+      "redFlags": [
+        "Non-blanching petechiae with fever and meningismus",
+        "Possible evolving shock"
+      ],
+      "teachingPoints": [
+        "Antibiotics should not be delayed for lumbar puncture when invasive bacterial infection is suspected.",
+        "A child can deteriorate rapidly before profound hypotension develops."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Bacterial meningitis with meningococcemia",
+          "Other invasive bacterial infection",
+          "Viral meningitis with an unrelated rash"
+        ],
+        "disposition": "Immediate isolation, cultures, antibiotics, and hemodynamic support would be followed by hospital admission, potentially to intensive care."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-2",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

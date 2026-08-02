@@ -1,71 +1,96 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-122",
   "number": 122,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Josh",
-      "age": 20,
-      "sex": "M",
-      "race": "asian"
-    },
-    "image": {
-      "imageFilename": "patient-122.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Josh",
+        "age": 20,
+        "sex": "M",
+        "race": "asian"
+      },
+      "image": {
+        "imageFilename": "patient-122.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Collapsed in the mascot suit",
-      "quoteShort": null,
-      "quoteLong": "(slurring) ...is the game over? I'm okay, I just need to... what quarter is it? It's so hot inside the head...",
-      "presentationShort": "20yo M — collapsed after 2h in a full mascot costume in the sun. Confused, hot skin, core temp 41.2°C.",
-      "presentationLong": "20-year-old male who collapsed after two hours in a full mascot costume in the sun, now confused with hot skin and a core temperature above 41 degrees."
-    },
-    "vitals": {
-      "hr": {
-        "value": 152,
-        "color": "red"
-      },
-      "bp": {
-        "value": "92/54",
-        "color": "red"
-      },
-      "rr": {
-        "value": 30,
-        "color": "red"
-      },
-      "spo2": {
-        "value": 96,
-        "color": "green"
-      },
-      "temp": {
-        "value": 41.2,
-        "color": "red"
-      },
-      "pain": {
-        "value": 2,
-        "color": "green"
+      "quote": "(slurring) ...is the game over? I'm okay, I just need to... what quarter is it? It's so hot inside the head...",
+      "triageNote": "20-year-old male who collapsed after two hours in a full mascot costume in the sun, now confused with hot skin and a core temperature above 41 degrees.",
+      "vitals": {
+        "hr": {
+          "value": 152,
+          "color": "red"
+        },
+        "bp": {
+          "value": "92/54",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 30,
+          "color": "red"
+        },
+        "spo2": {
+          "value": 96,
+          "color": "green"
+        },
+        "temp": {
+          "value": 41.2,
+          "color": "red"
+        },
+        "pain": {
+          "value": 2,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Exertional heat stroke",
-      "esi": 1,
-      "esi2roomsNotes": null,
-      "disposition": "Resus → strip the costume, immediate cold-water immersion, IV fluids, monitor for rhabdomyolysis",
-      "why": "Heat stroke is hyperthermia PLUS altered mental status. Cool first and investigate second — every minute of delay costs organs. A costume blocks evaporative cooling completely.",
-      "redFlag": "Core temperature 41.2°C with altered mental status — heat stroke, and the clock is running."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 1,
+      "correctRoom": "esi-1",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 1 is appropriate because core temperature 41.2 C with confusion after exertion in heat requires immediate aggressive cooling."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This young adult has exertional hyperthermia with central nervous system dysfunction after prolonged heat exposure in an insulating costume.",
+      "acuityReason": "Hyperthermia plus altered mental status defines life-threatening heat stroke; cooling must begin before extended diagnostic workup.",
+      "expectedResources": [
+        "Immediate whole-body cooling",
+        "Airway and circulatory support",
+        "Continuous core-temperature monitoring",
+        "Electrolyte, renal, liver, coagulation, and muscle-injury testing"
+      ],
+      "keyFindings": [
+        "Collapsed after two hours in sun",
+        "Full mascot costume impaired heat loss",
+        "Confused",
+        "Hot skin",
+        "Core temperature 41.2 C",
+        "Heart rate 152 and blood pressure 92/54"
+      ],
+      "redFlags": [
+        "Extreme hyperthermia with altered mental status"
+      ],
+      "teachingPoints": [
+        "Rapid cooling is the definitive time-critical intervention.",
+        "Antipyretic medication does not treat environmental heat stroke."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Exertional heat stroke",
+          "Severe heat illness with multiorgan risk"
+        ],
+        "disposition": "Immediate cooling and organ-supportive care would require intensive monitored admission."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-1",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

@@ -1,71 +1,87 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-096",
   "number": 96,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Hector",
-      "age": 55,
-      "sex": "M",
-      "race": "hispanic"
-    },
-    "image": {
-      "imageFilename": "patient-096.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Hector",
+        "age": 55,
+        "sex": "M",
+        "race": "hispanic"
+      },
+      "image": {
+        "imageFilename": "patient-096.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Out of blood-pressure pills",
-      "quoteShort": null,
-      "quoteLong": "I ran out of my blood-pressure medicine and my doctor's office is closed for the weekend. I feel completely fine — no headache, no chest pain — I just need a refill to get me through.",
-      "presentationShort": "55yo M — asymptomatic, out of antihypertensive meds, requesting a bridge refill, exam and BP acceptable — non-urgent.",
-      "presentationLong": "55-year-old male, asymptomatic, out of his antihypertensive medication and requesting a bridge refill, with an acceptable blood pressure and normal exam."
-    },
-    "vitals": {
-      "hr": {
-        "value": 74,
-        "color": "green"
-      },
-      "bp": {
-        "value": "142/86",
-        "color": "green"
-      },
-      "rr": {
-        "value": 14,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 99,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.8,
-        "color": "green"
-      },
-      "pain": {
-        "value": 0,
-        "color": "green"
+      "quote": "I ran out of my blood-pressure medicine and my doctor's office is closed for the weekend. I feel completely fine — no headache, no chest pain — I just need a refill to get me through.",
+      "triageNote": "55-year-old male, asymptomatic, out of his antihypertensive medication and requesting a bridge refill, with a mildly elevated blood pressure and normal exam.",
+      "vitals": {
+        "hr": {
+          "value": 74,
+          "color": "green"
+        },
+        "bp": {
+          "value": "142/86",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 0,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Medication refill (non-urgent)",
-      "esi": 5,
-      "esi2roomsNotes": "ESI 5: no ED treatment-area resources are expected; brief evaluation, counseling, and discharge are appropriate.",
-      "disposition": "Discharge → short bridge prescription, counsel on continuity, PCP follow-up. No emergency care needed.",
-      "why": "Asymptomatic, just out of routine meds → a bridge refill and PCP follow-up. Not an emergency; a fast discharge.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "discharge",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because this asymptomatic routine medication-refill request has only mildly elevated blood pressure, a normal examination, and no counted emergency resource need."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has run out of routine antihypertensive medication but has no symptoms or evidence of acute end-organ injury.",
+      "acuityReason": "A mildly elevated blood pressure without symptoms and a normal examination support a bridge plan rather than emergency testing.",
+      "expectedResources": [],
+      "keyFindings": [
+        "Out of antihypertensive medication",
+        "Requests bridge refill",
+        "Asymptomatic",
+        "Mildly elevated blood pressure",
+        "Normal examination"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Chest pain, neurologic deficit, dyspnea, vision change, severe headache, or markedly abnormal pressure would require evaluation for acute injury.",
+        "Continuity planning helps prevent repeated medication gaps."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Medication access problem without acute illness"
+        ],
+        "disposition": "A limited bridge prescription and primary-care follow-up would allow discharge without testing."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "discharge",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

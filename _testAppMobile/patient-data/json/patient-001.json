@@ -1,7 +1,7 @@
 {
   "schema": {
-    "version": "2.1",
-    "date": "2026-07-31"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
   "id": "patient-001",
   "number": 1,
@@ -9,7 +9,7 @@
   "patient": {
     "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
     "presentation": {
-      "_comment": "Information available to the player before assigning a room. This is the only detailed-patient section exposed before the first assignment.",
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
       "personal": {
         "name": "Tyler",
         "age": 10,
@@ -52,19 +52,19 @@
       }
     },
     "answer": {
-      "_comment": "The authoritative game answer. The player's assigned room is session state and is not stored in the patient record.",
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player assignment remains session state.",
       "correctEsi": 4,
       "correctRoom": "esi-4",
-      "otherAcceptableRooms": null
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 4 is appropriate because the patient is stable and is expected to require one resource."
     },
     "clinical": {
-      "_comment": "Display-ready educational explanation of why the correct ESI applies, using only evidence in patient.presentation. Used by Coach and Patient Review after the answer is available; does not participate in scoring.",
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
       "summary": "This is a stable patient with an isolated ankle injury who is expected to need one diagnostic resource.",
       "acuityReason": "There is no immediate life threat, high-risk feature, severe distress, deformity, or neurovascular compromise in the information presented.",
       "expectedResources": [
         "Ankle X-ray"
       ],
-      "destinationReason": "ESI 4 is appropriate because the patient is stable and is expected to require one resource.",
       "keyFindings": [
         "Inversion injury while playing tennis",
         "Localized ankle swelling",
@@ -74,8 +74,8 @@
       ],
       "redFlags": null,
       "teachingPoints": [
-        "ESI is based on acuity and expected resources, not the final diagnosis.",
-        "One anticipated imaging resource supports ESI 4 in an otherwise stable patient."
+        "Triage decisions consider both current acuity and the resources likely to be needed, rather than relying on a final diagnosis.",
+        "This otherwise stable injury is expected to need a focused imaging evaluation."
       ],
       "possibleClinicalOutcome": {
         "possibleDiagnoses": [

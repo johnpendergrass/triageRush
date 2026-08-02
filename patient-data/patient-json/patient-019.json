@@ -1,71 +1,89 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-019",
   "number": 19,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Sofia",
-      "age": 4,
-      "sex": "F",
-      "race": "hispanic"
-    },
-    "image": {
-      "imageFilename": "patient-019.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Sofia",
+        "age": 4,
+        "sex": "F",
+        "race": "hispanic"
+      },
+      "image": {
+        "imageFilename": "patient-019.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Burned hand",
-      "quoteShort": null,
-      "quoteLong": "I wanted to help make pancakes and I touched the hot pan. It's all red and puffy and it STINGS.",
-      "presentationShort": "4yo F ? touched a hot pan; red, blistered area on right palm covering about 1% TBSA, brisk capillary refill, moving hand.",
-      "presentationLong": "4-year-old female who touched a hot pan, with a small superficial partial-thickness burn on the right palm covering about 1% of body surface area. Small blisters are present; sensation, circulation, and movement are intact."
-    },
-    "vitals": {
-      "hr": {
-        "value": 118,
-        "color": "green"
-      },
-      "bp": {
-        "value": "100/64",
-        "color": "green"
-      },
-      "rr": {
-        "value": 24,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 100,
-        "color": "green"
-      },
-      "temp": {
-        "value": 37.1,
-        "color": "green"
-      },
-      "pain": {
-        "value": 6,
-        "color": "red"
+      "quote": "I wanted to help make pancakes and touched the hot pan. My hand is red and puffy, and it stings.",
+      "triageNote": "4-year-old girl with a small superficial partial-thickness contact burn to the right palm, approximately 1% of body surface area. Small blisters are present; sensation, circulation, and movement remain intact.",
+      "vitals": {
+        "hr": {
+          "value": 118,
+          "color": "green"
+        },
+        "bp": {
+          "value": "100/64",
+          "color": "green"
+        },
+        "rr": {
+          "value": 24,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 100,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37.1,
+          "color": "green"
+        },
+        "pain": {
+          "value": 6,
+          "color": "yellow"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Superficial partial-thickness burn, right palm (~1% TBSA)",
-      "esi": 4,
-      "esi2roomsNotes": null,
-      "disposition": "Fast Track → cool, clean, non-adherent dressing, analgesia, burn precautions; discharge.",
-      "why": "Small superficial hand burn — cool, dress, pain control, watch for infection. Palms heal well.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 4,
+      "correctRoom": "esi-4",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 4 is appropriate because this stable small hand burn is expected to require one focused treatment resource for burn care and pain management."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This child has a small, painful partial-thickness burn confined to the palm, with intact hand function and circulation.",
+      "acuityReason": "The palm location deserves careful assessment, but the burn is small, noncircumferential, and has no evidence of inhalation injury or neurovascular impairment.",
+      "expectedResources": [
+        "Focused burn assessment and treatment"
+      ],
+      "keyFindings": [
+        "Contact with a hot pan",
+        "Small blistered area on the right palm",
+        "Approximately 1% body surface area",
+        "Intact sensation, circulation, and movement",
+        "No inhalation mechanism"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Hand burns require assessment of depth, movement, sensation, and circulation even when the total area is small.",
+        "Circumferential injury, deep tissue damage, electrical exposure, or inhalation findings would increase concern."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Superficial partial-thickness contact burn"
+        ],
+        "disposition": "The hand would likely be cooled if still appropriate, cleaned, dressed with a nonadherent dressing, and treated for pain, followed by discharge with burn-care and infection precautions."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-4",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

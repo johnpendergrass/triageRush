@@ -1,7 +1,7 @@
 {
   "schema": {
-    "version": "2.1",
-    "date": "2026-07-31"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
   "id": "patient-004",
   "number": 4,
@@ -9,7 +9,7 @@
   "patient": {
     "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
     "presentation": {
-      "_comment": "Information available to the player before assigning a room. This is the only detailed-patient section exposed before the first assignment.",
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
       "personal": {
         "name": "Rosa",
         "age": 61,
@@ -52,20 +52,20 @@
       }
     },
     "answer": {
-      "_comment": "The authoritative game answer. The player's assigned room is session state and is not stored in the patient record.",
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player assignment remains session state.",
       "correctEsi": 3,
       "correctRoom": "esi-3",
-      "otherAcceptableRooms": null
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 3 is appropriate because the patient is stable but is expected to require more than one resource for traumatic spinal assessment and symptom control."
     },
     "clinical": {
-      "_comment": "Display-ready educational explanation of why the correct ESI applies, using only evidence in patient.presentation. Used by Coach and Patient Review after the answer is available; does not participate in scoring.",
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
       "summary": "This is a stable older adult with traumatic midline back tenderness who is expected to need multiple resources to exclude spinal injury and control pain.",
       "acuityReason": "She is hemodynamically stable and moving both legs, with no presented sign of immediate instability. Her age, collision mechanism, midline tenderness, and pain still make a simple low-resource strain evaluation inappropriate.",
       "expectedResources": [
         "Lumbar-spine CT or radiographs",
         "Parenteral analgesia"
       ],
-      "destinationReason": "ESI 3 is appropriate because the patient is stable but is expected to require more than one resource for traumatic spinal assessment and symptom control.",
       "keyFindings": [
         "Motor-vehicle collision",
         "Age 61",
@@ -79,7 +79,7 @@
       ],
       "teachingPoints": [
         "Normal leg movement is reassuring but does not exclude a vertebral injury.",
-        "ESI 3 reflects a stable patient who is expected to need multiple resources, not a confirmed fracture."
+        "A stable presentation can still require imaging, medication, and repeated assessment."
       ],
       "possibleClinicalOutcome": {
         "possibleDiagnoses": [

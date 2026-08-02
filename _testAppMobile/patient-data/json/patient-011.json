@@ -1,71 +1,91 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-011",
   "number": 11,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Gerry",
-      "age": 45,
-      "sex": "M",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-011.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Gerry",
+        "age": 45,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-011.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Cut my hand",
-      "quoteShort": null,
-      "quoteLong": "Avocado. The avocado won. I looked away for one second, and now there is more of me on the cutting board than I am comfortable with. It's not squirting, I checked. I can still bend everything.",
-      "presentationShort": "45yo M — palmar laceration from a knife, bleeding controlled, full flexion & sensation.",
-      "presentationLong": "45-year-old male, palm laceration from a kitchen knife, bleeding controlled, full finger flexion and sensation intact."
-    },
-    "vitals": {
-      "hr": {
-        "value": 84,
-        "color": "green"
-      },
-      "bp": {
-        "value": "130/82",
-        "color": "green"
-      },
-      "rr": {
-        "value": 16,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 99,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.8,
-        "color": "green"
-      },
-      "pain": {
-        "value": 4,
-        "color": "yellow"
+      "quote": "Avocado. The avocado won. I looked away for one second, and now there is more of me on the cutting board than I am comfortable with. It's not squirting, I checked. I can still bend everything.",
+      "triageNote": "45-year-old male, palm laceration from a kitchen knife, bleeding controlled, full finger flexion and sensation intact.",
+      "vitals": {
+        "hr": {
+          "value": 84,
+          "color": "green"
+        },
+        "bp": {
+          "value": "130/82",
+          "color": "green"
+        },
+        "rr": {
+          "value": 16,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 4,
+          "color": "yellow"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Palmar laceration ('avocado hand'), no tendon/nerve/vascular injury",
-      "esi": 4,
-      "esi2roomsNotes": null,
-      "disposition": "Fast Track → irrigate, confirm tendon/nerve/vascular intact, suture, tetanus update",
-      "why": "'Avocado hand' is a real named injury. Not squirting + full finger motion = a one-resource ESI 4. Always still test distal tendon and nerve first.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player assignment remains session state.",
+      "correctEsi": 4,
+      "correctRoom": "esi-4",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 4 / Fast Track is appropriate because this stable laceration is expected to need one focused procedural resource."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This is a stable hand laceration with controlled bleeding and reassuring movement and sensation.",
+      "acuityReason": "There is no active hemorrhage, neurovascular deficit, severe distress, or other presented sign of immediate instability.",
+      "expectedResources": [
+        "Focused wound exploration and repair",
+        "Tetanus assessment"
+      ],
+      "keyFindings": [
+        "Kitchen-knife laceration to the palm",
+        "Bleeding controlled",
+        "Full finger flexion",
+        "Sensation intact",
+        "Stable vital signs"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Apparently minor palm wounds still require careful tendon, nerve, and vascular examination.",
+        "Controlled bleeding does not remove the need to inspect the wound before closure."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Palmar laceration without deep structural injury",
+          "Partial tendon or digital-nerve injury"
+        ],
+        "disposition": "The wound would likely be irrigated, explored, and repaired with tetanus prophylaxis as indicated, followed by discharge if deeper injury is excluded."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-4",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

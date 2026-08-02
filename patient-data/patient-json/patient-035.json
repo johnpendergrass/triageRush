@@ -1,71 +1,97 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-035",
   "number": 35,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Walter",
-      "age": 72,
-      "sex": "M",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-035.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Eugene",
+        "age": 72,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-035.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Room won't stop spinning",
-      "quoteShort": null,
-      "quoteLong": "The room won't stop spinning and I keep listing to one side when I try to walk. It came on all of a sudden this morning. It's 'just' dizziness, but it won't quit and I can't stay upright.",
-      "presentationShort": "72yo M ? sudden persistent vertigo, truncal unsteadiness, direction-changing nystagmus, and inability to walk without assistance.",
-      "presentationLong": "72-year-old male with sudden persistent spinning dizziness. He lists to one side, has marked truncal unsteadiness and direction-changing nystagmus, and cannot stand or walk without assistance."
-    },
-    "vitals": {
-      "hr": {
-        "value": 72,
-        "color": "green"
-      },
-      "bp": {
-        "value": "168/94",
-        "color": "yellow"
-      },
-      "rr": {
-        "value": 16,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 97,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.8,
-        "color": "green"
-      },
-      "pain": {
-        "value": 1,
-        "color": "green"
+      "quote": "The room won't stop spinning and I keep listing to one side when I try to walk. It came on all of a sudden this morning. It's 'just' dizziness, but it won't quit and I can't stay upright.",
+      "triageNote": "72-year-old male with sudden persistent spinning dizziness. He lists to one side, has marked truncal unsteadiness and direction-changing nystagmus, and cannot stand or walk without assistance.",
+      "vitals": {
+        "hr": {
+          "value": 72,
+          "color": "green"
+        },
+        "bp": {
+          "value": "168/94",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 16,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 97,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 1,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Cerebellar (posterior circulation) stroke",
-      "esi": 2,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → stroke pathway, MRI (plain CT often misses posterior strokes), neurology; 'just vertigo' can be a stroke.",
-      "why": "Can't walk = central. Posterior strokes masquerade as 'vertigo' and CT misses them — think HINTS exam / MRI.",
-      "redFlag": "Sudden vertigo + inability to walk / truncal ataxia = central (stroke), not benign peripheral vertigo."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because sudden persistent vertigo with inability to stand and direction-changing nystagmus is a high-risk central neurologic presentation."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This older adult has abrupt continuous vertigo, severe truncal instability, lateropulsion, direction-changing nystagmus, and inability to walk unaided.",
+      "acuityReason": "The prominent gait and eye-movement abnormalities are not safely explained by uncomplicated peripheral vertigo and require rapid stroke assessment.",
+      "expectedResources": [
+        "Immediate neurologic and stroke assessment",
+        "Brain and vascular imaging",
+        "ECG and laboratory testing",
+        "Neurology consultation"
+      ],
+      "keyFindings": [
+        "Sudden persistent spinning sensation",
+        "Cannot stand or walk without help",
+        "Marked truncal unsteadiness",
+        "Lists to one side",
+        "Direction-changing nystagmus"
+      ],
+      "redFlags": [
+        "Acute vestibular syndrome with inability to walk",
+        "Central-pattern nystagmus"
+      ],
+      "teachingPoints": [
+        "Severe truncal ataxia is a central warning sign even when limb weakness or speech change is absent.",
+        "Early non-contrast CT may miss posterior circulation ischemia."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Posterior circulation stroke",
+          "Vestibular neuritis",
+          "Other central vestibular disorder"
+        ],
+        "disposition": "Urgent stroke evaluation and appropriate imaging would likely lead to admission for neurologic monitoring and treatment."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-2",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

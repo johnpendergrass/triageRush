@@ -34,16 +34,16 @@ The scoring algorithm reads:
 
 - The version-appropriate correct-room field:
   - `answer.correctRoom` in schema version 1.2
-  - `patient.answer.correctRoom` in schema version 2.1
+  - `patient.answer.correctRoom` in schema version 2.1 and later
 - The patient's underlying ESI:
   - `patient.diagnosis.esi` in schema version 1.2
-  - `patient.answer.correctEsi` in schema version 2.1
+  - `patient.answer.correctEsi` in schema version 2.1 and later
 
 The version-appropriate `correctRoom` must be one of the seven room identifiers above.
 The version-appropriate underlying ESI must be an integer from 1 through 5.
 
 `otherAcceptableRooms` remains present at `answer.otherAcceptableRooms` in
-schema 1.2 and `patient.answer.otherAcceptableRooms` in schema 2.1,
+schema 1.2 and `patient.answer.otherAcceptableRooms` in schema 2.1 and later,
 but is `null` for all current patients. The scoring algorithm must ignore it.
 It is reserved for a possible future exceptional-patient override whose schema
 and behavior must be defined before use.

@@ -1,0 +1,111 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-103",
+  "number": 103,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Rosa",
+        "age": 74,
+        "sex": "F",
+        "race": "hispanic"
+      },
+      "image": {
+        "imageFilename": "patient-103.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Weak, can't keep anything down",
+      "quote": "Four days of this. I can't even keep water down, and my sugars are all over the place. My legs feel like water.",
+      "triageNote": "74-year-old female with type 2 diabetes, four days of COVID with vomiting and poor oral intake, now weak with dry mucous membranes.",
+      "vitals": {
+        "hr": {
+          "value": 104,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "104/62",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 20,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 94,
+          "color": "yellow"
+        },
+        "temp": {
+          "value": 38.1,
+          "color": "yellow"
+        },
+        "pain": {
+          "value": 3,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 3,
+      "correctRoom": "esi-3",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 3 is appropriate because this stable older diabetic patient with vomiting, dehydration, fever, and hyperglycemia requires multiple laboratory and treatment resources."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has viral illness complicated by poor intake, dehydration, and metabolic risk.",
+      "acuityReason": "She is weak and mildly hypotensive relative to age but not confused or in shock; laboratory assessment and IV treatment are required.",
+      "expectedResources": [
+        "CBC, metabolic, glucose, ketone, and renal testing",
+        "IV fluids",
+        "Parenteral antiemetic medication",
+        "Respiratory and metabolic reassessment"
+      ],
+      "keyFindings": [
+        "Four days of viral illness",
+        "Vomiting and poor oral intake",
+        "Weakness and dry mucous membranes",
+        "Diabetes",
+        "Heart rate 104",
+        "Oxygen saturation 94%"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Diabetes and inability to retain fluids increase risk for hyperglycemic crisis.",
+        "Metabolic testing should precede reassurance based only on respiratory appearance."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Viral illness with dehydration and hyperglycemia",
+          "Early diabetic ketoacidosis",
+          "Other infectious gastroenteritis"
+        ],
+        "disposition": "IV fluids, symptom control, and metabolic assessment would guide discharge after recovery or admission for persistent abnormalities."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a hispanic 74-year-old woman in a cardigan, seated on a blue padded clinic chair",
+    "pose": "sitting slumped slightly to one side, a small basin held in her lap",
+    "expression": "drained and weary",
+    "signs": [
+      "dry cracked lips",
+      "sunken tired eyes",
+      "pale washed-out skin"
+    ],
+    "lookSeverity": "unwell and depleted but not in extremis",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-103.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. Subject: a hispanic 74-year-old woman in a cardigan, seated on a blue padded clinic chair. Pose: sitting slumped slightly to one side, a small basin held in her lap. Expression: drained and weary. Clearly visible: dry cracked lips; sunken tired eyes; pale washed-out skin. Overall: unwell and depleted but not in extremis. No text, no logos, no watermarks, no border."
+  }
+}

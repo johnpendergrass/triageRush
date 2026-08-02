@@ -1,71 +1,97 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-116",
   "number": 116,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Frank",
-      "age": 71,
-      "sex": "M",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-116.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Vernon",
+        "age": 71,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-116.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "COPD is much worse",
-      "quoteShort": null,
-      "quoteLong": "Started as a head cold off my grandson, and now I'm on that inhaler every hour and it's doing nothing at all. My test said it wasn't COVID.",
-      "presentationShort": "71yo M, COPD — 4 days coryza, now worsening dyspnoea and wheeze unresponsive to inhaler. RSV-positive contact.",
-      "presentationLong": "71-year-old male with COPD, four days of coryza and now worsening breathlessness and wheeze unresponsive to his own inhaler."
-    },
-    "vitals": {
-      "hr": {
-        "value": 104,
-        "color": "yellow"
-      },
-      "bp": {
-        "value": "138/82",
-        "color": "green"
-      },
-      "rr": {
-        "value": 26,
-        "color": "yellow"
-      },
-      "spo2": {
-        "value": 90,
-        "color": "yellow"
-      },
-      "temp": {
-        "value": 37.7,
-        "color": "yellow"
-      },
-      "pain": {
-        "value": 2,
-        "color": "green"
+      "quote": "Started as a head cold off my grandson, and now I'm on that inhaler every hour and it's doing nothing at all. My test said it wasn't COVID.",
+      "triageNote": "71-year-old male with COPD, four days of coryza and now worsening breathlessness and wheeze unresponsive to his own inhaler.",
+      "vitals": {
+        "hr": {
+          "value": 104,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "138/82",
+          "color": "green"
+        },
+        "rr": {
+          "value": 26,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 90,
+          "color": "red"
+        },
+        "temp": {
+          "value": 37.7,
+          "color": "green"
+        },
+        "pain": {
+          "value": 2,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "RSV infection precipitating a COPD exacerbation",
-      "esi": 3,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → nebulisers, steroids, chest X-ray, blood gas; admission likely",
-      "why": "RSV is badly underrated in older adults; in COPD it behaves like a serious exacerbation. And a negative COVID test says precisely nothing about it.",
-      "redFlag": "SpO₂ 90% in an exacerbation not responding to his own inhaler — this one is heading toward non-invasive ventilation."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because worsening COPD symptoms unresponsive to home inhaler with respiratory rate 26 and oxygen saturation 90% are high risk for respiratory deterioration."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This older adult with chronic lung disease has worsening dyspnea and wheeze after a viral prodrome, with poor rescue-inhaler response.",
+      "acuityReason": "Abnormal oxygenation, tachypnea, and treatment failure require rapid bronchodilator and respiratory assessment rather than routine multi-resource sorting.",
+      "expectedResources": [
+        "Controlled oxygen and immediate bronchodilator treatment",
+        "Systemic corticosteroids",
+        "Chest imaging, ECG, and laboratory testing",
+        "Antibiotics when sputum or imaging supports them"
+      ],
+      "keyFindings": [
+        "Known COPD",
+        "Four days of coryza",
+        "Worsening breathlessness and wheeze",
+        "Home inhaler not effective",
+        "Respiratory rate 26",
+        "Oxygen saturation 90%"
+      ],
+      "redFlags": [
+        "Poor treatment response with abnormal oxygenation"
+      ],
+      "teachingPoints": [
+        "Oxygen should be titrated appropriately rather than withheld from a hypoxemic patient.",
+        "Fatigue, confusion, reduced air movement, or worsening gas exchange would indicate impending failure."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Viral-triggered COPD exacerbation",
+          "Pneumonia",
+          "Heart failure"
+        ],
+        "disposition": "Rapid respiratory treatment and reassessment would likely lead to observation or admission unless the patient returns safely to baseline."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-3",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

@@ -1,71 +1,89 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-014",
   "number": 14,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Trevor",
-      "age": 15,
-      "sex": "M",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-014.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Trevor",
+        "age": 15,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-014.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Itchy rash, both legs",
-      "quoteShort": null,
-      "quoteLong": "I built a sick dirt jump in the woods. Turns out I built it directly in a poison ivy patch. My legs now look like a topographic map and I have not stopped scratching since third period.",
-      "presentationShort": "15yo M — itchy streaky rash to shins 2d after trail-building. No face/airway.",
-      "presentationLong": "15-year-old male, itchy streaky rash on both shins two days after building trails in the woods, no facial or airway involvement."
-    },
-    "vitals": {
-      "hr": {
-        "value": 80,
-        "color": "green"
-      },
-      "bp": {
-        "value": "112/70",
-        "color": "green"
-      },
-      "rr": {
-        "value": 16,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 100,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.9,
-        "color": "green"
-      },
-      "pain": {
-        "value": 2,
-        "color": "green"
+      "quote": "I built a sick dirt jump in the woods. Turns out I built it directly in a poison ivy patch. My legs now look like a topographic map and I have not stopped scratching since third period.",
+      "triageNote": "15-year-old male, itchy streaky rash on both shins and forearms two days after building trails in the woods, no facial or airway involvement.",
+      "vitals": {
+        "hr": {
+          "value": 80,
+          "color": "green"
+        },
+        "bp": {
+          "value": "112/70",
+          "color": "green"
+        },
+        "rr": {
+          "value": 16,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 100,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.9,
+          "color": "green"
+        },
+        "pain": {
+          "value": 2,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Contact dermatitis (poison ivy / Rhus)",
-      "esi": 5,
-      "esi2roomsNotes": null,
-      "disposition": "Fast Track → topical or short oral steroids, antihistamine, wash exposure, education",
-      "why": "Linear streaky vesicles = a plant brushed past. Watch for face/eye involvement or airway if it spreads — this one's a localized ESI 5.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "esi-5",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 / Non-Urgent is appropriate because this localized stable rash is expected to need examination and simple treatment without a countable emergency resource."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This is a localized itchy rash after plant exposure without facial, airway, or systemic involvement.",
+      "acuityReason": "The patient is comfortable and stable, with no breathing difficulty, facial swelling, fever, severe pain, or widespread systemic findings.",
+      "expectedResources": [
+        "Clinical skin examination and simple medication treatment"
+      ],
+      "keyFindings": [
+        "Woodland plant exposure",
+        "Itchy streaky rash on both shins and forearms",
+        "Two-day duration",
+        "No facial or airway involvement",
+        "Normal vital signs"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Linear or streaky dermatitis after outdoor exposure supports a contact pattern.",
+        "Facial, ocular, airway, extensive, or infected involvement would change the urgency and treatment needs."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Allergic contact dermatitis from poison ivy or another plant"
+        ],
+        "disposition": "The patient would likely receive topical or short-course systemic treatment when indicated, exposure-removal advice, and discharge precautions."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-5",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

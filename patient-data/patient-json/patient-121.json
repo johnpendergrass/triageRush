@@ -1,71 +1,97 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-121",
   "number": 121,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Nick",
-      "age": 62,
-      "sex": "M",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-121.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Nick",
+        "age": 62,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-121.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Chest pain",
-      "quoteShort": null,
-      "quoteLong": "Nine malls this week. I thought it was the kids sitting on me, but it's like a truck is parked on my chest and my left arm has gone dead.",
-      "presentationShort": "62yo M — 40min crushing central chest pain radiating to left arm, diaphoretic and nauseated. Pain ongoing.",
-      "presentationLong": "62-year-old male with forty minutes of crushing central chest pain radiating to the left arm, sweating and nauseated, with pain still ongoing."
-    },
-    "vitals": {
-      "hr": {
-        "value": 52,
-        "color": "red"
-      },
-      "bp": {
-        "value": "94/58",
-        "color": "red"
-      },
-      "rr": {
-        "value": 22,
-        "color": "yellow"
-      },
-      "spo2": {
-        "value": 95,
-        "color": "yellow"
-      },
-      "temp": {
-        "value": 36.6,
-        "color": "green"
-      },
-      "pain": {
-        "value": 9,
-        "color": "red"
+      "quote": "Nine malls this week. I thought it was the kids sitting on me, but it's like a truck is parked on my chest and my left arm has gone dead.",
+      "triageNote": "62-year-old male with forty minutes of crushing central chest pain radiating to the left arm, sweating and nauseated, with pain still ongoing.",
+      "vitals": {
+        "hr": {
+          "value": 52,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "94/58",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 22,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 95,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.6,
+          "color": "green"
+        },
+        "pain": {
+          "value": 9,
+          "color": "red"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Inferior ST-elevation myocardial infarction with likely right ventricular involvement",
-      "esi": 1,
-      "esi2roomsNotes": null,
-      "disposition": "Resus → ECG within 10 minutes including right-sided leads, aspirin, activate the cath lab; extreme caution with nitrates",
-      "why": "The suit is a distraction. Bradycardic and hypotensive with an inferior STEMI means think right ventricle: these patients are preload dependent, and nitrates can drop them through the floor.",
-      "redFlag": "Crushing chest pain with diaphoresis, bradycardia and hypotension — inferior STEMI with possible RV infarction."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 1,
+      "correctRoom": "esi-1",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 1 is appropriate because ongoing ischemic chest pain with bradycardia, blood pressure 94/58, diaphoresis, and nausea suggests impaired perfusion requiring immediate cardiovascular stabilization."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has an acute inferior-coronary pattern with hypotension and bradycardia, raising concern for right-ventricular involvement.",
+      "acuityReason": "The low pressure and slow rate accompanying ongoing pain indicate instability and require simultaneous resuscitation and reperfusion activation.",
+      "expectedResources": [
+        "Immediate ECG and cardiac monitoring",
+        "IV access and perfusion support",
+        "Antiplatelet treatment and reperfusion activation",
+        "Right-sided ECG assessment",
+        "Careful medication selection because of preload dependence"
+      ],
+      "keyFindings": [
+        "Forty minutes of crushing central pain",
+        "Radiation to left arm",
+        "Diaphoresis and nausea",
+        "Pain remains 9 out of 10",
+        "Heart rate 52",
+        "Blood pressure 94/58"
+      ],
+      "redFlags": [
+        "Ongoing ischemia with hypotension and bradycardia"
+      ],
+      "teachingPoints": [
+        "Inferior infarction with right-ventricular involvement may be highly preload dependent.",
+        "Vasodilators can worsen hypotension when right-ventricular filling is compromised."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Inferior myocardial infarction with right-ventricular involvement",
+          "Other acute coronary syndrome"
+        ],
+        "disposition": "Immediate stabilization and coronary reperfusion would be followed by intensive cardiac admission."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-1",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

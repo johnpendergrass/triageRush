@@ -1,0 +1,112 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-035",
+  "number": 35,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Walter",
+        "age": 72,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-035.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Room won't stop spinning",
+      "quote": "The room won't stop spinning and I keep listing to one side when I try to walk. It came on all of a sudden this morning. It's 'just' dizziness, but it won't quit and I can't stay upright.",
+      "triageNote": "72-year-old male with sudden persistent spinning dizziness. He lists to one side, has marked truncal unsteadiness and direction-changing nystagmus, and cannot stand or walk without assistance.",
+      "vitals": {
+        "hr": {
+          "value": 72,
+          "color": "green"
+        },
+        "bp": {
+          "value": "168/94",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 16,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 97,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 1,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because sudden persistent vertigo with inability to stand and direction-changing nystagmus is a high-risk central neurologic presentation."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This older adult has abrupt continuous vertigo, severe truncal instability, lateropulsion, direction-changing nystagmus, and inability to walk unaided.",
+      "acuityReason": "The prominent gait and eye-movement abnormalities are not safely explained by uncomplicated peripheral vertigo and require rapid stroke assessment.",
+      "expectedResources": [
+        "Immediate neurologic and stroke assessment",
+        "Brain and vascular imaging",
+        "ECG and laboratory testing",
+        "Neurology consultation"
+      ],
+      "keyFindings": [
+        "Sudden persistent spinning sensation",
+        "Cannot stand or walk without help",
+        "Marked truncal unsteadiness",
+        "Lists to one side",
+        "Direction-changing nystagmus"
+      ],
+      "redFlags": [
+        "Acute vestibular syndrome with inability to walk",
+        "Central-pattern nystagmus"
+      ],
+      "teachingPoints": [
+        "Severe truncal ataxia is a central warning sign even when limb weakness or speech change is absent.",
+        "Early non-contrast CT may miss posterior circulation ischemia."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Posterior circulation stroke",
+          "Vestibular neuritis",
+          "Other central vestibular disorder"
+        ],
+        "disposition": "Urgent stroke evaluation and appropriate imaging would likely lead to admission for neurologic monitoring and treatment."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "72-year-old man, looks queasy",
+    "pose": "gripping the arm of the chair for balance, tilted to one side",
+    "expression": "nauseated and off-balance",
+    "signs": [
+      "gripping the chair for balance",
+      "tilted, off-balance look"
+    ],
+    "lookSeverity": "unsteady, unwell",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-035.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 72-year-old man who looks queasy, seated on a blue padded clinic chair. Pose: gripping the arm of the chair for balance, body tilted to one side. Expression: nauseated and off-balance. Clearly visible: a white-knuckle grip on the chair and an unsteady, tilted posture. No text, no logos."
+  }
+}

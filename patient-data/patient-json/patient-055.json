@@ -1,71 +1,93 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-055",
   "number": 55,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Tyler",
-      "age": 22,
-      "sex": "M",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-055.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Dylan",
+        "age": 22,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-055.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Shoulder popped out",
-      "quoteShort": null,
-      "quoteLong": "I fell on my arm playing football and my shoulder popped out of place — I can feel it's not sitting right. I'm holding it away from my body because I can't move it at all.",
-      "presentationShort": "22yo M ? shoulder injury after football fall; visible squared-off contour, arm held slightly away and externally rotated, unable to move it, NV intact.",
-      "presentationLong": "22-year-old male who fell onto his arm playing football. The shoulder has a squared-off contour and he holds the arm slightly away from his body and externally rotated; movement is severely limited, with intact distal circulation and sensation."
-    },
-    "vitals": {
-      "hr": {
-        "value": 104,
-        "color": "yellow"
-      },
-      "bp": {
-        "value": "128/80",
-        "color": "green"
-      },
-      "rr": {
-        "value": 16,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 99,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.9,
-        "color": "green"
-      },
-      "pain": {
-        "value": 7,
-        "color": "red"
+      "quote": "I fell on my arm playing football and my shoulder popped out of place — I can feel it's not sitting right. I'm holding it away from my body because I can't move it at all.",
+      "triageNote": "22-year-old male who fell onto his arm playing football. The shoulder has a squared-off contour and he holds the arm slightly away from his body and externally rotated; movement is severely limited, with intact distal circulation and sensation.",
+      "vitals": {
+        "hr": {
+          "value": 104,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "128/80",
+          "color": "green"
+        },
+        "rr": {
+          "value": 16,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.9,
+          "color": "green"
+        },
+        "pain": {
+          "value": 7,
+          "color": "red"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Anterior shoulder dislocation",
-      "esi": 3,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → X-ray, procedural sedation & reduction, sling, check NV before/after; discharge.",
-      "why": "Squared-off shoulder + arm held out = anterior dislocation. Imaging plus procedural sedation and reduction make this an Acute resource case. Check axillary nerve before and after reduction.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 3,
+      "correctRoom": "esi-3",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 3 is appropriate because a stable shoulder dislocation is expected to require multiple resources including imaging, analgesia or sedation, and reduction."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has an obvious shoulder deformity after trauma with preserved distal neurovascular status.",
+      "acuityReason": "The injury is not currently limb-threatening, but severe motion restriction and deformity require imaging and a monitored reduction procedure.",
+      "expectedResources": [
+        "Shoulder X-ray",
+        "Analgesia and procedural sedation as needed",
+        "Closed reduction",
+        "Post-reduction imaging"
+      ],
+      "keyFindings": [
+        "Fall onto the arm",
+        "Squared-off shoulder contour",
+        "Arm held abducted and externally rotated",
+        "Severely limited motion",
+        "Intact distal circulation and sensation"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Axillary-nerve and distal neurovascular findings should be recorded before and after reduction.",
+        "Post-reduction imaging and immobilization help confirm alignment and identify associated fracture."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Anterior shoulder dislocation",
+          "Proximal humerus fracture-dislocation"
+        ],
+        "disposition": "Imaging and monitored reduction would likely be followed by immobilization, repeat examination, and orthopedic follow-up."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-3",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

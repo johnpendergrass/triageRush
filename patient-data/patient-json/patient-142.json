@@ -1,71 +1,87 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-142",
   "number": 142,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Victor",
-      "age": 39,
-      "sex": "M",
-      "race": "hispanic"
-    },
-    "image": {
-      "imageFilename": "patient-142.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Carlos",
+        "age": 39,
+        "sex": "M",
+        "race": "hispanic"
+      },
+      "image": {
+        "imageFilename": "patient-142.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Need a note for work",
-      "quoteShort": null,
-      "quoteLong": "I tweaked my back last Monday lifting boxes. It's basically better now, but my supervisor wants a note before I'm allowed back on the floor.",
-      "presentationShort": "39yo M — mechanical back strain 8 days ago, now resolved. Full painless range of motion, no red flags, neurologically intact.",
-      "presentationLong": "39-year-old male with a mechanical back strain eight days ago that has now resolved, with full painless movement and a normal neurological examination."
-    },
-    "vitals": {
-      "hr": {
-        "value": 70,
-        "color": "green"
-      },
-      "bp": {
-        "value": "126/78",
-        "color": "green"
-      },
-      "rr": {
-        "value": 14,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 99,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.8,
-        "color": "green"
-      },
-      "pain": {
-        "value": 1,
-        "color": "green"
+      "quote": "I tweaked my back last Monday lifting boxes. It's basically better now, but my supervisor wants a note before I'm allowed back on the floor.",
+      "triageNote": "39-year-old male with a mechanical back strain eight days ago that has now resolved, with full painless movement and a normal neurological examination.",
+      "vitals": {
+        "hr": {
+          "value": 70,
+          "color": "green"
+        },
+        "bp": {
+          "value": "126/78",
+          "color": "green"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 1,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Resolved mechanical low back strain",
-      "esi": 5,
-      "esi2roomsNotes": "ESI 5: no ED treatment-area resources are expected; brief evaluation, counseling, and discharge are appropriate.",
-      "disposition": "Discharge → work note and return-to-duty advice",
-      "why": "No red flags at all: no fever, no weight loss, no night pain, no neurology, no retention. A resolved strain needs a signature, not a scan.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "discharge",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because this resolved mechanical back strain has full painless movement, a normal neurologic examination, and no resource need."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient seeks documentation after an uncomplicated strain that has already resolved.",
+      "acuityReason": "This resolved mechanical back strain has full painless movement, a normal neurologic examination, and no resource need.",
+      "expectedResources": [],
+      "keyFindings": [
+        "Back strain eight days ago",
+        "Symptoms resolved",
+        "Full painless movement",
+        "Normal neurologic examination",
+        "No red flags"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "No red flags at all: no fever, no weight loss, no night pain, no neurology, no retention. A resolved strain needs a signature, not a scan.",
+        "Triage should be based on the current presentation and expected care, with reassessment if new warning signs appear."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Resolved mechanical back strain"
+        ],
+        "disposition": "Documentation and recurrence-prevention guidance would allow discharge without testing."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "discharge",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

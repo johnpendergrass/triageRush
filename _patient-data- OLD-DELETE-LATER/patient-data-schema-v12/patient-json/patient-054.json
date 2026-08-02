@@ -1,0 +1,85 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-054",
+  "number": 54,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Diego",
+      "age": 38,
+      "sex": "M",
+      "race": "hispanic"
+    },
+    "image": {
+      "imageFilename": "patient-054.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Cut his finger",
+      "quoteShort": null,
+      "quoteLong": "I was chopping onions and the knife slipped. It's a clean cut on my finger, bled a lot but stopped with pressure. I can still bend it fine and feel everything.",
+      "presentationShort": "38yo M — clean 1.5 cm volar finger laceration, bleeding controlled, flexion intact, sensation intact distally.",
+      "presentationLong": "38-year-old male with a clean 1.5 cm volar finger laceration from a kitchen knife, bleeding controlled, with intact flexion and distal sensation."
+    },
+    "vitals": {
+      "hr": {
+        "value": 76,
+        "color": "green"
+      },
+      "bp": {
+        "value": "124/78",
+        "color": "green"
+      },
+      "rr": {
+        "value": 14,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 99,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.8,
+        "color": "green"
+      },
+      "pain": {
+        "value": 3,
+        "color": "yellow"
+      }
+    },
+    "diagnosis": {
+      "primary": "Simple finger laceration",
+      "esi": 4,
+      "esi2roomsNotes": null,
+      "disposition": "Fast Track → irrigate, check tendon/nerve, sutures, tetanus; discharge.",
+      "why": "Always document tendon and nerve function before you close. Intact here → simple repair.",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-4",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "38-year-old man in a casual shirt",
+    "pose": "seated, holding gauze wrapped around one finger",
+    "expression": "calm, a little sheepish",
+    "signs": [
+      "gauze wrapped around one finger"
+    ],
+    "lookSeverity": "well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-054.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a hispanic 38-year-old man in a casual shirt, seated on a blue padded clinic chair. Pose: holding a gauze-wrapped finger up. Expression: calm and a little sheepish. Clearly visible: gauze wrapped around one finger. No text, no logos."
+  }
+}

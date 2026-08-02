@@ -1,0 +1,87 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-149",
+  "number": 149,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Piper",
+      "age": 23,
+      "sex": "F",
+      "race": "white"
+    },
+    "image": {
+      "imageFilename": "patient-149.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Cut my hand on the pruning shears",
+      "quoteShort": null,
+      "quoteLong": "I have four hundred hours of virtual farming and my first real tomato plant put me in the ER. The irony is not lost on me. It's pretty deep and it was very muddy soil.",
+      "presentationShort": "23yo F — deep soil-contaminated laceration to the palm from pruning shears 2h ago. Bleeding controlled, tendons and NV intact, tetanus status unknown.",
+      "presentationLong": "23-year-old female with a deep soil-contaminated laceration to the palm from pruning shears two hours ago; bleeding is controlled with intact tendon function and neurovascular exam, tetanus status unknown."
+    },
+    "vitals": {
+      "hr": {
+        "value": 84,
+        "color": "green"
+      },
+      "bp": {
+        "value": "116/72",
+        "color": "green"
+      },
+      "rr": {
+        "value": 14,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 99,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.8,
+        "color": "green"
+      },
+      "pain": {
+        "value": 5,
+        "color": "yellow"
+      }
+    },
+    "diagnosis": {
+      "primary": "Soil-contaminated hand laceration",
+      "esi": 4,
+      "esi2roomsNotes": null,
+      "disposition": "Fast Track → wound exploration for foreign material, copious irrigation, tetanus booster, closure and hand-function check",
+      "why": "A garden wound is a dirty wound: explore for grit and plant material, irrigate generously, and check tetanus status — 'unknown' means give it. Always test tendon function BEFORE anaesthetising the hand.",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-4",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a white 23-year-old woman in a Stardew Valley t-shirt and muddy gardening gloves pushed down at the wrists, seated on a blue padded clinic chair",
+    "pose": "sitting holding her right hand palm-up in her lap, a gauze pad pressed against the palm",
+    "expression": "rueful and self-deprecating",
+    "signs": [
+      "a gauze pad held against the palm of one hand",
+      "muddy gardening gloves pushed down around the wrists",
+      "soil on the forearms"
+    ],
+    "lookSeverity": "entirely well, cut hand",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-149.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. Subject: a white 23-year-old woman in a Stardew Valley t-shirt and muddy gardening gloves pushed down at the wrists, seated on a blue padded clinic chair. Pose: sitting holding her right hand palm-up in her lap, a gauze pad pressed against the palm. Expression: rueful and self-deprecating. Clearly visible: a gauze pad held against the palm of one hand; muddy gardening gloves pushed down around the wrists; soil on the forearms. Overall: entirely well, cut hand. The only lettering anywhere in the picture is the words 'STARDEW VALLEY' printed cleanly across the front of the t-shirt. No other text, no watermarks, no border."
+  }
+}

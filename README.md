@@ -9,7 +9,7 @@ apps, and a future standalone Patient CRUD tool.
 ```text
 triageRush/
 ├── docs/
-├── docs-archive/
+│   └── archive/
 ├── triageRush/
 ├── patient-data/
 ├── patient-CRUD (standalone)/
@@ -24,7 +24,7 @@ triageRush/
 - Root `index.html` is the GitHub Pages entry point.
 - `docs/` contains the small authoritative set of current project
   specifications.
-- `docs-archive/` preserves superseded specifications, development history,
+- `docs/archive/` preserves superseded specifications, development history,
   prototype references, and artwork development.
 - `triageRush/` owns the responsive Game/Edu application and production game
   assets.

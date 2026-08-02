@@ -1,0 +1,86 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-034",
+  "number": 34,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Gladys",
+      "age": 76,
+      "sex": "F",
+      "race": "black"
+    },
+    "image": {
+      "imageFilename": "patient-034.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Can't catch her breath",
+      "quoteShort": null,
+      "quoteLong": "I can't catch my breath, especially lying down — I've been sleeping upright in my recliner. My ankles are all puffed up and I've gained a few pounds just this week.",
+      "presentationShort": "76yo F ? worsening dyspnea, unable to lie flat, recent weight gain, bilateral ankle edema, bibasal crackles, and raised neck veins.",
+      "presentationLong": "76-year-old female with progressive shortness of breath, now sleeping upright because she cannot breathe comfortably lying down. She reports recent weight gain and has bilateral ankle edema, bibasal crackles, and distended neck veins."
+    },
+    "vitals": {
+      "hr": {
+        "value": 98,
+        "color": "yellow"
+      },
+      "bp": {
+        "value": "158/92",
+        "color": "yellow"
+      },
+      "rr": {
+        "value": 24,
+        "color": "yellow"
+      },
+      "spo2": {
+        "value": 93,
+        "color": "yellow"
+      },
+      "temp": {
+        "value": 36.9,
+        "color": "green"
+      },
+      "pain": {
+        "value": 2,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Acute decompensated heart failure",
+      "esi": 3,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → sit upright, oxygen, CXR/BNP/ECG, IV diuresis (furosemide), nitrates if hypertensive; monitor.",
+      "why": "Orthopnea + leg edema + weight gain + crackles = CHF. Sit them up, give oxygen, and diurese.",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-3",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "76-year-old woman",
+    "pose": "leaning forward on the chair, working to breathe",
+    "expression": "tired, breathing hard",
+    "signs": [
+      "leaning forward, breathing hard",
+      "swollen ankles"
+    ],
+    "lookSeverity": "short of breath, stable",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-034.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a black 76-year-old woman, seated on a blue padded clinic chair. Pose: leaning forward with hands on her knees, visibly working to breathe. Expression: tired and short of breath. Clearly visible: leaning forward breathing hard, with noticeably swollen ankles. No text, no logos."
+  }
+}

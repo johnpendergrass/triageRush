@@ -66,7 +66,7 @@ Production checks should verify:
 - Ordinary ESI room identifiers agree with the version-appropriate underlying
   ESI.
 - Psych and Discharge retain a valid underlying ESI.
-- Version 2.1 clinical explanations use only `patient.presentation` facts or reasonable
+- Version 2.2 Clinical explanations use only `patient.presentation` facts or reasonable
   inferences from them.
 - Unknown room identifiers are rejected or reported.
 - Schema-version changes are deliberate.
@@ -144,13 +144,16 @@ The future CRUD application:
 ## Historical artwork
 
 Artwork iterations, rejected concepts, and selected-reference snapshots are
-stored in the root `docs-archive/`. Production code must use
+stored in `docs/archive/`. Production code must use
 `triageRush/assets/`, not documentation artwork.
 
 ## Change history
 
 - **2026-07-31:** Established schema 2.1 with explicit `presentation`, `answer`,
   and `clinical` patient-display sections and single quote/triage-note fields.
+- **2026-08-01:** Established schema 2.2 with destination rationale under
+  `patient.answer`, pre-answer Clinical boundaries, anti-creep review rules,
+  and three independent detailed-panel contexts.
 - **2026-07-31:** Established schema 2.0 with `triageReasoning` and documented
   the controlled transition from version 1.2 records.
 - **2026-07-29 16:55 PDT:** Consolidated patient ownership, schema essentials,

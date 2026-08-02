@@ -1,71 +1,89 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-132",
   "number": 132,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Sandra",
-      "age": 45,
-      "sex": "F",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-132.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Sandra",
+        "age": 45,
+        "sex": "F",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-132.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Ingrown toenail",
-      "quoteShort": null,
-      "quoteLong": "I tried to fix it myself with nail clippers and, in hindsight, that was the mistake. Now it's angry and I can't get a shoe on.",
-      "presentationShort": "45yo F — 5 days painful ingrown great toenail with local redness. No spreading cellulitis, no fever, not diabetic.",
-      "presentationLong": "45-year-old female with five days of a painful ingrown great toenail with local redness, no spreading cellulitis and no fever."
-    },
-    "vitals": {
-      "hr": {
-        "value": 76,
-        "color": "green"
-      },
-      "bp": {
-        "value": "122/74",
-        "color": "green"
-      },
-      "rr": {
-        "value": 14,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 99,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.8,
-        "color": "green"
-      },
-      "pain": {
-        "value": 5,
-        "color": "yellow"
+      "quote": "I tried to fix it myself with nail clippers and, in hindsight, that was the mistake. Now it's angry and I can't get a shoe on.",
+      "triageNote": "45-year-old female with five days of a painful ingrown great toenail with local redness, no spreading cellulitis and no fever.",
+      "vitals": {
+        "hr": {
+          "value": 76,
+          "color": "green"
+        },
+        "bp": {
+          "value": "122/74",
+          "color": "green"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 5,
+          "color": "yellow"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Ingrown toenail with local inflammation",
-      "esi": 4,
-      "esi2roomsNotes": null,
-      "disposition": "Fast Track → digital block and partial nail avulsion, dressing, footwear advice",
-      "why": "One procedure, one resource — a textbook ESI 4. Always check for diabetes or vascular disease, which would change the whole picture; she has neither.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 4,
+      "correctRoom": "esi-4",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 4 is appropriate because this stable localized ingrown toenail requires one simple procedure for partial nail treatment."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has localized nail-fold inflammation without spreading infection or systemic illness.",
+      "acuityReason": "This stable localized ingrown toenail requires one simple procedure for partial nail treatment.",
+      "expectedResources": [
+        "Partial nail avulsion or local nail procedure"
+      ],
+      "keyFindings": [
+        "Five days of great-toe pain",
+        "Ingrown nail with local redness",
+        "No spreading cellulitis",
+        "Afebrile",
+        "No diabetes or vascular disease"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "One procedure, one resource — a textbook single-procedure case. Always check for diabetes or vascular disease, which would change the whole picture; she has neither.",
+        "Triage should be based on the current presentation and expected care, with reassessment if new warning signs appear."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Ingrown toenail with local inflammation"
+        ],
+        "disposition": "A local anesthetic procedure and wound-care guidance would allow discharge."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-4",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

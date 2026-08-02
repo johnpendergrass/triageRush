@@ -1,71 +1,93 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-061",
   "number": 61,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Nicole",
-      "age": 30,
-      "sex": "F",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-061.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Nicole",
+        "age": 30,
+        "sex": "F",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-061.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Vomiting and diarrhea",
-      "quoteShort": null,
-      "quoteLong": "I've been throwing up and having diarrhea since yesterday — can't keep water down. A few of us got sick after the potluck. I'm lightheaded when I stand up.",
-      "presentationShort": "30yo F ? 24h vomiting and diarrhea after a potluck, unable to keep fluids down; dry mouth, mild orthostatic lightheadedness, afebrile.",
-      "presentationLong": "30-year-old female with one day of vomiting and diarrhea after several people became ill following a potluck. She cannot keep fluids down and has dry mucous membranes and mild lightheadedness on standing."
-    },
-    "vitals": {
-      "hr": {
-        "value": 108,
-        "color": "yellow"
-      },
-      "bp": {
-        "value": "108/68",
-        "color": "yellow"
-      },
-      "rr": {
-        "value": 16,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 99,
-        "color": "green"
-      },
-      "temp": {
-        "value": 37.2,
-        "color": "green"
-      },
-      "pain": {
-        "value": 3,
-        "color": "yellow"
+      "quote": "I've been throwing up and having diarrhea since yesterday — can't keep water down. A few of us got sick after the potluck. I'm lightheaded when I stand up.",
+      "triageNote": "30-year-old female with one day of vomiting and diarrhea after several people became ill following a potluck. She cannot keep fluids down and has dry mucous membranes and mild lightheadedness on standing.",
+      "vitals": {
+        "hr": {
+          "value": 108,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "108/68",
+          "color": "green"
+        },
+        "rr": {
+          "value": 16,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37.2,
+          "color": "green"
+        },
+        "pain": {
+          "value": 3,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Viral gastroenteritis with dehydration",
-      "esi": 3,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → antiemetic, IV fluids, electrolytes, reassess PO; discharge if tolerating.",
-      "why": "Vomiting + diarrhea + can't tolerate PO = dehydration. Antiemetic, rehydrate, reassess. Watch for bloody stool / severe pain.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 3,
+      "correctRoom": "esi-3",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 3 is appropriate because persistent vomiting with inability to tolerate fluids and clinical dehydration is expected to require multiple treatment and assessment resources."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has an outbreak-associated gastrointestinal illness with dehydration and orthostatic symptoms.",
+      "acuityReason": "She is not in shock and has no focal abdominal warning signs, but failed oral intake requires IV treatment and reassessment.",
+      "expectedResources": [
+        "IV fluids",
+        "Parenteral antiemetic medication",
+        "Electrolyte and renal testing"
+      ],
+      "keyFindings": [
+        "One day of vomiting and diarrhea",
+        "Multiple potluck attendees ill",
+        "Cannot keep fluids down",
+        "Dry mucous membranes",
+        "Lightheaded on standing"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Bloody stool, focal or severe abdominal pain, high fever, prolonged symptoms, or immunocompromise would broaden the evaluation.",
+        "Successful oral rehydration after treatment is an important disposition check."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Acute infectious gastroenteritis",
+          "Foodborne toxin illness",
+          "Other causes of vomiting and diarrhea"
+        ],
+        "disposition": "IV rehydration, antiemetic treatment, and laboratory assessment would be followed by an oral challenge and discharge if symptoms and hydration improve."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-3",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

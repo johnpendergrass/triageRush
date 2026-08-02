@@ -1,0 +1,86 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-142",
+  "number": 142,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Victor",
+      "age": 39,
+      "sex": "M",
+      "race": "hispanic"
+    },
+    "image": {
+      "imageFilename": "patient-142.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Need a note for work",
+      "quoteShort": null,
+      "quoteLong": "I tweaked my back last Monday lifting boxes. It's basically better now, but my supervisor wants a note before I'm allowed back on the floor.",
+      "presentationShort": "39yo M — mechanical back strain 8 days ago, now resolved. Full painless range of motion, no red flags, neurologically intact.",
+      "presentationLong": "39-year-old male with a mechanical back strain eight days ago that has now resolved, with full painless movement and a normal neurological examination."
+    },
+    "vitals": {
+      "hr": {
+        "value": 70,
+        "color": "green"
+      },
+      "bp": {
+        "value": "126/78",
+        "color": "green"
+      },
+      "rr": {
+        "value": 14,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 99,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.8,
+        "color": "green"
+      },
+      "pain": {
+        "value": 1,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Resolved mechanical low back strain",
+      "esi": 5,
+      "esi2roomsNotes": "ESI 5: no ED treatment-area resources are expected; brief evaluation, counseling, and discharge are appropriate.",
+      "disposition": "Discharge → work note and return-to-duty advice",
+      "why": "No red flags at all: no fever, no weight loss, no night pain, no neurology, no retention. A resolved strain needs a signature, not a scan.",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "discharge",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a hispanic 39-year-old man in a warehouse work shirt, seated comfortably on a blue padded clinic chair",
+    "pose": "sitting upright and relaxed, forearms on his thighs",
+    "expression": "patient and slightly bored",
+    "signs": [
+      "completely comfortable relaxed posture",
+      "a warehouse work shirt with a name patch"
+    ],
+    "lookSeverity": "entirely well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-142.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. Subject: a hispanic 39-year-old man in a warehouse work shirt, seated comfortably on a blue padded clinic chair. Pose: sitting upright and relaxed, forearms on his thighs. Expression: patient and slightly bored. Clearly visible: completely comfortable relaxed posture; a warehouse work shirt with a name patch. Overall: entirely well. No text, no logos, no watermarks, no border."
+  }
+}

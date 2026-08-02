@@ -1,71 +1,98 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-159",
   "number": 159,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Claire",
-      "age": 39,
-      "sex": "F",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-159.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Claire",
+        "age": 39,
+        "sex": "F",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-159.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Fever after returning from the Congo",
-      "quoteShort": null,
-      "quoteLong": "I got back from the DRC eight days ago. I was treating patients during the outbreak, and one shift my glove tore while I was cleaning up vomit. Yesterday the fever and body aches started; today I've vomited twice.",
-      "presentationShort": "39yo F aid doctor - returned from DRC 8 days ago after direct body-fluid exposure with torn PPE. Fever, severe myalgia, headache and vomiting since yesterday.",
-      "presentationLong": "39-year-old female international aid physician who returned from the Democratic Republic of the Congo eight days ago after a torn glove during direct contact with a febrile patient's vomit, now with acute fever, severe myalgia, headache and vomiting."
-    },
-    "vitals": {
-      "hr": {
-        "value": 124,
-        "color": "red"
-      },
-      "bp": {
-        "value": "102/64",
-        "color": "yellow"
-      },
-      "rr": {
-        "value": 24,
-        "color": "yellow"
-      },
-      "spo2": {
-        "value": 97,
-        "color": "green"
-      },
-      "temp": {
-        "value": 39.4,
-        "color": "red"
-      },
-      "pain": {
-        "value": 7,
-        "color": "yellow"
+      "quote": "I got back from the DRC eight days ago. I was treating patients during the outbreak, and one shift my glove tore while I was cleaning up vomit. Yesterday the fever and body aches started; today I've vomited twice.",
+      "triageNote": "39-year-old female international aid physician who returned from the Democratic Republic of the Congo eight days ago after a torn glove during direct contact with a febrile patient's vomit, now with acute fever, severe myalgia, headache and vomiting.",
+      "vitals": {
+        "hr": {
+          "value": 124,
+          "color": "red"
+        },
+        "bp": {
+          "value": "102/64",
+          "color": "green"
+        },
+        "rr": {
+          "value": 24,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 97,
+          "color": "green"
+        },
+        "temp": {
+          "value": 39.4,
+          "color": "red"
+        },
+        "pain": {
+          "value": 7,
+          "color": "red"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Suspected Ebola disease after high-risk occupational exposure",
-      "esi": 1,
-      "esi2roomsNotes": null,
-      "disposition": "Resus -> immediate single-room isolation with appropriate PPE, notify infection control and public health, coordinate Ebola testing while urgently evaluating malaria and other likely causes",
-      "why": "Travel alone is not enough. This patient has all three pieces: compatible acute illness, return within the 21-day window and a direct body-fluid exposure through compromised PPE. Isolate first and notify public health, but do not let the Ebola concern delay testing and treatment for malaria or other common lethal infections.",
-      "redFlag": "Fever within 21 days of a high-risk body-fluid exposure in an Ebola-affected area."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because compatible illness within the exposure window after direct body-fluid contact through compromised protective equipment is a high-risk communicable-disease presentation but lacks current lifesaving-intervention criteria."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This returning aid physician has acute fever, myalgia, headache, and vomiting after a specific high-risk occupational exposure.",
+      "acuityReason": "Compatible illness within the exposure window after direct body-fluid contact through compromised protective equipment is a high-risk communicable-disease presentation but lacks current lifesaving-intervention criteria.",
+      "expectedResources": [
+        "Immediate high-level isolation",
+        "Public-health and infection-control notification",
+        "Malaria testing and coordinated specialized diagnostics",
+        "IV hydration and symptom treatment"
+      ],
+      "keyFindings": [
+        "Returned eight days ago from the DRC",
+        "Torn glove during direct vomit contact",
+        "Acute fever, myalgia, headache, and vomiting",
+        "Heart rate 124",
+        "Blood pressure 102/64",
+        "Temperature 39.4 C"
+      ],
+      "redFlags": [
+        "Potential high-consequence communicable infection",
+        "Malaria and other common lethal travel infections remain possible"
+      ],
+      "teachingPoints": [
+        "Travel alone is not enough. This patient has all three pieces: compatible acute illness, return within the 21-day window and a direct body-fluid exposure through compromised PPE. Isolate first and notify public health, but do not let the Ebola concern delay testing and treatment for malaria or other common lethal infections.",
+        "Triage should be based on the current presentation and expected care, with reassessment if new warning signs appear."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Suspected Ebola disease",
+          "Malaria",
+          "Other travel-associated febrile illness"
+        ],
+        "disposition": "Immediate isolation, public-health coordination, and parallel testing and treatment would lead to specialized admission."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-1",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

@@ -1,71 +1,98 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-101",
   "number": 101,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Walter",
-      "age": 79,
-      "sex": "M",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-101.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Albert",
+        "age": 79,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-101.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Can't breathe",
-      "quoteShort": null,
-      "quoteLong": "Six days... of this. Can't... get a full... breath. Had to stop... twice... walking in.",
-      "presentationShort": "79yo M — 6 days COVID, now severe dyspnoea at rest, two-word sentences, accessory muscle use.",
-      "presentationLong": "79-year-old male, six days of COVID symptoms, now in severe respiratory distress at rest, speaking two-word sentences and using accessory muscles."
-    },
-    "vitals": {
-      "hr": {
-        "value": 124,
-        "color": "red"
-      },
-      "bp": {
-        "value": "98/58",
-        "color": "yellow"
-      },
-      "rr": {
-        "value": 34,
-        "color": "red"
-      },
-      "spo2": {
-        "value": 79,
-        "color": "red"
-      },
-      "temp": {
-        "value": 38.9,
-        "color": "red"
-      },
-      "pain": {
-        "value": 2,
-        "color": "green"
+      "quote": "Six days... of this. Can't... get a full... breath. Had to stop... twice... walking in.",
+      "triageNote": "79-year-old male, six days of COVID symptoms, now in severe respiratory distress at rest, speaking two-word sentences and using accessory muscles.",
+      "vitals": {
+        "hr": {
+          "value": 124,
+          "color": "red"
+        },
+        "bp": {
+          "value": "98/58",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 34,
+          "color": "red"
+        },
+        "spo2": {
+          "value": 79,
+          "color": "red"
+        },
+        "temp": {
+          "value": 38.9,
+          "color": "yellow"
+        },
+        "pain": {
+          "value": 2,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "COVID-19 pneumonia with acute hypoxaemic respiratory failure",
-      "esi": 1,
-      "esi2roomsNotes": null,
-      "disposition": "Resus → high-flow oxygen, prepare for intubation, ICU admission",
-      "why": "Work of breathing beats any single number. Two-word sentences and tripoding mean the tank is nearly empty — set up to intubate before you have to.",
-      "redFlag": "Two-word sentences with accessory muscle use and SpO₂ 79% — imminent respiratory failure."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 1,
+      "correctRoom": "esi-1",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 1 is appropriate because severe respiratory distress with two-word speech, accessory-muscle use, respiratory rate 34, oxygen saturation 79%, and borderline blood pressure requires immediate ventilatory support."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This older adult has severe viral respiratory illness with profound hypoxemia and near-exhaustion.",
+      "acuityReason": "Work of breathing and inability to speak normally indicate impending ventilatory failure regardless of any single test result.",
+      "expectedResources": [
+        "Immediate high-level oxygen and ventilatory support",
+        "Airway preparation",
+        "Cardiac monitoring and IV access",
+        "Chest imaging and laboratory evaluation"
+      ],
+      "keyFindings": [
+        "Six days of viral symptoms",
+        "Severe distress at rest",
+        "Two-word sentences",
+        "Accessory-muscle use",
+        "Respiratory rate 34",
+        "Oxygen saturation 79%"
+      ],
+      "redFlags": [
+        "Profound hypoxemia",
+        "Impending respiratory fatigue"
+      ],
+      "teachingPoints": [
+        "Work of breathing and speech are essential severity markers.",
+        "Airway planning should occur before exhaustion or altered consciousness develops."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Severe viral pneumonia with acute hypoxemic respiratory failure",
+          "Secondary bacterial pneumonia",
+          "Acute respiratory distress syndrome"
+        ],
+        "disposition": "Immediate respiratory support would be followed by intensive monitored admission and disease-directed treatment."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-1",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

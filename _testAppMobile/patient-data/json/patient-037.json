@@ -1,71 +1,98 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-037",
   "number": 37,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Marco",
-      "age": 58,
-      "sex": "M",
-      "race": "hispanic"
-    },
-    "image": {
-      "imageFilename": "patient-037.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Marco",
+        "age": 58,
+        "sex": "M",
+        "race": "hispanic"
+      },
+      "image": {
+        "imageFilename": "patient-037.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Tearing chest pain to the back",
-      "quoteShort": null,
-      "quoteLong": "It hit me all at once — a ripping, tearing pain in my chest that shot straight through to my back. Worst thing I've ever felt. It's not pressure, it's tearing.",
-      "presentationShort": "58yo M with hypertension ? abrupt severe tearing chest pain through to the back, unequal arm pressures, diaphoresis, BP 196/108.",
-      "presentationLong": "58-year-old male with hypertension and abrupt, severe tearing chest pain radiating through to his back. He is diaphoretic, has unequal blood pressures between his arms, and a measured pressure of 196/108."
-    },
-    "vitals": {
-      "hr": {
-        "value": 104,
-        "color": "yellow"
-      },
-      "bp": {
-        "value": "196/108",
-        "color": "red"
-      },
-      "rr": {
-        "value": 22,
-        "color": "yellow"
-      },
-      "spo2": {
-        "value": 97,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.9,
-        "color": "green"
-      },
-      "pain": {
-        "value": 10,
-        "color": "red"
+      "quote": "It hit me all at once — a ripping, tearing pain in my chest that shot straight through to my back. Worst thing I've ever felt. It's not pressure, it's tearing.",
+      "triageNote": "58-year-old male with hypertension and abrupt, severe tearing chest pain radiating through to his back. He is diaphoretic, has unequal blood pressures between his arms, and a measured pressure of 196/108.",
+      "vitals": {
+        "hr": {
+          "value": 104,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "196/108",
+          "color": "red"
+        },
+        "rr": {
+          "value": 22,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 97,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.9,
+          "color": "green"
+        },
+        "pain": {
+          "value": 10,
+          "color": "red"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Acute aortic dissection",
-      "esi": 1,
-      "esi2roomsNotes": null,
-      "disposition": "Resus → CT angiogram, control heart rate & BP (esmolol), type & cross, cardiothoracic surgery STAT; do NOT anticoagulate.",
-      "why": "Tearing, radiates to the back, unequal pulses/BP. Rate and pressure control, then surgery — and never anticoagulate it.",
-      "redFlag": "Tearing pain radiating to the back + unequal arm pressures = dissection."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player assignment remains session state.",
+      "correctEsi": 1,
+      "correctRoom": "esi-1",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 1 / Resuscitation is appropriate because the suspected aortic emergency requires immediate cardiovascular stabilization and lifesaving intervention."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This is an abrupt severe chest-pain presentation with marked hypertension, diaphoresis, and unequal arm pressures requiring immediate stabilization.",
+      "acuityReason": "Tearing pain radiating to the back with a major inter-arm pressure difference suggests an acute aortic emergency with risk of rupture, stroke, tamponade, or organ ischemia.",
+      "expectedResources": [
+        "Immediate cardiorespiratory monitoring and IV access",
+        "Rapid heart-rate and blood-pressure control",
+        "Emergency aortic imaging and cardiothoracic consultation"
+      ],
+      "keyFindings": [
+        "Abrupt maximal tearing chest pain",
+        "Radiation through to the back",
+        "Unequal arm blood pressures",
+        "Blood pressure of 196/108",
+        "Diaphoresis",
+        "Pain rated 10 out of 10"
+      ],
+      "redFlags": [
+        "Abrupt tearing pain radiating to the back",
+        "Unequal arm pressures",
+        "Severe hypertension with diaphoresis"
+      ],
+      "teachingPoints": [
+        "Aortic disease must be considered before empiric anticoagulation in a compatible chest-pain pattern.",
+        "Rapid reduction of aortic shear stress and early surgical involvement are time critical."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Acute aortic dissection",
+          "Other acute aortic syndrome",
+          "Acute coronary syndrome"
+        ],
+        "disposition": "The patient would receive immediate monitored stabilization, urgent aortic imaging when safe, and cardiothoracic management with operative care if proximal dissection is identified."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-1",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

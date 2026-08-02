@@ -1,71 +1,89 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-022",
   "number": 22,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Mia",
-      "age": 3,
-      "sex": "F",
-      "race": "asian"
-    },
-    "image": {
-      "imageFilename": "patient-022.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Mia",
+        "age": 3,
+        "sex": "F",
+        "race": "asian"
+      },
+      "image": {
+        "imageFilename": "patient-022.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Ate a 'do not eat' packet",
-      "quoteShort": null,
-      "quoteLong": "(Dad) She got into my shoebox and chewed one of those little 'DO NOT EAT' packets. She's totally fine — running around, ate lunch — but I panicked. Is it poison?",
-      "presentationShort": "3yo F — chewed a silica-gel desiccant packet; fully asymptomatic, tolerating PO, playful, exam normal.",
-      "presentationLong": "3-year-old female, ingested part of a silica-gel desiccant packet, completely asymptomatic, eating and drinking normally, with an unremarkable exam."
-    },
-    "vitals": {
-      "hr": {
-        "value": 110,
-        "color": "green"
-      },
-      "bp": {
-        "value": "98/62",
-        "color": "green"
-      },
-      "rr": {
-        "value": 24,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 100,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.9,
-        "color": "green"
-      },
-      "pain": {
-        "value": 0,
-        "color": "green"
+      "quote": "(Dad) She got into my shoebox and chewed one of those little 'DO NOT EAT' packets. She's totally fine — running around, ate lunch — but I panicked. Is it poison?",
+      "triageNote": "3-year-old female, ingested part of a silica-gel desiccant packet, completely asymptomatic, eating and drinking normally, with an unremarkable exam.",
+      "vitals": {
+        "hr": {
+          "value": 110,
+          "color": "green"
+        },
+        "bp": {
+          "value": "98/62",
+          "color": "green"
+        },
+        "rr": {
+          "value": 24,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 100,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.9,
+          "color": "green"
+        },
+        "pain": {
+          "value": 0,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Nontoxic ingestion (silica-gel desiccant)",
-      "esi": 5,
-      "esi2roomsNotes": "ESI 5: no ED treatment-area resources are expected; brief evaluation, counseling, and discharge are appropriate.",
-      "disposition": "Discharge → reassurance; silica gel is non-toxic. Return for vomiting, drooling, or refusal to eat.",
-      "why": "Silica gel = desiccant, essentially non-toxic. Well child + normal exam → reassure and discharge. (Contrast: a button battery is a true emergency.)",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "discharge",
+      "otherAcceptableRooms": null,
+      "destinationReason": "Discharge is appropriate because the confirmed exposure is generally nontoxic and the asymptomatic child is not expected to need an emergency treatment-area resource."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This is an asymptomatic child after chewing a silica-gel packet who remains playful and is eating and drinking normally.",
+      "acuityReason": "There are no airway symptoms, vomiting, drooling, altered behavior, pain, abnormal vital signs, or other evidence of toxicity.",
+      "expectedResources": [
+        "Product confirmation and brief ingestion assessment"
+      ],
+      "keyFindings": [
+        "Silica-gel desiccant packet identified",
+        "Completely asymptomatic",
+        "Tolerating food and fluids",
+        "Playful behavior",
+        "Normal examination and vital signs"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Silica gel is generally considered nontoxic, although the packet can still present a choking risk.",
+        "The exact product matters because button batteries, magnets, medications, and caustic substances require different responses."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Nontoxic silica-gel ingestion"
+        ],
+        "disposition": "After confirming the product and a reassuring assessment, the child could be discharged with poison-information guidance and return precautions for airway or gastrointestinal symptoms."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "discharge",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

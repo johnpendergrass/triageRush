@@ -10,7 +10,7 @@ During production development:
 triageRush/
 ├── index.html
 ├── docs/
-├── docs-archive/
+│   └── archive/
 ├── triageRush/
 │   ├── app.js
 │   ├── styles.css
@@ -47,7 +47,7 @@ implementation-reference--YYYY-MM-DD-HHMM.md
 
 When a current specification changes:
 
-1. Move the outgoing version to root `docs-archive/`.
+1. Move the outgoing version to `docs/archive/`.
 2. Save the revised document with the new timestamp.
 3. Keep the purpose prefix unchanged.
 4. Add a concise entry to the document's change history.

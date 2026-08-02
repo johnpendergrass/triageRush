@@ -1,0 +1,310 @@
+# triageRush Asset Reorganization and Demo Migration Handoff
+
+**Current version:** 2026-08-02 14:57 PDT
+
+**Last committed baseline:** `f8ddb4f Adopt patient schema 2.1 and unified patient chart`
+
+## Start here next session
+
+The next focused task is to update `_testAppMobile/` and
+`_testAppHomeScreen/` for the reorganized production assets under
+`triageRush/assets/`. The asset reorganization is present in the working tree,
+but no demo source or demo asset files have yet been changed for this migration.
+
+Before editing, recheck `git status` and preserve all unrelated user work. The
+working tree currently contains extensive staged, unstaged, and untracked
+changes across patient data, documentation, archive moves, CRUD material, and
+production assets. Do not assume those changes belong to the demo migration,
+and do not clean, reset, stage, or rewrite them as part of this task.
+
+## Work completed in this session
+
+### Repository guidance
+
+- Read the current authoritative documentation and the prior handoff.
+- Confirmed that patient schema 2.2 is canonical and that the July 31 schema
+  2.1 handoff was superseded.
+- Added repository-level `AGENTS.md` guidance requiring Codex to ask about a
+  handoff whenever John requests a commit or push, and defining the expected
+  content and documentation workflow for future handoffs.
+- Archived the outgoing current handoff as
+  `docs/archive/development-handoff--2026-07-31-1935.md`.
+
+### Production asset reinventory
+
+The reorganized `triageRush/assets/` tree contains 58 files:
+
+- 49 active PNG assets
+- 2 archived PNG reference images
+- 3 positioning or metadata text files
+- 4 `.gitkeep` placeholders
+
+The current structure is:
+
+```text
+triageRush/assets/
+|-- game-page/
+|   |-- patient-panel/          5 PNGs
+|   |-- triage-rooms-panel/    22 PNGs
+|   `-- waiting-room-panel/    16 PNGs
+|-- lobby-page/                 8 active PNGs, 3 text files, archived/
+|-- audio/                      placeholder only
+|-- icons/                      placeholder only
+|-- patient-chart-popup/        placeholder only
+`-- review-page/                placeholder only
+```
+
+The active game assets are now organized by screen and panel:
+
+- `game-page/patient-panel/`
+- `game-page/triage-rooms-panel/`
+- `game-page/waiting-room-panel/`
+
+The active HOME assets are now in `lobby-page/`. The old
+`home-screen/backgrounds/` location no longer exists in the working tree.
+
+### Demo audit results
+
+#### Mobile demo
+
+- `_testAppMobile/` remains self-contained and currently loads its own copies
+  under `_testAppMobile/assets/`.
+- Its old private asset paths still exist, so the demo is not immediately
+  broken, but its folders and filenames no longer match production.
+- Forty-one of its forty-two production-art copies are byte-identical to the
+  reorganized production files.
+- The remaining difference is the patient clipboard bitmap. The new version
+  removes the small three-dot decoration. John confirmed this is only a
+  cosmetic change and does not affect the asset's use, dimensions, placement,
+  behavior, or integration plan.
+- `nameBubble`, `quoteBubble`, `vitalsBubble`, and `clipboardBubble` are listed
+  in `_testAppMobile/assets.js` but are not currently consumed by the demo.
+- Room-interior paths are also present in the manifest but are not currently
+  consumed. The demo renders the combined closed/open door artwork.
+- The mobile preview server serves `_testAppMobile/` as its document root.
+  Direct references to `../triageRush/assets/` would therefore fall outside
+  the server root and fail. The mobile demo should remain self-contained.
+
+#### HOME demo
+
+- `_testAppHomeScreen/` directly consumes production HOME assets.
+- All five current production-asset references point to removed paths, so the
+  HOME demo is presently broken.
+- The two prior settings-board assets have been consolidated into one shared
+  `lobby-page/settings-blackboard.png`.
+- The reorganized lobby inventory contains Start Shift and Resume Shift door
+  overlays, but the current HOME demo does not render either state.
+- The existing background, boombox, and popup dimensions remain compatible
+  with the current CSS placement measurements.
+
+## Approved decisions
+
+- Keep the mobile demo independently runnable and self-contained.
+- Mirror the reorganized production game-asset hierarchy and filenames inside
+  `_testAppMobile/assets/` rather than referencing files outside its server
+  root.
+- Treat the updated clipboard as a cosmetic refresh only. Do not change HTML,
+  CSS, interaction, layout, or manifest semantics specifically for it.
+- Use the single shared `settings-blackboard.png` for both Player Settings and
+  Shift Settings while retaining distinct accessible titles.
+- Preserve unused but intentional patient overlay and room-interior manifest
+  entries for future work; do not introduce new rendering behavior during the
+  path migration.
+
+## Asset mapping reference
+
+### HOME demo
+
+```text
+old background:
+  ../triageRush/assets/home-screen/backgrounds/
+    background-w-open-glass-doors 852x1515.png
+new background:
+  ../triageRush/assets/lobby-page/background-w-open-glass-doors.png
+
+old boombox:
+  ../triageRush/assets/home-screen/backgrounds/boombox.png
+new boombox:
+  ../triageRush/assets/lobby-page/boombox.png
+
+old Player Settings popup:
+  ../triageRush/assets/home-screen/backgrounds/
+    popup-settings-player-board.png
+new Player Settings popup:
+  ../triageRush/assets/lobby-page/settings-blackboard.png
+
+old Shift Settings popup:
+  ../triageRush/assets/home-screen/backgrounds/
+    popup-settings-shift-settings-board.png
+new Shift Settings popup:
+  ../triageRush/assets/lobby-page/settings-blackboard.png
+
+old About popup:
+  ../triageRush/assets/home-screen/backgrounds/popup-about-whiteboard.png
+new About popup:
+  ../triageRush/assets/lobby-page/about-whiteboard.png
+```
+
+Available lobby-state overlays:
+
+```text
+../triageRush/assets/lobby-page/glass-door-overlay-start-shift.png
+../triageRush/assets/lobby-page/glass-door-overlay-resume-shift.png
+```
+
+Both overlays use source-canvas position `X 319, Y 447` on the `852 x 1515`
+background coordinate system.
+
+### Mobile demo
+
+Mirror these production folders inside `_testAppMobile/assets/`:
+
+```text
+triageRush/assets/game-page/patient-panel/
+  -> _testAppMobile/assets/game-page/patient-panel/
+
+triageRush/assets/game-page/triage-rooms-panel/
+  -> _testAppMobile/assets/game-page/triage-rooms-panel/
+
+triageRush/assets/game-page/waiting-room-panel/
+  -> _testAppMobile/assets/game-page/waiting-room-panel/
+```
+
+Representative path changes in `_testAppMobile/assets.js`:
+
+```text
+assets/waiting-room-panel/backgrounds/
+  waiting-room-background-N-hires.png
+-> assets/game-page/waiting-room-panel/background-N.png
+
+assets/patient-panel/backgrounds/patient-panel-*.png
+-> assets/game-page/patient-panel/patient-panel-*.png
+
+assets/rooms-panel/backgrounds/wall-room-background-hires.png
+-> assets/game-page/triage-rooms-panel/
+   background-wall-for-all-rooms.png
+
+assets/rooms-panel/backgrounds/esi-N-room-background-hires.png
+-> assets/game-page/triage-rooms-panel/background-esi-N-room.png
+
+assets/rooms-panel/doors/esi-N-door-closed-with-sign-hires.png
+-> assets/game-page/triage-rooms-panel/door-esi-N-closed.png
+
+assets/rooms-panel/doors/esi-N-door-open-with-sign-hires.png
+-> assets/game-page/triage-rooms-panel/door-esi-N-open.png
+```
+
+Psych and Discharge follow the same new `background-*` and `door-*` naming
+pattern.
+
+## Implementation plan
+
+1. **Recheck repository state.**
+   Confirm the production asset tree is stable and inspect current user changes
+   before modifying either demo.
+
+2. **Mirror the new game hierarchy into the mobile demo.**
+   Create `_testAppMobile/assets/game-page/` with `patient-panel/`,
+   `triage-rooms-panel/`, and `waiting-room-panel/`. Copy all 43 active game
+   PNGs using their exact production filenames.
+
+3. **Update the mobile manifest.**
+   Revise `_testAppMobile/assets.js` to reference the mirrored new locations
+   and filenames. Leave demo patient JSON and portraits under the existing
+   `_testAppMobile/patient-data/` paths.
+
+4. **Synchronize the clipboard cosmetically.**
+   Include the current production clipboard in the mirror. Make no
+   clipboard-specific rendering or interaction changes.
+
+5. **Preserve intentional future-facing manifest entries.**
+   Keep patient overlay and room-interior entries even though the current demo
+   does not consume them. Do not add assigned-patient room compositing or other
+   new behavior during this migration.
+
+6. **Repair HOME asset references.**
+   Update `_testAppHomeScreen/index.html` and
+   `_testAppHomeScreen/app.js` to use `../triageRush/assets/lobby-page/` and the
+   mappings recorded above.
+
+7. **Use the shared settings blackboard.**
+   Point both Player Settings and Shift Settings at
+   `settings-blackboard.png`, retaining separate titles, labels, and popup
+   identities.
+
+8. **Add the three lobby doorway preview states.**
+   Provide Start Shift, Resume Shift, and Active Shift preview states. Start
+   uses the start overlay, Resume uses the resume overlay, and Active uses no
+   overlay. Register overlays at `319,447` and scale them with the complete
+   HOME composition.
+
+9. **Retain existing HOME geometry unless visual testing disproves it.**
+   The reorganized background, boombox, and popup assets retain compatible
+   dimensions. Avoid unnecessary CSS layout changes.
+
+10. **Verify before removing old mobile copies.**
+    Confirm every new mobile manifest path loads and visually compare the demo
+    before deleting the superseded `_testAppMobile/assets/patient-panel/`,
+    `rooms-panel/`, and `waiting-room-panel/` folders. Leave
+    `_testAppMobile/assets-legacy/` untouched unless John separately approves
+    its removal.
+
+11. **Update demo documentation.**
+    Revise the mobile and HOME README files to explain the new hierarchy,
+    shared settings blackboard, doorway preview states, and the different
+    self-contained versus direct-production dependency models.
+
+12. **Perform authoritative documentation cleanup as a separate controlled
+    step.**
+    Current specifications still contain old asset paths and filenames.
+    Archive and replace affected timestamped documents under the established
+    docs workflow. Revisit or retire `docs/asset-organization-todo.md`, whose
+    proposed reorganization is now represented in the working tree.
+
+## Verification plan
+
+- Confirm every HTML, JavaScript manifest, and generated asset URL resolves.
+- Run JavaScript syntax checks for both demos.
+- Exercise all 16 waiting-room backgrounds.
+- Exercise all 14 closed/open treatment-door images.
+- Confirm patient-panel presentation and the cosmetically revised clipboard
+  remain aligned.
+- Confirm HOME background, boombox, settings blackboard, About whiteboard, and
+  both door overlays load.
+- Check Start Shift, Resume Shift, and Active Shift registration at desktop
+  and iPhone-sized viewports.
+- Check popup closing, keyboard behavior, sound controls, and the Classical
+  KING error path for regressions.
+- Inspect browser console and network panels for missing assets or runtime
+  errors.
+- Run `git diff --check` and review the final diff without staging unrelated
+  work.
+
+## Unresolved questions and cautions
+
+- The asset changes are currently represented as a mixture of deleted tracked
+  paths and untracked new folders rather than a clean committed rename. Do not
+  infer that files are disposable from Git status alone.
+- Adding HOME doorway-state preview controls is part of the recommended plan,
+  but their exact visual control treatment can remain prototype-only.
+- The old mobile `assets-legacy/` directory is outside this migration and must
+  remain untouched without separate approval.
+- Do not expand this work into room-interior patient compositing, Patient
+  Review implementation, production game implementation, or End of Shift
+  Report work.
+
+## Files changed by this Codex session
+
+- Added `AGENTS.md`.
+- Moved `docs/development-handoff--2026-07-31-1935.md` to
+  `docs/archive/development-handoff--2026-07-31-1935.md`.
+- Added `docs/development-handoff--2026-08-02-1457.md`.
+
+No mobile-demo, HOME-demo, patient-data, or production-asset file was edited by
+Codex during this session.
+
+## Change history
+
+- **2026-08-02 14:57 PDT:** Recorded the production asset reinventory, current
+  demo breakage and drift, approved migration decisions, exact asset mappings,
+  full implementation and verification plan, and working-tree cautions.

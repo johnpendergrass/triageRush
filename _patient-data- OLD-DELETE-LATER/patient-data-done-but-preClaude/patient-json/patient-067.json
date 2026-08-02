@@ -1,0 +1,109 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-067",
+  "number": 67,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Rosa",
+        "age": 44,
+        "sex": "F",
+        "race": "hispanic"
+      },
+      "image": {
+        "imageFilename": "patient-067.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Bad pain under right ribs",
+      "quote": "After a greasy dinner I got this deep pain under my right ribs that won't let up — it wraps around to my shoulder blade. Makes me nauseous, and it hurts more when I breathe in deep.",
+      "triageNote": "44-year-old female with persistent pain beneath the right ribs after a fatty meal, radiating to the right shoulder blade. She is nauseated and febrile, with marked right-upper-quadrant tenderness that catches her breath on deep palpation.",
+      "vitals": {
+        "hr": {
+          "value": 100,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "132/82",
+          "color": "green"
+        },
+        "rr": {
+          "value": 18,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 98,
+          "color": "green"
+        },
+        "temp": {
+          "value": 38.2,
+          "color": "yellow"
+        },
+        "pain": {
+          "value": 7,
+          "color": "red"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 3,
+      "correctRoom": "esi-3",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 3 is appropriate because this stable febrile right-upper-abdominal presentation is expected to require multiple diagnostic and treatment resources."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has persistent postprandial right-upper-quadrant pain, fever, nausea, referred shoulder-blade pain, and inspiratory arrest with palpation.",
+      "acuityReason": "The pattern suggests an inflamed biliary process requiring imaging, laboratory testing, medication, and surgical assessment, without current shock or generalized peritonitis.",
+      "expectedResources": [
+        "Abdominal laboratory testing",
+        "Right-upper-quadrant ultrasound",
+        "IV fluids, analgesia, and antiemetic medication",
+        "Antibiotics and surgical consultation when confirmed"
+      ],
+      "keyFindings": [
+        "Pain after a fatty meal",
+        "Radiation to the right shoulder blade",
+        "Nausea and fever",
+        "Marked right-upper-quadrant tenderness",
+        "Inspiratory arrest with deep palpation"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Persistent pain and fever distinguish an inflammatory process from uncomplicated transient biliary colic.",
+        "Hypotension, jaundice with systemic illness, confusion, or generalized peritonitis would increase urgency."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Acute cholecystitis",
+          "Biliary colic",
+          "Ascending biliary infection"
+        ],
+        "disposition": "Laboratory testing, ultrasound, symptom control, and antibiotics would likely be followed by surgical consultation and admission."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "44-year-old woman",
+    "pose": "seated, hand pressed under her right ribs, guarded",
+    "expression": "grimacing, nauseated",
+    "signs": [
+      "hand under the right ribs",
+      "guarded posture"
+    ],
+    "lookSeverity": "in pain, stable",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-067.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a hispanic 44-year-old woman, seated on a blue padded clinic chair. Pose: one hand pressed under her right ribs, guarding. Expression: grimacing and nauseated. Clearly visible: a hand pressed under the right rib cage. No text, no logos."
+  }
+}

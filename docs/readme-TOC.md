@@ -27,10 +27,10 @@ These are the authoritative current specifications.
    Repository ownership, state and actions, documentation workflow,
    implementation sequence, persistence, verification, and unresolved work.
 
-6. [Schema 2.1 and mobile detailed-patient handoff](development-handoff--2026-07-31-1935.md)
+6. [Patient schema 2.2 specification and version history](../patient-data/schema/patient-schema-notes.md)
 
-   Work completed since the last checkpoint, current schema and panel state,
-   verification, and the next-session TODO/discussion checklist.
+   Current patient structure, answer/Clinical boundary, clinical-fidelity
+   rules, validation, panel contexts, and retained schema history.
 
 7. [HOME screen specification](home-screen-specification--2026-07-31-1113.md)
 
@@ -39,4 +39,4 @@ These are the authoritative current specifications.
 
 See [README.md](README.md) for the documentation versioning workflow.
 Superseded material is cataloged in
-[the archive table of contents](../docs-archive/readme-TOC.md).
+[the archive table of contents](archive/readme-TOC.md).

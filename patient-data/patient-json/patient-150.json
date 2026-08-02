@@ -1,71 +1,96 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-150",
   "number": 150,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Deborah",
-      "age": 54,
-      "sex": "F",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-150.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Deborah",
+        "age": 54,
+        "sex": "F",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-150.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Fever, and I'm on chemo",
-      "quoteShort": null,
-      "quoteLong": "I'm having chemo for breast cancer and my last round was ten days ago. I took my temperature at home like they told me to — 38.6 — and they said come straight in. I actually feel more or less fine.",
-      "presentationShort": "54yo F, breast ca — day 10 post-chemo, fever 38.6°C, no obvious source. Well-appearing.",
-      "presentationLong": "54-year-old female on chemotherapy for breast cancer, ten days after her last cycle, with a fever of 38.6 and no obvious source of infection; she looks deceptively well."
-    },
-    "vitals": {
-      "hr": {
-        "value": 112,
-        "color": "yellow"
-      },
-      "bp": {
-        "value": "104/62",
-        "color": "yellow"
-      },
-      "rr": {
-        "value": 20,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 97,
-        "color": "green"
-      },
-      "temp": {
-        "value": 38.6,
-        "color": "red"
-      },
-      "pain": {
-        "value": 1,
-        "color": "green"
+      "quote": "I'm having chemo for breast cancer and my last round was ten days ago. I took my temperature at home like they told me to — 38.6 — and they said come straight in. I actually feel more or less fine.",
+      "triageNote": "54-year-old female on chemotherapy for breast cancer, ten days after her last cycle, with a fever of 38.6 and no obvious source of infection; she looks deceptively well.",
+      "vitals": {
+        "hr": {
+          "value": 112,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "104/62",
+          "color": "green"
+        },
+        "rr": {
+          "value": 20,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 97,
+          "color": "green"
+        },
+        "temp": {
+          "value": 38.6,
+          "color": "yellow"
+        },
+        "pain": {
+          "value": 1,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Febrile neutropenia (neutropenic sepsis)",
-      "esi": 2,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → blood cultures then broad-spectrum IV antibiotics WITHIN ONE HOUR, without waiting for the neutrophil count; isolate, full sepsis screen, urgent oncology",
-      "why": "Door-to-antibiotic time is one hour, and you start before the count comes back. She looks well precisely BECAUSE she has no neutrophils — no pus, no redness, no impressive exam. The absence of a source is the danger, not the reassurance.",
-      "redFlag": "Fever 10–14 days after chemotherapy is neutropenic sepsis until proven otherwise."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because fever ten days after chemotherapy is high risk for neutropenic sepsis even when the patient appears well."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This chemotherapy patient has fever without a localizing source during the expected neutrophil nadir.",
+      "acuityReason": "Fever ten days after chemotherapy is high risk for neutropenic sepsis even when the patient appears well.",
+      "expectedResources": [
+        "Immediate protective precautions and IV access",
+        "CBC with differential, cultures, metabolic and lactate testing",
+        "Immediate broad-spectrum IV antibiotics",
+        "Source assessment without delaying treatment"
+      ],
+      "keyFindings": [
+        "Active chemotherapy",
+        "Ten days after last cycle",
+        "Temperature 38.6 C",
+        "Heart rate 112",
+        "No obvious source",
+        "Deceptively well appearance"
+      ],
+      "redFlags": [
+        "Possible febrile neutropenia"
+      ],
+      "teachingPoints": [
+        "Door-to-antibiotic time is one hour, and you start before the count comes back. She looks well precisely BECAUSE she has no neutrophils — no pus, no redness, no impressive exam. The absence of a source is the danger, not the reassurance.",
+        "Triage should be based on the current presentation and expected care, with reassessment if new warning signs appear."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Febrile neutropenia",
+          "Other infection in an immunocompromised host"
+        ],
+        "disposition": "Cultures and immediate antibiotics would be followed by risk-based admission and oncology management."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-2",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

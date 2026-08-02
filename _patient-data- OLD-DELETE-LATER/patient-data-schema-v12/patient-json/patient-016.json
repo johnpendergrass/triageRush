@@ -1,0 +1,86 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-016",
+  "number": 16,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Brenda",
+      "age": 39,
+      "sex": "F",
+      "race": "black"
+    },
+    "image": {
+      "imageFilename": "patient-016.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "WebMD says tumor",
+      "quoteShort": null,
+      "quoteLong": "I have a headache. WebMD said brain tumor. My sister said it's because I doom-scroll until 3am every night. I need a licensed professional to tell me which one of them is right.",
+      "presentationShort": "39yo F — mild bilateral HA x few days, no red flags, very worried after Googling.",
+      "presentationLong": "39-year-old female, mild bilateral headache for a few days, no red-flag features, very worried after reading online."
+    },
+    "vitals": {
+      "hr": {
+        "value": 72,
+        "color": "green"
+      },
+      "bp": {
+        "value": "118/76",
+        "color": "green"
+      },
+      "rr": {
+        "value": 14,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 100,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.7,
+        "color": "green"
+      },
+      "pain": {
+        "value": 2,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Tension-type headache with health anxiety",
+      "esi": 5,
+      "esi2roomsNotes": "ESI 5: no ED treatment-area resources are expected; brief evaluation, counseling, and discharge are appropriate.",
+      "disposition": "Discharge → reassurance, sleep hygiene, hydration, no imaging indicated, clear return precautions",
+      "why": "No thunderclap onset, no focal deficit, no red flags → no scan. The sister is right. Reassurance and a bedtime ARE the treatment.",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "discharge",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "39-year-old woman in athleisure, phone in hand",
+    "pose": "sitting relaxed, holding her phone up mid-scroll",
+    "expression": "anxious but healthy-looking, rubbing one temple",
+    "signs": [
+      "well-appearing, good color",
+      "rubbing her temple"
+    ],
+    "lookSeverity": "completely well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-016.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a Black 39-year-old woman in athleisure with a phone in hand, on the same blue clinic chair. Pose: sitting relaxed, holding her phone up mid-scroll, rubbing one temple. Expression: anxious but clearly healthy-looking — NOT in pain. Clearly visible: well-appearing with good color, one hand at her temple. Overall completely well. No text, no logos."
+  }
+}

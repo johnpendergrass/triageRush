@@ -48,10 +48,11 @@ patient-data/
 └── images/
 ```
 
-The active demo rotation uses ten draft-schema records, `patient-001.json`
-through `patient-010.json`. These are local copies of the experimental files
-under `patientsNewSchema/` and include the proposed `triageReasoning` object.
-The original production patient records remain unchanged.
+The active demo rotation uses ten self-contained historical draft records,
+`patient-001.json` through `patient-010.json`. Their former repository-level
+experimental source folder was removed when schema 2.2 became canonical. The
+desktop fixtures remain local to this disposable demo, and the original
+production patient records remain unchanged.
 
 Every active JSON file has its corresponding local image. Additional older
 snapshot files remain in the folder but are not loaded by the current demo.

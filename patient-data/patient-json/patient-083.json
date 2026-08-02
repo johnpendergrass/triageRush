@@ -1,71 +1,97 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-083",
   "number": 83,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Kevin",
-      "age": 27,
-      "sex": "M",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-083.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Jason",
+        "age": 27,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-083.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Bee sting, swelling and wheezing",
-      "quoteShort": null,
-      "quoteLong": "A bee stung me and within minutes I broke out in hives all over, my lips and throat feel swollen and tight, and I'm starting to wheeze. My chest feels tight — I've never reacted like this.",
-      "presentationShort": "27yo M ? minutes after bee sting, diffuse hives, lip and throat swelling, wheeze and chest tightness; HR 122, SpO2 93%.",
-      "presentationLong": "27-year-old male who developed widespread hives, swelling of his lips and throat, wheeze, and chest tightness within minutes of a bee sting. Heart rate is 122 and oxygen saturation is 93%."
-    },
-    "vitals": {
-      "hr": {
-        "value": 122,
-        "color": "red"
-      },
-      "bp": {
-        "value": "102/62",
-        "color": "yellow"
-      },
-      "rr": {
-        "value": 24,
-        "color": "yellow"
-      },
-      "spo2": {
-        "value": 93,
-        "color": "yellow"
-      },
-      "temp": {
-        "value": 36.9,
-        "color": "green"
-      },
-      "pain": {
-        "value": 3,
-        "color": "yellow"
+      "quote": "A bee stung me and within minutes I broke out in hives all over, my lips and throat feel swollen and tight, and I'm starting to wheeze. My chest feels tight — I've never reacted like this.",
+      "triageNote": "27-year-old male who developed widespread hives, swelling of his lips and throat, wheeze, and chest tightness within minutes of a bee sting. Heart rate is 122 and oxygen saturation is 93%.",
+      "vitals": {
+        "hr": {
+          "value": 122,
+          "color": "red"
+        },
+        "bp": {
+          "value": "102/62",
+          "color": "green"
+        },
+        "rr": {
+          "value": 24,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 93,
+          "color": "yellow"
+        },
+        "temp": {
+          "value": 36.9,
+          "color": "green"
+        },
+        "pain": {
+          "value": 3,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Anaphylaxis",
-      "esi": 1,
-      "esi2roomsNotes": null,
-      "disposition": "Resus → IM epinephrine immediately, airway, O2, fluids, antihistamine/steroid adjuncts, observe for biphasic reaction.",
-      "why": "Two systems (hives + airway) after an exposure = anaphylaxis. IM epi in the thigh, now. Everything else is secondary.",
-      "redFlag": "Skin + airway/breathing after an exposure = anaphylaxis; epinephrine first, not antihistamines."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 1,
+      "correctRoom": "esi-1",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 1 is appropriate because rapid-onset hives, lip and throat swelling, wheeze, and chest tightness after a sting require immediate intramuscular epinephrine."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has a multisystem allergic reaction involving skin and airway within minutes of a bee sting.",
+      "acuityReason": "Throat swelling and wheeze threaten airway and ventilation even before profound hypoxemia or hypotension appears.",
+      "expectedResources": [
+        "Immediate IM epinephrine",
+        "Airway preparation and supplemental oxygen",
+        "IV access and fluid support",
+        "Bronchodilator and adjunctive therapy",
+        "Continuous monitoring for biphasic reaction"
+      ],
+      "keyFindings": [
+        "Bee sting immediately preceded symptoms",
+        "Widespread hives",
+        "Lip and throat swelling",
+        "Wheeze and chest tightness",
+        "Heart rate 122",
+        "Oxygen saturation 93%"
+      ],
+      "redFlags": [
+        "Airway involvement from anaphylaxis"
+      ],
+      "teachingPoints": [
+        "Epinephrine is first-line and should not be delayed for antihistamines or steroids.",
+        "Airway swelling and bronchospasm can progress rapidly despite an initially preserved blood pressure."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Anaphylaxis",
+          "Severe systemic allergic reaction"
+        ],
+        "disposition": "Immediate epinephrine and airway-focused treatment would be followed by monitored observation and discharge or admission based on response."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-1",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

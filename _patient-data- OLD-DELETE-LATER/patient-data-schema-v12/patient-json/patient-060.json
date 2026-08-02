@@ -1,0 +1,86 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-060",
+  "number": 60,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Marcus",
+      "age": 3,
+      "sex": "M",
+      "race": "black"
+    },
+    "image": {
+      "imageFilename": "patient-060.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Pulling at his ear",
+      "quoteShort": null,
+      "quoteLong": "(Mom) He's had a cold, and since last night he's been tugging his right ear, crying, and running a fever. He finally fell asleep on me but wakes up fussy.",
+      "presentationShort": "3yo M ? cold symptoms followed by fever, fussiness and right ear-tugging; right tympanic membrane is red and bulging.",
+      "presentationLong": "3-year-old male with a recent cold who developed fever, fussiness, and persistent pulling at his right ear overnight. The right tympanic membrane appears red and bulging."
+    },
+    "vitals": {
+      "hr": {
+        "value": 124,
+        "color": "green"
+      },
+      "bp": {
+        "value": "98/62",
+        "color": "green"
+      },
+      "rr": {
+        "value": 24,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 99,
+        "color": "green"
+      },
+      "temp": {
+        "value": 38.4,
+        "color": "yellow"
+      },
+      "pain": {
+        "value": 4,
+        "color": "yellow"
+      }
+    },
+    "diagnosis": {
+      "primary": "Acute otitis media",
+      "esi": 4,
+      "esi2roomsNotes": null,
+      "disposition": "Fast Track → otoscopy, analgesia, antibiotics per age/severity; discharge.",
+      "why": "Bulging red eardrum + ear pain + fever = AOM. Pain control matters as much as antibiotics.",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-4",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "3-year-old boy, flushed",
+    "pose": "on the clinic chair, tugging at his right ear",
+    "expression": "fussy, teary",
+    "signs": [
+      "tugging at his ear",
+      "flushed cheeks"
+    ],
+    "lookSeverity": "fussy but stable",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-060.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a black 3-year-old boy, flushed, seated on a blue padded clinic chair. Pose: tugging at his right ear. Expression: fussy and teary. Clearly visible: a hand tugging the ear and flushed cheeks. No text, no logos."
+  }
+}

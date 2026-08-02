@@ -1,71 +1,88 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-118",
   "number": 118,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Kevin",
-      "age": 44,
-      "sex": "M",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-118.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Derek",
+        "age": 44,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-118.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Headache",
-      "quoteShort": null,
-      "quoteLong": "Before you ask: yes, the arrow is part of the hat. No, it is not new. I've had this headache since the third birthday party this morning.",
-      "presentationShort": "44yo M — bilateral band-like headache after a long working shift. Neurological examination normal, no red flags.",
-      "presentationLong": "44-year-old male with a bilateral band-like headache after a long working shift, with a completely normal neurological examination."
-    },
-    "vitals": {
-      "hr": {
-        "value": 76,
-        "color": "green"
-      },
-      "bp": {
-        "value": "124/78",
-        "color": "green"
-      },
-      "rr": {
-        "value": 14,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 99,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.8,
-        "color": "green"
-      },
-      "pain": {
-        "value": 4,
-        "color": "yellow"
+      "quote": "Before you ask: yes, the arrow is part of the hat. No, it is not new. I've had this headache since the third birthday party this morning.",
+      "triageNote": "44-year-old male with a bilateral band-like headache after a long working shift, with a completely normal neurological examination.",
+      "vitals": {
+        "hr": {
+          "value": 76,
+          "color": "green"
+        },
+        "bp": {
+          "value": "124/78",
+          "color": "green"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 4,
+          "color": "yellow"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Tension-type headache",
-      "esi": 5,
-      "esi2roomsNotes": "ESI 5: no ED treatment-area resources are expected; brief evaluation, counseling, and discharge are appropriate.",
-      "disposition": "Discharge → simple analgesia, hydration, and fewer birthday parties",
-      "why": "The hat is a costume; the headache is a band-like tension headache with a normal neurological exam. No thunderclap, no fever, no deficit — nothing here needs an ED.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "discharge",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because this typical tension-pattern headache with a normal neurologic examination has no expected counted emergency resource."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has bilateral band-like headache after a long work shift without neurologic or systemic warning signs.",
+      "acuityReason": "The gradual mechanical pattern and normal examination support conservative treatment.",
+      "expectedResources": [],
+      "keyFindings": [
+        "Bilateral band-like pain",
+        "After a long work shift",
+        "Normal neurologic examination",
+        "No thunderclap onset",
+        "No fever or focal deficit"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Thunderclap onset, fever, neck stiffness, neurologic deficit, trauma, pregnancy-related risk, or a major pattern change would alter assessment.",
+        "Hydration, sleep, posture, vision strain, and medication overuse may contribute."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Tension-type headache",
+          "Other uncomplicated primary headache"
+        ],
+        "disposition": "Oral treatment, reassurance, and return guidance would allow discharge without imaging."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "discharge",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

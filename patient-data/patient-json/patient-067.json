@@ -1,71 +1,94 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-067",
   "number": 67,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Rosa",
-      "age": 44,
-      "sex": "F",
-      "race": "hispanic"
-    },
-    "image": {
-      "imageFilename": "patient-067.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Lucia",
+        "age": 44,
+        "sex": "F",
+        "race": "hispanic"
+      },
+      "image": {
+        "imageFilename": "patient-067.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Bad pain under right ribs",
-      "quoteShort": null,
-      "quoteLong": "After a greasy dinner I got this deep pain under my right ribs that won't let up — it wraps around to my shoulder blade. Makes me nauseous, and it hurts more when I breathe in deep.",
-      "presentationShort": "44yo F ? persistent RUQ pain after fatty meal, radiating to right shoulder blade, nausea, fever, and marked tenderness with deep inspiration.",
-      "presentationLong": "44-year-old female with persistent pain beneath the right ribs after a fatty meal, radiating to the right shoulder blade. She is nauseated and febrile, with marked right-upper-quadrant tenderness that catches her breath on deep palpation."
-    },
-    "vitals": {
-      "hr": {
-        "value": 100,
-        "color": "yellow"
-      },
-      "bp": {
-        "value": "132/82",
-        "color": "green"
-      },
-      "rr": {
-        "value": 18,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 98,
-        "color": "green"
-      },
-      "temp": {
-        "value": 38.2,
-        "color": "yellow"
-      },
-      "pain": {
-        "value": 7,
-        "color": "red"
+      "quote": "After a greasy dinner I got this deep pain under my right ribs that won't let up — it wraps around to my shoulder blade. Makes me nauseous, and it hurts more when I breathe in deep.",
+      "triageNote": "44-year-old female with persistent pain beneath the right ribs after a fatty meal, radiating to the right shoulder blade. She is nauseated and febrile, with marked right-upper-quadrant tenderness that catches her breath on deep palpation.",
+      "vitals": {
+        "hr": {
+          "value": 100,
+          "color": "green"
+        },
+        "bp": {
+          "value": "132/82",
+          "color": "green"
+        },
+        "rr": {
+          "value": 18,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 98,
+          "color": "green"
+        },
+        "temp": {
+          "value": 38.2,
+          "color": "yellow"
+        },
+        "pain": {
+          "value": 7,
+          "color": "red"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Acute cholecystitis",
-      "esi": 3,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → RUQ ultrasound, labs, analgesia, antibiotics, surgery consult; likely cholecystectomy.",
-      "why": "Fatty meal + RUQ pain to the scapula + Murphy's + fever = cholecystitis. Ultrasound first; surgery follows.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 3,
+      "correctRoom": "esi-3",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 3 is appropriate because this stable febrile right-upper-abdominal presentation is expected to require multiple diagnostic and treatment resources."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has persistent postprandial right-upper-quadrant pain, fever, nausea, referred shoulder-blade pain, and inspiratory arrest with palpation.",
+      "acuityReason": "The pattern suggests an inflamed biliary process requiring imaging, laboratory testing, medication, and surgical assessment, without current shock or generalized peritonitis.",
+      "expectedResources": [
+        "Abdominal laboratory testing",
+        "Right-upper-quadrant ultrasound",
+        "IV fluids, analgesia, and antiemetic medication",
+        "Antibiotics and surgical consultation when confirmed"
+      ],
+      "keyFindings": [
+        "Pain after a fatty meal",
+        "Radiation to the right shoulder blade",
+        "Nausea and fever",
+        "Marked right-upper-quadrant tenderness",
+        "Inspiratory arrest with deep palpation"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Persistent pain and fever distinguish an inflammatory process from uncomplicated transient biliary colic.",
+        "Hypotension, jaundice with systemic illness, confusion, or generalized peritonitis would increase urgency."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Acute cholecystitis",
+          "Biliary colic",
+          "Ascending biliary infection"
+        ],
+        "disposition": "Laboratory testing, ultrasound, symptom control, and antibiotics would likely be followed by surgical consultation and admission."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-3",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

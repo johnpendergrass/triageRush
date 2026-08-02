@@ -1,71 +1,98 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-146",
   "number": 146,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Amara",
-      "age": 5,
-      "sex": "F",
-      "race": "black"
-    },
-    "image": {
-      "imageFilename": "patient-146.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Amara",
+        "age": 5,
+        "sex": "F",
+        "race": "black"
+      },
+      "image": {
+        "imageFilename": "patient-146.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Rash, fever and red eyes",
-      "quoteShort": null,
-      "quoteLong": "(her mother) Four days of fever and this barking cough, then the rash started at her face and just marched down her body. She's not vaccinated — we were travelling when it was due.",
-      "presentationShort": "5yo F, unvaccinated — 4 days fever, cough, coryza and conjunctivitis, then a rash spreading head-to-trunk. Koplik spots present, poor intake.",
-      "presentationLong": "Five-year-old unvaccinated female with four days of fever, cough, coryza and red eyes, followed by a rash spreading from the face downward; Koplik spots are present and her oral intake is poor."
-    },
-    "vitals": {
-      "hr": {
-        "value": 138,
-        "color": "yellow"
-      },
-      "bp": {
-        "value": "92/58",
-        "color": "green"
-      },
-      "rr": {
-        "value": 28,
-        "color": "yellow"
-      },
-      "spo2": {
-        "value": 96,
-        "color": "green"
-      },
-      "temp": {
-        "value": 39.3,
-        "color": "red"
-      },
-      "pain": {
-        "value": 4,
-        "color": "yellow"
+      "quote": "(her mother) Four days of fever and this barking cough, then the rash started at her face and just marched down her body. She's not vaccinated — we were travelling when it was due.",
+      "triageNote": "Five-year-old unvaccinated female with four days of fever, cough, coryza and red eyes, followed by a rash spreading from the face downward; Koplik spots are present and her oral intake is poor.",
+      "vitals": {
+        "hr": {
+          "value": 148,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "92/58",
+          "color": "green"
+        },
+        "rr": {
+          "value": 28,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 96,
+          "color": "green"
+        },
+        "temp": {
+          "value": 39.3,
+          "color": "red"
+        },
+        "pain": {
+          "value": 4,
+          "color": "yellow"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Measles",
-      "esi": 3,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → IMMEDIATE airborne isolation in a negative-pressure room, notify public health the same day, IV fluids, vitamin A",
-      "why": "The three Cs — cough, coryza, conjunctivitis — plus a rash marching down from the face. Koplik spots clinch it. Isolate first, notify public health same-day, and give vitamin A: it measurably reduces mortality.",
-      "redFlag": "Measles is the most contagious disease known — it must be isolated at the door, before registration if possible."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because high fever, marked tachycardia, poor intake, and a highly transmissible measles pattern create a high-risk pediatric infectious presentation."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This unvaccinated child has the classic prodrome and descending rash of measles with dehydration risk.",
+      "acuityReason": "High fever, marked tachycardia, poor intake, and a highly transmissible measles pattern create a high-risk pediatric infectious presentation.",
+      "expectedResources": [
+        "Immediate airborne isolation",
+        "Public-health notification and confirmatory testing",
+        "Hydration assessment and treatment",
+        "Vitamin A therapy",
+        "Respiratory and neurologic complication screening"
+      ],
+      "keyFindings": [
+        "Four days of fever",
+        "Cough, coryza, and conjunctivitis",
+        "Koplik spots",
+        "Rash spreading from face downward",
+        "Poor oral intake",
+        "Heart rate 148 and temperature 39.3 C"
+      ],
+      "redFlags": [
+        "High-consequence communicable infection",
+        "Poor intake with marked tachycardia"
+      ],
+      "teachingPoints": [
+        "The three Cs — cough, coryza, conjunctivitis — plus a rash marching down from the face. Koplik spots clinch it. Isolate first, notify public health same-day, and give vitamin A: it measurably reduces mortality.",
+        "Triage should be based on the current presentation and expected care, with reassessment if new warning signs appear."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Measles",
+          "Other febrile viral exanthem"
+        ],
+        "disposition": "Isolation, supportive treatment, and complication assessment would likely require observation or admission."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-3",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

@@ -1,71 +1,96 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-030",
   "number": 30,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Herbert",
-      "age": 78,
-      "sex": "M",
-      "race": "black"
-    },
-    "image": {
-      "imageFilename": "patient-030.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Herbert",
+        "age": 78,
+        "sex": "M",
+        "race": "black"
+      },
+      "image": {
+        "imageFilename": "patient-030.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Bumped his head",
-      "quoteShort": null,
-      "quoteLong": "I tripped on the rug and bumped my head — barely anything, I feel completely fine. My wife made me come in. Oh, I take that blood thinner, warfarin, for my heart rhythm.",
-      "presentationShort": "78yo M on warfarin ? ground-level fall with head strike; feels well, GCS 15, no focal neurological deficit.",
-      "presentationLong": "78-year-old male taking warfarin for atrial fibrillation after a ground-level fall with a head strike. He feels well, has a GCS of 15, and has no focal neurological deficit."
-    },
-    "vitals": {
-      "hr": {
-        "value": 78,
-        "color": "yellow"
-      },
-      "bp": {
-        "value": "152/88",
-        "color": "yellow"
-      },
-      "rr": {
-        "value": 16,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 97,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.7,
-        "color": "green"
-      },
-      "pain": {
-        "value": 2,
-        "color": "green"
+      "quote": "I tripped on the rug and bumped my head — barely anything, I feel completely fine. My wife made me come in. Oh, I take that blood thinner, warfarin, for my heart rhythm.",
+      "triageNote": "78-year-old male taking warfarin for atrial fibrillation after a ground-level fall with a head strike. He feels well, has a GCS of 15, and has no focal neurological deficit.",
+      "vitals": {
+        "hr": {
+          "value": 78,
+          "color": "green"
+        },
+        "bp": {
+          "value": "152/88",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 16,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 97,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.7,
+          "color": "green"
+        },
+        "pain": {
+          "value": 2,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Head injury on anticoagulation (risk of intracranial hemorrhage)",
-      "esi": 2,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → non-contrast head CT now, reverse if bleed (PCC/vit K), serial neuro checks; anticoagulation makes a trivial bump lethal.",
-      "why": "The scariest 'I feel fine.' On warfarin/DOAC a minor head bump can bleed hours later — always CT.",
-      "redFlag": "Anticoagulation + ANY head strike = CT even if asymptomatic; bleeds can be delayed for hours."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because head trauma in a patient taking warfarin is high risk despite a normal examination and minimal symptoms."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This anticoagulated older adult struck his head in a fall but currently has normal alertness and no focal neurologic deficit.",
+      "acuityReason": "Anticoagulation raises the risk of immediate or delayed intracranial bleeding, so a reassuring appearance cannot justify delay.",
+      "expectedResources": [
+        "Immediate neurologic assessment and serial checks",
+        "Non-contrast head CT",
+        "Coagulation testing",
+        "Reversal treatment and specialty consultation if bleeding is found"
+      ],
+      "keyFindings": [
+        "Age 78",
+        "Ground-level fall with head strike",
+        "Current warfarin use",
+        "Alert with normal neurologic examination",
+        "Minimal pain"
+      ],
+      "redFlags": [
+        "Head strike while anticoagulated"
+      ],
+      "teachingPoints": [
+        "Minor mechanisms can cause clinically important intracranial hemorrhage in anticoagulated patients.",
+        "Delayed deterioration instructions and an anticoagulation plan are essential even if initial imaging is reassuring."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Occult traumatic intracranial hemorrhage",
+          "Minor head injury without bleeding",
+          "Scalp contusion"
+        ],
+        "disposition": "Urgent CT and observation planning would be followed by reversal and admission if bleeding is present, or carefully instructed discharge when evaluation remains reassuring."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-2",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

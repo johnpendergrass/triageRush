@@ -1,71 +1,91 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-108",
   "number": 108,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Gary",
-      "age": 52,
-      "sex": "M",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-108.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Phil",
+        "age": 52,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-108.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Family says he isn't making sense",
-      "quoteShort": null,
-      "quoteLong": "I'm not sick, I'm informed. I've been reading about this for eleven years and my daughter has decided that's a symptom. Go on — ask me about the water supply.",
-      "presentationShort": "52yo M — long-standing fixed beliefs, unchanged, brought by family. Oriented, at baseline, no danger to self or others.",
-      "presentationLong": "52-year-old male with long-standing unchanged fixed beliefs brought in by family; fully oriented, functioning at his usual baseline, denies any thoughts of harm."
-    },
-    "vitals": {
-      "hr": {
-        "value": 76,
-        "color": "green"
-      },
-      "bp": {
-        "value": "128/80",
-        "color": "green"
-      },
-      "rr": {
-        "value": 14,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 99,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.9,
-        "color": "green"
-      },
-      "pain": {
-        "value": 0,
-        "color": "green"
+      "quote": "I'm not sick, I'm informed. I've been reading about this for eleven years and my daughter has decided that's a symptom. Go on — ask me about the water supply.",
+      "triageNote": "52-year-old male with long-standing unchanged fixed beliefs brought in by family; fully oriented, functioning at his usual baseline, denies any thoughts of harm.",
+      "vitals": {
+        "hr": {
+          "value": 76,
+          "color": "green"
+        },
+        "bp": {
+          "value": "128/80",
+          "color": "green"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.9,
+          "color": "green"
+        },
+        "pain": {
+          "value": 0,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Chronic delusional disorder, stable — no acute psychiatric emergency",
-      "esi": 5,
-      "esi2roomsNotes": "ESI 5: medically stable and low risk with no ED resources expected; Psych is preferred, and Fast Track is acceptable.",
-      "disposition": "Psych → brief evaluation to confirm absence of risk, then outpatient referral",
-      "why": "Long-standing, unchanged, no danger, at baseline. A brief Psych assessment is reasonable; Fast Track is also acceptable for a low-acuity medical screening.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 4,
+      "correctRoom": "psych",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 4 is appropriate because this stable chronic delusional presentation requires one specialty assessment resource but has no acute danger or physiologic instability."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient is fully oriented and functioning at his established baseline despite long-standing fixed beliefs.",
+      "acuityReason": "The unchanged course and absence of harmful intent are reassuring, while a brief medical and psychiatric assessment remains appropriate.",
+      "expectedResources": [
+        "Focused medical screening",
+        "Psychiatric evaluation"
+      ],
+      "keyFindings": [
+        "Long-standing unchanged beliefs",
+        "Fully oriented",
+        "Functioning at usual baseline",
+        "Denies thoughts of harm",
+        "Normal vital signs"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "A new or fluctuating pattern, disorientation, fever, intoxication, or functional decline would suggest delirium or another medical cause.",
+        "Collateral history is valuable when determining whether behavior truly represents baseline."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Stable delusional disorder",
+          "Chronic psychotic disorder"
+        ],
+        "disposition": "Brief screening and psychiatric follow-up planning would usually allow discharge if safety and function remain at baseline."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "psych",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

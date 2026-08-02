@@ -1,71 +1,90 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-020",
   "number": 20,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Isaiah",
-      "age": 7,
-      "sex": "M",
-      "race": "black"
-    },
-    "image": {
-      "imageFilename": "patient-020.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Isaiah",
+        "age": 7,
+        "sex": "M",
+        "race": "black"
+      },
+      "image": {
+        "imageFilename": "patient-020.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Cut chin",
-      "quoteShort": null,
-      "quoteLong": "I was hanging upside down on the monkey bars like a bat, and then I wasn't. My chin bonked the ground. Do I get the glue or the sewing?",
-      "presentationShort": "7yo M — fell from monkey bars; 2 cm clean linear chin laceration, no full-thickness/intraoral involvement, jaw & dentition normal, NV intact.",
-      "presentationLong": "7-year-old male, fell from the monkey bars onto his chin, a 2 cm clean linear laceration with no full-thickness or intraoral involvement, jaw and teeth intact."
-    },
-    "vitals": {
-      "hr": {
-        "value": 92,
-        "color": "green"
-      },
-      "bp": {
-        "value": "104/66",
-        "color": "green"
-      },
-      "rr": {
-        "value": 20,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 100,
-        "color": "green"
-      },
-      "temp": {
-        "value": 37.0,
-        "color": "green"
-      },
-      "pain": {
-        "value": 3,
-        "color": "yellow"
+      "quote": "I was hanging upside down on the monkey bars like a bat, and then I wasn't. My chin hit the ground. Do I get glue or sewing?",
+      "triageNote": "7-year-old boy after a fall from monkey bars, with a clean 2 cm linear chin laceration. There is no intraoral extension; jaw movement, bite alignment, and dentition are normal, with no concerning neurologic symptoms.",
+      "vitals": {
+        "hr": {
+          "value": 92,
+          "color": "green"
+        },
+        "bp": {
+          "value": "104/66",
+          "color": "green"
+        },
+        "rr": {
+          "value": 20,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 100,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37,
+          "color": "green"
+        },
+        "pain": {
+          "value": 3,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Simple chin laceration (2 cm)",
-      "esi": 4,
-      "esi2roomsNotes": null,
-      "disposition": "Fast Track → irrigate, tissue adhesive or sutures, confirm tetanus; discharge.",
-      "why": "Clean simple lac — glue or a couple of sutures, check tetanus status. No imaging needed.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 4,
+      "correctRoom": "esi-4",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 4 is appropriate because this stable, uncomplicated laceration is expected to require one resource for wound closure."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This is a stable child with a small uncomplicated chin laceration and no evidence of jaw, dental, or significant head injury.",
+      "acuityReason": "The wound needs irrigation and closure, but normal jaw function, dentition, neurologic status, and vital signs make a deeper injury unlikely.",
+      "expectedResources": [
+        "Laceration irrigation and closure"
+      ],
+      "keyFindings": [
+        "2 cm clean linear chin laceration",
+        "No intraoral extension",
+        "Normal jaw movement and bite alignment",
+        "Dentition intact",
+        "No concerning neurologic symptoms"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "A chin impact should prompt examination of the jaw, teeth, bite, and oral mucosa rather than assessment of the skin wound alone.",
+        "Simple laceration closure counts as one resource in the resource-prediction step."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Simple chin laceration",
+          "Minor facial contusion"
+        ],
+        "disposition": "After irrigation, the wound would likely be closed with tissue adhesive or sutures, tetanus status reviewed, and the child discharged with wound precautions."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-4",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

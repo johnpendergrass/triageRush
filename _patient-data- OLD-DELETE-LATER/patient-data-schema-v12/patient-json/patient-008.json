@@ -1,0 +1,86 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-008",
+  "number": 8,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Mary",
+      "age": 84,
+      "sex": "F",
+      "race": "white"
+    },
+    "image": {
+      "imageFilename": "patient-008.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Confused",
+      "quoteShort": null,
+      "quoteLong": "She keeps calling me by her late sister's name and she's burning up. She does the crossword in pen every morning — today she didn't know the pen. That's not her.",
+      "presentationShort": "84yo F — acute confusion per family, off baseline. No localizing complaint.",
+      "presentationLong": "84-year-old female, brought by family for acute confusion, a sharp change from her baseline, with no complaint of her own."
+    },
+    "vitals": {
+      "hr": {
+        "value": 112,
+        "color": "yellow"
+      },
+      "bp": {
+        "value": "92/60",
+        "color": "yellow"
+      },
+      "rr": {
+        "value": 24,
+        "color": "yellow"
+      },
+      "spo2": {
+        "value": 94,
+        "color": "yellow"
+      },
+      "temp": {
+        "value": 38.9,
+        "color": "red"
+      },
+      "pain": {
+        "value": 2,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Urosepsis with delirium",
+      "esi": 2,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → sepsis bundle: lactate, blood + urine cultures, early fluids and broad-spectrum antibiotics",
+      "why": "In elders, sepsis wears a disguise: no chief complaint of 'infection,' just new confusion. The dazed face and the family's 'that's not her' ARE the presentation. 🎯",
+      "redFlag": "fever + soft pressure + acute AMS = sepsis"
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "84-year-old woman in a knit shawl seated on the clinic chair, with her adult daughter standing beside the chair, hand on her shoulder",
+    "pose": "the mother slumped slightly in the chair with her gaze wandering; the daughter standing upright beside her, turned toward her, watching her",
+    "expression": "dazed and glassy, not tracking the room",
+    "signs": [
+      "flushed, sweaty forehead",
+      "vacant, unfocused stare"
+    ],
+    "lookSeverity": "quietly very sick — looks 'just confused' but isn't",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-008.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, EXACTLY TWO characters in one scene. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view. BOTH figures must be completely inside the frame: the seated woman from the top of her head to the soles of both feet, and the standing woman from the top of her head to the soles of both shoes. The ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides. This is NOT a close-up and NOT a cropped view - the camera is pulled well back so both people and the whole chair sit comfortably inside the picture. Draw both bodies COMPLETE - heads, torsos, arms, hands, laps, legs and feet. The daughter must be a WHOLE PERSON standing beside the chair, never a disembodied hand or a partial figure. Nothing cropped by the edges, no missing limbs. Subject: TWO people. In the centre, the patient - a white 84-year-old woman with a knit shawl over her shoulders, seated on a blue padded clinic chair, slumped slightly to one side with her gaze wandering away from the viewer, dazed and glassy-eyed, not tracking the room (NOT grimacing, NOT in pain). Standing close beside the chair on her left, her adult daughter - a white woman in her early fifties in a plain coat, standing upright with one hand resting protectively on her mother's shoulder, her body turned slightly toward her mother and her face full of worry as she looks down at her. The elderly seated woman is the clear focal point. Clearly visible: the older woman's flushed sweaty forehead; her vacant unfocused stare; the daughter's whole body standing beside the chair with a hand on the shoulder. Overall: the older woman is quietly very sick - she looks 'just confused' but is not. No text, no logos, no watermarks, no border."
+  }
+}

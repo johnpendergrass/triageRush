@@ -1,0 +1,108 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-061",
+  "number": 61,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Nicole",
+        "age": 30,
+        "sex": "F",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-061.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Vomiting and diarrhea",
+      "quote": "I've been throwing up and having diarrhea since yesterday — can't keep water down. A few of us got sick after the potluck. I'm lightheaded when I stand up.",
+      "triageNote": "30-year-old female with one day of vomiting and diarrhea after several people became ill following a potluck. She cannot keep fluids down and has dry mucous membranes and mild lightheadedness on standing.",
+      "vitals": {
+        "hr": {
+          "value": 108,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "108/68",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 16,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37.2,
+          "color": "green"
+        },
+        "pain": {
+          "value": 3,
+          "color": "yellow"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 3,
+      "correctRoom": "esi-3",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 3 is appropriate because persistent vomiting with inability to tolerate fluids and clinical dehydration is expected to require multiple treatment and assessment resources."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has an outbreak-associated gastrointestinal illness with dehydration and orthostatic symptoms.",
+      "acuityReason": "She is not in shock and has no focal abdominal warning signs, but failed oral intake requires IV treatment and reassessment.",
+      "expectedResources": [
+        "IV fluids",
+        "Parenteral antiemetic medication",
+        "Electrolyte and renal testing"
+      ],
+      "keyFindings": [
+        "One day of vomiting and diarrhea",
+        "Multiple potluck attendees ill",
+        "Cannot keep fluids down",
+        "Dry mucous membranes",
+        "Lightheaded on standing"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Bloody stool, focal or severe abdominal pain, high fever, prolonged symptoms, or immunocompromise would broaden the evaluation.",
+        "Successful oral rehydration after treatment is an important disposition check."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Acute infectious gastroenteritis",
+          "Foodborne toxin illness",
+          "Other causes of vomiting and diarrhea"
+        ],
+        "disposition": "IV rehydration, antiemetic treatment, and laboratory assessment would be followed by an oral challenge and discharge if symptoms and hydration improve."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "30-year-old woman, pale and washed-out",
+    "pose": "slumped, clutching her stomach, holding an emesis bag",
+    "expression": "queasy, drained",
+    "signs": [
+      "clutching her stomach",
+      "holding an emesis bag"
+    ],
+    "lookSeverity": "unwell but stable",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-061.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 30-year-old woman, pale and washed-out, seated on a blue padded clinic chair. Pose: slumped, one hand on her stomach, holding a small emesis bag. Expression: queasy and drained. Clearly visible: a hand on the stomach and an emesis bag. No text, no logos."
+  }
+}

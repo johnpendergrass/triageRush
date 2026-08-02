@@ -1,0 +1,86 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-041",
+  "number": 41,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Doug",
+      "age": 45,
+      "sex": "M",
+      "race": "white"
+    },
+    "image": {
+      "imageFilename": "patient-041.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Worst headache of his life",
+      "quoteShort": null,
+      "quoteLong": "The worst headache of my entire life hit me like a thunderclap — instant, full force, like I got hit in the back of the head. It's a little better now, but I feel awful and my neck's stiff.",
+      "presentationShort": "45yo M ? instantaneous worst-ever headache, maximal at onset, with neck stiffness; pain has eased slightly but remains severe.",
+      "presentationLong": "45-year-old male with an instantaneous, worst-ever headache that was maximal from the first moment. He describes being struck in the back of the head, has neck stiffness, and remains in severe pain despite slight improvement."
+    },
+    "vitals": {
+      "hr": {
+        "value": 80,
+        "color": "green"
+      },
+      "bp": {
+        "value": "172/98",
+        "color": "yellow"
+      },
+      "rr": {
+        "value": 16,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 98,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.9,
+        "color": "green"
+      },
+      "pain": {
+        "value": 8,
+        "color": "red"
+      }
+    },
+    "diagnosis": {
+      "primary": "Subarachnoid hemorrhage (aneurysmal)",
+      "esi": 2,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → non-contrast head CT now (± LP for xanthochromia if late), neurosurgery; 'feeling better' does not exclude it.",
+      "why": "Maximal-at-onset = thunderclap = SAH until proven otherwise. Early CT is very sensitive — don't be fooled by improvement.",
+      "redFlag": "Thunderclap, maximal-at-onset, worst-ever headache = SAH even if it improves."
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "45-year-old man",
+    "pose": "one hand on the back of his head, the other on his neck",
+    "expression": "wincing, pained",
+    "signs": [
+      "holding the back of his head",
+      "hand on a stiff neck"
+    ],
+    "lookSeverity": "in pain, guarded",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-041.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. ANATOMY AND OBJECTS (critical): exactly one head, exactly two arms ending in exactly two hands, exactly two legs ending in two feet, five fingers on each hand. No extra, duplicated, floating or partial limbs anywhere. Anything the character touches must be plausibly held by one of those two hands. All furniture is solid and fully opaque - the chair must never look transparent or see-through, and its back, seat and legs must all be completely drawn. Subject: a white 45-year-old man, seated on a blue padded clinic chair. Pose: one hand pressed to the back of his head, the other on his neck. Expression: wincing and pained. Clearly visible: a hand cradling the back of the head and a hand on a stiff neck. No text, no logos."
+  }
+}

@@ -110,8 +110,12 @@
             <span class="chart-rail" aria-hidden="true"></span>
             <span class="coach-eyebrow" id="detailEyebrow">PATIENT CHART</span>
 
-            <section class="coach-info-group coach-known-group" aria-labelledby="coachKnownTitle">
-              <h2 class="coach-group-title" id="coachKnownTitle">PATIENT PRESENTATION</h2>
+            <section class="coach-info-group coach-known-group" id="detailPresentationSection" data-section="presentation" data-section-state="expanded" aria-labelledby="coachKnownTitle">
+              <button class="coach-section-toggle coach-group-title" type="button" data-section-toggle="presentation" aria-expanded="true">
+                <span id="coachKnownTitle">PATIENT PRESENTATION</span>
+                <span class="coach-section-control" aria-hidden="true">COLLAPSE</span>
+              </button>
+              <div class="coach-section-content">
               <figure class="coach-patient-portrait">
                 <img id="coachPatientImage" src="" alt="" />
               </figure>
@@ -129,25 +133,35 @@
                 <h3 id="coachTriageTitle">TRIAGE NOTE</h3>
                 <p id="coachTriage"></p>
               </section>
+              </div>
             </section>
 
-            <section class="coach-info-group coach-decision-group" id="detailAnswerSection" aria-labelledby="coachDecisionTitle" hidden>
-              <h3 id="coachDecisionTitle">YOUR TRIAGE DECISION</h3>
+            <section class="coach-info-group coach-decision-group" id="detailAnswerSection" data-section="answer" data-section-state="locked" aria-labelledby="coachDecisionTitle">
+              <button class="coach-section-toggle" type="button" data-section-toggle="answer" aria-expanded="false" aria-disabled="true">
+                <span id="coachDecisionTitle">ANSWER</span>
+                <span class="coach-section-control" aria-hidden="true">LOCKED</span>
+              </button>
+              <div class="coach-section-content" hidden>
               <div class="coach-summary">
                 <div><span>YOU ASSIGNED</span><strong id="coachChoice"></strong></div>
                 <div><span>CORRECT LEVEL</span><strong id="coachCorrect"></strong></div>
               </div>
               <p class="coach-result" id="coachResult"></p>
+              <h4>Why this destination?</h4>
+              <p id="coachDestinationReason"></p>
+              </div>
             </section>
 
-            <section class="coach-info-group coach-explanation-group" id="detailClinicalSection" aria-labelledby="coachExplanationTitle" hidden>
-              <h2 class="coach-group-title" id="coachExplanationTitle">CLINICAL EXPLANATION</h2>
+            <section class="coach-info-group coach-explanation-group" id="detailClinicalSection" data-section="clinical" data-section-state="collapsed" aria-labelledby="coachExplanationTitle">
+              <button class="coach-section-toggle coach-group-title" type="button" data-section-toggle="clinical" aria-expanded="false">
+                <span id="coachExplanationTitle">CLINICAL INFORMATION</span>
+                <span class="coach-section-control" aria-hidden="true">EXPAND</span>
+              </button>
+              <div class="coach-section-content" hidden>
               <section class="coach-explanation-section" aria-labelledby="coachWhyTitle">
-                <h3 id="coachWhyTitle">WHY THIS TRIAGE LEVEL?</h3>
+                <h3 id="coachWhyTitle">CLINICAL ASSESSMENT</h3>
                 <p class="coach-lead" id="coachSummaryText"></p>
                 <p id="coachAcuityReason"></p>
-                <h4>Why this destination?</h4>
-                <p id="coachDestinationReason"></p>
               </section>
               <section class="coach-explanation-section" aria-labelledby="coachResourcesTitle">
                 <h3 id="coachResourcesTitle">EXPECTED RESOURCES</h3>
@@ -176,9 +190,11 @@
                 <h4>Possible disposition</h4>
                 <p id="coachDisposition"></p>
               </section>
+              </div>
             </section>
 
             <p class="coach-caution" id="detailCaution">Educational prototype · Patient-specific reasoning remains subject to clinical review.</p>
+            <p class="coach-section-feedback" id="detailSectionFeedback" role="status" aria-live="polite"></p>
           </article>
           <button class="coach-close" id="coachClose" type="button" aria-label="Close patient chart">×</button>
           <button

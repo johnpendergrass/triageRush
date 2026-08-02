@@ -1,0 +1,113 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-052",
+  "number": 52,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Wayne",
+        "age": 55,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-052.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Vomited blood, black stools",
+      "quote": "I threw up something that looked like coffee grounds, and my stools have been black and tarry. I get lightheaded when I stand. I drink a fair bit, and I take ibuprofen for my knees.",
+      "triageNote": "55-year-old male with coffee-ground vomit, black tarry stools, and lightheadedness when standing. Heart rate is 108 and blood pressure is 104/64; he regularly uses ibuprofen and drinks alcohol.",
+      "vitals": {
+        "hr": {
+          "value": 108,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "104/64",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 18,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 98,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.7,
+          "color": "green"
+        },
+        "pain": {
+          "value": 4,
+          "color": "yellow"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because coffee-ground emesis, melena, orthostatic lightheadedness, tachycardia, and borderline blood pressure indicate a high-risk gastrointestinal bleed."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has evidence of upper gastrointestinal bleeding with early physiologic compromise.",
+      "acuityReason": "Coffee-ground emesis and melena establish gastrointestinal blood loss, while orthostatic symptoms, heart rate 108, and blood pressure 104/64 raise concern for ongoing volume loss.",
+      "expectedResources": [
+        "Two large-bore IVs and fluid or blood support as indicated",
+        "CBC, coagulation studies, metabolic testing, and type and crossmatch",
+        "IV acid suppression",
+        "Urgent gastroenterology consultation and endoscopy"
+      ],
+      "keyFindings": [
+        "Coffee-ground emesis",
+        "Black tarry stools",
+        "Lightheaded on standing",
+        "Regular ibuprofen and alcohol use",
+        "Heart rate 108",
+        "Blood pressure 104/64"
+      ],
+      "redFlags": [
+        "Possible ongoing gastrointestinal hemorrhage",
+        "Early hypovolemia"
+      ],
+      "teachingPoints": [
+        "Dark tarry stool and coffee-ground emesis localize bleeding to the upper gastrointestinal tract.",
+        "A single blood-pressure value may underestimate blood loss early in the course."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Bleeding peptic ulcer",
+          "Erosive gastritis",
+          "Esophageal variceal bleeding"
+        ],
+        "disposition": "Resuscitative assessment, laboratory testing, medication, and urgent endoscopy would likely be followed by monitored admission."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "55-year-old man, pale and drained",
+    "pose": "seated, one hand resting on his stomach, looks weak",
+    "expression": "pale, washed-out, tired",
+    "signs": [
+      "pale, drained look",
+      "hand on the stomach"
+    ],
+    "lookSeverity": "looks unwell, pale",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-052.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 55-year-old man, pale and drained, seated on a blue padded clinic chair. Pose: seated, one hand resting on his stomach, looking weak. Expression: pale, washed-out, and tired. Clearly visible: a pale, drained face and a hand resting on the stomach. No text, no logos."
+  }
+}

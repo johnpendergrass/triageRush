@@ -1,71 +1,98 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-006",
   "number": 6,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Priya",
-      "age": 27,
-      "sex": "F",
-      "race": "asian"
-    },
-    "image": {
-      "imageFilename": "patient-006.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Priya",
+        "age": 27,
+        "sex": "F",
+        "race": "asian"
+      },
+      "image": {
+        "imageFilename": "patient-006.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Face swelling",
-      "quoteShort": null,
-      "quoteLong": "The waiter SWORE there was no shrimp in the pad thai. My face is filing a formal dispute. Also I can hear myself wheezing now, which is a sound I've decided I hate.",
-      "presentationShort": "27yo F — facial/lip swelling + wheeze minutes after shellfish.",
-      "presentationLong": "27-year-old female, facial and lip swelling with wheeze minutes after eating shellfish."
-    },
-    "vitals": {
-      "hr": {
-        "value": 128,
-        "color": "red"
-      },
-      "bp": {
-        "value": "88/54",
-        "color": "red"
-      },
-      "rr": {
-        "value": 26,
-        "color": "red"
-      },
-      "spo2": {
-        "value": 90,
-        "color": "red"
-      },
-      "temp": {
-        "value": 37.0,
-        "color": "green"
-      },
-      "pain": {
-        "value": 3,
-        "color": "green"
+      "quote": "The waiter swore there was no shrimp in the pad thai. Now my lips feel swollen, I can hear myself wheezing, and I feel like I might pass out.",
+      "triageNote": "27-year-old woman with diffuse hives and reported facial and lip swelling minutes after eating shellfish. She is wheezing and lightheaded, with a blood pressure of 88/54 and oxygen saturation of 90%.",
+      "vitals": {
+        "hr": {
+          "value": 128,
+          "color": "red"
+        },
+        "bp": {
+          "value": "88/54",
+          "color": "red"
+        },
+        "rr": {
+          "value": 26,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 90,
+          "color": "red"
+        },
+        "temp": {
+          "value": 37,
+          "color": "green"
+        },
+        "pain": {
+          "value": 3,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Anaphylaxis (shellfish) with airway edema and hypotension",
-      "esi": 1,
-      "esi2roomsNotes": null,
-      "disposition": "Resus → IM epinephrine NOW, high-flow O2, IV fluids for the low pressure, antihistamines + steroids, watch for a biphasic rebound",
-      "why": "Epi goes in the thigh, not on the back burner. Airway swelling plus shock = ESI 1, no negotiating. 🦐",
-      "redFlag": "airway swelling + wheeze + hypotension"
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player assignment remains session state.",
+      "correctEsi": 1,
+      "correctRoom": "esi-1",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 1 / Resuscitation is required because epinephrine and hemodynamic support cannot safely be delayed."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has airway and breathing compromise with hypotension after an allergen exposure and requires an immediate lifesaving intervention.",
+      "acuityReason": "Wheeze, facial and lip swelling, oxygen saturation of 90%, blood pressure of 88/54, tachycardia, and lightheadedness indicate rapidly progressive respiratory and circulatory compromise.",
+      "expectedResources": [
+        "Immediate intramuscular epinephrine",
+        "Supplemental oxygen and airway support",
+        "IV access and rapid fluid resuscitation",
+        "Continuous cardiorespiratory monitoring"
+      ],
+      "keyFindings": [
+        "Symptoms began within minutes of eating shellfish",
+        "Diffuse hives visible on the face, chest, and arms",
+        "Reported facial and lip swelling",
+        "Wheezing and lightheadedness",
+        "Blood pressure of 88/54",
+        "Oxygen saturation of 90%",
+        "Heart rate of 128"
+      ],
+      "redFlags": [
+        "Airway swelling with wheeze",
+        "Hypotension and hypoxemia",
+        "Rapid onset after a likely allergen exposure"
+      ],
+      "teachingPoints": [
+        "An immediate lifesaving intervention can be required even when the patient is awake and speaking.",
+        "Intramuscular epinephrine is the priority intervention when allergic symptoms involve airway, breathing, or circulation."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Food-triggered anaphylaxis"
+        ],
+        "disposition": "The patient would receive immediate epinephrine, oxygen, IV fluids, airway readiness, and monitored observation, with admission or discharge determined by response and recurrence risk."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-1",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

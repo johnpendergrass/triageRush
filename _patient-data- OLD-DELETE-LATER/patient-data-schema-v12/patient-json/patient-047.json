@@ -1,0 +1,86 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-047",
+  "number": 47,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Kyle",
+      "age": 35,
+      "sex": "M",
+      "race": "white"
+    },
+    "image": {
+      "imageFilename": "patient-047.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Threw his back out",
+      "quoteShort": null,
+      "quoteLong": "I threw my back out carrying my team to Diamond?okay, actually lifting a couch after ranked. It hurts to bend, but my legs feel normal: no numbness, and everything works down there.",
+      "presentationShort": "35yo M ? acute low back pain after lifting a couch; paraspinal tenderness, normal leg strength and sensation, no groin numbness or bladder symptoms.",
+      "presentationLong": "35-year-old male with lower back pain beginning while lifting a couch. Pain is worse with bending and there is paraspinal tenderness; leg strength and sensation are normal, with no groin numbness or bladder symptoms."
+    },
+    "vitals": {
+      "hr": {
+        "value": 78,
+        "color": "green"
+      },
+      "bp": {
+        "value": "124/78",
+        "color": "green"
+      },
+      "rr": {
+        "value": 14,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 99,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.8,
+        "color": "green"
+      },
+      "pain": {
+        "value": 5,
+        "color": "yellow"
+      }
+    },
+    "diagnosis": {
+      "primary": "Mechanical low back strain",
+      "esi": 4,
+      "esi2roomsNotes": null,
+      "disposition": "Fast Track → analgesia, stay active, return precautions; no imaging without red flags.",
+      "why": "Mechanical back pain with NO red flags (no saddle numbness, retention, weakness, or fever) → no imaging, keep moving. (Compare the cauda equina case.)",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-4",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "35-year-old man in a gamer t-shirt",
+    "pose": "standing, one hand on his lower back, mild grimace",
+    "expression": "annoyed, mild wince",
+    "signs": [
+      "hand on the lower back",
+      "otherwise looks well"
+    ],
+    "lookSeverity": "uncomfortable but well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-047.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 35-year-old man in a casual gamer t-shirt, beside a blue padded clinic chair. Pose: standing, one hand pressed to his lower back, leaning slightly. Expression: annoyed with a mild wince. Clearly visible: a hand on the lower back; he otherwise looks well and healthy. No text, no logos."
+  }
+}

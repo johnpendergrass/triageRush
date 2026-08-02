@@ -1,71 +1,95 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-086",
   "number": 86,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Barbara",
-      "age": 58,
-      "sex": "F",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-086.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Barbara",
+        "age": 58,
+        "sex": "F",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-086.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Left lower belly pain and fever",
-      "quoteShort": null,
-      "quoteLong": "I've had a steady, achy pain low on the left side of my belly for two days, and now a fever. I'm not really hungry and my bowels have been off. It's tender right there when I press.",
-      "presentationShort": "58yo F ? 2 days steady LLQ abdominal pain, localized tenderness, temperature 38.2?C, reduced appetite and altered bowel habit; no vomiting.",
-      "presentationLong": "58-year-old female with two days of steady left-lower abdominal pain, reduced appetite, and a change in bowel habits. She has localized tenderness and a temperature of 38.2?C, without vomiting or generalized guarding."
-    },
-    "vitals": {
-      "hr": {
-        "value": 92,
-        "color": "green"
-      },
-      "bp": {
-        "value": "134/82",
-        "color": "green"
-      },
-      "rr": {
-        "value": 16,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 98,
-        "color": "green"
-      },
-      "temp": {
-        "value": 38.2,
-        "color": "yellow"
-      },
-      "pain": {
-        "value": 6,
-        "color": "red"
+      "quote": "I've had a steady, achy pain low on the left side of my belly for two days, and now a fever. I'm not really hungry and my bowels have been off. It's tender right there when I press.",
+      "triageNote": "58-year-old female with two days of steady left-lower abdominal pain, reduced appetite, and a change in bowel habits. She has localized tenderness and a temperature of 38.2 C, without vomiting or generalized guarding.",
+      "vitals": {
+        "hr": {
+          "value": 92,
+          "color": "green"
+        },
+        "bp": {
+          "value": "134/82",
+          "color": "green"
+        },
+        "rr": {
+          "value": 16,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 98,
+          "color": "green"
+        },
+        "temp": {
+          "value": 38.2,
+          "color": "yellow"
+        },
+        "pain": {
+          "value": 6,
+          "color": "yellow"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Acute diverticulitis",
-      "esi": 3,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → CT abdomen/pelvis, labs, antibiotics, analgesia, bowel rest; watch for perforation/abscess.",
-      "why": "Older adult + LLQ pain + fever = diverticulitis. CT confirms and rules out abscess/perforation.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 3,
+      "correctRoom": "esi-3",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 3 is appropriate because this stable febrile localized abdominal presentation requires multiple resources including laboratory testing and CT imaging."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has two days of localized left-lower-quadrant pain, bowel change, reduced appetite, tenderness, and low-grade fever.",
+      "acuityReason": "The absence of generalized guarding, vomiting, or instability is reassuring, but inflammatory complications must be excluded.",
+      "expectedResources": [
+        "CBC and metabolic testing",
+        "CT abdomen and pelvis",
+        "IV fluids, analgesia, and antiemetic medication",
+        "Antibiotic treatment when indicated"
+      ],
+      "keyFindings": [
+        "Two days of steady left-lower abdominal pain",
+        "Change in bowel habits",
+        "Reduced appetite",
+        "Localized tenderness",
+        "Temperature 38.2 C",
+        "No generalized guarding or vomiting"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Generalized peritonitis, hypotension, obstruction, or toxic appearance would suggest perforation or another complication.",
+        "Imaging helps distinguish uncomplicated inflammation from abscess or perforation."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Acute diverticulitis",
+          "Colitis",
+          "Colonic malignancy or other inflammatory process"
+        ],
+        "disposition": "Laboratory and CT assessment would guide outpatient treatment versus admission and procedural or surgical consultation for complications."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-3",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

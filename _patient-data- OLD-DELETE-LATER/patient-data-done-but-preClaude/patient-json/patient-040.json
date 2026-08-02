@@ -1,0 +1,114 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-040",
+  "number": 40,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Paige",
+        "age": 19,
+        "sex": "F",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-040.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Vomiting, breathing hard",
+      "quote": "I've been throwing up and my stomach hurts, and I can't stop breathing heavy and fast. I'm so thirsty and I'm peeing constantly. I ran out of my insulin a few days ago.",
+      "triageNote": "19-year-old female with type 1 diabetes who ran out of insulin several days ago. She has vomiting, abdominal pain, intense thirst, frequent urination, dehydration, fruity breath, and deep rapid respirations at 32/min.",
+      "vitals": {
+        "hr": {
+          "value": 124,
+          "color": "red"
+        },
+        "bp": {
+          "value": "104/64",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 32,
+          "color": "red"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.7,
+          "color": "green"
+        },
+        "pain": {
+          "value": 5,
+          "color": "yellow"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because deep rapid respirations, dehydration, vomiting, and missed insulin indicate a high-risk metabolic emergency."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient with type 1 diabetes has several days without insulin, gastrointestinal symptoms, polyuria, polydipsia, fruity breath, tachycardia, and Kussmaul-pattern breathing.",
+      "acuityReason": "Severe metabolic derangement and dehydration can deteriorate rapidly and require prompt monitored treatment, although current perfusion and oxygenation are maintained.",
+      "expectedResources": [
+        "Immediate bedside glucose and blood gas",
+        "Electrolyte, ketone, and renal testing",
+        "IV fluid resuscitation",
+        "Insulin infusion after potassium assessment",
+        "Frequent cardiac and laboratory monitoring"
+      ],
+      "keyFindings": [
+        "Type 1 diabetes without insulin for several days",
+        "Vomiting and abdominal pain",
+        "Intense thirst and frequent urination",
+        "Fruity breath",
+        "Deep respirations at 32 per minute",
+        "Heart rate 124"
+      ],
+      "redFlags": [
+        "Kussmaul respirations with dehydration",
+        "Potential potassium abnormality"
+      ],
+      "teachingPoints": [
+        "Deep rapid breathing in this setting is respiratory compensation, not primarily a lung disorder.",
+        "Potassium must be assessed and monitored closely during insulin treatment."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Diabetic ketoacidosis",
+          "Other hyperglycemic crisis",
+          "Sepsis precipitating metabolic decompensation"
+        ],
+        "disposition": "Monitored fluids, electrolyte management, and insulin would be followed by admission until the acidosis resolves and a safe insulin plan is restored."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "19-year-old woman, exhausted and dehydrated",
+    "pose": "slumped, breathing deeply and fast",
+    "expression": "exhausted, dry-lipped",
+    "signs": [
+      "breathing hard and deep",
+      "exhausted, dry lips"
+    ],
+    "lookSeverity": "ill, dehydrated",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-040.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 19-year-old woman, exhausted and dehydrated, seated on a blue padded clinic chair. Pose: slumped, chest rising with deep fast breaths. Expression: worn out with dry, cracked lips. Clearly visible: deep labored breathing and a drained, dehydrated look. No text, no logos."
+  }
+}

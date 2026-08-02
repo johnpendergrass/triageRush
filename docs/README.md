@@ -20,7 +20,7 @@ home-screen-specification--YYYY-MM-DD-HHMM.md
 The timestamp records when that current version was established. When a
 specification changes:
 
-1. Move the outgoing version to `../docs-archive/`.
+1. Move the outgoing version to `archive/`.
 2. Save the revised document here with a new timestamp.
 3. Keep the purpose prefix unchanged.
 4. Add a concise entry to its change history.
@@ -28,5 +28,5 @@ specification changes:
 This README does not need updating for timestamp-only revisions. It changes
 only when a document purpose or the documentation workflow changes.
 
-Everything under `../docs-archive/` is historical and does not override these
+Everything under `archive/` is historical and does not override these
 current specifications.

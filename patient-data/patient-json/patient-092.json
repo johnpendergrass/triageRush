@@ -1,71 +1,90 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-092",
   "number": 92,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Justin",
-      "age": 19,
-      "sex": "M",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-092.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Justin",
+        "age": 19,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-092.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Sore, red fingernail",
-      "quoteShort": null,
-      "quoteLong": "The side of my fingernail has been red, swollen, and sore for a few days — I bite my nails. There's a little pocket of pus by the nail now. It throbs but I feel fine otherwise.",
-      "presentationShort": "19yo M ? red, swollen, tender nail fold with a small visible pus pocket after nail-biting; no spreading redness, fever, or systemic symptoms.",
-      "presentationLong": "19-year-old male with several days of redness, swelling, and throbbing tenderness along one fingernail after nail-biting. A small pus pocket is visible at the nail fold, without spreading redness, fever, or systemic illness."
-    },
-    "vitals": {
-      "hr": {
-        "value": 72,
-        "color": "green"
-      },
-      "bp": {
-        "value": "120/76",
-        "color": "green"
-      },
-      "rr": {
-        "value": 14,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 99,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.8,
-        "color": "green"
-      },
-      "pain": {
-        "value": 3,
-        "color": "yellow"
+      "quote": "The side of my fingernail has been red, swollen, and sore for a few days — I bite my nails. There's a little pocket of pus by the nail now. It throbs but I feel fine otherwise.",
+      "triageNote": "19-year-old male with several days of redness, swelling, and throbbing tenderness along one fingernail after nail-biting. A small pus pocket is visible at the nail fold, without spreading redness, fever, or systemic illness.",
+      "vitals": {
+        "hr": {
+          "value": 72,
+          "color": "green"
+        },
+        "bp": {
+          "value": "120/76",
+          "color": "green"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 3,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Paronychia with small abscess",
-      "esi": 5,
-      "esi2roomsNotes": null,
-      "disposition": "Fast Track → warm soaks, incision/drainage of the pocket, ± antibiotics; discharge.",
-      "why": "Red, tender nail fold with a pus pocket = paronychia. Drain the pocket; soaks help. Minor, quick.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 4,
+      "correctRoom": "esi-4",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 4 is appropriate because the visible pus pocket at the nail fold requires one simple procedure for drainage."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has a small localized nail-fold abscess after nail biting without spreading infection or systemic illness.",
+      "acuityReason": "The collection requires drainage, but the absence of fever, proximal spread, or deep hand findings supports low acuity.",
+      "expectedResources": [
+        "Drainage of the nail-fold abscess"
+      ],
+      "keyFindings": [
+        "Several days of nail-fold redness and swelling",
+        "Throbbing tenderness",
+        "Visible small pus pocket",
+        "Nail-biting exposure",
+        "No spreading redness, fever, or systemic illness"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "A visible collection generally requires drainage rather than antibiotics alone.",
+        "Spreading redness, flexor-tendon tenderness, impaired movement, or systemic illness would broaden concern."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Acute paronychia with small abscess",
+          "Early felon if deeper pulp findings develop"
+        ],
+        "disposition": "Drainage, warm soaks, local care, and selective antibiotics would usually allow discharge."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-5",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

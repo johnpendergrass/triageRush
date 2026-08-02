@@ -1,71 +1,93 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-124",
   "number": 124,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Amaya",
-      "age": 21,
-      "sex": "F",
-      "race": "black"
-    },
-    "image": {
-      "imageFilename": "patient-124.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Amaya",
+        "age": 21,
+        "sex": "F",
+        "race": "black"
+      },
+      "image": {
+        "imageFilename": "patient-124.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Fell from the top of the pyramid",
-      "quoteShort": null,
-      "quoteLong": "I was literally mid 'Go Boston U' and the base wobbled. I landed on my head and shoulders. Everything moves fine, it just really hurts right here in my neck.",
-      "presentationShort": "21yo F — fell ~10ft from a cheer stunt onto head and shoulders. Midline C-spine tenderness, GCS 15, no deficit.",
-      "presentationLong": "21-year-old female who fell about ten feet from a cheerleading stunt onto her head and shoulders, with midline cervical tenderness, GCS 15 and no neurological deficit."
-    },
-    "vitals": {
-      "hr": {
-        "value": 96,
-        "color": "green"
-      },
-      "bp": {
-        "value": "118/72",
-        "color": "green"
-      },
-      "rr": {
-        "value": 18,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 99,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.9,
-        "color": "green"
-      },
-      "pain": {
-        "value": 7,
-        "color": "yellow"
+      "quote": "I was literally mid 'Go Boston U' and the base wobbled. I landed on my head and shoulders. Everything moves fine, it just really hurts right here in my neck.",
+      "triageNote": "21-year-old female who fell about ten feet from a cheerleading stunt onto her head and shoulders, with midline cervical tenderness, GCS 15 and no neurological deficit.",
+      "vitals": {
+        "hr": {
+          "value": 96,
+          "color": "green"
+        },
+        "bp": {
+          "value": "118/72",
+          "color": "green"
+        },
+        "rr": {
+          "value": 18,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.9,
+          "color": "green"
+        },
+        "pain": {
+          "value": 7,
+          "color": "red"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Suspected cervical spine injury after an axial-load fall",
-      "esi": 3,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → cervical immobilisation, CT cervical spine per the Canadian C-spine rule, serial neurological checks",
-      "why": "A dangerous mechanism plus midline tenderness fails the Canadian C-spine rule, so she needs imaging. She is alert and neurologically intact, which makes her an ESI 3 rather than a Resus.",
-      "redFlag": "Midline cervical tenderness after a dangerous axial-load mechanism — cannot be cleared clinically."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 3,
+      "correctRoom": "esi-3",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 3 is appropriate because this stable dangerous-mechanism neck injury is expected to require multiple trauma-assessment and imaging resources."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This alert patient has midline cervical tenderness after a ten-foot axial-load fall onto the head and shoulders.",
+      "acuityReason": "Normal neurologic findings are reassuring, but the mechanism and midline tenderness require immobilization and imaging before clearance.",
+      "expectedResources": [
+        "Cervical-spine CT imaging",
+        "Trauma examination and additional imaging as indicated",
+        "Analgesia"
+      ],
+      "keyFindings": [
+        "Fall about ten feet",
+        "Landed on head and shoulders",
+        "Midline cervical tenderness",
+        "GCS 15",
+        "No neurologic deficit"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "A normal neurologic examination does not exclude an unstable cervical injury.",
+        "Spinal motion restriction should be maintained until appropriate clinical and imaging clearance."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Cervical-spine fracture",
+          "Cervical ligamentous injury",
+          "Cervical strain"
+        ],
+        "disposition": "Trauma evaluation and imaging would guide discharge in a collar, specialist consultation, or admission if structural injury is found."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-3",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

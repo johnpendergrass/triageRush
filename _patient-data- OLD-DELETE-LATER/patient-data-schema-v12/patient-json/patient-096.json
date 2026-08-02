@@ -1,0 +1,83 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-096",
+  "number": 96,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Hector",
+      "age": 55,
+      "sex": "M",
+      "race": "hispanic"
+    },
+    "image": {
+      "imageFilename": "patient-096.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Out of blood-pressure pills",
+      "quoteShort": null,
+      "quoteLong": "I ran out of my blood-pressure medicine and my doctor's office is closed for the weekend. I feel completely fine — no headache, no chest pain — I just need a refill to get me through.",
+      "presentationShort": "55yo M — asymptomatic, out of antihypertensive meds, requesting a bridge refill, exam and BP acceptable — non-urgent.",
+      "presentationLong": "55-year-old male, asymptomatic, out of his antihypertensive medication and requesting a bridge refill, with an acceptable blood pressure and normal exam."
+    },
+    "vitals": {
+      "hr": {
+        "value": 74,
+        "color": "green"
+      },
+      "bp": {
+        "value": "142/86",
+        "color": "green"
+      },
+      "rr": {
+        "value": 14,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 99,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.8,
+        "color": "green"
+      },
+      "pain": {
+        "value": 0,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Medication refill (non-urgent)",
+      "esi": 5,
+      "esi2roomsNotes": "ESI 5: no ED treatment-area resources are expected; brief evaluation, counseling, and discharge are appropriate.",
+      "disposition": "Discharge → short bridge prescription, counsel on continuity, PCP follow-up. No emergency care needed.",
+      "why": "Asymptomatic, just out of routine meds → a bridge refill and PCP follow-up. Not an emergency; a fast discharge.",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "discharge",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "55-year-old man",
+    "pose": "seated comfortably, relaxed",
+    "expression": "calm, patient",
+    "signs": [],
+    "lookSeverity": "completely well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-096.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a hispanic 55-year-old man, seated comfortably on a blue padded clinic chair. Pose: relaxed, hands in his lap. Expression: calm and patient. Clearly visible: a healthy, well-looking man with no distress. No text, no logos."
+  }
+}

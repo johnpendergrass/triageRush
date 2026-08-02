@@ -1,0 +1,86 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-035",
+  "number": 35,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Walter",
+      "age": 72,
+      "sex": "M",
+      "race": "white"
+    },
+    "image": {
+      "imageFilename": "patient-035.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Room won't stop spinning",
+      "quoteShort": null,
+      "quoteLong": "The room won't stop spinning and I keep listing to one side when I try to walk. It came on all of a sudden this morning. It's 'just' dizziness, but it won't quit and I can't stay upright.",
+      "presentationShort": "72yo M ? sudden persistent vertigo, truncal unsteadiness, direction-changing nystagmus, and inability to walk without assistance.",
+      "presentationLong": "72-year-old male with sudden persistent spinning dizziness. He lists to one side, has marked truncal unsteadiness and direction-changing nystagmus, and cannot stand or walk without assistance."
+    },
+    "vitals": {
+      "hr": {
+        "value": 72,
+        "color": "green"
+      },
+      "bp": {
+        "value": "168/94",
+        "color": "yellow"
+      },
+      "rr": {
+        "value": 16,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 97,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.8,
+        "color": "green"
+      },
+      "pain": {
+        "value": 1,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Cerebellar (posterior circulation) stroke",
+      "esi": 2,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → stroke pathway, MRI (plain CT often misses posterior strokes), neurology; 'just vertigo' can be a stroke.",
+      "why": "Can't walk = central. Posterior strokes masquerade as 'vertigo' and CT misses them — think HINTS exam / MRI.",
+      "redFlag": "Sudden vertigo + inability to walk / truncal ataxia = central (stroke), not benign peripheral vertigo."
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "72-year-old man, looks queasy",
+    "pose": "gripping the arm of the chair for balance, tilted to one side",
+    "expression": "nauseated and off-balance",
+    "signs": [
+      "gripping the chair for balance",
+      "tilted, off-balance look"
+    ],
+    "lookSeverity": "unsteady, unwell",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-035.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 72-year-old man who looks queasy, seated on a blue padded clinic chair. Pose: gripping the arm of the chair for balance, body tilted to one side. Expression: nauseated and off-balance. Clearly visible: a white-knuckle grip on the chair and an unsteady, tilted posture. No text, no logos."
+  }
+}

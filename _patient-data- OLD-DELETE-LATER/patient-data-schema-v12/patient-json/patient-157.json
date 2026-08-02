@@ -1,0 +1,87 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-157",
+  "number": 157,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Dennis",
+      "age": 70,
+      "sex": "M",
+      "race": "white"
+    },
+    "image": {
+      "imageFilename": "patient-157.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Diarrhea won't stop",
+      "quoteShort": null,
+      "quoteLong": "I've lost count - at least a dozen watery trips a day. I was only in the hospital three nights for that leg infection, and the diarrhea started a few days after I finished their antibiotics.",
+      "presentationShort": "70yo M - profuse watery diarrhea and cramping for 4 days after recent admission and clindamycin. Dry mouth, weak, no blood in stool.",
+      "presentationLong": "70-year-old male with four days of frequent profuse watery diarrhea and abdominal cramping shortly after a hospital admission and a course of clindamycin, now weak and clinically dehydrated without bloody stool."
+    },
+    "vitals": {
+      "hr": {
+        "value": 112,
+        "color": "yellow"
+      },
+      "bp": {
+        "value": "98/60",
+        "color": "yellow"
+      },
+      "rr": {
+        "value": 20,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 98,
+        "color": "green"
+      },
+      "temp": {
+        "value": 38.1,
+        "color": "yellow"
+      },
+      "pain": {
+        "value": 5,
+        "color": "yellow"
+      }
+    },
+    "diagnosis": {
+      "primary": "Suspected Clostridioides difficile infection with dehydration",
+      "esi": 3,
+      "esi2roomsNotes": null,
+      "disposition": "Acute -> contact isolation, IV fluids, CBC/CMP and stool C. diff testing; assess for severe colitis",
+      "why": "Older age, recent healthcare exposure, clindamycin and new profuse watery diarrhea are the classic cluster for C. diff. Do not wait for the stool result to protect everyone else: isolate on suspicion, use soap-and-water hand hygiene and assess dehydration and colitis severity.",
+      "redFlag": "Recent antibiotics plus profuse diarrhea, fever, tachycardia and low blood pressure - possible severe C. diff colitis."
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-3",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a white 70-year-old man in a loose polo shirt and casual trousers, seated on a blue padded clinic chair",
+    "pose": "leaning forward slightly with one forearm across his lower abdomen and the other hand holding a clear water bottle",
+    "expression": "drained, uncomfortable and exhausted after days of diarrhea",
+    "signs": [
+      "dry lips and tired eyes",
+      "slightly sunken cheeks",
+      "one hand resting protectively across the lower abdomen"
+    ],
+    "lookSeverity": "dehydrated and genuinely unwell but awake and stable",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-157.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style with smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines, warm detailed rendering and natural realistic proportions. Match the attached reference image's painterly style. Full-body wide shot, square 1:1, 3/4 front view, centered. Show the entire person and entire blue padded clinic chair with all feet and chair legs and generous margin. Subject: a white 70-year-old man in a loose polo shirt and casual trousers. Pose: leaning forward slightly, one forearm across his lower abdomen, the other hand holding a clear water bottle. Expression: drained, uncomfortable and exhausted. Visible signs: dry lips, tired eyes, slightly sunken cheeks; no stool, toilet, vomiting or graphic content. No text, logos, medical equipment, shadows, floor plane, watermark or border. Perfectly flat solid #00ff00 chroma-key background."
+  }
+}

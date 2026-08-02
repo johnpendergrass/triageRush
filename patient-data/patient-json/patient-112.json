@@ -1,71 +1,98 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-112",
   "number": 112,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Andre",
-      "age": 26,
-      "sex": "M",
-      "race": "black"
-    },
-    "image": {
-      "imageFilename": "patient-112.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Andre",
+        "age": 26,
+        "sex": "M",
+        "race": "black"
+      },
+      "image": {
+        "imageFilename": "patient-112.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Wants pain medication",
-      "quoteShort": null,
-      "quoteLong": "I know how this sounds. I know what my chart says. It's my usual crisis, it's in my back and my legs, and the only thing that has ever touched it is exactly what I'm about to ask you for.",
-      "presentationShort": "26yo M, sickle cell disease — 8h of typical vaso-occlusive pain in back and legs, unrelieved at home. Frequent attender.",
-      "presentationLong": "26-year-old male with sickle cell disease, eight hours of his typical vaso-occlusive pain in the back and legs, unrelieved by home medication."
-    },
-    "vitals": {
-      "hr": {
-        "value": 112,
-        "color": "yellow"
-      },
-      "bp": {
-        "value": "138/84",
-        "color": "green"
-      },
-      "rr": {
-        "value": 22,
-        "color": "yellow"
-      },
-      "spo2": {
-        "value": 94,
-        "color": "yellow"
-      },
-      "temp": {
-        "value": 37.6,
-        "color": "yellow"
-      },
-      "pain": {
-        "value": 10,
-        "color": "red"
+      "quote": "I know how this sounds. I know what my chart says. It's my usual crisis, it's in my back and my legs, and the only thing that has ever touched it is exactly what I'm about to ask you for.",
+      "triageNote": "26-year-old male with sickle cell disease, eight hours of his typical vaso-occlusive pain in the back and legs, unrelieved by home medication.",
+      "vitals": {
+        "hr": {
+          "value": 112,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "138/84",
+          "color": "green"
+        },
+        "rr": {
+          "value": 22,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 94,
+          "color": "yellow"
+        },
+        "temp": {
+          "value": 37.6,
+          "color": "green"
+        },
+        "pain": {
+          "value": 10,
+          "color": "red"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Sickle cell vaso-occlusive crisis",
-      "esi": 2,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → analgesia within 30 minutes, IV fluids, oxygen, screen for acute chest syndrome",
-      "why": "'Drug-seeking' is the most dangerous label in the department. Sickle crisis is real, agonising and time-critical — guidelines want analgesia inside 30 minutes. Under-triage here is the classic harm.",
-      "redFlag": "SpO₂ 94% in a sickle crisis — screen for acute chest syndrome, which is the leading cause of death in these patients."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because pain rated 10 out of 10 with failure of home medication in sickle cell disease requires rapid analgesia and assessment for complications."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has a typical severe vaso-occlusive pain episode involving the back and legs.",
+      "acuityReason": "The familiar pattern is reassuring against a new diagnosis, but extreme pain and the risk of acute chest syndrome or infection require rapid equitable treatment.",
+      "expectedResources": [
+        "Rapid parenteral analgesia",
+        "CBC, reticulocyte, metabolic, and hemolysis testing as indicated",
+        "IV hydration when clinically needed",
+        "Screening for acute chest, infection, and other complications"
+      ],
+      "keyFindings": [
+        "Known sickle cell disease",
+        "Eight hours of typical back and leg pain",
+        "Home medication ineffective",
+        "Pain rated 10 out of 10",
+        "Heart rate 112",
+        "Oxygen saturation 94%"
+      ],
+      "redFlags": [
+        "Extreme pain",
+        "Risk of occult sickle cell complication"
+      ],
+      "teachingPoints": [
+        "Stigmatizing labels contribute to dangerous undertreatment and should not replace assessment.",
+        "Chest pain, fever, hypoxemia, neurologic symptoms, priapism, or splenic findings require focused escalation."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Vaso-occlusive pain crisis",
+          "Acute chest syndrome if respiratory findings emerge",
+          "Other sickle cell complication"
+        ],
+        "disposition": "Rapid protocolized analgesia and complication screening would guide discharge after control or admission for persistent pain or complications."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-2",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

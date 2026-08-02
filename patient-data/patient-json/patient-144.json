@@ -1,71 +1,88 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-144",
   "number": 144,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Owen",
-      "age": 10,
-      "sex": "M",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-144.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Owen",
+        "age": 10,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-144.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Spots everywhere and so itchy",
-      "quoteShort": null,
-      "quoteLong": "They started on my tummy and now they're EVERYWHERE, even in my hair. Mum keeps telling me not to scratch. That is an unreasonable request.",
-      "presentationShort": "10yo M, unvaccinated — 2 days of itchy vesicular rash in crops at different stages, mild fever. Eating and drinking, chest clear.",
-      "presentationLong": "10-year-old unvaccinated male with two days of an itchy vesicular rash appearing in crops at different stages, with a mild fever; he is eating, drinking and systemically well."
-    },
-    "vitals": {
-      "hr": {
-        "value": 94,
-        "color": "green"
-      },
-      "bp": {
-        "value": "104/64",
-        "color": "green"
-      },
-      "rr": {
-        "value": 18,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 99,
-        "color": "green"
-      },
-      "temp": {
-        "value": 37.8,
-        "color": "yellow"
-      },
-      "pain": {
-        "value": 3,
-        "color": "green"
+      "quote": "They started on my tummy and now they're EVERYWHERE, even in my hair. Mum keeps telling me not to scratch. That is an unreasonable request.",
+      "triageNote": "10-year-old unvaccinated male with two days of an itchy vesicular rash appearing in crops at different stages, with a mild fever; he is eating, drinking and systemically well.",
+      "vitals": {
+        "hr": {
+          "value": 94,
+          "color": "green"
+        },
+        "bp": {
+          "value": "104/64",
+          "color": "green"
+        },
+        "rr": {
+          "value": 18,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 3,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Uncomplicated varicella (chickenpox)",
-      "esi": 5,
-      "esi2roomsNotes": null,
-      "disposition": "Fast Track → mask and isolate on arrival; calamine, antihistamine, no aspirin, keep off school until crusted",
-      "why": "Uncomplicated chickenpox in a well child needs no resources at all — but it is airborne AND contact spread, so mask them at the door and keep them away from pregnant or immunosuppressed people. Never give aspirin (Reye's).",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "esi-5",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because this systemically well child has uncomplicated varicella requiring isolation precautions but no counted treatment resource."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This unvaccinated child has crops of itchy vesicles at different stages with only mild fever and preserved intake.",
+      "acuityReason": "This systemically well child has uncomplicated varicella requiring isolation precautions but no counted treatment resource.",
+      "expectedResources": [],
+      "keyFindings": [
+        "Unvaccinated",
+        "Two days of itchy vesicular rash",
+        "Lesions in crops at different stages",
+        "Mild fever",
+        "Eating and drinking normally"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Uncomplicated chickenpox in a well child needs no resources at all — but it is airborne AND contact spread, so mask them at the door and keep them away from pregnant or immunosuppressed people. Never give aspirin (Reye's).",
+        "Triage should be based on the current presentation and expected care, with reassessment if new warning signs appear."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Uncomplicated varicella",
+          "Other vesicular viral exanthem"
+        ],
+        "disposition": "Airborne and contact precautions, symptom care, exposure counseling, and return guidance would allow discharge."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-5",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

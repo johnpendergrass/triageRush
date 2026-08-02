@@ -1,71 +1,94 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-090",
   "number": 90,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Sofia",
-      "age": 1,
-      "sex": "F",
-      "race": "hispanic"
-    },
-    "image": {
-      "imageFilename": "patient-090.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Sofia",
+        "age": 1,
+        "sex": "F",
+        "race": "hispanic"
+      },
+      "image": {
+        "imageFilename": "patient-090.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Wheezy baby with a cold",
-      "quoteShort": null,
-      "quoteLong": "(Mom) She's had a cold for a few days and now she's breathing fast and wheezy, her little ribs suck in when she breathes. She's still taking some bottle and had wet diapers, but I'm worried.",
-      "presentationShort": "12mo F ? cold symptoms followed by rapid breathing, wheeze, mild rib retractions and SpO2 92%; still taking some bottle with wet diapers.",
-      "presentationLong": "12-month-old female with several days of cold symptoms, now breathing rapidly with wheeze and mild chest retractions. Oxygen saturation is 92%; she is still taking part of her bottles and producing wet diapers."
-    },
-    "vitals": {
-      "hr": {
-        "value": 150,
-        "color": "green"
-      },
-      "bp": {
-        "value": "94/56",
-        "color": "green"
-      },
-      "rr": {
-        "value": 48,
-        "color": "yellow"
-      },
-      "spo2": {
-        "value": 92,
-        "color": "yellow"
-      },
-      "temp": {
-        "value": 37.6,
-        "color": "green"
-      },
-      "pain": {
-        "value": 1,
-        "color": "green"
+      "quote": "(Mom) She's had a cold for a few days and now she's breathing fast and wheezy, her little ribs suck in when she breathes. She's still taking some bottle and had wet diapers, but I'm worried.",
+      "triageNote": "12-month-old female with several days of cold symptoms, now breathing rapidly with wheeze and mild chest retractions. Oxygen saturation is 92%; she is still taking part of her bottles and producing wet diapers.",
+      "vitals": {
+        "hr": {
+          "value": 150,
+          "color": "green"
+        },
+        "bp": {
+          "value": "94/56",
+          "color": "green"
+        },
+        "rr": {
+          "value": 48,
+          "color": "red"
+        },
+        "spo2": {
+          "value": 92,
+          "color": "yellow"
+        },
+        "temp": {
+          "value": 37.6,
+          "color": "green"
+        },
+        "pain": {
+          "value": 1,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Bronchiolitis (RSV)",
-      "esi": 3,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → suctioning, oxygen if needed, assess hydration/feeding, observe work of breathing; admit if hypoxic/poor feeding.",
-      "why": "Infant + cold + wheeze + retractions = bronchiolitis. Mostly supportive (suction, O2, feeding). Watch the work of breathing.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 3,
+      "correctRoom": "esi-3",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 3 is appropriate because this stable infant with bronchiolitis is expected to require multiple supportive resources because of retractions and oxygen saturation 92%."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This infant has a viral prodrome followed by tachypnea, wheeze, mild retractions, and borderline oxygenation while still maintaining partial intake and wet diapers.",
+      "acuityReason": "The work of breathing and oxygen level require suction, monitored reassessment, and possible oxygen or hydration, but there is no apnea, exhaustion, or severe feeding failure.",
+      "expectedResources": [
+        "Nasal suction and repeated respiratory assessment",
+        "Supplemental oxygen if persistent or worsening",
+        "Hydration support and feeding assessment"
+      ],
+      "keyFindings": [
+        "Twelve months old",
+        "Several days of cold symptoms",
+        "Tachypnea and wheeze",
+        "Mild chest retractions",
+        "Oxygen saturation 92%",
+        "Still taking some bottles and producing wet diapers"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Apnea, fatigue, worsening retractions, poor perfusion, or inability to hydrate would increase urgency.",
+        "Supportive care and repeated assessment are more important than routine bronchodilator use in typical bronchiolitis."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Viral bronchiolitis",
+          "Viral-induced wheeze",
+          "Pneumonia"
+        ],
+        "disposition": "Suction, oxygen and feeding reassessment would determine whether discharge after improvement or admission for respiratory and hydration support is appropriate."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-3",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

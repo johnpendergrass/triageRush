@@ -1,71 +1,98 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-024",
   "number": 24,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Mateo",
-      "age": 6,
-      "sex": "M",
-      "race": "hispanic"
-    },
-    "image": {
-      "imageFilename": "patient-024.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Mateo",
+        "age": 6,
+        "sex": "M",
+        "race": "hispanic"
+      },
+      "image": {
+        "imageFilename": "patient-024.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Elbow hurts after a fall",
-      "quoteShort": null,
-      "quoteLong": "I jumped off the top of the slide 'cause my friend dared me. I landed on my arm and now my elbow is all fat and I can't move it. My fingers feel kind of tingly.",
-      "presentationShort": "6yo M — FOOSH from playground height; swollen tender elbow, guarded ROM, mild finger paresthesias — watch pulse & median/AIN nerve.",
-      "presentationLong": "6-year-old male, fell from playground height onto an extended arm, markedly swollen and tender elbow with guarded range of motion and mild finger paresthesias — neurovascular status must be watched closely."
-    },
-    "vitals": {
-      "hr": {
-        "value": 122,
-        "color": "yellow"
-      },
-      "bp": {
-        "value": "104/66",
-        "color": "green"
-      },
-      "rr": {
-        "value": 24,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 100,
-        "color": "green"
-      },
-      "temp": {
-        "value": 37.0,
-        "color": "green"
-      },
-      "pain": {
-        "value": 7,
-        "color": "red"
+      "quote": "I jumped off the top of the slide because my friend dared me. I landed on my arm, and now my left elbow is all fat and I can't move it. My fingers feel kind of tingly.",
+      "triageNote": "6-year-old boy after a fall from playground height onto an outstretched arm, with a markedly swollen, tender left elbow held rigidly still and mild finger paresthesias. The distal pulse is currently present and the hand remains warm and pink.",
+      "vitals": {
+        "hr": {
+          "value": 122,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "104/66",
+          "color": "green"
+        },
+        "rr": {
+          "value": 24,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 100,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37,
+          "color": "green"
+        },
+        "pain": {
+          "value": 7,
+          "color": "red"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Supracondylar humerus fracture",
-      "esi": 3,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → elbow X-ray, strict neurovascular checks (brachial artery / median-AIN nerve), ortho; likely reduction & pinning.",
-      "why": "The peds fracture that can strangle the artery/nerve. Swelling + any NV change raises acuity; it's a multi-resource workup → Acute.",
-      "redFlag": "Finger paresthesias — supracondylar fractures threaten the brachial artery and the median/anterior interosseous nerve."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because finger paresthesias accompanying a markedly swollen elbow injury suggest possible neurovascular compromise and make this a high-risk extremity presentation."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This child has a markedly swollen elbow after a fall, with finger paresthesias that may signal threatened nerve or vascular function.",
+      "acuityReason": "The combination of major swelling, guarded motion, significant pain, and a distal sensory complaint requires rapid evaluation and serial neurovascular checks.",
+      "expectedResources": [
+        "Immediate and repeated distal neurovascular examinations",
+        "Elbow X-ray",
+        "Analgesia",
+        "Orthopedic consultation",
+        "Reduction or operative treatment if indicated"
+      ],
+      "keyFindings": [
+        "Fall from playground height onto an outstretched arm",
+        "Markedly swollen and tender left elbow",
+        "Arm held rigidly still",
+        "Pain rated 7 out of 10",
+        "Mild finger paresthesias"
+      ],
+      "redFlags": [
+        "Finger paresthesias after a markedly swollen elbow injury",
+        "Potential evolving neurovascular compromise"
+      ],
+      "teachingPoints": [
+        "Distal pulse alone does not exclude a clinically important nerve or vascular injury.",
+        "Sensation, motor function, perfusion, and pulse should be documented repeatedly before and after splinting or reduction."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Supracondylar humerus fracture",
+          "Displaced elbow fracture",
+          "Elbow dislocation"
+        ],
+        "disposition": "Rapid imaging and orthopedic assessment would likely lead to reduction and stabilization, with operative fixation if the injury is displaced or neurovascular findings persist."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-3",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
@@ -73,7 +100,7 @@
     "pose": "sitting, cradling a swollen elbow, holding it very still",
     "expression": "in real pain, worried",
     "signs": [
-      "swollen right elbow",
+      "swollen left elbow",
       "holding the arm rigidly still"
     ],
     "lookSeverity": "in real pain but alert",
@@ -81,6 +108,6 @@
     "size": "1024x1024",
     "outputFolder": "images-hires",
     "outputFile": "patient-024.png",
-    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a hispanic 6-year-old boy in playground clothes, seated on a blue padded clinic chair. Pose: sitting, cradling a visibly swollen elbow and holding it very still. Expression: in real pain and worried. Clearly visible: a swollen right elbow held rigidly still. No text, no logos."
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a hispanic 6-year-old boy in playground clothes, seated on a blue padded clinic chair. Pose: sitting, cradling a visibly swollen elbow and holding it very still. Expression: in real pain and worried. Clearly visible: a swollen left elbow held rigidly still. No text, no logos."
   }
 }

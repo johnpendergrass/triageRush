@@ -1,71 +1,97 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-107",
   "number": 107,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Arthur",
-      "age": 78,
-      "sex": "M",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-107.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Arthur",
+        "age": 78,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-107.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Says he was abducted by aliens",
-      "quoteShort": null,
-      "quoteLong": "They took me up on Tuesday. Very polite about it, gave me a cup of tea and brought me straight back. Why does everybody keep asking me what year it is?",
-      "presentationShort": "78yo M, no psychiatric history — 3 days new confusion and vivid narratives, urinary frequency, febrile. Family say the behaviour is entirely new.",
-      "presentationLong": "78-year-old male with no psychiatric history, three days of new-onset confusion and vivid narratives with urinary frequency and a low-grade fever; his family say this behaviour is entirely new for him."
-    },
-    "vitals": {
-      "hr": {
-        "value": 98,
-        "color": "yellow"
-      },
-      "bp": {
-        "value": "128/74",
-        "color": "green"
-      },
-      "rr": {
-        "value": 18,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 96,
-        "color": "green"
-      },
-      "temp": {
-        "value": 38.2,
-        "color": "yellow"
-      },
-      "pain": {
-        "value": 2,
-        "color": "green"
+      "quote": "They took me up on Tuesday. Very polite about it, gave me a cup of tea and brought me straight back. Why does everybody keep asking me what year it is?",
+      "triageNote": "78-year-old male with no psychiatric history, three days of new-onset confusion and vivid narratives with urinary frequency and a low-grade fever; his family say this behaviour is entirely new for him.",
+      "vitals": {
+        "hr": {
+          "value": 98,
+          "color": "green"
+        },
+        "bp": {
+          "value": "128/74",
+          "color": "green"
+        },
+        "rr": {
+          "value": 18,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 96,
+          "color": "green"
+        },
+        "temp": {
+          "value": 38.2,
+          "color": "yellow"
+        },
+        "pain": {
+          "value": 2,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Delirium secondary to urinary tract infection",
-      "esi": 3,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → urinalysis and culture, bloods, IV antibiotics, likely admission",
-      "why": "New psychosis after 60 is medical until proven otherwise. The tell is the fever, the three-day onset, and that the hat is NEW — a man does not simply become delusional at 78 without a cause. UTI, hypoglycaemia, hyponatraemia and medications all wear this costume.",
-      "redFlag": "New 'psychiatric' symptoms at 78 with a fever — this is delirium until proven otherwise."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because new confusion and delusional behavior in an older adult with fever and urinary symptoms is a high-risk acute mental-status change."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This older adult has abrupt new delirium with a possible urinary or systemic infectious trigger.",
+      "acuityReason": "A three-day departure from baseline at age 78 is a medical emergency rather than a primary psychiatric presentation.",
+      "expectedResources": [
+        "Immediate glucose and neurologic assessment",
+        "CBC, metabolic and urine testing",
+        "Cultures and infection evaluation",
+        "IV fluids and antibiotics when indicated"
+      ],
+      "keyFindings": [
+        "No psychiatric history",
+        "Three days of new confusion",
+        "Vivid implausible narratives",
+        "Urinary frequency",
+        "Temperature 38.2 C",
+        "Family confirms this is entirely new"
+      ],
+      "redFlags": [
+        "Acute mental-status change in an older adult"
+      ],
+      "teachingPoints": [
+        "New psychotic symptoms late in life should be treated as medical until proven otherwise.",
+        "Medication effects, infection, glucose, sodium, hypoxia, stroke, and urinary retention are common reversible causes."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Delirium from infection",
+          "Metabolic delirium",
+          "Medication-related delirium"
+        ],
+        "disposition": "Immediate medical evaluation and treatment would likely be followed by admission until cognition and the underlying cause improve."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-3",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

@@ -7,12 +7,230 @@ belong here rather than as data inside that JSON template.
 
 ## Current version
 
-> **Current schema: version 2.1 — established 2026-07-31**
+> **Current schema: version 2.2 — established 2026-08-01**
 
 The version and date are recorded in the `schema` object at the beginning of
 `patient-schema-template.json`.
 
-## Definitive version 2.1 specification
+## Definitive version 2.2 specification
+
+This section is the complete, authoritative contract for schema version 2.2.
+The adjacent `patient-schema-template.json` is the canonical structural
+example. Version 2.1 and earlier specifications remain below as history.
+
+### Purpose and information boundary
+
+Version 2.2 retains the three patient sections introduced by 2.1 while
+correcting their information boundary:
+
+- `patient.presentation` is the immutable evidence package available for the
+  triage decision.
+- `patient.clinical` is a faithful clinical interpretation of that evidence.
+  It may be available before assignment, so it must not explicitly state or
+  identify the correct ESI level or destination.
+- `patient.answer` is the authoritative answer-bearing section. It contains the
+  correct ESI, correct destination, and explicit destination rationale.
+
+The schema defines content. The application controls whether sections are
+locked, collapsed, or expanded. Panel state is never patient data.
+
+### Required structure and metadata
+
+Every record contains `schema`, `id`, `number`, `johnsComments`, the three
+required `patient` sections, and `aiImageGeneration`. Legacy locations such as
+top-level `answer`, `patient.personal`, `patient.image`, `patient.vitals`,
+`patient.diagnosis`, and `patient.triageReasoning` are not permitted.
+
+- Files are valid UTF-8 JSON without mojibake or replacement characters.
+- Filename and `id` use `patient-NNN.json` and `patient-NNN`.
+- `number` equals the numeric portion of the filename and ID.
+- IDs and numbers are unique and each record has a matching patient image.
+- `schema.version` is exactly `"2.2"`.
+- `schema.date` is exactly `"2026-08-01"`.
+- `johnsComments` is a string and may be empty.
+
+### `patient.presentation`
+
+Presentation is the complete evidence package and contains `_comment`,
+`personal`, `image`, `chiefComplaint`, `quote`, `triageNote`, and `vitals`.
+`quote` and `triageNote` are the single authoritative text versions and must be
+non-empty and consistent with all other patient content.
+
+`quote` has a maximum length of 225 Unicode characters. `triageNote` has a
+maximum length of 325 Unicode characters. These are schema contract limits,
+not merely authoring targets; validation must reject records that exceed them.
+Unicode characters are counted by code point rather than UTF-16 code unit.
+
+All placement-critical evidence must appear in Presentation. Neither Clinical
+nor Answer may repair an underspecified case by introducing a fact the player
+did not receive.
+
+All six vital entries—`hr`, `bp`, `rr`, `spo2`, `temp`, and `pain`—are required.
+Each contains `value` and `color` using the template types. Temperature is
+stored in Celsius; the application derives Fahrenheit.
+
+#### Vitals color contract (established 2026-08-01)
+
+Vital colors are **fixed thresholds** — a pure function of the value and the
+patient's age band, defined authoritatively in
+`schema-support-files/vitals-bands.md` and mirrored in
+`schema-support-files/vitals-bands.json`. Green = normal, yellow = notice
+this, red = this
+number alone is alarming. Colors never encode per-patient context; when
+context changes the clinical meaning of a number (fever on chemotherapy,
+bradycardia with chest pain), that context must appear in the quote or
+triageNote so the correct ESI stays justifiable from Presentation alone.
+Colors remain baked into each record and are enforced by
+`audit-vitals-bands.mjs`; the application displays stored colors and never
+computes them.
+
+### `patient.answer`
+
+Answer contains `_comment`, `correctEsi`, `correctRoom`,
+`otherAcceptableRooms`, and `destinationReason`.
+
+`correctEsi` is the authoritative integer from 1 through 5. `correctRoom` is
+one of `esi-1`, `esi-2`, `esi-3`, `esi-4`, `esi-5`, `psych`, or `discharge`.
+An ordinary room's suffix equals `correctEsi`; Psych and Discharge retain a
+clinically valid underlying ESI. `otherAcceptableRooms` remains required and
+`null` until a later version defines non-null semantics.
+
+`destinationReason` is required answer-bearing prose. It explicitly explains
+why the correct ESI or special destination applies and may name it. It is never
+stored under Clinical. The player's assignment remains session data and is
+never written into the patient record.
+
+### `patient.clinical`
+
+Clinical contains `_comment`, `summary`, `acuityReason`, `expectedResources`,
+`keyFindings`, `redFlags`, `teachingPoints`, and
+`possibleClinicalOutcome.possibleDiagnoses` plus
+`possibleClinicalOutcome.disposition`. `destinationReason` is not permitted.
+
+Clinical may explain severity, stability, risk, immediate needs, expected
+resources, red flags, diagnostic possibilities, and likely care. It may help a
+player reason toward an answer. It must not explicitly name an ESI level, ESI
+room identifier, or correct special destination, and must not use phrasing
+whose only function is to announce that answer.
+
+Removing answer language must not remove or weaken the underlying medicine.
+For example, an immediate lifesaving intervention remains important Clinical
+information even though the text must not append an ESI number.
+
+Prose fields are complete and punctuated; resource and finding lists use
+concise phrases; `redFlags` is `null` when no separate list is useful; serious
+possibilities precede lower-risk alternatives; and lower-risk alternatives use
+the exact `(maybe)` prefix. Possible outcomes are conditional educational
+content, never confirmed facts or evidence required for the original decision.
+
+### Clinical-fidelity and anti-creep contract
+
+Migration and later editing must preserve clinical meaning. An editor must not
+gradually simplify, sharpen, embellish, or drift a case by rewriting only from
+the latest derivative version.
+
+For every migrated or materially revised patient:
+
+1. Review the designated source record, matching source image, authoritative
+   answer, and approved source notes. Never use the preceding rewrite as the
+   sole clinical source.
+2. Maintain an external evidence ledger covering mechanism and timeline,
+   symptoms, pertinent negatives, vitals, examination findings, severity,
+   instability, expected resources, red flags, correct ESI, destination, and
+   intentional ambiguity.
+3. Classify every material Clinical assertion as directly presented,
+   reasonably inferable from Presentation, a possible later outcome, or
+   general teaching information.
+4. Reject a new placement-critical fact that is absent from Presentation.
+5. Reject removal, weakening, or exaggeration of a source clinical fact unless
+   a separately documented clinical decision intentionally corrects it.
+6. Treat moving explicit answer language separately from editing the underlying
+   clinical reasoning.
+7. Perform a three-way comparison of source, evidence ledger, and proposed
+   record. Document preserved facts, moved answer language, new inferences,
+   clinical corrections, and unresolved questions.
+
+Evidence ledgers and review logs are migration artifacts. They do not belong
+inside patient JSON and are not displayed by the application.
+
+### Core evidence rule
+
+Every patient-specific fact in Clinical is directly present in Presentation or
+reasonably inferable from it. Clinical must not depend on an undisclosed
+symptom, hidden diagnosis, unseen test result, later deterioration, response to
+treatment, or another event unavailable at assignment time.
+
+Possible outcomes may describe what later evaluation could find or what care
+might follow, but must use conditional language and cannot retroactively
+justify the original assignment.
+
+### Detailed-patient panel contract
+
+One reusable component renders three sections in three named contexts. Each
+context owns an independent in-memory view profile:
+
+```text
+PATIENT ASSIGNMENT
+  presentation: unlocked, expanded
+  answer:       locked (therefore collapsed)
+  clinical:     unlocked, collapsed
+
+PATIENT-ROOM
+  presentation: unlocked, expanded
+  answer:       unlocked, collapsed
+  clinical:     unlocked, collapsed
+
+PATIENT-REVIEW
+  presentation: unlocked, expanded
+  answer:       unlocked, expanded
+  clinical:     unlocked, expanded
+```
+
+Locked always implies collapsed; locked content cannot be expanded or shown.
+Application rules control access and the player cannot unlock restricted
+content.
+
+For unlocked sections, expansion changes persist across patients only within
+the same context. They remain in memory for the current game and are never
+stored in patient JSON, local storage, or persistent settings. Game reset, page
+reload, tab closure, or application restart restores the hard-coded defaults.
+A future Reset All Settings command may restore the same defaults during play.
+
+Every section header remains visible. Activating a locked header leaves it
+closed and displays `This section is locked`. Anchored Close, conditional
+`MORE ABOVE` and `MORE BELOW`, smooth scrolling, and timer pause remain part of
+the shared component behavior.
+
+### Version 2.2 validation
+
+A record is valid only when:
+
+- Version and date match 2.2.
+- All required fields exist with correct types.
+- `destinationReason` exists only under Answer.
+- Presentation contains non-empty `quote` and `triageNote` values.
+- No legacy short/long variants or legacy data locations remain.
+- `correctEsi` and an ordinary `correctRoom` agree.
+- Clinical strings contain no explicit ESI level or correct room name.
+- Every Clinical assertion is traceable under the evidence contract.
+- The matching patient image exists.
+- Intentional source corrections are documented by clinical review.
+
+Structural and leakage checks may be automated. Clinical fidelity, fairness,
+writing quality, and visual presentation require human review.
+
+### Change from version 2.1
+
+- Moved `patient.clinical.destinationReason` to
+  `patient.answer.destinationReason`.
+- Permitted Clinical before assignment while forbidding it from explicitly
+  identifying the answer.
+- Added the clinical-fidelity and anti-creep contract.
+- Defined the three named panel contexts and their independent in-memory view
+  profiles.
+- Did not change scoring semantics or authoritative answer values.
+
+## Superseded version 2.1 specification
 
 This section is the complete, authoritative contract for schema version 2.1.
 The adjacent `patient-schema-template.json` is the canonical structural
@@ -609,6 +827,7 @@ These may be settled without changing the version 2.0 patient record:
 
 | Version | Date | Summary |
 |---|---|---|
+| **2.2** | 2026-08-01 | Moved destination rationale into Answer, established pre-answer Clinical boundaries, added anti-creep review rules, and defined three panel contexts |
 | **2.1** | 2026-07-31 | Grouped all displayable patient content into presentation, answer, and clinical sections and adopted single quote and triage-note fields |
 | **2.0** | 2026-07-31 | Replaced diagnosis-oriented review data with evidence-based ESI reasoning for Coach and Patient Review |
 | **1.2** | 2026-07-27 14:54 PDT | Reserved acceptable-room override while moving ordinary scoring logic into code |
@@ -641,10 +860,50 @@ specification near the top is always the authoritative current contract.
 
 ---
 
+## Version 2.2 — Clinical fidelity and panel contexts
+
+**Established:** 2026-08-01
+**Status:** Current
+
+### Added
+
+- Added required `patient.answer.destinationReason`.
+- Added the clinical-fidelity and anti-creep contract, including immutable
+  source review, external evidence ledgers, assertion classification, and
+  three-way comparison.
+- Added PATIENT ASSIGNMENT, PATIENT-ROOM, and PATIENT-REVIEW as independent
+  application-owned panel contexts with in-memory defaults and preferences.
+- Added a canonical schema 2.2 structural and explicit-leakage validator.
+
+### Changed
+
+- Clinical may be available before assignment and therefore cannot explicitly
+  identify the correct ESI level or destination.
+- Locked sections are always collapsed and cannot be expanded.
+
+### Removed
+
+- Removed `patient.clinical.destinationReason`; its content now belongs to
+  `patient.answer.destinationReason`.
+- Removed obsolete draft/review datasets and one-off schema migration scripts
+  after consolidating the contract.
+
+### Migration notes
+
+- The 160 authoritative production records remain at version 1.2.
+- The next patient migration must begin from the preserved version 1.2 source
+  and matching images, not from the provisional mobile fixtures or a derivative
+  schema rewrite.
+- A separate version 2.3 migration plan will define the source inventory,
+  evidence-ledger format, review workflow, and acceptance gates before any
+  production record is changed.
+
+---
+
 ## Version 2.1 — Display-oriented patient sections
 
 **Established:** 2026-07-31
-**Status:** Current
+**Status:** Superseded by version 2.2
 
 ### Added
 
@@ -798,8 +1057,8 @@ The approved information order is:
 - Do not perform a mechanical field rename. The new explanation must be
   authored and clinically reviewed against the evidence actually shown to the
   player.
-- The ten records in `patientsNewSchema/` are working examples, not a substitute
-  for reviewing the production records.
+- The former ten-record draft set was removed after version 2.2 consolidated
+  the schema. It was never a substitute for reviewing the production records.
 
 The definitive field contracts, evidence rules, validation requirements, and
 Coach/Patient Review form letter are maintained in the current specification

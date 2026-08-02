@@ -1,71 +1,97 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-009",
   "number": 9,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Andre",
-      "age": 19,
-      "sex": "M",
-      "race": "black"
-    },
-    "image": {
-      "imageFilename": "patient-009.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Andre",
+        "age": 19,
+        "sex": "M",
+        "race": "black"
+      },
+      "image": {
+        "imageFilename": "patient-009.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Belly pain, moved right",
-      "quoteShort": null,
-      "quoteLong": "It started up by my belly button, then it packed up and MIGRATED down to the right like it had a GPS. Already threw up my ramen. Do NOT make me laugh, I'm serious, don't.",
-      "presentationShort": "19yo M — periumbilical pain migrated to RLQ over the day, N/V, guarding.",
-      "presentationLong": "19-year-old male, pain that started at the navel and migrated to the right lower quadrant over the day, with nausea, vomiting, and guarding."
-    },
-    "vitals": {
-      "hr": {
-        "value": 96,
-        "color": "green"
-      },
-      "bp": {
-        "value": "124/78",
-        "color": "green"
-      },
-      "rr": {
-        "value": 18,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 99,
-        "color": "green"
-      },
-      "temp": {
-        "value": 37.8,
-        "color": "yellow"
-      },
-      "pain": {
-        "value": 7,
-        "color": "red"
+      "quote": "The pain started near my belly button, then packed up and moved down to the right like it had a GPS. I already threw up my ramen. Please do not make me laugh; it makes the pain worse.",
+      "triageNote": "19-year-old man with pain that began near the navel and migrated to the right lower quadrant over the day. He has nausea, vomiting, guarding, pain with movement or laughter, and a temperature of 37.8°C.",
+      "vitals": {
+        "hr": {
+          "value": 96,
+          "color": "green"
+        },
+        "bp": {
+          "value": "124/78",
+          "color": "green"
+        },
+        "rr": {
+          "value": 18,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 7,
+          "color": "red"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Acute appendicitis",
-      "esi": 3,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → labs, CT or ultrasound, surgery consult, NPO, antibiotics, analgesia",
-      "why": "The 'GPS' pain — periumbilical then RLQ to McBurney's — is textbook appendix. Multi-resource workup makes it a clean ESI 3.",
-      "redFlag": "migratory RLQ pain + guarding + low-grade fever"
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player assignment remains session state.",
+      "correctEsi": 3,
+      "correctRoom": "esi-3",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 3 is appropriate because the patient is stable and is expected to require more than one resource."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This is a stable abdominal-pain presentation that is expected to require multiple resources for laboratory assessment, imaging, symptom control, and possible surgical evaluation.",
+      "acuityReason": "Migratory right-lower-quadrant pain, vomiting, guarding, and a low-grade fever require timely evaluation, but the patient has stable vital signs and no presented evidence of shock, severe systemic illness, or current need for a lifesaving intervention.",
+      "expectedResources": [
+        "Laboratory testing",
+        "Abdominal ultrasound or CT",
+        "IV fluids, analgesia, and antiemetic medication",
+        "Possible surgical consultation"
+      ],
+      "keyFindings": [
+        "Pain began near the navel and migrated to the right lower quadrant",
+        "Nausea and vomiting",
+        "Guarding",
+        "Pain worsened by movement or laughter",
+        "Temperature of 37.8°C",
+        "Stable blood pressure, heart rate, and oxygenation"
+      ],
+      "redFlags": [
+        "Migratory right-lower-quadrant pain with guarding"
+      ],
+      "teachingPoints": [
+        "A stable patient may still need laboratory testing, imaging, medication, and specialty evaluation.",
+        "Triage reflects current acuity and anticipated care, not whether a particular abdominal diagnosis seems likely."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Acute appendicitis",
+          "Mesenteric adenitis",
+          "(maybe) Gastroenteritis"
+        ],
+        "disposition": "The patient would remain NPO while receiving laboratory testing, abdominal imaging, fluids, and symptom control, with surgical treatment if imaging confirms an operative condition."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-3",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

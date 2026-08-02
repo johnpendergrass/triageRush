@@ -1,0 +1,86 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-050",
+  "number": 50,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Andre",
+      "age": 40,
+      "sex": "M",
+      "race": "hispanic"
+    },
+    "image": {
+      "imageFilename": "patient-050.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Throbbing tooth, swollen cheek",
+      "quoteShort": null,
+      "quoteLong": "This tooth's been throbbing for days and now my whole cheek is puffed up like a chipmunk. It hurts to chew, hurts to touch — honestly I'd trade the tooth for a nap.",
+      "presentationShort": "40yo M ? several days of throbbing molar pain with localized tender cheek swelling; no drooling, floor-of-mouth swelling, voice change, or breathing difficulty.",
+      "presentationLong": "40-year-old male with several days of throbbing molar pain and localized tender swelling of the adjacent cheek. There is no drooling, floor-of-mouth swelling, voice change, difficulty swallowing, or airway concern."
+    },
+    "vitals": {
+      "hr": {
+        "value": 82,
+        "color": "green"
+      },
+      "bp": {
+        "value": "128/80",
+        "color": "green"
+      },
+      "rr": {
+        "value": 14,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 99,
+        "color": "green"
+      },
+      "temp": {
+        "value": 37.4,
+        "color": "green"
+      },
+      "pain": {
+        "value": 7,
+        "color": "red"
+      }
+    },
+    "diagnosis": {
+      "primary": "Dental (periapical) abscess",
+      "esi": 5,
+      "esi2roomsNotes": null,
+      "disposition": "Fast Track → analgesia, antibiotics, dental referral for drainage; watch for spread / Ludwig's angina (none here).",
+      "why": "Localized dental abscess without airway or floor-of-mouth spread → antibiotics + dentist. Watch for Ludwig's angina (airway threat).",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-5",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "40-year-old man with a swollen cheek",
+    "pose": "seated, holding a hand to his swollen jaw",
+    "expression": "glum, aching",
+    "signs": [
+      "swollen cheek",
+      "hand held to the jaw"
+    ],
+    "lookSeverity": "in pain but well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-050.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a hispanic 40-year-old man with a visibly swollen cheek, seated on a blue padded clinic chair. Pose: seated, one hand held gently to his swollen jaw. Expression: glum and aching. Clearly visible: a swollen cheek and a hand cradling the jaw. No text, no logos."
+  }
+}

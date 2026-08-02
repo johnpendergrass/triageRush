@@ -1,71 +1,95 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-102",
   "number": 102,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Dennis",
-      "age": 58,
-      "sex": "M",
-      "race": "black"
-    },
-    "image": {
-      "imageFilename": "patient-102.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Dennis",
+        "age": 58,
+        "sex": "M",
+        "race": "black"
+      },
+      "image": {
+        "imageFilename": "patient-102.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Cough for a week",
-      "quoteShort": null,
-      "quoteLong": "Honestly? I feel fine. The cough is annoying but I walked in here myself. My wife made me come. Can I go home after this?",
-      "presentationShort": "58yo M — 8 days COVID symptoms, comfortable at rest, no distress, walked in unassisted.",
-      "presentationLong": "58-year-old male, eight days of COVID symptoms, entirely comfortable at rest with no apparent distress, ambulatory and self-presenting."
-    },
-    "vitals": {
-      "hr": {
-        "value": 96,
-        "color": "yellow"
-      },
-      "bp": {
-        "value": "132/78",
-        "color": "green"
-      },
-      "rr": {
-        "value": 22,
-        "color": "yellow"
-      },
-      "spo2": {
-        "value": 84,
-        "color": "red"
-      },
-      "temp": {
-        "value": 37.8,
-        "color": "yellow"
-      },
-      "pain": {
-        "value": 0,
-        "color": "green"
+      "quote": "Honestly? I feel fine. The cough is annoying but I walked in here myself. My wife made me come. Can I go home after this?",
+      "triageNote": "58-year-old male, eight days of COVID symptoms, entirely comfortable at rest with no apparent distress, ambulatory and self-presenting.",
+      "vitals": {
+        "hr": {
+          "value": 96,
+          "color": "green"
+        },
+        "bp": {
+          "value": "132/78",
+          "color": "green"
+        },
+        "rr": {
+          "value": 22,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 84,
+          "color": "red"
+        },
+        "temp": {
+          "value": 37.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 0,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "COVID-19 pneumonia with silent (happy) hypoxaemia",
-      "esi": 2,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → oxygen, chest X-ray, admission; he is far sicker than he appears",
-      "why": "The badge IS the case. Silent hypoxaemia is COVID's signature trick: comfortable, chatty and profoundly hypoxic. Believe the number, not the vibe.",
-      "redFlag": "SpO₂ 84% in a patient who looks and feels completely well — silent hypoxaemia."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because profound oxygen saturation of 84% is a high-risk finding despite a comfortable appearance and preserved conversation."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has marked silent hypoxemia during a viral respiratory illness.",
+      "acuityReason": "The absence of visible distress does not make profound impaired oxygenation safe to delay.",
+      "expectedResources": [
+        "Immediate oxygen and repeated saturation assessment",
+        "Chest imaging",
+        "CBC, metabolic and inflammatory testing",
+        "ECG and cardiopulmonary monitoring"
+      ],
+      "keyFindings": [
+        "Eight days of viral symptoms",
+        "Comfortable and ambulatory",
+        "No apparent distress",
+        "Oxygen saturation 84%"
+      ],
+      "redFlags": [
+        "Profound hypoxemia despite a well appearance"
+      ],
+      "teachingPoints": [
+        "Objective oxygenation must be trusted when the measurement is technically valid.",
+        "A calm appearance can coexist with serious gas-exchange failure."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Viral pneumonia with silent hypoxemia",
+          "Pulmonary embolism",
+          "Measurement artifact requiring immediate confirmation"
+        ],
+        "disposition": "Rapid confirmation, oxygen, and pulmonary evaluation would likely lead to hospital admission."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-2",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

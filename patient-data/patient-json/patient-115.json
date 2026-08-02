@@ -1,71 +1,98 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-115",
   "number": 115,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Mateo",
-      "age": 0,
-      "sex": "M",
-      "race": "hispanic"
-    },
-    "image": {
-      "imageFilename": "patient-115.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Emilio",
+        "age": 0,
+        "sex": "M",
+        "race": "hispanic"
+      },
+      "image": {
+        "imageFilename": "patient-115.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Baby's breathing is scary",
-      "quoteShort": null,
-      "quoteLong": "(his mother) He stopped breathing for a few seconds in the car. He won't finish a bottle. Look at his ribs when he breathes — please, look.",
-      "presentationShort": "4mo M — 3 days coryza, now marked retractions, nasal flaring, poor feeding and one witnessed apnoeic episode.",
-      "presentationLong": "Four-month-old male with three days of coryza, now with marked chest retractions, nasal flaring, poor feeding and a witnessed apnoeic episode."
-    },
-    "vitals": {
-      "hr": {
-        "value": 178,
-        "color": "red"
-      },
-      "bp": {
-        "value": "82/48",
-        "color": "green"
-      },
-      "rr": {
-        "value": 68,
-        "color": "red"
-      },
-      "spo2": {
-        "value": 88,
-        "color": "red"
-      },
-      "temp": {
-        "value": 38.0,
-        "color": "yellow"
-      },
-      "pain": {
-        "value": 2,
-        "color": "green"
+      "quote": "(his mother) He stopped breathing for a few seconds in the car. He won't finish a bottle. Look at his ribs when he breathes — please, look.",
+      "triageNote": "Four-month-old male with three days of coryza, now with marked chest retractions, nasal flaring, poor feeding and a witnessed apnoeic episode.",
+      "vitals": {
+        "hr": {
+          "value": 178,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "82/48",
+          "color": "green"
+        },
+        "rr": {
+          "value": 68,
+          "color": "red"
+        },
+        "spo2": {
+          "value": 88,
+          "color": "red"
+        },
+        "temp": {
+          "value": 38,
+          "color": "yellow"
+        },
+        "pain": {
+          "value": 2,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "RSV bronchiolitis with apnoea and hypoxaemia",
-      "esi": 2,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → suction, oxygen, continuous apnoea monitoring, paediatric admission",
-      "why": "Apnoea plus retractions plus SpO₂ 88 is not 'a bad cold'. Under six months, RSV apnoea is exactly why these babies get monitored beds.",
-      "redFlag": "Apnoea in an infant under six months with bronchiolitis — high risk of respiratory arrest."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 1,
+      "correctRoom": "esi-1",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 1 is appropriate because a four-month-old with witnessed apnea, marked retractions, oxygen saturation 88%, heart rate 178, respiratory rate 68, and blood pressure 82/48 requires immediate respiratory support."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This young infant has severe bronchiolitis with hypoxemia, major work of breathing, poor feeding, and apnea.",
+      "acuityReason": "Current gas exchange and ventilation are unstable; young age and apnea create immediate risk of recurrent respiratory arrest.",
+      "expectedResources": [
+        "Immediate oxygen and airway support",
+        "Continuous cardiorespiratory monitoring",
+        "Nasal suction and respiratory support escalation",
+        "IV or enteral hydration when safe"
+      ],
+      "keyFindings": [
+        "Four months old",
+        "Three days of coryza",
+        "Marked retractions and nasal flaring",
+        "Poor feeding",
+        "Witnessed apnea",
+        "Oxygen saturation 88% and respiratory rate 68"
+      ],
+      "redFlags": [
+        "Apnea in a young infant",
+        "Severe work of breathing and hypoxemia"
+      ],
+      "teachingPoints": [
+        "Apnea may be the presenting manifestation of severe bronchiolitis in young infants.",
+        "Feeding should not be forced when work of breathing makes aspiration likely."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Severe viral bronchiolitis",
+          "Apnea from respiratory infection",
+          "Serious bacterial infection if additional findings emerge"
+        ],
+        "disposition": "Immediate respiratory stabilization would be followed by monitored pediatric admission, potentially intensive care."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-2",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

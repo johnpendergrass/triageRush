@@ -1,71 +1,98 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-038",
   "number": 38,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Destiny",
-      "age": 26,
-      "sex": "F",
-      "race": "black"
-    },
-    "image": {
-      "imageFilename": "patient-038.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Destiny",
+        "age": 26,
+        "sex": "F",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-038.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "One-sided belly pain and spotting",
-      "quoteShort": null,
-      "quoteLong": "My lower belly's been hurting on one side and I've had some spotting. My period's a couple weeks late — I figured it was just a weird cycle. I got really dizzy standing up.",
-      "presentationShort": "26yo F ? unilateral pelvic pain, vaginal spotting, LMP about 6 weeks ago, and lightheadedness on standing; BP 100/62.",
-      "presentationLong": "26-year-old female with one-sided pelvic pain, vaginal spotting, and a menstrual period about two weeks late. She becomes lightheaded when standing; heart rate is 104 and blood pressure is 100/62."
-    },
-    "vitals": {
-      "hr": {
-        "value": 104,
-        "color": "yellow"
-      },
-      "bp": {
-        "value": "100/62",
-        "color": "yellow"
-      },
-      "rr": {
-        "value": 18,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 98,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.8,
-        "color": "green"
-      },
-      "pain": {
-        "value": 7,
-        "color": "red"
+      "quote": "My lower belly's been hurting on one side and I've had some spotting. My period's a couple weeks late — I figured it was just a weird cycle. I got really dizzy standing up.",
+      "triageNote": "26-year-old female with one-sided pelvic pain, vaginal spotting, and a menstrual period about two weeks late. She becomes lightheaded when standing; heart rate is 104 and blood pressure is 100/62.",
+      "vitals": {
+        "hr": {
+          "value": 104,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "100/62",
+          "color": "green"
+        },
+        "rr": {
+          "value": 18,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 98,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 7,
+          "color": "red"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Ectopic pregnancy (possible rupture)",
-      "esi": 2,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → urine/serum hCG, bedside ultrasound, type & cross, OB/GYN; a positive hCG with pain is ectopic until excluded.",
-      "why": "Every reproductive-age woman with belly pain gets an hCG. Late period + one-sided pain + spotting = ectopic — it ruptures and kills.",
-      "redFlag": "Reproductive-age woman + abdominal pain + late period + spotting = ectopic; get a pregnancy test."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because unilateral pelvic pain, spotting, delayed menses, orthostatic lightheadedness, and tachycardia require rapid evaluation for internal bleeding."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This reproductive-age patient has possible early pregnancy with one-sided pain and bleeding, plus symptoms that may indicate reduced circulating volume.",
+      "acuityReason": "A potentially rupturing pregnancy-related process must be excluded promptly even though the measured blood pressure is not yet frankly hypotensive.",
+      "expectedResources": [
+        "Immediate pregnancy testing",
+        "CBC, blood type, and crossmatch",
+        "Bedside and formal pelvic ultrasound",
+        "IV access and fluids as indicated",
+        "Urgent obstetric consultation"
+      ],
+      "keyFindings": [
+        "Menstrual period about two weeks late",
+        "One-sided pelvic pain",
+        "Vaginal spotting",
+        "Lightheaded on standing",
+        "Heart rate 104",
+        "Blood pressure 100/62"
+      ],
+      "redFlags": [
+        "Possible pregnancy with pain, bleeding, and orthostatic symptoms"
+      ],
+      "teachingPoints": [
+        "Pregnancy status should be established early in reproductive-age patients with abdominal or pelvic pain.",
+        "A single reassuring blood-pressure reading does not exclude evolving internal hemorrhage."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Ectopic pregnancy",
+          "Early intrauterine pregnancy with bleeding",
+          "Hemorrhagic ovarian cyst"
+        ],
+        "disposition": "Pregnancy testing and urgent ultrasound would guide medical or operative treatment, with resuscitation and emergency surgery if rupture or instability is identified."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-2",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

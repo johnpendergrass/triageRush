@@ -129,7 +129,8 @@ The application-owned disclaimer currently reads:
 
 ## Data mapping
 
-Schema 2.1 maps the patient record as follows:
+This historical desktop prototype still maps its local schema 2.1 draft
+fixtures as follows; it is not the canonical schema 2.2 contract:
 
 | Displayed content | Source |
 |---|---|

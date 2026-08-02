@@ -1,71 +1,99 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-100",
   "number": 100,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Angela",
-      "age": 43,
-      "sex": "F",
-      "race": "hispanic"
-    },
-    "image": {
-      "imageFilename": "patient-100.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Angela",
+        "age": 43,
+        "sex": "F",
+        "race": "hispanic"
+      },
+      "image": {
+        "imageFilename": "patient-100.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Swollen, red cheek and eye",
-      "quoteShort": null,
-      "quoteLong": "My cheek got red and swollen yesterday, and now it's spreading toward my eye. It's hot and tender, my eye is puffy, and I've got a fever.",
-      "presentationShort": "43yo F ? 1 day spreading redness, heat, tenderness and swelling of cheek toward eye; eyelid puffy, febrile, eye movement and vision not yet assessed.",
-      "presentationLong": "43-year-old female with one day of rapidly spreading redness, warmth, tenderness, and swelling from her cheek toward the eye. Her eyelid is puffy and temperature is 38.3?C; visual acuity and pain with eye movement have not yet been assessed."
-    },
-    "vitals": {
-      "hr": {
-        "value": 98,
-        "color": "yellow"
-      },
-      "bp": {
-        "value": "128/80",
-        "color": "green"
-      },
-      "rr": {
-        "value": 16,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 98,
-        "color": "green"
-      },
-      "temp": {
-        "value": 38.3,
-        "color": "yellow"
-      },
-      "pain": {
-        "value": 5,
-        "color": "yellow"
+      "quote": "My cheek got red and swollen yesterday, and now it's spreading toward my eye. It's hot and tender, my eye is puffy, and I've got a fever.",
+      "triageNote": "43-year-old female with one day of rapidly spreading redness, warmth, tenderness, and swelling from her cheek toward the eye. Her eyelid is puffy and temperature is 38.3 C; visual acuity and pain with eye movement have not yet been assessed.",
+      "vitals": {
+        "hr": {
+          "value": 98,
+          "color": "green"
+        },
+        "bp": {
+          "value": "128/80",
+          "color": "green"
+        },
+        "rr": {
+          "value": 16,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 98,
+          "color": "green"
+        },
+        "temp": {
+          "value": 38.3,
+          "color": "yellow"
+        },
+        "pain": {
+          "value": 5,
+          "color": "yellow"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Facial cellulitis (assess for periorbital/orbital spread)",
-      "esi": 3,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → antibiotics, mark the border, CT and ophtho if any orbital signs (pain with eye movement, proptosis, vision change); monitor.",
-      "why": "Facial cellulitis near the eye: check eye movement and vision. Preseptal is treatable; orbital cellulitis is an emergency.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because rapidly spreading febrile facial inflammation approaching the eye is high risk until vision and extraocular movement have excluded orbital involvement."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has rapidly progressive cheek erythema, warmth, tenderness, and swelling extending toward a puffy eyelid with fever.",
+      "acuityReason": "Visual acuity and pain with eye movement have not yet been assessed, so a vision-threatening orbital process cannot safely be excluded at triage.",
+      "expectedResources": [
+        "Immediate visual acuity, pupil, and extraocular-movement assessment",
+        "CBC and blood cultures when indicated",
+        "Contrast-enhanced orbital and facial imaging",
+        "IV antibiotics",
+        "Ophthalmology or surgical consultation if orbital signs are present"
+      ],
+      "keyFindings": [
+        "One day of rapid spread",
+        "Cheek redness, warmth, tenderness, and swelling",
+        "Extension toward the eye",
+        "Puffy eyelid",
+        "Temperature 38.3 C",
+        "Eye movement pain and visual acuity not yet assessed"
+      ],
+      "redFlags": [
+        "Possible orbital involvement",
+        "Rapidly spreading febrile facial infection"
+      ],
+      "teachingPoints": [
+        "Pain with eye movement, reduced vision, proptosis, impaired color vision, or restricted movement suggests postseptal disease.",
+        "The eye examination must be completed before labeling this a superficial facial infection."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Preseptal cellulitis",
+          "Orbital cellulitis",
+          "Facial cellulitis from dental or skin source"
+        ],
+        "disposition": "Rapid eye assessment, imaging, and IV antibiotics would guide admission and urgent ophthalmic or surgical treatment if orbital spread is present."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-3",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

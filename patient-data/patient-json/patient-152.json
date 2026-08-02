@@ -1,71 +1,96 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-152",
   "number": 152,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Manuel",
-      "age": 71,
-      "sex": "M",
-      "race": "hispanic"
-    },
-    "image": {
-      "imageFilename": "patient-152.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Manuel",
+        "age": 71,
+        "sex": "M",
+        "race": "hispanic"
+      },
+      "image": {
+        "imageFilename": "patient-152.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Yellow again, and shaking",
-      "quoteShort": null,
-      "quoteLong": "They put a stent in for the pancreatic cancer back in the spring. Since yesterday I've gone yellow again, my teeth are chattering with the shivers, and there's a pain up under my right ribs.",
-      "presentationShort": "71yo M, pancreatic ca with biliary stent — 24h RUQ pain, jaundice and rigors. Charcot's triad complete, hypotensive.",
-      "presentationLong": "71-year-old male with pancreatic cancer and an indwelling biliary stent, 24 hours of right upper quadrant pain, jaundice and rigors, now hypotensive."
-    },
-    "vitals": {
-      "hr": {
-        "value": 122,
-        "color": "red"
-      },
-      "bp": {
-        "value": "96/54",
-        "color": "red"
-      },
-      "rr": {
-        "value": 24,
-        "color": "yellow"
-      },
-      "spo2": {
-        "value": 95,
-        "color": "yellow"
-      },
-      "temp": {
-        "value": 39.1,
-        "color": "red"
-      },
-      "pain": {
-        "value": 8,
-        "color": "red"
+      "quote": "They put a stent in for the pancreatic cancer back in the spring. Since yesterday I've gone yellow again, my teeth are chattering with the shivers, and there's a pain up under my right ribs.",
+      "triageNote": "71-year-old male with pancreatic cancer and an indwelling biliary stent, 24 hours of right upper quadrant pain, jaundice and rigors, now hypotensive.",
+      "vitals": {
+        "hr": {
+          "value": 122,
+          "color": "red"
+        },
+        "bp": {
+          "value": "96/54",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 24,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 95,
+          "color": "green"
+        },
+        "temp": {
+          "value": 39.1,
+          "color": "red"
+        },
+        "pain": {
+          "value": 8,
+          "color": "red"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Ascending cholangitis from an obstructed biliary stent",
-      "esi": 2,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → sepsis pathway, blood cultures, IV antibiotics, urgent ERCP to decompress the duct",
-      "why": "Charcot's triad is cholangitis; add confusion and hypotension and it becomes Reynolds' pentad. Antibiotics alone will not save him — the obstructed duct must be drained, so the definitive treatment is ERCP.",
-      "redFlag": "Charcot's triad — fever, jaundice, RUQ pain — with hypotension; ascending cholangitis heading for septic shock."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because right-upper-quadrant pain, jaundice, rigors, fever, tachycardia, and hypotension indicate high-risk biliary sepsis requiring rapid antibiotics and drainage."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient with a biliary stent has an obstructed infected biliary system with early shock physiology.",
+      "acuityReason": "Right-upper-quadrant pain, jaundice, rigors, fever, tachycardia, and hypotension indicate high-risk biliary sepsis requiring rapid antibiotics and drainage.",
+      "expectedResources": [
+        "Immediate IV access and fluid support",
+        "Blood cultures and hepatobiliary laboratory testing",
+        "Immediate IV antibiotics",
+        "Urgent biliary drainage consultation"
+      ],
+      "keyFindings": [
+        "Pancreatic cancer with biliary stent",
+        "Jaundice and right-upper-quadrant pain",
+        "Rigors",
+        "Heart rate 122",
+        "Blood pressure 96/54",
+        "Temperature 39.1 C"
+      ],
+      "redFlags": [
+        "Biliary sepsis with hypotension"
+      ],
+      "teachingPoints": [
+        "Charcot's triad is cholangitis; add confusion and hypotension and it becomes Reynolds' pentad. Antibiotics alone will not save him — the obstructed duct must be drained, so the definitive treatment is ERCP.",
+        "Triage should be based on the current presentation and expected care, with reassessment if new warning signs appear."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Ascending cholangitis from stent obstruction",
+          "Other biliary-source sepsis"
+        ],
+        "disposition": "Rapid resuscitation, antibiotics, and urgent endoscopic or percutaneous drainage would require admission."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-2",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

@@ -1,7 +1,7 @@
 {
   "schema": {
-    "version": "2.1",
-    "date": "2026-07-31"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
   "id": "patient-005",
   "number": 5,
@@ -9,7 +9,7 @@
   "patient": {
     "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
     "presentation": {
-      "_comment": "Information available to the player before assigning a room. This is the only detailed-patient section exposed before the first assignment.",
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
       "personal": {
         "name": "Marcus",
         "age": 52,
@@ -52,13 +52,14 @@
       }
     },
     "answer": {
-      "_comment": "The authoritative game answer. The player's assigned room is session state and is not stored in the patient record.",
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player assignment remains session state.",
       "correctEsi": 2,
       "correctRoom": "esi-2",
-      "otherAcceptableRooms": null
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because this is a time-sensitive high-risk presentation; the patient should not wait for ordinary multi-resource abdominal-pain evaluation."
     },
     "clinical": {
-      "_comment": "Display-ready educational explanation of why the correct ESI applies, using only evidence in patient.presentation. Used by Coach and Patient Review after the answer is available; does not participate in scoring.",
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
       "summary": "This is a high-risk abdominal-pain presentation with abrupt maximal symptoms, systemic abnormalities, and guarding that requires rapid evaluation for a surgical or cardiac emergency.",
       "acuityReason": "Sudden severe epigastric pain that worsens with movement, fever, tachycardia, tachypnea, diaphoresis, and guarding creates a substantial risk of deterioration despite a currently measurable blood pressure.",
       "expectedResources": [
@@ -68,7 +69,6 @@
         "Chest and abdominal imaging",
         "Urgent surgical evaluation"
       ],
-      "destinationReason": "ESI 2 is appropriate because this is a time-sensitive high-risk presentation; the patient should not wait for ordinary multi-resource abdominal-pain evaluation.",
       "keyFindings": [
         "Abrupt onset of severe epigastric pain",
         "Pain rated 9 out of 10",
@@ -85,7 +85,7 @@
       ],
       "teachingPoints": [
         "Severe epigastric pain can reflect abdominal, vascular, or cardiac disease and should not be dismissed as indigestion.",
-        "Abrupt maximal pain, movement avoidance, guarding, and abnormal vital signs support a high-risk ESI assignment."
+        "Abrupt maximal pain, movement avoidance, guarding, and abnormal vital signs support rapid evaluation."
       ],
       "possibleClinicalOutcome": {
         "possibleDiagnoses": [

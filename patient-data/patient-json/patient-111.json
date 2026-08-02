@@ -1,71 +1,97 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-111",
   "number": 111,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Katherine",
-      "age": 46,
-      "sex": "F",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-111.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Katherine",
+        "age": 46,
+        "sex": "F",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-111.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Very drowsy, hard to wake",
-      "quoteShort": null,
-      "quoteLong": "(rousable only briefly) ...I'm fine... just tired... please don't call my office...",
-      "presentationShort": "46yo F — found drowsy at her desk, empty zolpidem and lorazepam packets in her bag. Rousable to voice, protecting airway.",
-      "presentationLong": "46-year-old female found drowsy at her desk with empty zolpidem and lorazepam packets nearby; rousable to voice and protecting her own airway."
-    },
-    "vitals": {
-      "hr": {
-        "value": 62,
-        "color": "green"
-      },
-      "bp": {
-        "value": "106/64",
-        "color": "green"
-      },
-      "rr": {
-        "value": 11,
-        "color": "yellow"
-      },
-      "spo2": {
-        "value": 95,
-        "color": "yellow"
-      },
-      "temp": {
-        "value": 36.4,
-        "color": "green"
-      },
-      "pain": {
-        "value": 0,
-        "color": "green"
+      "quote": "(rousable only briefly) ...I'm fine... just tired... please don't call my office...",
+      "triageNote": "46-year-old female found drowsy at her desk with empty zolpidem and lorazepam packets nearby; rousable to voice and protecting her own airway.",
+      "vitals": {
+        "hr": {
+          "value": 62,
+          "color": "green"
+        },
+        "bp": {
+          "value": "106/64",
+          "color": "green"
+        },
+        "rr": {
+          "value": 11,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 95,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.4,
+          "color": "green"
+        },
+        "pain": {
+          "value": 0,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Sedative-hypnotic (benzodiazepine and Z-drug) overdose",
-      "esi": 3,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → monitored bed, serial airway and respiratory assessment, toxicology screen, psychiatric evaluation",
-      "why": "She is in a tailored suit and it changes nothing. Overdose has no dress code — the drowsiness and the respiratory rate of 11 are the case, not the appearance.",
-      "redFlag": "Respiratory rate of 11 with sedation — the airway needs watching; this can deepen."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because a suspected mixed sedative overdose with significant drowsiness, respiratory rate 11, and bradycardia is high risk despite preserved airway protection."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient is rousable but markedly sedated beside empty sedative medication packets.",
+      "acuityReason": "Her airway is currently protected, yet mixed sedatives can cause progressive respiratory depression and cannot safely wait for routine resource sorting.",
+      "expectedResources": [
+        "Immediate airway and respiratory monitoring",
+        "Bedside glucose, ECG, and toxicologic assessment",
+        "IV access and supportive treatment",
+        "Serial neurologic reassessment"
+      ],
+      "keyFindings": [
+        "Empty zolpidem and lorazepam packets",
+        "Drowsy and hard to wake",
+        "Rousable to voice",
+        "Protecting airway",
+        "Respiratory rate 11",
+        "Heart rate 62"
+      ],
+      "redFlags": [
+        "Potential progression to respiratory depression"
+      ],
+      "teachingPoints": [
+        "Clothing, occupation, or social appearance does not change overdose risk.",
+        "Flumazenil is not routinely safe in unknown or mixed overdoses because it can precipitate seizures."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Sedative-hypnotic overdose",
+          "Mixed medication ingestion",
+          "Other cause of depressed consciousness"
+        ],
+        "disposition": "Close respiratory observation and supportive care would continue until sustained recovery, with psychiatric assessment when ingestion intent is clarified."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-3",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

@@ -1,71 +1,89 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-013",
   "number": 13,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Gloria",
-      "age": 67,
-      "sex": "F",
-      "race": "hispanic"
-    },
-    "image": {
-      "imageFilename": "patient-013.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Gloria",
+        "age": 67,
+        "sex": "F",
+        "race": "hispanic"
+      },
+      "image": {
+        "imageFilename": "patient-013.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Out of BP meds",
-      "quoteShort": null,
-      "quoteLong": "I ran clean out of my blood pressure pills on a cruise, and my regular doctor is booked solid until roughly the Rapture. I feel perfectly fine. I just need the little pink one, dear.",
-      "presentationShort": "67yo F — out of BP meds, asymptomatic, here for refill.",
-      "presentationLong": "67-year-old female, ran out of her blood-pressure medication, feels well, here for a refill."
-    },
-    "vitals": {
-      "hr": {
-        "value": 74,
-        "color": "green"
-      },
-      "bp": {
-        "value": "150/88",
-        "color": "yellow"
-      },
-      "rr": {
-        "value": 15,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 98,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.8,
-        "color": "green"
-      },
-      "pain": {
-        "value": 0,
-        "color": "green"
+      "quote": "I ran clean out of my blood pressure pills on a cruise, and my regular doctor is booked solid until roughly the Rapture. I feel perfectly fine. I just need the little pink one, dear.",
+      "triageNote": "67-year-old female, ran out of her blood-pressure medication, feels well, here for a refill.",
+      "vitals": {
+        "hr": {
+          "value": 74,
+          "color": "green"
+        },
+        "bp": {
+          "value": "150/88",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 15,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 98,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 0,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Medication refill; asymptomatic mild hypertension",
-      "esi": 5,
-      "esi2roomsNotes": "ESI 5: no ED treatment-area resources are expected; brief evaluation, counseling, and discharge are appropriate.",
-      "disposition": "Discharge → bridge prescription and PCP follow-up; no ED workup needed.",
-      "why": "Asymptomatic mildly-high BP is NOT a hypertensive emergency — no end-organ signs, no symptoms, nothing an ED needs to fix. A refill and a PCP appointment. Laying eyes on her in Fast Track is perfectly defensible, which is why it counts as acceptable.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "discharge",
+      "otherAcceptableRooms": null,
+      "destinationReason": "Discharge is appropriate because no emergency treatment-area resource is expected and medication guidance with follow-up addresses the current need."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This is an asymptomatic medication-refill request with mildly elevated blood pressure and no presented evidence of acute end-organ injury.",
+      "acuityReason": "The patient feels well, has no pain or concerning symptoms, and has otherwise stable vital signs.",
+      "expectedResources": [
+        "Medication reconciliation and brief clinical assessment"
+      ],
+      "keyFindings": [
+        "Ran out of prescribed blood-pressure medication",
+        "No current symptoms",
+        "Blood pressure of 150/88",
+        "Pain rated 0 out of 10",
+        "Otherwise stable vital signs"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "An elevated blood-pressure reading without symptoms is not by itself evidence of a hypertensive emergency.",
+        "Medication access and safe follow-up planning may be the principal needs."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Asymptomatic hypertension related to interrupted medication access"
+        ],
+        "disposition": "After medication verification and a brief assessment, the patient could receive bridge-prescription guidance, return precautions, and primary-care follow-up without emergency testing."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "discharge",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

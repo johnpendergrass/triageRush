@@ -1,0 +1,83 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-022",
+  "number": 22,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Mia",
+      "age": 3,
+      "sex": "F",
+      "race": "asian"
+    },
+    "image": {
+      "imageFilename": "patient-022.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Ate a 'do not eat' packet",
+      "quoteShort": null,
+      "quoteLong": "(Dad) She got into my shoebox and chewed one of those little 'DO NOT EAT' packets. She's totally fine — running around, ate lunch — but I panicked. Is it poison?",
+      "presentationShort": "3yo F — chewed a silica-gel desiccant packet; fully asymptomatic, tolerating PO, playful, exam normal.",
+      "presentationLong": "3-year-old female, ingested part of a silica-gel desiccant packet, completely asymptomatic, eating and drinking normally, with an unremarkable exam."
+    },
+    "vitals": {
+      "hr": {
+        "value": 110,
+        "color": "green"
+      },
+      "bp": {
+        "value": "98/62",
+        "color": "green"
+      },
+      "rr": {
+        "value": 24,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 100,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.9,
+        "color": "green"
+      },
+      "pain": {
+        "value": 0,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Nontoxic ingestion (silica-gel desiccant)",
+      "esi": 5,
+      "esi2roomsNotes": "ESI 5: no ED treatment-area resources are expected; brief evaluation, counseling, and discharge are appropriate.",
+      "disposition": "Discharge → reassurance; silica gel is non-toxic. Return for vomiting, drooling, or refusal to eat.",
+      "why": "Silica gel = desiccant, essentially non-toxic. Well child + normal exam → reassure and discharge. (Contrast: a button battery is a true emergency.)",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "discharge",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "3-year-old girl, playful and well",
+    "pose": "wiggly, half-standing by the clinic chair",
+    "expression": "happy and oblivious",
+    "signs": [],
+    "lookSeverity": "completely well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-022.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. ANATOMY AND OBJECTS (critical): exactly one head, exactly two arms ending in exactly two hands, exactly two legs ending in two feet, five fingers on each hand. No extra, duplicated, floating or partial limbs anywhere. Anything the character touches must be plausibly held by one of those two hands. All furniture is solid and fully opaque - the chair must never look transparent or see-through, and its back, seat and legs must all be completely drawn. Subject: an asian 3-year-old girl, playful and healthy, beside a blue padded clinic chair. Pose: wiggly, half-standing, full of energy. Expression: happy and oblivious. Clearly visible: a lively, completely well-looking child with no signs of distress. No text, no logos."
+  }
+}

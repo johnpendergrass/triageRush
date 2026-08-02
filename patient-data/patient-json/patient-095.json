@@ -1,71 +1,88 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-095",
   "number": 95,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Donna",
-      "age": 46,
-      "sex": "F",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-095.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Donna",
+        "age": 46,
+        "sex": "F",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-095.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Heel pain in the mornings",
-      "quoteShort": null,
-      "quoteLong": "My heel has been killing me for weeks, worst with my first steps in the morning, then it eases up. No injury, no swelling, no numbness — I've just been on my feet a lot at work.",
-      "presentationShort": "46yo F ? weeks of plantar heel pain, worst with first morning steps and easing with activity; no trauma, swelling, redness, or neurological symptoms.",
-      "presentationLong": "46-year-old female with several weeks of pain under the heel, most severe on her first steps each morning and improving as she moves. She has no injury, swelling, redness, numbness, or weakness."
-    },
-    "vitals": {
-      "hr": {
-        "value": 72,
-        "color": "green"
-      },
-      "bp": {
-        "value": "120/76",
-        "color": "green"
-      },
-      "rr": {
-        "value": 14,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 99,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.8,
-        "color": "green"
-      },
-      "pain": {
-        "value": 3,
-        "color": "yellow"
+      "quote": "My heel has been killing me for weeks, worst with my first steps in the morning, then it eases up. No injury, no swelling, no numbness — I've just been on my feet a lot at work.",
+      "triageNote": "46-year-old female with several weeks of pain under the heel, most severe on her first steps each morning and improving as she moves. She has no injury, swelling, redness, numbness, or weakness.",
+      "vitals": {
+        "hr": {
+          "value": 72,
+          "color": "green"
+        },
+        "bp": {
+          "value": "120/76",
+          "color": "green"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 3,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Plantar fasciitis",
-      "esi": 5,
-      "esi2roomsNotes": "ESI 5: no ED treatment-area resources are expected; brief evaluation, counseling, and discharge are appropriate.",
-      "disposition": "Discharge → stretching, supportive footwear/orthotics, NSAIDs, PCP follow-up. Not an ED problem; reassurance.",
-      "why": "Chronic heel pain worst with first steps, no red flags = plantar fasciitis. Stretch, supportive shoes — a go-home.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "discharge",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because this chronic mechanical heel-pain pattern has no injury or inflammatory and neurologic warning signs and requires no counted emergency resource."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has weeks of plantar heel pain worst with the first morning steps and improving with movement.",
+      "acuityReason": "The classic mechanical pattern and absence of trauma, swelling, redness, weakness, or numbness support conservative care.",
+      "expectedResources": [],
+      "keyFindings": [
+        "Several weeks of plantar heel pain",
+        "Worst on first morning steps",
+        "Improves with movement",
+        "No injury",
+        "No swelling, redness, numbness, or weakness"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Stretching, supportive footwear, and gradual load management are central to recovery.",
+        "Acute trauma, inability to bear weight, fever, marked swelling, or neurologic symptoms would require reconsideration."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Plantar fasciitis",
+          "Mechanical heel pain"
+        ],
+        "disposition": "Stretching, supportive footwear, oral pain treatment, and outpatient follow-up would allow discharge."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "discharge",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

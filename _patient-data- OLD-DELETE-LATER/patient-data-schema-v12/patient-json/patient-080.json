@@ -1,0 +1,86 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-080",
+  "number": 80,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Sean",
+      "age": 24,
+      "sex": "M",
+      "race": "white"
+    },
+    "image": {
+      "imageFilename": "patient-080.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Sudden chest pain, can't breathe",
+      "quoteShort": null,
+      "quoteLong": "I was just sitting there and suddenly got this sharp pain in the right side of my chest and couldn't catch my breath. It's worse when I breathe in. I'm tall and thin, it came out of nowhere.",
+      "presentationShort": "24yo tall, thin M ? sudden right pleuritic chest pain and dyspnea at rest; reduced breath sounds on right, RR 24, SpO2 92%.",
+      "presentationLong": "24-year-old tall, thin male with sudden sharp right-sided chest pain and shortness of breath while sitting at rest. Pain worsens on inspiration; breath sounds are reduced on the right and oxygen saturation is 92%."
+    },
+    "vitals": {
+      "hr": {
+        "value": 108,
+        "color": "yellow"
+      },
+      "bp": {
+        "value": "128/80",
+        "color": "green"
+      },
+      "rr": {
+        "value": 24,
+        "color": "yellow"
+      },
+      "spo2": {
+        "value": 92,
+        "color": "yellow"
+      },
+      "temp": {
+        "value": 36.9,
+        "color": "green"
+      },
+      "pain": {
+        "value": 6,
+        "color": "red"
+      }
+    },
+    "diagnosis": {
+      "primary": "Spontaneous pneumothorax",
+      "esi": 2,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → CXR (or bedside US), oxygen, needle decompression/chest tube if large or tensioning; monitor for tension.",
+      "why": "Tall thin young man, sudden pleuritic pain + short of breath = spontaneous pneumothorax. Oxygen; decompress if it tensions.",
+      "redFlag": "Sudden pleuritic pain + dyspnea + decreased breath sounds = pneumothorax; watch for tension (hypotension, tracheal shift)."
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "24-year-old tall, thin man",
+    "pose": "seated upright, one hand on the right chest, breathing shallow",
+    "expression": "alarmed, breathless",
+    "signs": [
+      "hand on the right chest",
+      "shallow, guarded breathing"
+    ],
+    "lookSeverity": "in distress, alert",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-080.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 24-year-old tall, thin man, seated on a blue padded clinic chair. Pose: sitting upright, one hand pressed to the right side of his chest, breathing shallowly. Expression: alarmed and breathless. Clearly visible: a hand on the right chest and guarded, shallow breathing. No text, no logos."
+  }
+}

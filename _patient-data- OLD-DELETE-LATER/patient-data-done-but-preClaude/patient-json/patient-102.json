@@ -1,0 +1,111 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-102",
+  "number": 102,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Dennis",
+        "age": 58,
+        "sex": "M",
+        "race": "black"
+      },
+      "image": {
+        "imageFilename": "patient-102.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Cough for a week",
+      "quote": "Honestly? I feel fine. The cough is annoying but I walked in here myself. My wife made me come. Can I go home after this?",
+      "triageNote": "58-year-old male, eight days of COVID symptoms, entirely comfortable at rest with no apparent distress, ambulatory and self-presenting.",
+      "vitals": {
+        "hr": {
+          "value": 96,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "132/78",
+          "color": "green"
+        },
+        "rr": {
+          "value": 22,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 84,
+          "color": "red"
+        },
+        "temp": {
+          "value": 37.8,
+          "color": "yellow"
+        },
+        "pain": {
+          "value": 0,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because profound oxygen saturation of 84% is a high-risk finding despite a comfortable appearance and preserved conversation."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has marked silent hypoxemia during a viral respiratory illness.",
+      "acuityReason": "The absence of visible distress does not make profound impaired oxygenation safe to delay.",
+      "expectedResources": [
+        "Immediate oxygen and repeated saturation assessment",
+        "Chest imaging",
+        "CBC, metabolic and inflammatory testing",
+        "ECG and cardiopulmonary monitoring"
+      ],
+      "keyFindings": [
+        "Eight days of viral symptoms",
+        "Comfortable and ambulatory",
+        "No apparent distress",
+        "Oxygen saturation 84%"
+      ],
+      "redFlags": [
+        "Profound hypoxemia despite a well appearance"
+      ],
+      "teachingPoints": [
+        "Objective oxygenation must be trusted when the measurement is technically valid.",
+        "A calm appearance can coexist with serious gas-exchange failure."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Viral pneumonia with silent hypoxemia",
+          "Pulmonary embolism",
+          "Measurement artifact requiring immediate confirmation"
+        ],
+        "disposition": "Rapid confirmation, oxygen, and pulmonary evaluation would likely lead to hospital admission."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a black 58-year-old man in a polo shirt and jeans, sitting comfortably on a blue padded clinic chair",
+    "pose": "sitting relaxed and at ease, one ankle crossed over the opposite knee, phone loosely in one hand",
+    "expression": "mildly bored and faintly amused, completely at ease",
+    "signs": [
+      "no distress whatsoever",
+      "relaxed easy posture",
+      "normal skin colour"
+    ],
+    "lookSeverity": "looks entirely well — the danger is invisible",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-102.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. ANATOMY AND OBJECTS (critical): exactly one head, exactly two arms ending in exactly two hands, exactly two legs ending in two feet, five fingers on each hand. No extra, duplicated, floating or partial limbs anywhere. Anything the character touches must be plausibly held by one of those two hands. All furniture is solid and fully opaque - the chair must never look transparent or see-through, and its back, seat and legs must all be completely drawn. Subject: a black 58-year-old man in a polo shirt and jeans, seated on a blue padded clinic chair. Pose: caught MID-COUGH - turned slightly to one side with a loosely closed fist raised to his mouth and his shoulders rounding forward with the cough, while his body stays otherwise relaxed and settled back in the chair with one ankle crossed over the opposite knee. Expression: the scrunched momentary look of someone coughing into their fist - irritated by the cough but NOT frightened, NOT gasping and NOT in distress. Clearly visible: a fist raised to the mouth mid-cough; a relaxed, comfortable seated posture; completely normal skin colour with no blueness anywhere. Overall: a comfortable man with an annoying cough - the danger is invisible. No text, no logos, no watermarks, no border."
+  }
+}

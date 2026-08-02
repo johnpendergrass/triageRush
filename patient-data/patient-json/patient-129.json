@@ -1,71 +1,95 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-129",
   "number": 129,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Margaret",
-      "age": 66,
-      "sex": "F",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-129.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Margaret",
+        "age": 66,
+        "sex": "F",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-129.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Terrible eye pain, seeing halos",
-      "quoteShort": null,
-      "quoteLong": "It came on at the cinema — the dark, they tell me. There are rainbow rings around every light, and I've been throwing up from the pain.",
-      "presentationShort": "66yo F — 4h severe unilateral eye pain with haloes and vomiting. Red eye, mid-dilated fixed pupil, hard globe, blurred vision.",
-      "presentationLong": "66-year-old female with four hours of severe one-sided eye pain with coloured haloes and vomiting; the eye is red with a mid-dilated non-reactive pupil and feels hard."
-    },
-    "vitals": {
-      "hr": {
-        "value": 92,
-        "color": "green"
-      },
-      "bp": {
-        "value": "158/88",
-        "color": "yellow"
-      },
-      "rr": {
-        "value": 18,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 98,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.8,
-        "color": "green"
-      },
-      "pain": {
-        "value": 9,
-        "color": "red"
+      "quote": "It came on at the cinema — the dark, they tell me. There are rainbow rings around every light, and I've been throwing up from the pain.",
+      "triageNote": "66-year-old female with four hours of severe one-sided eye pain with coloured haloes and vomiting; the eye is red with a mid-dilated non-reactive pupil and feels hard.",
+      "vitals": {
+        "hr": {
+          "value": 92,
+          "color": "green"
+        },
+        "bp": {
+          "value": "158/88",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 18,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 98,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 9,
+          "color": "red"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Acute angle-closure glaucoma",
-      "esi": 2,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → immediate pressure-lowering treatment and urgent ophthalmology for definitive laser iridotomy",
-      "why": "Headache with vomiting and a red eye gets misfiled as migraine or gastroenteritis. A hard globe with a mid-dilated fixed pupil is angle closure, and threatened vision within hours makes this a high-risk time-critical ESI 2 presentation.",
-      "redFlag": "A hard red eye with a mid-dilated fixed pupil and haloes — sight-threatening within hours."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because severe unilateral eye pain, halos, vomiting, a hard red eye, and a fixed mid-dilated pupil threaten permanent vision within hours."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has an acute high-pressure eye syndrome requiring rapid pressure reduction and ophthalmic care.",
+      "acuityReason": "Severe unilateral eye pain, halos, vomiting, a hard red eye, and a fixed mid-dilated pupil threaten permanent vision within hours.",
+      "expectedResources": [
+        "Immediate visual acuity and intraocular-pressure assessment",
+        "Urgent pressure-lowering medication",
+        "Immediate ophthalmology consultation"
+      ],
+      "keyFindings": [
+        "Four hours of severe one-sided eye pain",
+        "Colored halos",
+        "Vomiting",
+        "Red hard eye",
+        "Mid-dilated nonreactive pupil",
+        "Pain rated 9 out of 10"
+      ],
+      "redFlags": [
+        "Threatened vision from acute ocular hypertension"
+      ],
+      "teachingPoints": [
+        "Headache with vomiting and a red eye gets misfiled as migraine or gastroenteritis. A hard globe with a mid-dilated fixed pupil is angle closure, and threatened vision within hours makes this a high-risk, time-critical presentation.",
+        "Triage should be based on the current presentation and expected care, with reassessment if new warning signs appear."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Acute angle-closure glaucoma",
+          "Other painful red-eye emergency"
+        ],
+        "disposition": "Immediate medical pressure reduction would be followed by definitive ophthalmic laser or surgical treatment."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-2",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

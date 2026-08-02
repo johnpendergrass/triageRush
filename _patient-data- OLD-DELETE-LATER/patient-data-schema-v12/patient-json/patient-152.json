@@ -1,0 +1,87 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-152",
+  "number": 152,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Manuel",
+      "age": 71,
+      "sex": "M",
+      "race": "hispanic"
+    },
+    "image": {
+      "imageFilename": "patient-152.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Yellow again, and shaking",
+      "quoteShort": null,
+      "quoteLong": "They put a stent in for the pancreatic cancer back in the spring. Since yesterday I've gone yellow again, my teeth are chattering with the shivers, and there's a pain up under my right ribs.",
+      "presentationShort": "71yo M, pancreatic ca with biliary stent — 24h RUQ pain, jaundice and rigors. Charcot's triad complete, hypotensive.",
+      "presentationLong": "71-year-old male with pancreatic cancer and an indwelling biliary stent, 24 hours of right upper quadrant pain, jaundice and rigors, now hypotensive."
+    },
+    "vitals": {
+      "hr": {
+        "value": 122,
+        "color": "red"
+      },
+      "bp": {
+        "value": "96/54",
+        "color": "red"
+      },
+      "rr": {
+        "value": 24,
+        "color": "yellow"
+      },
+      "spo2": {
+        "value": 95,
+        "color": "yellow"
+      },
+      "temp": {
+        "value": 39.1,
+        "color": "red"
+      },
+      "pain": {
+        "value": 8,
+        "color": "red"
+      }
+    },
+    "diagnosis": {
+      "primary": "Ascending cholangitis from an obstructed biliary stent",
+      "esi": 2,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → sepsis pathway, blood cultures, IV antibiotics, urgent ERCP to decompress the duct",
+      "why": "Charcot's triad is cholangitis; add confusion and hypotension and it becomes Reynolds' pentad. Antibiotics alone will not save him — the obstructed duct must be drained, so the definitive treatment is ERCP.",
+      "redFlag": "Charcot's triad — fever, jaundice, RUQ pain — with hypotension; ascending cholangitis heading for septic shock."
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a hispanic 71-year-old man with a blanket pulled around his shoulders, seated on a blue padded clinic chair",
+    "pose": "sitting hunched and shivering, one hand pressed up under the right ribs",
+    "expression": "drawn, feverish and shivering",
+    "signs": [
+      "deeply yellow skin and distinctly yellow whites of the eyes",
+      "a blanket pulled tight around the shoulders while shivering",
+      "a hand pressed up under the right ribs"
+    ],
+    "lookSeverity": "seriously unwell and septic-looking",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-152.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. Subject: a hispanic 71-year-old man with a blanket pulled around his shoulders, seated on a blue padded clinic chair. Pose: sitting hunched and shivering, one hand pressed up under the right ribs. Expression: drawn, feverish and shivering. Clearly visible: deeply yellow skin and distinctly yellow whites of the eyes; a blanket pulled tight around the shoulders while shivering; a hand pressed up under the right ribs. Overall: seriously unwell and septic-looking. No text, no logos, no watermarks, no border."
+  }
+}

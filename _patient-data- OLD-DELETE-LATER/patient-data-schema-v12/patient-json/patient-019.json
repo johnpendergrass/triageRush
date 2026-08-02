@@ -1,0 +1,85 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-019",
+  "number": 19,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Sofia",
+      "age": 4,
+      "sex": "F",
+      "race": "hispanic"
+    },
+    "image": {
+      "imageFilename": "patient-019.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Burned hand",
+      "quoteShort": null,
+      "quoteLong": "I wanted to help make pancakes and I touched the hot pan. It's all red and puffy and it STINGS.",
+      "presentationShort": "4yo F ? touched a hot pan; red, blistered area on right palm covering about 1% TBSA, brisk capillary refill, moving hand.",
+      "presentationLong": "4-year-old female who touched a hot pan, with a small superficial partial-thickness burn on the right palm covering about 1% of body surface area. Small blisters are present; sensation, circulation, and movement are intact."
+    },
+    "vitals": {
+      "hr": {
+        "value": 118,
+        "color": "green"
+      },
+      "bp": {
+        "value": "100/64",
+        "color": "green"
+      },
+      "rr": {
+        "value": 24,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 100,
+        "color": "green"
+      },
+      "temp": {
+        "value": 37.1,
+        "color": "green"
+      },
+      "pain": {
+        "value": 6,
+        "color": "red"
+      }
+    },
+    "diagnosis": {
+      "primary": "Superficial partial-thickness burn, right palm (~1% TBSA)",
+      "esi": 4,
+      "esi2roomsNotes": null,
+      "disposition": "Fast Track → cool, clean, non-adherent dressing, analgesia, burn precautions; discharge.",
+      "why": "Small superficial hand burn — cool, dress, pain control, watch for infection. Palms heal well.",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-4",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "4-year-old girl in a t-shirt",
+    "pose": "sitting, holding her red hand up, protecting it",
+    "expression": "teary but calming down",
+    "signs": [
+      "right palm red with small blisters"
+    ],
+    "lookSeverity": "distressed but stable",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-019.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a hispanic 4-year-old girl in a t-shirt, seated on a blue padded clinic chair. Pose: sitting, holding her right hand up and protecting it. Expression: teary but calming down. Clearly visible: the right palm is red with small blisters. No text, no logos."
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-126",
+  "number": 126,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Bernard",
+      "age": 64,
+      "sex": "M",
+      "race": "black"
+    },
+    "image": {
+      "imageFilename": "patient-126.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Missed dialysis, feeling off",
+      "quoteShort": null,
+      "quoteLong": "I skipped Tuesday's session, my ride fell through. I feel a bit weak and my legs are heavy, but honestly I've felt worse. I'll just go Thursday.",
+      "presentationShort": "64yo M, ESRD on haemodialysis — missed one session, now generalised weakness. Alert and well-appearing.",
+      "presentationLong": "64-year-old male with end-stage renal disease on haemodialysis who missed a session, now with generalised weakness; alert and well-appearing."
+    },
+    "vitals": {
+      "hr": {
+        "value": 52,
+        "color": "yellow"
+      },
+      "bp": {
+        "value": "158/92",
+        "color": "yellow"
+      },
+      "rr": {
+        "value": 16,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 98,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.7,
+        "color": "green"
+      },
+      "pain": {
+        "value": 1,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Hyperkalaemia following a missed dialysis session",
+      "esi": 2,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → ECG in the first minutes, calcium gluconate, insulin and dextrose, urgent dialysis",
+      "why": "A missed session plus 'a bit weak' is a potassium until proven otherwise. Get the ECG immediately: peaked T waves and a widening QRS mean calcium now, not when the lab phones back.",
+      "redFlag": "Missed dialysis with bradycardia and weakness — hyperkalaemia with imminent risk of fatal arrhythmia."
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a black 64-year-old man in a button-down shirt with a visible dialysis fistula on his left forearm, seated on a blue padded clinic chair",
+    "pose": "sitting comfortably with forearms resting on his thighs, left forearm turned outward",
+    "expression": "relaxed and mildly apologetic",
+    "signs": [
+      "a prominent dialysis fistula scar on the left forearm",
+      "generally well-kept appearance"
+    ],
+    "lookSeverity": "looks well and comfortable — nothing outward suggests danger",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-126.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. Subject: a black 64-year-old man in a button-down shirt with a visible dialysis fistula on his left forearm, seated on a blue padded clinic chair. Pose: sitting comfortably with forearms resting on his thighs, left forearm turned outward. Expression: relaxed and mildly apologetic. Clearly visible: a prominent dialysis fistula scar on the left forearm; generally well-kept appearance. Overall: looks well and comfortable — nothing outward suggests danger. No text, no logos, no watermarks, no border."
+  }
+}

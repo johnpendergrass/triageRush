@@ -1,71 +1,88 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-143",
   "number": 143,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Sofia",
-      "age": 4,
-      "sex": "F",
-      "race": "hispanic"
-    },
-    "image": {
-      "imageFilename": "patient-143.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Isabella",
+        "age": 4,
+        "sex": "F",
+        "race": "hispanic"
+      },
+      "image": {
+        "imageFilename": "patient-143.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Tummy ache, hasn't pooped",
-      "quoteShort": null,
-      "quoteLong": "(her mother) Four days now. She's eating, she's playing, she's completely herself — but she cries when she goes and now she won't even try.",
-      "presentationShort": "4yo F — 4 days without a bowel movement, hard painful stools. Playful, soft abdomen, no vomiting, no fever.",
-      "presentationLong": "Four-year-old female with four days without a bowel movement and hard painful stools; she is playful with a soft abdomen, no vomiting and no fever."
-    },
-    "vitals": {
-      "hr": {
-        "value": 98,
-        "color": "green"
-      },
-      "bp": {
-        "value": "96/60",
-        "color": "green"
-      },
-      "rr": {
-        "value": 20,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 99,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.8,
-        "color": "green"
-      },
-      "pain": {
-        "value": 3,
-        "color": "green"
+      "quote": "(her mother) Four days now. She's eating, she's playing, she's completely herself — but she cries when she goes and now she won't even try.",
+      "triageNote": "Four-year-old female with four days without a bowel movement and hard painful stools; she is playful with a soft abdomen, no vomiting and no fever.",
+      "vitals": {
+        "hr": {
+          "value": 98,
+          "color": "green"
+        },
+        "bp": {
+          "value": "96/60",
+          "color": "green"
+        },
+        "rr": {
+          "value": 20,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 3,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Functional constipation with stool withholding",
-      "esi": 5,
-      "esi2roomsNotes": "ESI 5: no ED treatment-area resources are expected; brief evaluation, counseling, and discharge are appropriate.",
-      "disposition": "Discharge → osmotic laxative, fluids and fibre, GP follow-up",
-      "why": "Playful, soft abdomen, no bilious vomiting, passing wind — this is functional constipation, not obstruction. The withholding cycle is the real problem to break.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "discharge",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because this playful child has a soft abdomen, no vomiting or fever, and a functional constipation pattern requiring no counted resource."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This child has stool withholding and hard painful stools without obstruction or systemic illness.",
+      "acuityReason": "This playful child has a soft abdomen, no vomiting or fever, and a functional constipation pattern requiring no counted resource.",
+      "expectedResources": [],
+      "keyFindings": [
+        "Four days without bowel movement",
+        "Hard painful stools",
+        "Playful",
+        "Soft abdomen",
+        "No vomiting or fever"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Playful, soft abdomen, no bilious vomiting, passing wind — this is functional constipation, not obstruction. The withholding cycle is the real problem to break.",
+        "Triage should be based on the current presentation and expected care, with reassessment if new warning signs appear."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Functional constipation",
+          "Stool-withholding cycle"
+        ],
+        "disposition": "Oral bowel regimen, diet and toileting guidance, and return precautions would allow discharge."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "discharge",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

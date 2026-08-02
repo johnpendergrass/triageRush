@@ -1,71 +1,94 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-012",
   "number": 12,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Carlos",
-      "age": 23,
-      "sex": "M",
-      "race": "asian"
-    },
-    "image": {
-      "imageFilename": "patient-012.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Carlos",
+        "age": 23,
+        "sex": "M",
+        "race": "asian"
+      },
+      "image": {
+        "imageFilename": "patient-012.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Something in my eye",
-      "quoteShort": null,
-      "quoteLong": "I was grinding metal without goggles because goggles 'aren't cool.' Breaking news: goggles are extremely cool. My right eye won't open and it's crying without my permission.",
-      "presentationShort": "23yo M — R eye FB sensation after grinding metal, no goggles. Vision intact.",
-      "presentationLong": "23-year-old male, right-eye foreign-body sensation after grinding metal without goggles, vision intact."
-    },
-    "vitals": {
-      "hr": {
-        "value": 78,
-        "color": "green"
-      },
-      "bp": {
-        "value": "122/76",
-        "color": "green"
-      },
-      "rr": {
-        "value": 14,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 100,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.7,
-        "color": "green"
-      },
-      "pain": {
-        "value": 5,
-        "color": "yellow"
+      "quote": "I was grinding metal without goggles because goggles 'aren't cool.' Breaking news: goggles are extremely cool. My right eye won't open and it's crying without my permission.",
+      "triageNote": "23-year-old male, right-eye foreign-body sensation after grinding metal without goggles, vision intact.",
+      "vitals": {
+        "hr": {
+          "value": 78,
+          "color": "green"
+        },
+        "bp": {
+          "value": "122/76",
+          "color": "green"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 100,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.7,
+          "color": "green"
+        },
+        "pain": {
+          "value": 5,
+          "color": "yellow"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Corneal foreign body (metallic)",
-      "esi": 4,
-      "esi2roomsNotes": null,
-      "disposition": "Fast Track → topical anesthetic, fluorescein + slit lamp, remove FB, check for rust ring, antibiotic drops",
-      "why": "Always evert the lid and rule out globe penetration first. High-speed metal-on-metal is the classic corneal FB — one-resource ESI 4.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player assignment remains session state.",
+      "correctEsi": 4,
+      "correctRoom": "esi-4",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 4 / Fast Track is appropriate because the patient is stable and is expected to need a focused eye examination and treatment resource."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This is a stable eye complaint after high-speed metal work that requires a focused ocular examination and likely foreign-body treatment.",
+      "acuityReason": "Vision is reported intact and there is no presented evidence of globe rupture or systemic instability, but the metal-on-metal mechanism requires careful assessment.",
+      "expectedResources": [
+        "Visual-acuity and fluorescein examination",
+        "Slit-lamp evaluation and possible foreign-body removal"
+      ],
+      "keyFindings": [
+        "Metal grinding without eye protection",
+        "Right-eye foreign-body sensation",
+        "Tearing and difficulty opening the eye",
+        "Vision reported intact",
+        "Stable vital signs"
+      ],
+      "redFlags": [
+        "High-velocity metal-on-metal mechanism"
+      ],
+      "teachingPoints": [
+        "High-speed eye injuries require assessment for penetration before a superficial foreign body is removed.",
+        "The eyelid should be everted and vision documented during the examination."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Metallic corneal foreign body",
+          "Corneal abrasion",
+          "Occult penetrating eye injury"
+        ],
+        "disposition": "A superficial foreign body could be removed after examination, with rust-ring assessment, topical treatment, eye follow-up, and discharge if penetration is excluded."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-4",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

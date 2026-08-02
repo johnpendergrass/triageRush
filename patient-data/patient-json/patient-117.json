@@ -1,71 +1,87 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-117",
   "number": 117,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Priya",
-      "age": 34,
-      "sex": "F",
-      "race": "asian"
-    },
-    "image": {
-      "imageFilename": "patient-117.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Sunita",
+        "age": 34,
+        "sex": "F",
+        "race": "asian"
+      },
+      "image": {
+        "imageFilename": "patient-117.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Awful cold, COVID test negative",
-      "quoteShort": null,
-      "quoteLong": "I've taken four COVID tests and every one is negative, so what IS it? I feel like I've been hit by a bus. But it's just a cold, isn't it?",
-      "presentationShort": "34yo F, healthy — 3 days coryza, cough and myalgia. No dyspnoea, chest clear.",
-      "presentationLong": "34-year-old healthy female with three days of coryza, cough and muscle aches; no breathlessness and a clear chest."
-    },
-    "vitals": {
-      "hr": {
-        "value": 84,
-        "color": "green"
-      },
-      "bp": {
-        "value": "116/74",
-        "color": "green"
-      },
-      "rr": {
-        "value": 16,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 98,
-        "color": "green"
-      },
-      "temp": {
-        "value": 37.5,
-        "color": "green"
-      },
-      "pain": {
-        "value": 3,
-        "color": "green"
+      "quote": "I've taken four COVID tests and every one is negative, so what IS it? I feel like I've been hit by a bus. But it's just a cold, isn't it?",
+      "triageNote": "34-year-old healthy female with three days of coryza, cough and muscle aches; no breathlessness and a clear chest.",
+      "vitals": {
+        "hr": {
+          "value": 84,
+          "color": "green"
+        },
+        "bp": {
+          "value": "116/74",
+          "color": "green"
+        },
+        "rr": {
+          "value": 16,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 98,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37.5,
+          "color": "green"
+        },
+        "pain": {
+          "value": 3,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Viral upper respiratory infection (RSV) in a healthy adult",
-      "esi": 5,
-      "esi2roomsNotes": "ESI 5: no ED treatment-area resources are expected; brief evaluation, counseling, and discharge are appropriate.",
-      "disposition": "Discharge → symptomatic care, return if breathless",
-      "why": "A negative COVID test rules out one virus out of hundreds. Healthy adult, clear chest, normal saturations — this is a cold with a name.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "discharge",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because this healthy adult has an uncomplicated viral upper-respiratory illness with normal breathing and no counted emergency resource need."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has coryza, cough, and myalgias but no lower-respiratory or systemic danger signs.",
+      "acuityReason": "Clear lungs, oxygen saturation 98%, and stable physiology support home care.",
+      "expectedResources": [],
+      "keyFindings": [
+        "Three days of coryza, cough, and myalgias",
+        "Negative home test for one virus",
+        "No breathlessness",
+        "Clear chest",
+        "Oxygen saturation 98%"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "A negative test for one pathogen does not exclude other viral infections.",
+        "Breathing difficulty, dehydration, chest pain, confusion, or prolonged severe symptoms should prompt reassessment."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Uncomplicated viral upper-respiratory infection"
+        ],
+        "disposition": "Supportive care and return precautions would allow discharge without testing."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "discharge",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

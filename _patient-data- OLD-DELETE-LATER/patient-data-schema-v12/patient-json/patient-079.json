@@ -1,0 +1,86 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-079",
+  "number": 79,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Luis",
+      "age": 61,
+      "sex": "M",
+      "race": "hispanic"
+    },
+    "image": {
+      "imageFilename": "patient-079.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Crushing chest pain",
+      "quoteShort": null,
+      "quoteLong": "I've got this crushing pressure on my chest like an elephant sitting on me, going down my left arm and into my jaw. I'm sweating buckets and feel like I might throw up. Started half an hour ago.",
+      "presentationShort": "61yo M ? 30 minutes crushing substernal pressure radiating to left arm and jaw, with diaphoresis, nausea, and ongoing 8/10 pain.",
+      "presentationLong": "61-year-old male with thirty minutes of ongoing crushing central chest pressure radiating to his left arm and jaw. He is drenched in sweat, nauseated, and rates the pain 8/10."
+    },
+    "vitals": {
+      "hr": {
+        "value": 98,
+        "color": "yellow"
+      },
+      "bp": {
+        "value": "148/92",
+        "color": "yellow"
+      },
+      "rr": {
+        "value": 20,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 96,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.9,
+        "color": "green"
+      },
+      "pain": {
+        "value": 8,
+        "color": "red"
+      }
+    },
+    "diagnosis": {
+      "primary": "ST-elevation myocardial infarction (STEMI)",
+      "esi": 1,
+      "esi2roomsNotes": null,
+      "disposition": "Resus → immediate ECG, aspirin, activate cath lab, cardiology; door-to-balloon clock is running.",
+      "why": "Classic MI: pressure to the arm/jaw, diaphoretic, nauseated. ECG immediately; aspirin + cath lab. Time is muscle.",
+      "redFlag": "Crushing chest pressure radiating to arm/jaw + diaphoresis = MI; ECG in the first minutes."
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-1",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "61-year-old man, sweaty and gray",
+    "pose": "clutching a fist to the center of his chest",
+    "expression": "frightened, in pain",
+    "signs": [
+      "fist clenched to the center of the chest",
+      "sweaty, gray"
+    ],
+    "lookSeverity": "critically ill",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-079.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a hispanic 61-year-old man, sweaty and ashen, seated on a blue padded clinic chair. Pose: a clenched fist pressed to the center of his chest. Expression: frightened and in pain. Clearly visible: a fist clenched over the chest and a sweaty, gray face. No text, no logos."
+  }
+}

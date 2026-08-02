@@ -1,71 +1,91 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-064",
   "number": 64,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Terrell",
-      "age": 45,
-      "sex": "M",
-      "race": "black"
-    },
-    "image": {
-      "imageFilename": "patient-064.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Terrell",
+        "age": 45,
+        "sex": "M",
+        "race": "black"
+      },
+      "image": {
+        "imageFilename": "patient-064.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Painful lump on his thigh",
-      "quoteShort": null,
-      "quoteLong": "I've got this red, hot lump on my thigh that's gotten bigger over a few days. It's really tender and there's a soft squishy spot in the middle now. Low fever maybe.",
-      "presentationShort": "45yo M ? enlarging red, hot, tender thigh lump with central fluctuance and low-grade fever; no spreading redness beyond the local area.",
-      "presentationLong": "45-year-old male with several days of an enlarging red, hot, tender lump on his thigh. The center is soft and fluctuant; temperature is 38.0?C, without extensive surrounding redness or systemic instability."
-    },
-    "vitals": {
-      "hr": {
-        "value": 88,
-        "color": "green"
-      },
-      "bp": {
-        "value": "128/80",
-        "color": "green"
-      },
-      "rr": {
-        "value": 16,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 98,
-        "color": "green"
-      },
-      "temp": {
-        "value": 38.0,
-        "color": "yellow"
-      },
-      "pain": {
-        "value": 6,
-        "color": "red"
+      "quote": "I've got this red, hot lump on my thigh that's gotten bigger over a few days. It's really tender and there's a soft squishy spot in the middle now. Low fever maybe.",
+      "triageNote": "45-year-old male with several days of an enlarging red, hot, tender lump on his thigh. The center is soft and fluctuant; temperature is 38.0 C, without extensive surrounding redness or systemic instability.",
+      "vitals": {
+        "hr": {
+          "value": 88,
+          "color": "green"
+        },
+        "bp": {
+          "value": "128/80",
+          "color": "green"
+        },
+        "rr": {
+          "value": 16,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 98,
+          "color": "green"
+        },
+        "temp": {
+          "value": 38,
+          "color": "yellow"
+        },
+        "pain": {
+          "value": 6,
+          "color": "yellow"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Cutaneous abscess",
-      "esi": 4,
-      "esi2roomsNotes": null,
-      "disposition": "Fast Track → incision & drainage, wound care, antibiotics if surrounding cellulitis; discharge.",
-      "why": "Fluctuant = pus = drain it. I&D is the treatment; antibiotics are adjunctive.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 4,
+      "correctRoom": "esi-4",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 4 is appropriate because this stable localized abscess is expected to require one resource for incision and drainage."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has a fluctuant localized thigh infection without extensive cellulitis or systemic instability.",
+      "acuityReason": "A soft center indicates a drainable collection; the low-grade fever warrants attention but there are no findings of shock or rapidly destructive infection.",
+      "expectedResources": [
+        "Incision and drainage"
+      ],
+      "keyFindings": [
+        "Several days of enlargement",
+        "Red hot tender thigh lump",
+        "Soft fluctuant center",
+        "Temperature 38.0 C",
+        "No extensive surrounding redness or instability"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Drainage is the primary treatment for a simple fluctuant abscess.",
+        "Pain out of proportion, crepitus, bullae, rapid spread, or hypotension would suggest deeper infection."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Cutaneous abscess",
+          "Inflamed epidermoid cyst",
+          "Cellulitis with developing collection"
+        ],
+        "disposition": "Drainage, wound care, and selective antibiotic treatment would usually be followed by discharge and reassessment instructions."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-4",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

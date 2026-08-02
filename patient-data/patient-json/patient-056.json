@@ -1,71 +1,93 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-056",
   "number": 56,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Carol",
-      "age": 63,
-      "sex": "F",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-056.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Carol",
+        "age": 63,
+        "sex": "F",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-056.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Fell on her wrist",
-      "quoteShort": null,
-      "quoteLong": "I slipped on the wet floor and caught myself on my hand. Now my wrist is swollen and bent a bit funny, and it really hurts to move. My fingers are fine though.",
-      "presentationShort": "63yo F ? fell onto outstretched hand; swollen wrist with dorsal angulation and dinner-fork appearance, painful movement, NV intact.",
-      "presentationLong": "63-year-old female who fell onto an outstretched hand. Her wrist is swollen and dorsally angulated with a dinner-fork appearance; movement is painful, while finger movement, sensation, and distal circulation remain intact."
-    },
-    "vitals": {
-      "hr": {
-        "value": 84,
-        "color": "green"
-      },
-      "bp": {
-        "value": "138/82",
-        "color": "green"
-      },
-      "rr": {
-        "value": 16,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 98,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.8,
-        "color": "green"
-      },
-      "pain": {
-        "value": 6,
-        "color": "red"
+      "quote": "I slipped on the wet floor and caught myself on my hand. Now my wrist is swollen and bent a bit funny, and it really hurts to move. My fingers are fine though.",
+      "triageNote": "63-year-old female who fell onto an outstretched hand. Her wrist is swollen and dorsally angulated with a dinner-fork appearance; movement is painful, while finger movement, sensation, and distal circulation remain intact.",
+      "vitals": {
+        "hr": {
+          "value": 84,
+          "color": "green"
+        },
+        "bp": {
+          "value": "138/82",
+          "color": "green"
+        },
+        "rr": {
+          "value": 16,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 98,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 6,
+          "color": "yellow"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Distal radius (Colles) fracture",
-      "esi": 4,
-      "esi2roomsNotes": null,
-      "disposition": "Fast Track → X-ray, reduction & splint, ortho follow-up; discharge.",
-      "why": "Dinner-fork deformity after a FOOSH = Colles. Check NV, reduce, splint. (Also: why did she fall?)",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 3,
+      "correctRoom": "esi-3",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 3 is appropriate because a displaced wrist fracture with visible angulation is expected to require multiple resources including imaging, analgesia, and reduction."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This older adult has a visibly displaced distal-forearm injury after a fall, with intact distal neurovascular function.",
+      "acuityReason": "The dinner-fork deformity makes a displaced fracture likely; current circulation and sensation are reassuring but do not remove the need for reduction planning.",
+      "expectedResources": [
+        "Wrist and forearm X-rays",
+        "Parenteral analgesia or hematoma block",
+        "Closed reduction",
+        "Post-reduction imaging"
+      ],
+      "keyFindings": [
+        "Fall onto an outstretched hand",
+        "Wrist swelling",
+        "Dorsal angulation with dinner-fork appearance",
+        "Painful movement",
+        "Intact finger movement, sensation, and circulation"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Neurovascular status must be documented before and after splinting or reduction.",
+        "The reason for an older adult's fall and bone-health risk should also be assessed."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Displaced distal radius fracture",
+          "Distal radius and ulna fracture"
+        ],
+        "disposition": "Imaging, analgesia, and reduction would be followed by immobilization and orthopedic follow-up or operative planning."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-4",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

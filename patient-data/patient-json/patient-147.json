@@ -1,71 +1,98 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-147",
   "number": 147,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Marta",
-      "age": 29,
-      "sex": "F",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-147.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Marta",
+        "age": 29,
+        "sex": "F",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-147.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Rash and high fever after a trip",
-      "quoteShort": null,
-      "quoteLong": "I flew back from Romania on Sunday. I thought it was flu — fever, streaming cold, eyes like sandpaper — and then this rash came down over my face. I don't think I ever had the second jab.",
-      "presentationShort": "29yo F, incompletely vaccinated — returned traveller, 5 days fever/cough/conjunctivitis then descending rash. Photophobia, poor intake.",
-      "presentationLong": "29-year-old incompletely vaccinated female returned from travel, five days of fever, cough and conjunctivitis followed by a descending rash, with photophobia and poor oral intake."
-    },
-    "vitals": {
-      "hr": {
-        "value": 116,
-        "color": "yellow"
-      },
-      "bp": {
-        "value": "108/64",
-        "color": "green"
-      },
-      "rr": {
-        "value": 22,
-        "color": "yellow"
-      },
-      "spo2": {
-        "value": 95,
-        "color": "yellow"
-      },
-      "temp": {
-        "value": 39.6,
-        "color": "red"
-      },
-      "pain": {
-        "value": 6,
-        "color": "yellow"
+      "quote": "I flew back from Romania on Sunday. I thought it was flu — fever, streaming cold, eyes like sandpaper — and then this rash came down over my face. I don't think I ever had the second jab.",
+      "triageNote": "29-year-old incompletely vaccinated female returned from travel, five days of fever, cough and conjunctivitis followed by a descending rash, with photophobia and poor oral intake.",
+      "vitals": {
+        "hr": {
+          "value": 116,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "108/64",
+          "color": "green"
+        },
+        "rr": {
+          "value": 22,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 95,
+          "color": "green"
+        },
+        "temp": {
+          "value": 39.6,
+          "color": "red"
+        },
+        "pain": {
+          "value": 6,
+          "color": "yellow"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Measles in an incompletely vaccinated adult",
-      "esi": 3,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → immediate airborne isolation, same-day public health notification, IV fluids, vitamin A, chest X-ray if hypoxic",
-      "why": "Adult measles is not a childhood illness with an adult attached: pneumonia and encephalitis rates are much higher. Ask about travel and vaccination — and remember she has already exposed everyone she sat next to.",
-      "redFlag": "Adults with measles get pneumonia and encephalitis far more often than children — and she has been in a waiting room."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because adult measles with temperature 39.6 C, tachycardia, poor intake, photophobia, and travel exposure is high risk for complications and transmission."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This incompletely vaccinated traveler has a classic descending febrile exanthem with systemic illness.",
+      "acuityReason": "Adult measles with temperature 39.6 C, tachycardia, poor intake, photophobia, and travel exposure is high risk for complications and transmission.",
+      "expectedResources": [
+        "Immediate airborne isolation",
+        "Public-health notification and confirmatory testing",
+        "CBC and metabolic testing",
+        "IV hydration and symptom treatment",
+        "Pulmonary and neurologic complication assessment"
+      ],
+      "keyFindings": [
+        "Recent travel",
+        "Incomplete vaccination",
+        "Five days of fever, cough, and conjunctivitis",
+        "Descending rash",
+        "Photophobia and poor intake",
+        "Heart rate 116 and temperature 39.6 C"
+      ],
+      "redFlags": [
+        "High-consequence communicable infection",
+        "Adult disease with systemic symptoms"
+      ],
+      "teachingPoints": [
+        "Adult measles is not a childhood illness with an adult attached: pneumonia and encephalitis rates are much higher. Ask about travel and vaccination — and remember she has already exposed everyone she sat next to.",
+        "Triage should be based on the current presentation and expected care, with reassessment if new warning signs appear."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Measles",
+          "Other travel-associated febrile exanthem"
+        ],
+        "disposition": "Isolation, hydration, and complication assessment would likely lead to hospital observation or admission."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-3",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

@@ -1,71 +1,89 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-023",
   "number": 23,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Liam",
-      "age": 4,
-      "sex": "M",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-023.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Liam",
+        "age": 4,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-023.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Bead up his nose",
-      "quoteShort": null,
-      "quoteLong": "It fit PERFECT and then it didn't come back out. I can still breathe out the other side. It's the blue one — my favorite.",
-      "presentationShort": "4yo M — witnessed plastic bead in R nostril, unilateral obstruction, comfortable, breathing well; not a battery or magnet.",
-      "presentationLong": "4-year-old male, placed a plastic bead in his right nostril, unilateral obstruction, breathing comfortably, with nothing to suggest a battery or magnet."
-    },
-    "vitals": {
-      "hr": {
-        "value": 104,
-        "color": "green"
-      },
-      "bp": {
-        "value": "100/64",
-        "color": "green"
-      },
-      "rr": {
-        "value": 22,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 100,
-        "color": "green"
-      },
-      "temp": {
-        "value": 37.0,
-        "color": "green"
-      },
-      "pain": {
-        "value": 1,
-        "color": "green"
+      "quote": "It fit PERFECT and then it didn't come back out. I can still breathe out the other side. It's the blue one — my favorite.",
+      "triageNote": "4-year-old male, placed a plastic bead in his right nostril, unilateral obstruction, breathing comfortably, with nothing to suggest a battery or magnet.",
+      "vitals": {
+        "hr": {
+          "value": 104,
+          "color": "green"
+        },
+        "bp": {
+          "value": "100/64",
+          "color": "green"
+        },
+        "rr": {
+          "value": 22,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 100,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37,
+          "color": "green"
+        },
+        "pain": {
+          "value": 1,
+          "color": "green"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Nasal foreign body (plastic bead)",
-      "esi": 5,
-      "esi2roomsNotes": null,
-      "disposition": "Fast Track → removal (positive-pressure 'parent's kiss' or instruments); discharge.",
-      "why": "Plain bead, breathing fine — simple removal. (Batteries and magnets in the nose ARE urgent — this isn't one.)",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "esi-5",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 / Non-Urgent is appropriate because this stable child is expected to need a simple removal procedure without a countable emergency resource."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This is a comfortable child with a witnessed plastic bead in one nostril and no airway compromise or high-risk foreign material.",
+      "acuityReason": "The child is breathing comfortably through the other nostril, has normal vital signs, and the object is reported not to be a battery or magnet.",
+      "expectedResources": [
+        "Focused nasal examination and foreign-body removal"
+      ],
+      "keyFindings": [
+        "Witnessed plastic bead insertion",
+        "Right-sided nasal obstruction",
+        "Breathing comfortably",
+        "Object is not a battery or magnet",
+        "Normal vital signs"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Button batteries require urgent removal because they can rapidly injure nasal tissue.",
+        "Positive-pressure or instrument removal should be selected according to visibility, cooperation, and aspiration risk."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Nasal foreign body without respiratory compromise"
+        ],
+        "disposition": "The bead would likely be removed with positive pressure or an appropriate instrument, followed by discharge if the airway and nasal examination remain reassuring."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-5",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

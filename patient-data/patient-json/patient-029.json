@@ -1,71 +1,94 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-029",
   "number": 29,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Dorothy",
-      "age": 82,
-      "sex": "F",
-      "race": "white"
-    },
-    "image": {
-      "imageFilename": "patient-029.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Dorothy",
+        "age": 82,
+        "sex": "F",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-029.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Fell, can't get up",
-      "quoteShort": null,
-      "quoteLong": "I got up in the night for the bathroom and my hip just gave out. Now my right leg looks shorter and turned out funny, and I can't put any weight on it at all.",
-      "presentationShort": "82yo F — ground-level fall; R leg shortened & externally rotated, unable to bear weight, NV intact distally.",
-      "presentationLong": "82-year-old female, ground-level fall at home, right leg shortened and externally rotated, unable to bear weight, neurovascularly intact distally."
-    },
-    "vitals": {
-      "hr": {
-        "value": 96,
-        "color": "yellow"
-      },
-      "bp": {
-        "value": "148/86",
-        "color": "green"
-      },
-      "rr": {
-        "value": 18,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 96,
-        "color": "green"
-      },
-      "temp": {
-        "value": 36.8,
-        "color": "green"
-      },
-      "pain": {
-        "value": 7,
-        "color": "red"
+      "quote": "I got up in the night for the bathroom and my hip just gave out. Now my right leg looks shorter and turned out funny, and I can't put any weight on it at all.",
+      "triageNote": "82-year-old female, ground-level fall at home, right leg shortened and externally rotated, unable to bear weight, neurovascularly intact distally.",
+      "vitals": {
+        "hr": {
+          "value": 96,
+          "color": "green"
+        },
+        "bp": {
+          "value": "148/86",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 18,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 96,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 7,
+          "color": "red"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Hip fracture (femoral neck / intertrochanteric)",
-      "esi": 3,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → hip/pelvis X-ray, analgesia, ortho for operative fixation; screen for WHY she fell (syncope? meds?).",
-      "why": "Shortened + externally rotated + can't bear weight = hip fracture till proven otherwise. Always ask why she fell. Multi-resource → Acute.",
-      "redFlag": null
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 3,
+      "correctRoom": "esi-3",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 3 is appropriate because a stable suspected hip fracture will require multiple diagnostic and treatment resources."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This older adult has classic deformity and inability to bear weight after a fall, with intact distal neurovascular function.",
+      "acuityReason": "The injury is painful and likely operative but there is no current shock, altered mental status, or distal compromise.",
+      "expectedResources": [
+        "Hip and pelvis X-rays",
+        "Parenteral analgesia",
+        "Laboratory testing and preoperative evaluation",
+        "Orthopedic consultation"
+      ],
+      "keyFindings": [
+        "Ground-level fall",
+        "Right leg shortened and externally rotated",
+        "Unable to bear weight",
+        "Pain rated 7 out of 10",
+        "Distal neurovascular function intact"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "A shortened, externally rotated leg after a fall strongly suggests proximal femur injury.",
+        "The cause of the fall should be assessed in addition to the injury itself."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Femoral neck fracture",
+          "Intertrochanteric hip fracture",
+          "Hip dislocation"
+        ],
+        "disposition": "Imaging, analgesia, medical optimization, and orthopedic evaluation would likely lead to admission for operative repair."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-3",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

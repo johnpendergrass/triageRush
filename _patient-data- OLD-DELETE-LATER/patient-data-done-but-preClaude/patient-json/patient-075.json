@@ -1,0 +1,103 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-075",
+  "number": 75,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Patricia",
+        "age": 62,
+        "sex": "F",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-075.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Painful blistering rash on one side",
+      "quote": "I've got burning, stabbing pain and a blistery stripe along one side of my ribs. It stops at the middle and doesn't cross over. The pain started days before the rash.",
+      "triageNote": "62-year-old female with several days of burning pain followed by grouped blisters in a narrow stripe along one side of her ribs. The rash stops at the midline, with no facial or eye involvement.",
+      "vitals": {
+        "hr": {
+          "value": 80,
+          "color": "green"
+        },
+        "bp": {
+          "value": "132/80",
+          "color": "green"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37,
+          "color": "green"
+        },
+        "pain": {
+          "value": 6,
+          "color": "red"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "esi-5",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because this localized dermatomal rash without facial or eye involvement requires medication but no counted emergency resource."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has unilateral burning pain followed by grouped vesicles confined to a thoracic dermatome.",
+      "acuityReason": "The rash stops at the midline and has no ocular, facial, disseminated, or systemic features.",
+      "expectedResources": [],
+      "keyFindings": [
+        "Several days of burning pain",
+        "Grouped blisters in a narrow unilateral stripe",
+        "Thoracic distribution",
+        "Stops at the midline",
+        "No facial or eye involvement"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Eye or forehead involvement requires urgent ophthalmic assessment.",
+        "Antiviral benefit is greatest when treatment begins early, especially in older or immunocompromised patients."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Herpes zoster",
+          "Contact dermatitis",
+          "Herpes simplex eruption"
+        ],
+        "disposition": "Oral antiviral and pain treatment would usually allow discharge with skin-care, transmission, and complication precautions."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "62-year-old woman",
+    "pose": "seated, lifting the edge of her shirt to show a rash on one side of her ribs",
+    "expression": "uncomfortable, wincing",
+    "signs": [
+      "stripe of blistery rash on one side of the torso"
+    ],
+    "lookSeverity": "in pain but well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-075.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 62-year-old woman, seated on a blue padded clinic chair. Pose: lifting the hem of her shirt slightly to show a rash along one side of her ribs. Expression: uncomfortable, wincing. Clearly visible: a stripe of red blistery rash on one side of the torso. No text, no logos."
+  }
+}

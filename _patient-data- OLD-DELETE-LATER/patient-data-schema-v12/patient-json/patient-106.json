@@ -1,0 +1,87 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-106",
+  "number": 106,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Trevor",
+      "age": 27,
+      "sex": "M",
+      "race": "white"
+    },
+    "image": {
+      "imageFilename": "patient-106.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "The voices are telling him to do something",
+      "quoteShort": null,
+      "quoteLong": "They keep saying I have to get him before he gets me. I've been trying not to listen. I don't want to do it. But they're getting louder.",
+      "presentationShort": "27yo M — new command hallucinations directing violence at a named person, escalating. Brought by family.",
+      "presentationLong": "27-year-old male with escalating command hallucinations directing violence toward a specific named person, brought in by family; he is frightened by them."
+    },
+    "vitals": {
+      "hr": {
+        "value": 108,
+        "color": "yellow"
+      },
+      "bp": {
+        "value": "142/88",
+        "color": "yellow"
+      },
+      "rr": {
+        "value": 20,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 98,
+        "color": "green"
+      },
+      "temp": {
+        "value": 37.0,
+        "color": "green"
+      },
+      "pain": {
+        "value": 0,
+        "color": "green"
+      }
+    },
+    "diagnosis": {
+      "primary": "Psychosis with command hallucinations — imminent risk to others",
+      "esi": 2,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → immediate safety measures, one-to-one observation, emergency psychiatric evaluation",
+      "why": "ESI 2 explicitly includes danger to self OR others. Command hallucinations with a named target are an emergency, not a Psych-lane walk-in — the quiet exterior is the trap.",
+      "redFlag": "Command hallucinations naming a specific target — an active danger to others."
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-2",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a white 27-year-old man in a hooded sweatshirt, seated on a blue padded clinic chair",
+    "pose": "sitting hunched forward, both hands gripping the edge of the seat, glancing sideways",
+    "expression": "frightened and hyper-vigilant, jaw tight",
+    "signs": [
+      "white-knuckled grip on the chair",
+      "darting watchful eyes",
+      "tension through the shoulders"
+    ],
+    "lookSeverity": "outwardly contained but visibly frightened and coiled",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-106.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. Subject: a white 27-year-old man in a hooded sweatshirt, seated on a blue padded clinic chair. Pose: sitting hunched forward, both hands gripping the edge of the seat, glancing sideways. Expression: frightened and hyper-vigilant, jaw tight. Clearly visible: white-knuckled grip on the chair; darting watchful eyes; tension through the shoulders. Overall: outwardly contained but visibly frightened and coiled. No text, no logos, no watermarks, no border."
+  }
+}

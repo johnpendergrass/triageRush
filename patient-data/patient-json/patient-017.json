@@ -1,71 +1,96 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-017",
   "number": 17,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Jaden",
-      "age": 16,
-      "sex": "M",
-      "race": "hispanic"
-    },
-    "image": {
-      "imageFilename": "patient-017.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Jaden",
+        "age": 16,
+        "sex": "M",
+        "race": "hispanic"
+      },
+      "image": {
+        "imageFilename": "patient-017.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Groin pain",
-      "quoteShort": null,
-      "quoteLong": "Okay this is SO embarrassing but... my left one, down there, really hurts. It woke me straight up out of sleep. Kinda feel like I'm gonna throw up. Can I just get some ibuprofen and go home? Please?",
-      "presentationShort": "16yo M — sudden severe L testicular pain, woke from sleep, now nauseated.",
-      "presentationLong": "16-year-old male, sudden severe left testicular pain that woke him from sleep, now with nausea."
-    },
-    "vitals": {
-      "hr": {
-        "value": 100,
-        "color": "yellow"
-      },
-      "bp": {
-        "value": "126/78",
-        "color": "green"
-      },
-      "rr": {
-        "value": 18,
-        "color": "green"
-      },
-      "spo2": {
-        "value": 99,
-        "color": "green"
-      },
-      "temp": {
-        "value": 37.0,
-        "color": "green"
-      },
-      "pain": {
-        "value": 8,
-        "color": "red"
+      "quote": "Okay, this is so embarrassing, but my left one down there really hurts. It woke me straight out of sleep, and I feel like I might throw up. Can I please just get some ibuprofen and go home?",
+      "triageNote": "16-year-old boy with sudden severe left testicular pain that woke him from sleep, now accompanied by nausea. He is pale, guarded, and rates the pain 8 of 10.",
+      "vitals": {
+        "hr": {
+          "value": 100,
+          "color": "green"
+        },
+        "bp": {
+          "value": "126/78",
+          "color": "green"
+        },
+        "rr": {
+          "value": 18,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37,
+          "color": "green"
+        },
+        "pain": {
+          "value": 8,
+          "color": "red"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Testicular torsion",
-      "esi": 2,
-      "esi2roomsNotes": null,
-      "disposition": "Acute → STAT urology, Doppler ultrasound (don't delay surgery for it if classic), possible manual detorsion / OR",
-      "why": "The embarrassment IS the trap — he wants to leave. Sudden teen testicular pain is torsion until proven otherwise, and the salvage clock is ~6 hours. Never fast-track this. 🎯",
-      "redFlag": "sudden testicular pain + nausea in a teen (torsion until proven otherwise)"
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because sudden severe testicular pain with nausea is a time-sensitive, high-risk presentation requiring rapid evaluation for threatened testicular viability."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This adolescent has sudden severe unilateral testicular pain with nausea and needs rapid assessment for a time-sensitive surgical cause.",
+      "acuityReason": "Abrupt pain awakening a teenager from sleep, associated nausea, pallor, and guarded behavior create a high-risk pattern even though the vital signs are stable.",
+      "expectedResources": [
+        "Urgent genital examination",
+        "Doppler ultrasound if it will not delay definitive care",
+        "Urgent urologic consultation",
+        "Analgesia and antiemetic medication"
+      ],
+      "keyFindings": [
+        "Sudden left testicular pain",
+        "Awakened from sleep",
+        "Associated nausea",
+        "Pain rated 8 out of 10",
+        "Pale, guarded appearance"
+      ],
+      "redFlags": [
+        "Sudden unilateral testicular pain with nausea"
+      ],
+      "teachingPoints": [
+        "A patient may minimize an embarrassing complaint despite a time-sensitive emergency.",
+        "Evaluation and specialty involvement should not be delayed when the presentation strongly suggests threatened testicular viability."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Testicular torsion",
+          "Torsion of the appendix testis",
+          "Epididymitis"
+        ],
+        "disposition": "Urgent examination and urologic assessment would determine whether immediate operative exploration is needed; rapid treatment offers the best chance of preserving the testicle."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-2",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

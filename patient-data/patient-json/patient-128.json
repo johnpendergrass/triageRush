@@ -1,71 +1,97 @@
 {
   "schema": {
-    "version": "1.2",
-    "date": "2026-07-27 14:54 PDT"
+    "version": "2.2",
+    "date": "2026-08-01"
   },
-
   "id": "patient-128",
   "number": 128,
   "johnsComments": "",
   "patient": {
-    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
-    "personal": {
-      "name": "Gloria",
-      "age": 58,
-      "sex": "F",
-      "race": "hispanic"
-    },
-    "image": {
-      "imageFilename": "patient-128.png",
-      "imageFlipped": false,
-      "imageScale": 1.0
-    },
-    "clinical": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Teresa",
+        "age": 58,
+        "sex": "F",
+        "race": "hispanic"
+      },
+      "image": {
+        "imageFilename": "patient-128.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
       "chiefComplaint": "Small cut on my leg, terrible pain",
-      "quoteShort": null,
-      "quoteLong": "It's just a scratch from the garden, I know it looks like nothing. But it hurts so much I couldn't sleep, and I feel like I'm dying. Something is really wrong.",
-      "presentationShort": "58yo F, diabetic — 36h after a minor leg scratch, agonising pain with an unimpressive wound. Systemically unwell.",
-      "presentationLong": "58-year-old diabetic female, thirty-six hours after a minor leg scratch, with agonising pain far beyond the appearance of the wound and looking systemically unwell."
-    },
-    "vitals": {
-      "hr": {
-        "value": 126,
-        "color": "red"
-      },
-      "bp": {
-        "value": "94/56",
-        "color": "red"
-      },
-      "rr": {
-        "value": 26,
-        "color": "yellow"
-      },
-      "spo2": {
-        "value": 95,
-        "color": "yellow"
-      },
-      "temp": {
-        "value": 39.4,
-        "color": "red"
-      },
-      "pain": {
-        "value": 10,
-        "color": "red"
+      "quote": "It's just a scratch from the garden, I know it looks like nothing. But it hurts so much I couldn't sleep, and I feel like I'm dying. Something is really wrong.",
+      "triageNote": "58-year-old diabetic female, thirty-six hours after a minor leg scratch, with agonising pain far beyond the appearance of the wound and looking systemically unwell.",
+      "vitals": {
+        "hr": {
+          "value": 126,
+          "color": "red"
+        },
+        "bp": {
+          "value": "94/56",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 26,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 95,
+          "color": "green"
+        },
+        "temp": {
+          "value": 39.4,
+          "color": "red"
+        },
+        "pain": {
+          "value": 10,
+          "color": "red"
+        }
       }
     },
-    "diagnosis": {
-      "primary": "Necrotising fasciitis",
-      "esi": 1,
-      "esi2roomsNotes": null,
-      "disposition": "Resus → sepsis pathway, broad-spectrum antibiotics, immediate surgical review for debridement",
-      "why": "The wound is a decoy. Pain out of proportion, systemic toxicity, and an infection that is moving means surgery NOW — antibiotics alone will not save this limb or this patient.",
-      "redFlag": "Pain grossly out of proportion to a benign-looking wound, with septic physiology — necrotising fasciitis."
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 1,
+      "correctRoom": "esi-1",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 1 is appropriate because systemic toxicity, hypotension, fever, tachycardia, and agonizing pain far beyond a minor wound require immediate resuscitation and surgical source control."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This diabetic patient has a rapidly destructive soft-tissue infection pattern with shock physiology.",
+      "acuityReason": "Systemic toxicity, hypotension, fever, tachycardia, and agonizing pain far beyond a minor wound require immediate resuscitation and surgical source control.",
+      "expectedResources": [
+        "Immediate IV access and fluid resuscitation",
+        "Broad-spectrum IV antibiotics",
+        "Immediate surgical consultation and operative exploration",
+        "Laboratory, culture, and imaging assessment without delaying surgery"
+      ],
+      "keyFindings": [
+        "Minor scratch thirty-six hours earlier",
+        "Pain rated 10 out of 10 far beyond appearance",
+        "Systemically unwell",
+        "Heart rate 126",
+        "Blood pressure 94/56",
+        "Temperature 39.4 C"
+      ],
+      "redFlags": [
+        "Pain out of proportion with systemic toxicity",
+        "Possible evolving shock"
+      ],
+      "teachingPoints": [
+        "The wound is a decoy. Pain out of proportion, systemic toxicity, and an infection that is moving means surgery NOW — antibiotics alone will not save this limb or this patient.",
+        "Triage should be based on the current presentation and expected care, with reassessment if new warning signs appear."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Necrotizing soft-tissue infection",
+          "Severe cellulitis or deep abscess"
+        ],
+        "disposition": "Immediate resuscitation, antibiotics, and operative debridement would require intensive monitored admission."
+      }
     }
-  },
-  "answer": {
-    "_comment": "'answer' is answer for the game scoring.",
-    "correctRoom": "esi-1",
-    "otherAcceptableRooms": null
   },
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",

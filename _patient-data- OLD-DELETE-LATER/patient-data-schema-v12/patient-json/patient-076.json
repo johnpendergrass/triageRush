@@ -1,0 +1,85 @@
+{
+  "schema": {
+    "version": "1.2",
+    "date": "2026-07-27 14:54 PDT"
+  },
+
+  "id": "patient-076",
+  "number": 76,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' is info about the patient: personal, clinical, vitals are shown on the patient card during the game; diagnosis is used for potential 'patient review' card.",
+    "personal": {
+      "name": "Yolanda",
+      "age": 58,
+      "sex": "F",
+      "race": "black"
+    },
+    "image": {
+      "imageFilename": "patient-076.png",
+      "imageFlipped": false,
+      "imageScale": 1.0
+    },
+    "clinical": {
+      "chiefComplaint": "Swollen, painful calf",
+      "quoteShort": null,
+      "quoteLong": "My left calf has been swollen, warm, and achy for a couple of days — the other leg's totally normal. I was in a cast recently. No chest pain or trouble breathing though.",
+      "presentationShort": "58yo F ? 2 days unilateral warm, swollen, tender calf after recent immobilization in a cast; no chest pain or dyspnea.",
+      "presentationLong": "58-year-old female with two days of swelling, warmth, and tenderness confined to the left calf after recent immobilization in a cast. The opposite leg is normal; she denies chest pain and shortness of breath."
+    },
+    "vitals": {
+      "hr": {
+        "value": 82,
+        "color": "green"
+      },
+      "bp": {
+        "value": "128/78",
+        "color": "green"
+      },
+      "rr": {
+        "value": 14,
+        "color": "green"
+      },
+      "spo2": {
+        "value": 98,
+        "color": "green"
+      },
+      "temp": {
+        "value": 36.9,
+        "color": "green"
+      },
+      "pain": {
+        "value": 4,
+        "color": "yellow"
+      }
+    },
+    "diagnosis": {
+      "primary": "Deep vein thrombosis (DVT)",
+      "esi": 3,
+      "esi2roomsNotes": null,
+      "disposition": "Acute → Wells score, D-dimer/compression ultrasound, anticoagulation; watch for PE symptoms.",
+      "why": "One swollen, warm, tender calf + a risk factor = DVT. Ultrasound + anticoagulate. Always ask about chest pain/dyspnea (PE).",
+      "redFlag": null
+    }
+  },
+  "answer": {
+    "_comment": "'answer' is answer for the game scoring.",
+    "correctRoom": "esi-3",
+    "otherAcceptableRooms": null
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "58-year-old woman",
+    "pose": "seated, one leg extended showing a swollen calf",
+    "expression": "mildly uncomfortable, concerned",
+    "signs": [
+      "one visibly swollen calf"
+    ],
+    "lookSeverity": "well, localized problem",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-076.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a black 58-year-old woman, seated on a blue padded clinic chair. Pose: one leg extended forward showing a swollen calf. Expression: mildly uncomfortable and concerned. Clearly visible: one visibly swollen lower leg. No text, no logos."
+  }
+}
