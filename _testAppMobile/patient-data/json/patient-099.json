@@ -1,0 +1,109 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-099",
+  "number": 99,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Russ",
+        "age": 50,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-099.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Drunk, fell and cut his head",
+      "quote": "I had a few too many and tripped, cut my forehead on the coffee table. It bled a lot. I didn't black out that I know of. Head hurts where I hit it but I feel okay otherwise.",
+      "triageNote": "50-year-old intoxicated male with a forehead laceration from a fall, GCS 15 without reported loss of consciousness, requiring wound repair and sober reassessment to exclude occult head injury.",
+      "vitals": {
+        "hr": {
+          "value": 92,
+          "color": "green"
+        },
+        "bp": {
+          "value": "140/86",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 16,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 98,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.7,
+          "color": "green"
+        },
+        "pain": {
+          "value": 4,
+          "color": "yellow"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 3,
+      "correctRoom": "esi-3",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 3 is appropriate because an intoxicated patient with a head strike is expected to need multiple resources for laceration repair and likely head imaging because examination reliability is limited."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient is intoxicated after a fall with a forehead laceration and currently has GCS 15 without reported loss of consciousness.",
+      "acuityReason": "Intoxication can conceal evolving head injury and limits immediate clearance; the wound also requires repair and sober reassessment.",
+      "expectedResources": [
+        "Laceration irrigation and repair",
+        "Non-contrast head CT when the intoxication prevents reliable clinical clearance",
+        "Serial neurologic and sober reassessment"
+      ],
+      "keyFindings": [
+        "Alcohol intoxication",
+        "Fall with head strike",
+        "Forehead laceration",
+        "GCS 15",
+        "No reported loss of consciousness",
+        "Needs sober reassessment"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "A normal initial score does not exclude intracranial injury in an intoxicated patient.",
+        "Serial examination and a safe discharge plan are necessary even if imaging is reassuring."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Forehead laceration with alcohol intoxication",
+          "Concussion",
+          "Occult intracranial hemorrhage"
+        ],
+        "disposition": "Wound repair, imaging or observation, and serial reassessment would be followed by discharge only when clinically sober and neurologically reassuring."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "50-year-old man, disheveled",
+    "pose": "seated, holding gauze to his forehead",
+    "expression": "bleary, sheepish",
+    "signs": [
+      "gauze held to the forehead",
+      "disheveled"
+    ],
+    "lookSeverity": "intoxicated, stable",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-099.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 50-year-old man, disheveled, seated on a blue padded clinic chair. Pose: holding a gauze pad to his forehead. Expression: bleary and sheepish. Clearly visible: a gauze pad held to the forehead and a disheveled look. No text, no logos."
+  }
+}

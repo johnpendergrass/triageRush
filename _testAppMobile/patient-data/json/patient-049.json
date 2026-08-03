@@ -1,0 +1,104 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-049",
+  "number": 49,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Tyler",
+        "age": 26,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-049.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Thinks he's dying (it's a cold)",
+      "quote": "I played ranked for 14 hours and now I've got a runny nose, sore throat, and feel gross. No fever, breathing is fine—I just need someone to say it isn't serious.",
+      "triageNote": "26-year-old male with two days of runny nose, sore throat, and malaise. He is afebrile, breathing comfortably, and has a normal examination; the presentation is consistent with an uncomplicated viral upper respiratory illness.",
+      "vitals": {
+        "hr": {
+          "value": 72,
+          "color": "green"
+        },
+        "bp": {
+          "value": "120/76",
+          "color": "green"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37.1,
+          "color": "green"
+        },
+        "pain": {
+          "value": 2,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "discharge",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because a well-appearing patient with an uncomplicated viral upper-respiratory pattern is not expected to require emergency resources."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has two days of rhinorrhea, sore throat, and malaise, with normal vital signs, comfortable breathing, and a reassuring examination.",
+      "acuityReason": "There are no findings suggesting airway compromise, pneumonia, sepsis, dehydration, or another urgent process.",
+      "expectedResources": [],
+      "keyFindings": [
+        "Two days of runny nose and sore throat",
+        "Afebrile",
+        "Breathing comfortably",
+        "Normal oxygen saturation",
+        "Reassuring examination"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Antibiotics do not treat an uncomplicated viral upper-respiratory illness.",
+        "Return precautions should cover breathing difficulty, dehydration, persistent high fever, confusion, or significant worsening."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Viral upper-respiratory infection",
+          "Early influenza or COVID-like viral illness",
+          "Viral pharyngitis"
+        ],
+        "disposition": "Reassurance, fluids, rest, oral symptom treatment, and return precautions would allow discharge without testing."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "26-year-old man in a hoodie",
+    "pose": "seated, holding a tissue to his nose, a bit sheepish",
+    "expression": "sniffly but otherwise fine, sheepish",
+    "signs": [
+      "holding a tissue to the nose",
+      "sniffly but well"
+    ],
+    "lookSeverity": "completely well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-049.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 26-year-old man in a hoodie, seated on a blue padded clinic chair. Pose: seated, holding a tissue to his nose, looking a bit sheepish. Expression: sniffly but otherwise fine and a little embarrassed. Clearly visible: a tissue held to the nose; he otherwise looks healthy. No text, no logos."
+  }
+}

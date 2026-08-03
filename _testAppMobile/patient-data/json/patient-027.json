@@ -1,0 +1,112 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-027",
+  "number": 27,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Camila",
+        "age": 3,
+        "sex": "F",
+        "race": "hispanic"
+      },
+      "image": {
+        "imageFilename": "patient-027.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Swallowed something shiny",
+      "quote": "(Mom) The back of the little remote was open and the shiny coin-battery is missing. She's drooling a lot and won't drink her juice, keeps gagging a little. She doesn't even look that sick, though.",
+      "triageNote": "3-year-old female, likely swallowed a coin-cell button battery from a remote, now drooling and refusing to drink with mild gagging, though she looks deceptively well.",
+      "vitals": {
+        "hr": {
+          "value": 118,
+          "color": "green"
+        },
+        "bp": {
+          "value": "98/60",
+          "color": "green"
+        },
+        "rr": {
+          "value": 26,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 100,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37,
+          "color": "green"
+        },
+        "pain": {
+          "value": 3,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because suspected button-battery ingestion with drooling and refusal to drink is a time-critical esophageal emergency."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This toddler may have a coin-cell battery lodged in the esophagus, with drooling, dysphagia, and gagging despite a deceptively well appearance.",
+      "acuityReason": "A lodged battery can cause rapid caustic injury; symptoms of esophageal obstruction require immediate localization and removal planning.",
+      "expectedResources": [
+        "Immediate chest and abdominal radiographs",
+        "Urgent gastroenterology or surgical consultation",
+        "Time-critical endoscopic removal if lodged",
+        "Age- and timing-appropriate mitigation while awaiting removal"
+      ],
+      "keyFindings": [
+        "Missing coin-cell battery from a remote",
+        "New drooling",
+        "Refuses liquids",
+        "Mild gagging",
+        "Comfortable breathing and normal oxygen saturation"
+      ],
+      "redFlags": [
+        "Possible esophageal button battery",
+        "Drooling and inability to swallow normally"
+      ],
+      "teachingPoints": [
+        "A well appearance does not exclude rapidly progressing tissue injury from a button battery.",
+        "The object must be distinguished from a coin and localized without delay."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Esophageal button-battery impaction",
+          "Coin ingestion",
+          "Other upper gastrointestinal foreign body"
+        ],
+        "disposition": "Imaging would be followed by immediate endoscopic removal if the battery is in the esophagus and observation for tissue injury or complications."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "3-year-old girl in a dress, deceptively well-looking",
+    "pose": "sitting, drooling slightly, hand near her mouth",
+    "expression": "uncomfortable and a bit gaggy",
+    "signs": [
+      "drool on the chin",
+      "hand near mouth/throat"
+    ],
+    "lookSeverity": "deceptively well but in danger",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-027.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a hispanic 3-year-old girl in a dress, deceptively well-looking, seated on a blue padded clinic chair. Pose: sitting, drooling slightly, one hand near her mouth. Expression: uncomfortable and a bit gaggy. Clearly visible: drool on her chin and a hand near her mouth and throat. No text, no logos."
+  }
+}

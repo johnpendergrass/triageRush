@@ -1,0 +1,99 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-096",
+  "number": 96,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Hector",
+        "age": 55,
+        "sex": "M",
+        "race": "hispanic"
+      },
+      "image": {
+        "imageFilename": "patient-096.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Out of blood-pressure pills",
+      "quote": "I ran out of my blood-pressure medicine and my doctor's office is closed for the weekend. I feel completely fine — no headache, no chest pain — I just need a refill to get me through.",
+      "triageNote": "55-year-old male, asymptomatic, out of his antihypertensive medication and requesting a bridge refill, with a mildly elevated blood pressure and normal exam.",
+      "vitals": {
+        "hr": {
+          "value": 74,
+          "color": "green"
+        },
+        "bp": {
+          "value": "142/86",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 0,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "discharge",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because this asymptomatic routine medication-refill request has only mildly elevated blood pressure, a normal examination, and no counted emergency resource need."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has run out of routine antihypertensive medication but has no symptoms or evidence of acute end-organ injury.",
+      "acuityReason": "A mildly elevated blood pressure without symptoms and a normal examination support a bridge plan rather than emergency testing.",
+      "expectedResources": [],
+      "keyFindings": [
+        "Out of antihypertensive medication",
+        "Requests bridge refill",
+        "Asymptomatic",
+        "Mildly elevated blood pressure",
+        "Normal examination"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Chest pain, neurologic deficit, dyspnea, vision change, severe headache, or markedly abnormal pressure would require evaluation for acute injury.",
+        "Continuity planning helps prevent repeated medication gaps."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Medication access problem without acute illness"
+        ],
+        "disposition": "A limited bridge prescription and primary-care follow-up would allow discharge without testing."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "55-year-old man",
+    "pose": "seated comfortably, relaxed",
+    "expression": "calm, patient",
+    "signs": [],
+    "lookSeverity": "completely well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-096.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a hispanic 55-year-old man, seated comfortably on a blue padded clinic chair. Pose: relaxed, hands in his lap. Expression: calm and patient. Clearly visible: a healthy, well-looking man with no distress. No text, no logos."
+  }
+}

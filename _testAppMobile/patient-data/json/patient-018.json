@@ -1,0 +1,106 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-018",
+  "number": 18,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Cody",
+        "age": 9,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-018.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Hurt wrist",
+      "quote": "I was so close to landing the kickflip. My wrist bent weird and crunched, and now it hurts to twist it. Can I still skate this weekend?",
+      "triageNote": "9-year-old boy after a fall onto an outstretched hand from a skateboard, with focal distal-forearm tenderness, subtle dorsal angulation, and pain with wrist rotation. Finger movement and distal circulation and sensation are intact.",
+      "vitals": {
+        "hr": {
+          "value": 96,
+          "color": "green"
+        },
+        "bp": {
+          "value": "106/68",
+          "color": "green"
+        },
+        "rr": {
+          "value": 20,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37,
+          "color": "green"
+        },
+        "pain": {
+          "value": 5,
+          "color": "yellow"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 4,
+      "correctRoom": "esi-4",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 4 is appropriate because this stable isolated wrist injury is expected to require one resource: an X-ray."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This is a stable child with an isolated distal-forearm injury and intact distal neurovascular function.",
+      "acuityReason": "Focal tenderness and subtle angulation make a fracture likely, but there is no open injury, severe deformity, or neurovascular compromise.",
+      "expectedResources": [
+        "Wrist and distal-forearm X-ray"
+      ],
+      "keyFindings": [
+        "Fall onto an outstretched hand",
+        "Focal distal-forearm tenderness",
+        "Subtle dorsal angulation",
+        "Pain with wrist rotation",
+        "Intact finger movement, circulation, and sensation"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Subtle deformity after a fall can indicate a stable pediatric fracture even when finger movement is preserved.",
+        "Splinting is treatment rather than an additional diagnostic resource in the resource-count step."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Distal radius buckle fracture",
+          "Distal radius fracture",
+          "Wrist sprain"
+        ],
+        "disposition": "Imaging would likely be followed by splinting and outpatient follow-up, with discharge precautions for increasing pain, swelling, numbness, or color change."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "9-year-old boy in skate gear (helmet, knee pads), skateboard propped beside him",
+    "pose": "sitting, cradling his right forearm against his body",
+    "expression": "pouty but tough, a mild wince",
+    "signs": [
+      "cradling right forearm",
+      "slight swelling at the wrist"
+    ],
+    "lookSeverity": "uncomfortable but clearly stable",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-018.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 9-year-old boy in skate gear (helmet, knee pads), a skateboard propped beside him, seated on a blue padded clinic chair. Pose: sitting, cradling his right forearm against his body. Expression: pouty but tough, a mild wince. Clearly visible: cradling the right forearm, slight swelling at the wrist. No text, no logos."
+  }
+}

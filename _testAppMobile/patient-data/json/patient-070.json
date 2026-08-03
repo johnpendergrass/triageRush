@@ -1,0 +1,112 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-070",
+  "number": 70,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Aiko",
+        "age": 28,
+        "sex": "F",
+        "race": "asian"
+      },
+      "image": {
+        "imageFilename": "patient-070.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Heart suddenly racing",
+      "quote": "Out of nowhere my heart started POUNDING super fast and steady — it just switched on. I feel it in my throat, a little dizzy, but no chest pain. It's happened once before.",
+      "triageNote": "28-year-old female with abrupt onset of a very rapid, regular pounding heartbeat. Pulse is about 190; she is mildly lightheaded but has no chest pain or breathing difficulty, and blood pressure is 116/74.",
+      "vitals": {
+        "hr": {
+          "value": 190,
+          "color": "red"
+        },
+        "bp": {
+          "value": "116/74",
+          "color": "green"
+        },
+        "rr": {
+          "value": 18,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 1,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 1,
+      "correctRoom": "esi-1",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 1 is appropriate because a symptomatic regular tachycardia near 190 requires immediate rhythm-directed treatment, potentially including adenosine, which is a lifesaving intervention."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has abrupt-onset regular narrow-complex-pattern palpitations near 190 with lightheadedness but preserved blood pressure.",
+      "acuityReason": "The extreme sustained rate requires immediate monitoring and rhythm termination while instability is reassessed continuously.",
+      "expectedResources": [
+        "Immediate ECG, cardiac monitoring, and IV access",
+        "Vagal maneuvers",
+        "Immediate rhythm-directed medication if vagal maneuvers fail",
+        "Synchronized cardioversion if instability develops"
+      ],
+      "keyFindings": [
+        "Abrupt onset",
+        "Very rapid regular pounding heartbeat",
+        "Pulse about 190",
+        "Mild lightheadedness",
+        "No chest pain or breathing difficulty",
+        "Blood pressure 116/74"
+      ],
+      "redFlags": [
+        "Sustained symptomatic tachycardia near 190"
+      ],
+      "teachingPoints": [
+        "A stable blood pressure can deteriorate quickly during a sustained very rapid rhythm.",
+        "Rhythm documentation should occur promptly without delaying treatment when instability appears."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Paroxysmal supraventricular tachycardia",
+          "Atrial flutter with fixed conduction",
+          "Other regular narrow-complex tachycardia"
+        ],
+        "disposition": "Immediate monitored rhythm treatment would be followed by observation, trigger assessment, and cardiology follow-up after successful conversion."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "28-year-old woman",
+    "pose": "seated upright, hand at her chest/throat",
+    "expression": "startled, wide-eyed",
+    "signs": [
+      "hand at the chest/throat",
+      "wide-eyed"
+    ],
+    "lookSeverity": "stable but alarmed",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-070.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. ANATOMY AND OBJECTS (critical): exactly one head, exactly two arms ending in exactly two hands, exactly two legs ending in two feet, five fingers on each hand. No extra, duplicated, floating or partial limbs anywhere. Anything the character touches must be plausibly held by one of those two hands. All furniture is solid and fully opaque - the chair must never look transparent or see-through, and its back, seat and legs must all be completely drawn. Subject: an asian 28-year-old woman, seated on a blue padded clinic chair. Pose: sitting upright, one hand at her chest and throat. Expression: startled and wide-eyed. Clearly visible: a hand pressed to the upper chest. No text, no logos."
+  }
+}

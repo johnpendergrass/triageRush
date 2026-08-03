@@ -23,7 +23,7 @@
       },
       "chiefComplaint": "Itchy rash, both legs",
       "quote": "I built a sick dirt jump in the woods. Turns out I built it directly in a poison ivy patch. My legs now look like a topographic map and I have not stopped scratching since third period.",
-      "triageNote": "15-year-old male, itchy streaky rash on both shins two days after building trails in the woods, no facial or airway involvement.",
+      "triageNote": "15-year-old male, itchy streaky rash on both shins and forearms two days after building trails in the woods, no facial or airway involvement.",
       "vitals": {
         "hr": {
           "value": 80,
@@ -67,7 +67,7 @@
       ],
       "keyFindings": [
         "Woodland plant exposure",
-        "Itchy streaky rash on both shins",
+        "Itchy streaky rash on both shins and forearms",
         "Two-day duration",
         "No facial or airway involvement",
         "Normal vital signs"

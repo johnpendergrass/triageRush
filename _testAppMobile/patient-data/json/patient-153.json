@@ -1,0 +1,113 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-153",
+  "number": 153,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Leonard",
+        "age": 66,
+        "sex": "M",
+        "race": "black"
+      },
+      "image": {
+        "imageFilename": "patient-153.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Confused and badly constipated",
+      "quote": "(his wife) He's got myeloma. All this last week he's been muddled — drinking gallons, up all night to the toilet, and he hasn't opened his bowels in five days. He's just not with us.",
+      "triageNote": "66-year-old male with myeloma, one week of confusion, excessive thirst and urination, constipation and profound fatigue; he is dry and drowsy.",
+      "vitals": {
+        "hr": {
+          "value": 96,
+          "color": "green"
+        },
+        "bp": {
+          "value": "112/68",
+          "color": "green"
+        },
+        "rr": {
+          "value": 16,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 97,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.6,
+          "color": "green"
+        },
+        "pain": {
+          "value": 3,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because confusion and drowsiness in a patient with malignancy are high-risk acute mental-status changes requiring rapid metabolic evaluation."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient with myeloma has a week of cognitive change, dehydration, constipation, polyuria, and profound fatigue suggesting a serious metabolic complication.",
+      "acuityReason": "Confusion and drowsiness in a patient with malignancy are high-risk acute mental-status changes requiring rapid metabolic evaluation.",
+      "expectedResources": [
+        "Immediate glucose and neurologic assessment",
+        "Calcium, electrolytes, renal, CBC, and ECG testing",
+        "IV fluid treatment",
+        "Malignancy-directed metabolic therapy"
+      ],
+      "keyFindings": [
+        "Known myeloma",
+        "One week of confusion",
+        "Drowsy and dry",
+        "Excess thirst and urination",
+        "Constipation",
+        "Profound fatigue"
+      ],
+      "redFlags": [
+        "Acute confusion in a patient with cancer"
+      ],
+      "teachingPoints": [
+        "Stones, bones, groans and psychiatric moans. Send a calcium on every confused cancer patient — hypercalcaemia is common, very treatable and lethal when missed. Fluids first, bisphosphonate second. Note that all six vitals are green: the whole case is in the story.",
+        "Triage should be based on the current presentation and expected care, with reassessment if new warning signs appear."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Hypercalcemia of malignancy",
+          "Other metabolic encephalopathy",
+          "Medication or infection-related delirium"
+        ],
+        "disposition": "Rapid testing and IV treatment would likely require monitored admission until cognition and calcium normalize."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a black 66-year-old man in a loose jumper, seated on a blue padded clinic chair",
+    "pose": "sitting slumped back with arms heavy in his lap, head tilted slightly",
+    "expression": "drowsy, vacant and slow, not quite present",
+    "signs": [
+      "dry cracked lips",
+      "heavy drooping eyelids",
+      "a slack vacant expression"
+    ],
+    "lookSeverity": "quietly and seriously unwell despite unremarkable observations",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-153.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. Subject: a black 66-year-old man in a loose jumper, seated on a blue padded clinic chair. Pose: sitting slumped back with arms heavy in his lap, head tilted slightly. Expression: drowsy, vacant and slow, not quite present. Clearly visible: dry cracked lips; heavy drooping eyelids; a slack vacant expression. Overall: quietly and seriously unwell despite unremarkable observations. No text, no logos, no watermarks, no border."
+  }
+}

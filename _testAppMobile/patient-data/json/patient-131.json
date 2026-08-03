@@ -1,0 +1,104 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-131",
+  "number": 131,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Randy",
+        "age": 35,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-131.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Severe indigestion",
+      "quote": "Forty-two hot dogs in ten minutes. I placed second. I regret nothing except the last eleven. Do I still get the trophy if I'm in here?",
+      "triageNote": "35-year-old male with epigastric fullness and reflux after a competitive eating contest; the abdomen is soft and non-tender with no signs of peritonism.",
+      "vitals": {
+        "hr": {
+          "value": 88,
+          "color": "green"
+        },
+        "bp": {
+          "value": "128/78",
+          "color": "green"
+        },
+        "rr": {
+          "value": 16,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 98,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 4,
+          "color": "yellow"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "discharge",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because the soft nontender abdomen, normal vital signs, and clear dietary precipitant support uncomplicated reflux without a counted resource."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has postprandial fullness and reflux after extreme overeating without peritoneal or systemic findings.",
+      "acuityReason": "The soft nontender abdomen, normal vital signs, and clear dietary precipitant support uncomplicated reflux without a counted resource.",
+      "expectedResources": [],
+      "keyFindings": [
+        "Competitive eating contest",
+        "Epigastric fullness and reflux",
+        "Soft nontender abdomen",
+        "No guarding or systemic illness",
+        "Normal vital signs"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Compare this with case 005: identical chief complaint, opposite answer. Soft non-tender abdomen, green vitals and an obvious precipitant — this one really is indigestion.",
+        "Triage should be based on the current presentation and expected care, with reassessment if new warning signs appear."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Gastric distension and reflux",
+          "Dyspepsia"
+        ],
+        "disposition": "Oral symptom treatment, dietary guidance, and return precautions would allow discharge."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a white 35-year-old man in a novelty hot dog costume with the foam bun pushed down around his waist, seated on a blue padded clinic chair",
+    "pose": "sitting back with legs spread, both hands resting on a distended stomach",
+    "expression": "queasy, sheepish and quietly proud",
+    "signs": [
+      "a foam hot dog costume pushed down around the waist",
+      "both hands resting on a full stomach",
+      "a competitor number pinned to his shirt"
+    ],
+    "lookSeverity": "entirely well and extremely full",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-131.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. Subject: a white 35-year-old man in a novelty hot dog costume with the foam bun pushed down around his waist, seated on a blue padded clinic chair. Pose: sitting back with legs spread, both hands resting on a distended stomach. Expression: queasy, sheepish and quietly proud. Clearly visible: a foam hot dog costume pushed down around the waist; both hands resting on a full stomach; a competitor number pinned to his shirt. Overall: entirely well and extremely full. No text, no logos, no watermarks, no border."
+  }
+}

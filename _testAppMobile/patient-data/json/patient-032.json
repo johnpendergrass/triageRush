@@ -27,7 +27,7 @@
       "vitals": {
         "hr": {
           "value": 118,
-          "color": "red"
+          "color": "yellow"
         },
         "bp": {
           "value": "88/54",
@@ -52,19 +52,20 @@
       }
     },
     "answer": {
-      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player assignment remains session state.",
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
       "correctEsi": 1,
       "correctRoom": "esi-1",
       "otherAcceptableRooms": null,
-      "destinationReason": "ESI 1 / Resuscitation is required because hypotensive circulatory collapse demands immediate lifesaving intervention."
+      "destinationReason": "ESI 1 is appropriate because hypotension with syncope, severe abdominal and back pain, diaphoresis, and a pulsatile mass requires immediate lifesaving intervention."
     },
     "clinical": {
       "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
-      "summary": "This patient has syncope, severe abdominal and back pain, a pulsatile abdominal mass, and hypotension requiring immediate lifesaving care.",
-      "acuityReason": "Blood pressure of 88/54 with tachycardia, diaphoresis, severe pain, and a pulsatile mass indicates active circulatory instability and a rapidly fatal vascular emergency until proven otherwise.",
+      "summary": "This older adult has shock physiology and a classic pattern for catastrophic intra-abdominal vascular bleeding.",
+      "acuityReason": "Blood pressure 88/54 with tachycardia and diaphoresis indicates decreased perfusion requiring simultaneous resuscitation and definitive surgical mobilization.",
       "expectedResources": [
-        "Immediate resuscitation and continuous monitoring",
-        "Large-bore IV access, blood preparation, and bedside imaging",
+        "Immediate large-bore IV access and blood-product resuscitation",
+        "Bedside aortic ultrasound",
+        "Type and crossmatch",
         "Immediate vascular-surgery activation"
       ],
       "keyFindings": [
@@ -72,24 +73,22 @@
         "Severe abdominal pain radiating to the back",
         "Pulsatile abdominal mass",
         "Diaphoresis",
-        "Blood pressure of 88/54",
-        "Heart rate of 118"
+        "Heart rate 118",
+        "Blood pressure 88/54"
       ],
       "redFlags": [
-        "Syncope with abdominal or back pain",
-        "Pulsatile abdominal mass",
-        "Hypotension with tachycardia"
+        "Shock with suspected internal hemorrhage"
       ],
       "teachingPoints": [
-        "An unstable patient with this vascular pattern requires simultaneous resuscitation and surgical activation.",
-        "Definitive imaging must not delay operative management when instability makes transport unsafe."
+        "Unstable patients with this pattern should not be delayed for routine CT imaging.",
+        "Resuscitation and operative mobilization must occur in parallel."
       ],
       "possibleClinicalOutcome": {
         "possibleDiagnoses": [
           "Ruptured abdominal aortic aneurysm",
-          "Other catastrophic intra-abdominal hemorrhage"
+          "Other catastrophic retroperitoneal hemorrhage"
         ],
-        "disposition": "The patient would require immediate blood-product preparation, bedside assessment, vascular-surgery involvement, and emergency operative management."
+        "disposition": "Immediate blood-product resuscitation and vascular intervention would be required, with emergency operative or endovascular repair."
       }
     }
   },

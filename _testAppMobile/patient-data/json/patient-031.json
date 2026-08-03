@@ -1,0 +1,113 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-031",
+  "number": 31,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Yuki",
+        "age": 85,
+        "sex": "F",
+        "race": "asian"
+      },
+      "image": {
+        "imageFilename": "patient-031.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Confused and not herself",
+      "quote": "(Daughter) She's just not herself — confused, calling me by my sister's name, sleepy all day. No real fever, barely a cough. She keeps picking at her blanket and drifting off.",
+      "triageNote": "85-year-old female with two days of new confusion and increasing drowsiness. Oxygen saturation is 91% with faint crackles at the right lung base; she is afebrile with only a slight cough.",
+      "vitals": {
+        "hr": {
+          "value": 104,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "128/74",
+          "color": "green"
+        },
+        "rr": {
+          "value": 22,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 91,
+          "color": "red"
+        },
+        "temp": {
+          "value": 37,
+          "color": "green"
+        },
+        "pain": {
+          "value": 0,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because new confusion and drowsiness with hypoxemia in an older adult is a high-risk medical presentation."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This older adult has acute delirium, oxygen saturation 91%, tachycardia, mild tachypnea, and focal basal crackles without fever.",
+      "acuityReason": "Acute mental-status change and impaired oxygenation may represent serious infection or another cardiopulmonary process even without fever.",
+      "expectedResources": [
+        "Supplemental oxygen",
+        "Chest X-ray",
+        "Laboratory testing and cultures",
+        "ECG and cardiopulmonary evaluation",
+        "IV fluids and antibiotics as indicated"
+      ],
+      "keyFindings": [
+        "Two days of new confusion",
+        "Increasing drowsiness",
+        "Oxygen saturation 91%",
+        "Faint right-basilar crackles",
+        "Slight cough without fever"
+      ],
+      "redFlags": [
+        "Acute delirium",
+        "Hypoxemia"
+      ],
+      "teachingPoints": [
+        "New confusion in an older adult is a medical emergency, not an expected consequence of aging.",
+        "Older adults with serious infection may not develop fever."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Pneumonia with hypoxemia and delirium",
+          "Other occult infection",
+          "Heart failure or another cardiopulmonary cause"
+        ],
+        "disposition": "Oxygen, imaging, and an infection and cardiopulmonary workup would likely be followed by admission for treatment and monitoring."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "frail 85-year-old woman in a cardigan",
+    "pose": "seated, slightly slumped, picking at a blanket on her lap",
+    "expression": "vacant, confused, drowsy",
+    "signs": [
+      "vacant confused gaze",
+      "picking at a blanket"
+    ],
+    "lookSeverity": "quietly unwell, confused",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-031.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a frail asian 85-year-old woman in a cardigan, seated on a blue padded clinic chair. Pose: slightly slumped, hands picking at a blanket on her lap. Expression: vacant, confused, and drowsy. Clearly visible: a confused, faraway gaze and hands fidgeting with the blanket. No text, no logos."
+  }
+}

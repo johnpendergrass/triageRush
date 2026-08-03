@@ -1,0 +1,113 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-036",
+  "number": 36,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Hannah",
+        "age": 28,
+        "sex": "F",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-036.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Sharp pain breathing in",
+      "quote": "I get this sharp stab when I breathe in and I'm weirdly short of breath. My right calf's been sore and swollen for a few days. I'm on the pill and I just got back from a long flight.",
+      "triageNote": "28-year-old female taking oral contraceptives after a recent long-haul flight. She has sharp pain on inspiration, shortness of breath, heart rate 118, oxygen saturation 93%, and a swollen tender right calf.",
+      "vitals": {
+        "hr": {
+          "value": 118,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "118/72",
+          "color": "green"
+        },
+        "rr": {
+          "value": 22,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 93,
+          "color": "yellow"
+        },
+        "temp": {
+          "value": 36.9,
+          "color": "green"
+        },
+        "pain": {
+          "value": 5,
+          "color": "yellow"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because pleuritic chest pain, dyspnea, tachycardia, hypoxemia, and unilateral calf swelling create a high-risk thromboembolic presentation."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This young adult has acute cardiopulmonary symptoms plus estrogen use, recent prolonged travel, and a swollen tender right calf.",
+      "acuityReason": "The combined symptoms and risk factors require rapid assessment for pulmonary vascular obstruction despite preserved blood pressure.",
+      "expectedResources": [
+        "ECG and cardiopulmonary monitoring",
+        "Laboratory risk assessment",
+        "CT pulmonary angiography or alternative definitive imaging",
+        "Lower-extremity venous ultrasound",
+        "Anticoagulation when appropriate"
+      ],
+      "keyFindings": [
+        "Sharp pain with inspiration",
+        "Shortness of breath",
+        "Heart rate 118",
+        "Oxygen saturation 93%",
+        "Swollen tender right calf",
+        "Oral contraceptive use and recent long flight"
+      ],
+      "redFlags": [
+        "Hypoxemia with pleuritic pain and unilateral leg swelling"
+      ],
+      "teachingPoints": [
+        "The leg examination and risk-factor history can reveal the source of an otherwise nonspecific cardiopulmonary complaint.",
+        "Normal blood pressure does not exclude clinically important pulmonary vascular obstruction."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Pulmonary embolism with deep-vein thrombosis",
+          "Pneumonia or pleurisy",
+          "Pneumothorax"
+        ],
+        "disposition": "Rapid imaging and risk stratification would guide anticoagulation and determine whether monitored admission or selected outpatient treatment is appropriate."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "28-year-old woman",
+    "pose": "sitting upright, one hand on her chest, breathing shallowly",
+    "expression": "anxious, short of breath",
+    "signs": [
+      "hand on chest, shallow breathing",
+      "one calf visibly swollen"
+    ],
+    "lookSeverity": "anxious, mildly distressed",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-036.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 28-year-old woman, seated on a blue padded clinic chair. Pose: sitting upright, one hand pressed to her chest, breathing shallowly, one lower leg extended showing a swollen calf. Expression: anxious and short of breath. Clearly visible: a hand on the chest and one visibly swollen calf. No text, no logos."
+  }
+}

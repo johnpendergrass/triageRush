@@ -1,0 +1,107 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-158",
+  "number": 158,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Curtis",
+        "age": 46,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-158.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Need something for my back",
+      "quote": "My oxycodone got stolen. I don't need tests - I know what works. Just ten milligrams to get me through until Monday. The other ERs keep acting like I'm asking for something crazy.",
+      "triageNote": "46-year-old male requesting replacement oxycodone for unchanged chronic back pain, with no trauma, neurologic deficit or cauda equina features; he is restless with yawning, rhinorrhea and piloerection, and the prescription-monitoring record shows several recent opioid prescriptions from multiple emergency departments.",
+      "vitals": {
+        "hr": {
+          "value": 104,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "148/88",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 18,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37,
+          "color": "green"
+        },
+        "pain": {
+          "value": 9,
+          "color": "red"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 4,
+      "correctRoom": "esi-4",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 4 is appropriate because this stable chronic-pain and mild-withdrawal presentation requires one specialty or structured treatment resource rather than replacement opioid prescribing."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has unchanged chronic back pain without neurologic red flags plus objective mild opioid withdrawal and concerning prescription history.",
+      "acuityReason": "This stable chronic-pain and mild-withdrawal presentation requires one specialty or structured treatment resource rather than replacement opioid prescribing.",
+      "expectedResources": [
+        "Structured substance-use assessment and treatment initiation"
+      ],
+      "keyFindings": [
+        "Unchanged chronic back pain",
+        "No trauma or neurologic deficit",
+        "No cauda equina features",
+        "Yawning, rhinorrhea, piloerection, and restlessness",
+        "Multiple recent opioid prescriptions",
+        "Pain rated 9 out of 10"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "The useful clues are objective, not how he looks: unchanged chronic pain, no red flags, a specific replacement-opioid request, multiple recent prescribers and physical withdrawal signs. Treat the patient without stigma - assess pain properly, recognize opioid use disorder and offer evidence-based treatment rather than simply labeling him a drug seeker.",
+        "Triage should be based on the current presentation and expected care, with reassessment if new warning signs appear."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Mild opioid withdrawal with opioid use disorder",
+          "Chronic mechanical back pain"
+        ],
+        "disposition": "Nonstigmatizing pain assessment and evidence-based withdrawal or addiction treatment would guide discharge and follow-up."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "an ordinary white 46-year-old man in clean jeans and a plain zip-up jacket, seated on a blue padded clinic chair",
+    "pose": "sitting restlessly near the front of the chair, rubbing one forearm with the opposite hand",
+    "expression": "impatient and uncomfortable, caught mid-yawn, but not intoxicated or threatening",
+    "signs": [
+      "subtle perspiration",
+      "slightly watery eyes and runny nose",
+      "restless posture without guarding the back"
+    ],
+    "lookSeverity": "mild opioid withdrawal, medically stable",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-158.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style with smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines, warm detailed rendering and natural realistic proportions. Match the attached reference image's painterly style. Full-body wide shot, square 1:1, 3/4 front view, centered. Show the entire person and entire blue padded clinic chair with all shoes and chair legs and generous margin. Subject: an ordinary, clean, non-stereotyped white 46-year-old man in jeans and a plain zip-up jacket. Pose: sitting restlessly near the front of the chair, rubbing one forearm with the opposite hand, not clutching or guarding his back. Expression: impatient and uncomfortable, caught mid-yawn, but not intoxicated, aggressive or threatening. Subtle perspiration, watery eyes and slightly runny nose. Do not depict needles, pills, drug paraphernalia, homelessness, dirtiness or criminal stereotypes. No text, logos, shadows, floor plane, watermark or border. Perfectly flat solid #00ff00 chroma-key background."
+  }
+}

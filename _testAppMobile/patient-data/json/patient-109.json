@@ -1,0 +1,111 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-109",
+  "number": 109,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Hannah",
+        "age": 19,
+        "sex": "F",
+        "race": "asian"
+      },
+      "image": {
+        "imageFilename": "patient-109.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Took some pills",
+      "quote": "I took a lot of Tylenol about six hours ago. I regretted it almost straight away. But I feel completely fine now, so it's probably okay — isn't it?",
+      "triageNote": "19-year-old female with intentional ingestion of approximately thirty paracetamol tablets six hours ago, currently asymptomatic with an entirely normal examination.",
+      "vitals": {
+        "hr": {
+          "value": 88,
+          "color": "green"
+        },
+        "bp": {
+          "value": "114/70",
+          "color": "green"
+        },
+        "rr": {
+          "value": 16,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.9,
+          "color": "green"
+        },
+        "pain": {
+          "value": 0,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because a large intentional acetaminophen ingestion six hours ago is high risk despite an asymptomatic appearance because treatment is time-sensitive."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient reports a potentially toxic intentional ingestion during the presymptomatic phase.",
+      "acuityReason": "Normal examination and vital signs do not predict hepatic safety; drug level interpretation and antidote treatment cannot be delayed.",
+      "expectedResources": [
+        "Immediate acetaminophen level and timed interpretation",
+        "Liver, coagulation, metabolic, and pregnancy testing",
+        "Immediate antidote therapy when indicated",
+        "Continuous safety observation and psychiatric assessment"
+      ],
+      "keyFindings": [
+        "Intentional ingestion",
+        "Approximately thirty tablets",
+        "Six hours ago",
+        "Currently asymptomatic",
+        "Normal examination"
+      ],
+      "redFlags": [
+        "Potentially lethal occult toxic ingestion",
+        "Intentional self-harm"
+      ],
+      "teachingPoints": [
+        "Acetaminophen toxicity may be clinically silent before severe liver injury develops.",
+        "Timing, formulation, dose, and co-ingestions determine interpretation and treatment."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Acute acetaminophen overdose",
+          "Mixed ingestion"
+        ],
+        "disposition": "Toxicologic testing and antidote treatment would be followed by serial laboratory monitoring and psychiatric disposition planning."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "an asian 19-year-old woman in a university sweatshirt, seated on a blue padded clinic chair",
+    "pose": "sitting with knees together, hands tucked between them, shoulders drawn in",
+    "expression": "quietly embarrassed and subdued, but physically comfortable",
+    "signs": [
+      "no physical signs of illness at all",
+      "reddened eyes as though she has been crying"
+    ],
+    "lookSeverity": "looks completely well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-109.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. Subject: an asian 19-year-old woman in a university sweatshirt, seated on a blue padded clinic chair. Pose: sitting with knees together, hands tucked between them, shoulders drawn in. Expression: quietly embarrassed and subdued, but physically comfortable. Clearly visible: no physical signs of illness at all; reddened eyes as though she has been crying. Overall: looks completely well. No text, no logos, no watermarks, no border."
+  }
+}

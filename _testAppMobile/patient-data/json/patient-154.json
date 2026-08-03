@@ -1,0 +1,107 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-154",
+  "number": 154,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Stanley",
+        "age": 76,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-154.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Haven't passed water since yesterday",
+      "quote": "Prostate cancer, diagnosed four years back. I've not passed a drop since yesterday morning and my belly is hard as a drum below the belt. The urge is there — nothing comes.",
+      "triageNote": "76-year-old male with prostate cancer, thirty hours unable to pass urine, with a distended tender lower abdomen and a palpable bladder.",
+      "vitals": {
+        "hr": {
+          "value": 98,
+          "color": "green"
+        },
+        "bp": {
+          "value": "156/88",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 18,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 97,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 7,
+          "color": "red"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 4,
+      "correctRoom": "esi-4",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 4 is appropriate because this stable urinary retention presentation is expected to require one laboratory resource after bedside catheter decompression."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This older patient has prolonged acute urinary retention with a palpable tender bladder and risk of post-renal kidney injury.",
+      "acuityReason": "This stable urinary retention presentation is expected to require one laboratory resource after bedside catheter decompression.",
+      "expectedResources": [
+        "Renal-function and electrolyte laboratory testing"
+      ],
+      "keyFindings": [
+        "Prostate cancer",
+        "Unable to urinate for thirty hours",
+        "Distended tender lower abdomen",
+        "Palpable bladder",
+        "Pain rated 7 out of 10",
+        "No instability"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "The catheter is both the diagnosis and the treatment. Check the potassium before relaxing, and expect a post-obstructive diuresis afterwards — these patients can pour out litres and drop their pressure.",
+        "Triage should be based on the current presentation and expected care, with reassessment if new warning signs appear."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Acute urinary retention with possible post-renal kidney injury",
+          "Bladder-outlet obstruction"
+        ],
+        "disposition": "Catheter decompression and laboratory testing would be followed by monitoring for post-obstructive diuresis and urologic follow-up."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a white 76-year-old man in a cardigan and slacks, seated uncomfortably on a blue padded clinic chair",
+    "pose": "sitting shifting restlessly, both hands resting low and protectively on his lower belly",
+    "expression": "uncomfortable, restless and preoccupied",
+    "signs": [
+      "a visibly distended lower abdomen",
+      "both hands resting low on the belly",
+      "restless shifting discomfort"
+    ],
+    "lookSeverity": "uncomfortable and distressed but stable",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-154.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. Subject: a white 76-year-old man in a cardigan and slacks, seated uncomfortably on a blue padded clinic chair. Pose: sitting shifting restlessly, both hands resting low and protectively on his lower belly. Expression: uncomfortable, restless and preoccupied. Clearly visible: a visibly distended lower abdomen; both hands resting low on the belly; restless shifting discomfort. Overall: uncomfortable and distressed but stable. No text, no logos, no watermarks, no border."
+  }
+}

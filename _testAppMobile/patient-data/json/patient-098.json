@@ -11,7 +11,7 @@
     "presentation": {
       "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
       "personal": {
-        "name": "Marcus",
+        "name": "Jerome",
         "age": 36,
         "sex": "M",
         "race": "black"
@@ -52,40 +52,40 @@
       }
     },
     "answer": {
-      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player assignment remains session state.",
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
       "correctEsi": 4,
       "correctRoom": "psych",
       "otherAcceptableRooms": null,
-      "destinationReason": "Psych is the preferred destination for this medically stable behavioral-health presentation; the underlying clinical acuity is ESI 4."
+      "destinationReason": "ESI 4 is appropriate because this medically stable nonviolent manic episode requires one specialty psychiatric-evaluation resource."
     },
     "clinical": {
       "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
-      "summary": "This is a medically stable patient with bipolar disorder, three days of minimal sleep, pressured speech, grandiosity, racing thoughts, and marked restlessness.",
-      "acuityReason": "The patient is not violent and has no presented medical instability, but the sustained activation requires safety assessment, evaluation for contributing substances or illness, and psychiatric treatment.",
+      "summary": "This patient with bipolar disorder has markedly reduced sleep, pressured speech, racing thoughts, grandiosity, and restlessness without violence or evident medical instability.",
+      "acuityReason": "The presentation requires safety and psychiatric assessment, while current behavior and physiology do not indicate immediate sedation or medical resuscitation.",
       "expectedResources": [
-        "Focused medical and substance screening",
-        "Psychiatric and safety assessment",
-        "Medication-based mood stabilization as indicated"
+        "Focused medical screening",
+        "Psychiatric evaluation"
       ],
       "keyFindings": [
-        "Known bipolar disorder",
-        "Minimal sleep for three days",
+        "Very little sleep for three days",
         "Rapid pressured speech",
-        "Racing thoughts and grandiose plans",
+        "Racing thoughts",
+        "Grandiose plans",
         "Marked restlessness",
-        "No violence or medical instability"
+        "Not violent and medically stable"
       ],
       "redFlags": null,
       "teachingPoints": [
-        "Reduced need for sleep, pressured speech, grandiosity, and racing thoughts form a characteristic manic pattern.",
-        "Escalating agitation, inability to cooperate, dangerous behavior, intoxication, or medical abnormalities would increase urgency."
+        "Safety assessment must include impulsivity, psychosis, suicidality, aggression, judgment, and ability to care for self.",
+        "Substance use, thyroid disease, medication effects, and other medical mimics should be considered when appropriate."
       ],
       "possibleClinicalOutcome": {
         "possibleDiagnoses": [
           "Acute manic episode",
-          "Substance-induced mood symptoms if screening identifies stimulant exposure"
+          "Substance-induced mood disorder",
+          "Medical mimic if new findings emerge"
         ],
-        "disposition": "The patient would receive a calm environment, safety and medical screening, psychiatric evaluation, and mood-stabilizing treatment with disposition based on risk and response."
+        "disposition": "Medical screening and psychiatric assessment would guide medication, observation, and supported discharge or psychiatric admission."
       }
     }
   },

@@ -52,37 +52,37 @@
       }
     },
     "answer": {
-      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player assignment remains session state.",
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
       "correctEsi": 1,
       "correctRoom": "esi-1",
       "otherAcceptableRooms": null,
-      "destinationReason": "ESI 1 / Resuscitation is appropriate because the suspected aortic emergency requires immediate cardiovascular stabilization and lifesaving intervention."
+      "destinationReason": "ESI 1 is appropriate because abrupt tearing chest pain to the back with severe hypertension and unequal arm pressures requires immediate cardiovascular stabilization."
     },
     "clinical": {
       "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
-      "summary": "This is an abrupt severe chest-pain presentation with marked hypertension, diaphoresis, and unequal arm pressures requiring immediate stabilization.",
-      "acuityReason": "Tearing pain radiating to the back with a major inter-arm pressure difference suggests an acute aortic emergency with risk of rupture, stroke, tamponade, or organ ischemia.",
+      "summary": "This patient has a classic acute aortic syndrome pattern with extreme pain, diaphoresis, and asymmetric arm pressures.",
+      "acuityReason": "The risk of rupture, tamponade, stroke, or end-organ ischemia requires immediate rate and pressure control while definitive care is mobilized.",
       "expectedResources": [
-        "Immediate cardiorespiratory monitoring and IV access",
-        "Rapid heart-rate and blood-pressure control",
-        "Emergency aortic imaging and cardiothoracic consultation"
+        "Immediate cardiac monitoring and IV access",
+        "IV heart-rate and blood-pressure control",
+        "Urgent aortic imaging",
+        "Type and crossmatch",
+        "Immediate cardiothoracic or vascular consultation"
       ],
       "keyFindings": [
-        "Abrupt maximal tearing chest pain",
+        "Instantaneous tearing chest pain",
         "Radiation through to the back",
         "Unequal arm blood pressures",
-        "Blood pressure of 196/108",
+        "Blood pressure 196/108",
         "Diaphoresis",
         "Pain rated 10 out of 10"
       ],
       "redFlags": [
-        "Abrupt tearing pain radiating to the back",
-        "Unequal arm pressures",
-        "Severe hypertension with diaphoresis"
+        "Suspected acute aortic catastrophe"
       ],
       "teachingPoints": [
-        "Aortic disease must be considered before empiric anticoagulation in a compatible chest-pain pattern.",
-        "Rapid reduction of aortic shear stress and early surgical involvement are time critical."
+        "Anticoagulation given for presumed coronary disease could be dangerous in this presentation.",
+        "Rate control generally precedes vasodilation to reduce aortic shear stress."
       ],
       "possibleClinicalOutcome": {
         "possibleDiagnoses": [
@@ -90,7 +90,7 @@
           "Other acute aortic syndrome",
           "Acute coronary syndrome"
         ],
-        "disposition": "The patient would receive immediate monitored stabilization, urgent aortic imaging when safe, and cardiothoracic management with operative care if proximal dissection is identified."
+        "disposition": "Immediate stabilization and definitive imaging would be followed by emergency surgical treatment when the ascending aorta is involved or complicated disease is present."
       }
     }
   },

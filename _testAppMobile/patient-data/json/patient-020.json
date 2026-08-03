@@ -1,0 +1,104 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-020",
+  "number": 20,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Isaiah",
+        "age": 7,
+        "sex": "M",
+        "race": "black"
+      },
+      "image": {
+        "imageFilename": "patient-020.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Cut chin",
+      "quote": "I was hanging upside down on the monkey bars like a bat, and then I wasn't. My chin hit the ground. Do I get glue or sewing?",
+      "triageNote": "7-year-old boy after a fall from monkey bars, with a clean 2 cm linear chin laceration. There is no intraoral extension; jaw movement, bite alignment, and dentition are normal, with no concerning neurologic symptoms.",
+      "vitals": {
+        "hr": {
+          "value": 92,
+          "color": "green"
+        },
+        "bp": {
+          "value": "104/66",
+          "color": "green"
+        },
+        "rr": {
+          "value": 20,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 100,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37,
+          "color": "green"
+        },
+        "pain": {
+          "value": 3,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 4,
+      "correctRoom": "esi-4",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 4 is appropriate because this stable, uncomplicated laceration is expected to require one resource for wound closure."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This is a stable child with a small uncomplicated chin laceration and no evidence of jaw, dental, or significant head injury.",
+      "acuityReason": "The wound needs irrigation and closure, but normal jaw function, dentition, neurologic status, and vital signs make a deeper injury unlikely.",
+      "expectedResources": [
+        "Laceration irrigation and closure"
+      ],
+      "keyFindings": [
+        "2 cm clean linear chin laceration",
+        "No intraoral extension",
+        "Normal jaw movement and bite alignment",
+        "Dentition intact",
+        "No concerning neurologic symptoms"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "A chin impact should prompt examination of the jaw, teeth, bite, and oral mucosa rather than assessment of the skin wound alone.",
+        "Simple laceration closure counts as one resource in the resource-prediction step."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Simple chin laceration",
+          "Minor facial contusion"
+        ],
+        "disposition": "After irrigation, the wound would likely be closed with tissue adhesive or sutures, tetanus status reviewed, and the child discharged with wound precautions."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "7-year-old boy at a playground in a striped shirt",
+    "pose": "sitting, holding gauze to his chin",
+    "expression": "brave and curious",
+    "signs": [
+      "small gauze held to the chin with a little blood"
+    ],
+    "lookSeverity": "stable, mild",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-020.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a black 7-year-old boy in a striped shirt, seated on a blue padded clinic chair. Pose: sitting, holding a small gauze pad to his chin. Expression: brave and curious. Clearly visible: a small gauze pad held to the chin with a little blood. No text, no logos."
+  }
+}

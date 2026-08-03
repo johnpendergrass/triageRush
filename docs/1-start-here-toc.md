@@ -1,19 +1,21 @@
 # Start Here: Current Project Map
 
-**Last modified:** 2026-08-02
+**Last modified:** 2026-08-03
 
-**Changes from the previous version:** Replaced the old specification table of
-contents with a production-development entry point and current priority list.
+**Changes from the previous version:** Marked the self-contained mobile game as
+the verified behavioral reference and updated production priorities after the
+accepted timing, scoring, sound, header, countdown, and review refinements.
 
 ## Current milestone
 
-The demo-design phase is substantially complete. The next major phase is to
-build the actual responsive application under `triageRush/`, using the mobile,
-desktop, and HOME demos as behavioral and visual references.
+The demo-design phase is substantially complete. `_testAppMobile/` is now a
+self-contained and verified game reference using all 160 schema 2.2 patients
+and the current game-page artwork. Its accepted behavior is specified in
+[Gameplay rules and specifications](3-gameplay-rules-and-specs.md).
 
-The production asset tree has been reorganized around `game-page/` and
-`lobby-page/`. The demos still need their asset references reconciled before or
-alongside production work.
+The next major phase is to build the actual responsive application under
+`triageRush/`. Production must load canonical assets and patient data from their
+owned locations; it must not depend on the mobile demo's private copies.
 
 ## Read in this order
 
@@ -30,7 +32,7 @@ alongside production work.
 5. [Development history](2-dev-history.md) explains how the present direction
    was reached.
 6. The current
-   [AI handoff](99-ai-handoff--2026-08-02-1457.md) records tactical
+   [AI handoff](99-ai-handoff--2026-08-03-1119.md) records tactical
    continuation details.
 
 ## Repository map
@@ -49,17 +51,20 @@ triageRush/
 
 ## Immediate priorities
 
-1. Reconcile `_testAppMobile/` and `_testAppHomeScreen/` with the reorganized
-   production asset names and folders.
+1. Preserve the accepted `_testAppMobile/` checkpoint as the behavioral
+   reference while production is built.
 2. Establish the production application shell and centralized asset and patient
    manifests.
 3. Implement one lightweight application state shared by all responsive views.
-4. Transfer the accepted Triage-mode loop from the mobile demo.
-5. Integrate the HOME lobby, settings boards, registered door overlays, and
-   sound controls.
-6. Implement Shift Review and the reusable detailed-patient chart contexts.
-7. Implement and tune TriageRUSH only after its provisional pacing and numeric
-   scoring values are confirmed.
+4. Transfer the accepted Triage loop, scoring, detailed charts, and first-choice
+   accounting from the mobile reference.
+5. Transfer Shift Review, scoring formulas, and the Patients Seen chart wrapper.
+6. Transfer the synchronized RUSH arrival curves, live waiting penalty, sounds,
+   full-queue shake, and final countdown behavior.
+7. Integrate the HOME lobby, settings boards, registered door overlays, and
+   streaming-audio controls.
+8. Repair `_testAppHomeScreen/` only if the standalone HOME reference is still
+   needed; otherwise use its accepted visuals directly during production work.
 
 ## Important current cautions
 

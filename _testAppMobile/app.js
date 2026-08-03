@@ -1,441 +1,361 @@
 const ASSETS = window.TRIAGE_RUSH_ASSETS;
 
-if (!ASSETS) {
-  throw new Error("Mobile asset manifest failed to load.");
-}
+if (!ASSETS) throw new Error("Mobile asset manifest failed to load.");
 
-let patients = [
-  {
-    id: "patient-006",
-    name: "Priya",
-    age: 27,
-    sex: "F",
-    complaint: "Face swelling",
-    quote: "There was shrimp in the pad thai. My face is swelling, and now I can hear myself wheezing.",
-    presentation: "27yo F - facial and lip swelling with wheeze minutes after shellfish. Hypotensive and hypoxic.",
-    vitals: { hr: 128, bp: "88/54", rr: 26, spo2: 90, temp: 37.0, pain: 3 },
-    answer: "esi1",
-    esi: 1,
-    why: "Airway swelling, wheeze, hypoxia, and shock require immediate life-saving intervention. This is ESI 1."
-  },
-  {
-    id: "patient-032",
-    name: "Ronald",
-    age: 71,
-    sex: "M",
-    complaint: "Passed out; belly and back pain",
-    quote: "I passed out at the store. Now there is deep tearing pain through my belly and back.",
-    presentation: "71yo M - syncope, severe abdominal/back pain, diaphoresis, pulsatile abdominal mass, BP 88/54.",
-    vitals: { hr: 118, bp: "88/54", rr: 22, spo2: 97, temp: 36.8, pain: 9 },
-    answer: "esi1",
-    esi: 1,
-    why: "Syncope, abdominal/back pain, a pulsatile mass, and hypotension suggest ruptured AAA. He needs immediate resuscitation."
-  },
-  {
-    id: "patient-002",
-    name: "Frank",
-    age: 58,
-    sex: "M",
-    complaint: "Heartburn",
-    quote: "It is just heartburn. Give me a Tums and I am out of here.",
-    presentation: "58yo M - substernal burning radiating to jaw, diaphoresis, onset at his desk; possible acute coronary syndrome.",
-    vitals: { hr: 108, bp: "108/70", rr: 20, spo2: 95, temp: 37.0, pain: 5 },
-    answer: "esi2",
-    esi: 2,
-    why: "High-risk chest symptoms can deteriorate quickly despite near-normal vital signs. This is an emergent ESI 2 evaluation."
-  },
-  {
-    id: "patient-004",
-    name: "Rosa",
-    age: 61,
-    sex: "F",
-    complaint: "Back pain after car crash",
-    quote: "I am mostly fine. It is my back that is being dramatic, not me.",
-    presentation: "61yo F - back pain after MVC, midline tenderness, moving both legs, stable vital signs.",
-    vitals: { hr: 96, bp: "148/88", rr: 18, spo2: 98, temp: 37.0, pain: 7 },
-    answer: "esi3",
-    esi: 3,
-    why: "She is stable but needs imaging, analgesia, and examination after a significant mechanism. Multiple resources support ESI 3."
-  },
-  {
-    id: "patient-009",
-    name: "Andre",
-    age: 19,
-    sex: "M",
-    complaint: "Belly pain moved right",
-    quote: "The pain started by my belly button, then moved down to the right.",
-    presentation: "19yo M - migrating RLQ pain, nausea/vomiting, guarding; stable and concerning for appendicitis.",
-    vitals: { hr: 96, bp: "124/78", rr: 18, spo2: 99, temp: 37.8, pain: 7 },
-    answer: "esi3",
-    esi: 3,
-    why: "Probable appendicitis requires labs, imaging, medication, and surgical consultation, but he is currently stable: ESI 3."
-  },
-  {
-    id: "patient-001",
-    name: "Tyler",
-    age: 10,
-    sex: "M",
-    complaint: "Twisted ankle",
-    quote: "I landed wrong playing tennis. Walking hurts. Do I get cool crutches?",
-    presentation: "10yo M - inversion ankle injury, painful weight-bearing, neurovascularly intact.",
-    vitals: { hr: 92, bp: "110/70", rr: 18, spo2: 99, temp: 37.0, pain: 5 },
-    answer: "esi4",
-    esi: 4,
-    why: "He is stable and likely needs one resource: an ankle X-ray. That makes this a less-urgent ESI 4 case."
-  },
-  {
-    id: "patient-011",
-    name: "Gerry",
-    age: 45,
-    sex: "M",
-    complaint: "Cut my hand",
-    quote: "The avocado won. It is not squirting, and I can still bend everything.",
-    presentation: "45yo M - palmar knife laceration, bleeding controlled, full flexion and sensation.",
-    vitals: { hr: 84, bp: "130/82", rr: 16, spo2: 99, temp: 36.8, pain: 4 },
-    answer: "esi4",
-    esi: 4,
-    why: "A controlled laceration with intact tendon and nerve function generally needs one focused procedural resource: ESI 4."
-  },
-  {
-    id: "patient-014",
-    name: "Trevor",
-    age: 15,
-    sex: "M",
-    complaint: "Itchy rash on both legs",
-    quote: "I built a dirt jump in poison ivy. I have not stopped scratching since third period.",
-    presentation: "15yo M - localized itchy streaky rash after plant exposure; no facial, airway, or systemic involvement.",
-    vitals: { hr: 80, bp: "112/70", rr: 16, spo2: 100, temp: 36.9, pain: 2 },
-    answer: "esi5",
-    esi: 5,
-    why: "Localized contact dermatitis without red flags needs examination and simple treatment without ED resources: ESI 5."
-  },
-  {
-    id: "patient-023",
-    name: "Liam",
-    age: 4,
-    sex: "M",
-    complaint: "Bead in nose",
-    quote: "It fit perfectly, and then it did not come back out. It is the blue one.",
-    presentation: "4yo M - witnessed plastic bead in right nostril, comfortable, breathing well; not a battery or magnet.",
-    vitals: { hr: 104, bp: "100/64", rr: 22, spo2: 100, temp: 37.0, pain: 1 },
-    answer: "esi5",
-    esi: 5,
-    why: "This is a simple foreign-body removal without airway compromise or high-risk material: non-urgent ESI 5."
-  },
-  {
-    id: "patient-015",
-    name: "Kevin",
-    age: 31,
-    sex: "M",
-    complaint: "Panic attack",
-    quote: "My heart is pounding and my fingers are tingling. This is the fourth time this month.",
-    presentation: "31yo M - recurrent palpitations and tingling, prior cardiac workup negative, no acute medical red flags.",
-    vitals: { hr: 104, bp: "128/80", rr: 22, spo2: 100, temp: 36.8, pain: 0 },
-    answer: "psych",
-    esi: 4,
-    why: "After medical red flags are excluded, the recurrent stable pattern and hyperventilation symptoms support the behavioral-health pathway."
-  },
-  {
-    id: "patient-043",
-    name: "Devon",
-    age: 29,
-    sex: "M",
-    complaint: "Seeing and hearing things",
-    quote: "I stopped my medication. I am not going to hurt anyone; I just want the voices to stop.",
-    presentation: "29yo M - known schizophrenia off medication, calm, cooperative, no SI/HI, normal vitals, no organic red flags.",
-    vitals: { hr: 78, bp: "122/76", rr: 14, spo2: 99, temp: 36.8, pain: 0 },
-    answer: "psych",
-    esi: 4,
-    why: "A calm, cooperative patient with a known psychiatric condition, normal vitals, and no imminent danger fits the Psych pathway."
-  },
-  {
-    id: "patient-013",
-    name: "Gloria",
-    age: 67,
-    sex: "F",
-    complaint: "Out of blood-pressure medicine",
-    quote: "I feel perfectly fine. I just need a refill of the little pink pill.",
-    presentation: "67yo F - out of antihypertensive medication, asymptomatic, mildly elevated BP, no end-organ symptoms.",
-    vitals: { hr: 74, bp: "150/88", rr: 15, spo2: 98, temp: 36.8, pain: 0 },
-    answer: "discharge",
-    esi: 5,
-    why: "Asymptomatic mild hypertension without end-organ signs does not require emergency treatment. Refill guidance and follow-up are appropriate."
-  },
-  {
-    id: "patient-016",
-    name: "Brenda",
-    age: 39,
-    sex: "F",
-    complaint: "Web search says brain tumor",
-    quote: "I have a mild headache. I need a professional to tell me whether the internet is right.",
-    presentation: "39yo F - mild bilateral headache for several days, no thunderclap onset, neurologic deficit, or other red flags.",
-    vitals: { hr: 72, bp: "118/76", rr: 14, spo2: 100, temp: 36.7, pain: 2 },
-    answer: "discharge",
-    esi: 5,
-    why: "A mild headache without red flags or abnormal findings can receive reassurance, safety-net instructions, and outpatient follow-up."
-  }
-];
+document.documentElement.style.setProperty("--asset-room-wall", `url("${ASSETS.roomsPanel.wall}")`);
+document.documentElement.style.setProperty("--asset-patient-panel", `url("${ASSETS.patientPanel.background}")`);
 
-const reviewedPatientIds = [
-  ...Array.from(
-    { length: 16 },
-    (_, index) => `patient-${String(index + 1).padStart(3, "0")}`
-  ),
-  "patient-021",
-  "patient-022",
-  "patient-023",
-  "patient-032",
-  "patient-037",
-  "patient-043",
-  "patient-098"
-];
+const rooms = [
+  ["esi-1", 1, "ESI 1 RESUS", "Immediate life-saving treatment is required."],
+  ["esi-2", 2, "ESI 2 EMERGENT", "High-risk or severe symptoms that should not wait."],
+  ["esi-3", 3, "ESI 3 URGENT", "Stable now, but likely to need several tests or treatments."],
+  ["esi-4", 4, "ESI 4 LESS URGENT", "Stable and likely to need one test or treatment."],
+  ["esi-5", 5, "ESI 5 NON-URGENT", "Stable and generally needs examination or simple care only."],
+  ["psych", null, "PSYCH", "Behavioral-health evaluation for a medically stable patient."],
+  ["discharge", null, "DISCHARGE", "Emergency treatment is not needed; provide guidance or follow-up."]
+].map(([key, esi, label, description]) => ({
+  key,
+  esi,
+  label,
+  description,
+  closed: ASSETS.roomsPanel.rooms[key].closedDoor,
+  open: ASSETS.roomsPanel.rooms[key].openDoor
+}));
+
+const ui = Object.fromEntries(
+  [
+    "waitingList", "patientName", "patientDemographics", "patientImage", "complaintChip",
+    "patientQuote", "presentationText", "patientExpandButton", "roomsPanel", "resultToast",
+    "roomInfoPopover", "roomInfoTitle", "roomInfoText", "patientEmptyState", "emptyStateKicker",
+    "emptyStateTitle", "emptyStateHint", "coachButton", "coachOverlay", "coachCard",
+    "detailEyebrow", "detailPresentationSection", "detailAnswerSection", "detailClinicalSection",
+    "detailSectionFeedback", "detailCaution", "coachScrollAbove", "coachScrollHint", "statusLabel",
+    "statusValue", "headerCorrect", "headerClose", "headerCloseItem", "headerCloseDivider",
+    "headerWrong", "headerScore", "soundButton", "nextButton", "setupOverlay", "setupTitle", "setupCancel",
+    "setupNote", "startShift", "setupHints", "setupRushSounds", "rushSoundSetting",
+    "triageLengthOptions", "rushLengthOptions",
+    "reviewOverlay", "reviewTitle", "reviewMeta", "reviewScore", "reviewStats", "reviewDirections",
+    "reviewPatientsLink", "reviewChartNav", "reviewChartPrevious", "reviewChartLabel",
+    "reviewChartNext", "reviewChartClose", "reviewClose", "newShift",
+    "playerTitle", "playerInitials"
+  ].map((id) => [id, document.querySelector(`#${id}`)])
+);
+ui.patientPanel = document.querySelector(".patient-panel");
+ui.waitingPanel = document.querySelector(".waiting-panel");
+ui.appShell = document.querySelector(".app-shell");
+ui.coachFrame = document.querySelector(".coach-frame");
+ui.brand = document.querySelector(".brand");
+ui.resetButton = document.querySelector("#resetButton");
+
+let patients = [];
+let patientById = new Map();
+let timerId = null;
+let detailReturnFocus = null;
+let chartContext = null;
+let reviewIndex = 0;
+let muted = false;
+let holdTimer = null;
+let audioContext = null;
+
+const state = {
+  phase: "loading",
+  mode: "triage",
+  difficulty: "forgiving",
+  shiftLength: 300,
+  hints: true,
+  rushSounds: true,
+  player: { title: "Doctor", initials: "AAA" },
+  startedAt: null,
+  elapsed: 0,
+  remaining: 300,
+  deck: [],
+  waiting: [],
+  activePatientId: null,
+  activeBackground: null,
+  decision: null,
+  openRoom: null,
+  firstAssignmentRecorded: false,
+  history: [],
+  stats: { correct: 0, close: 0, over: 0, under: 0, wrong: 0 },
+  score: 0,
+  heartbeatPhase: 0,
+  rushArrivalIn: 10,
+  rushInterval: 10
+};
 
 function normalizePatientRecord(record) {
   if (record.schema?.version !== "2.2") {
     throw new Error(`${record.id || "Patient record"} is not schema version 2.2.`);
   }
-
   const { presentation, answer, clinical } = record.patient;
-  const { personal, image, vitals } = presentation;
-  const correctRoom = answer.correctRoom.replace("esi-", "esi");
-
   return {
     id: record.id,
-    name: personal.name,
-    age: personal.age,
-    sex: personal.sex,
+    name: presentation.personal.name,
+    age: presentation.personal.age,
+    sex: presentation.personal.sex,
     complaint: presentation.chiefComplaint,
     quote: presentation.quote,
-    presentation: presentation.triageNote,
-    vitals: Object.fromEntries(
-      Object.entries(vitals).map(([key, vital]) => [key, vital.value])
-    ),
-    answer: correctRoom,
-    esi: answer.correctEsi,
-    destinationReason: answer.destinationReason,
-    clinical,
-    imageFilename: image.imageFilename
+    triageNote: presentation.triageNote,
+    vitals: presentation.vitals,
+    answer,
+    clinical
   };
 }
 
-async function loadReviewedPatients() {
+async function loadPatients() {
   const records = await Promise.all(
-    reviewedPatientIds.map(async (patientId) => {
+    ASSETS.patientData.ids.map(async (patientId) => {
       const response = await fetch(ASSETS.patientData.json(patientId));
-      if (!response.ok) {
-        throw new Error(`Could not load ${patientId} (${response.status}).`);
-      }
+      if (!response.ok) throw new Error(`Could not load ${patientId} (${response.status}).`);
       return response.json();
     })
   );
-
-  return records.map(normalizePatientRecord);
+  patients = records.map(normalizePatientRecord);
+  patientById = new Map(patients.map((patient) => [patient.id, patient]));
 }
 
-const rooms = [
-  {
-    key: "esi1",
-    esi: 1,
-    badge: "ESI 1",
-    label: "RESUS",
-    description: "Immediate life-saving treatment is required.",
-    closed: ASSETS.roomsPanel.rooms.esi1.closedDoor,
-    open: ASSETS.roomsPanel.rooms.esi1.openDoor
-  },
-  {
-    key: "esi2",
-    esi: 2,
-    badge: "ESI 2",
-    label: "EMERGENT",
-    description: "High-risk or severe symptoms that should not wait.",
-    closed: ASSETS.roomsPanel.rooms.esi2.closedDoor,
-    open: ASSETS.roomsPanel.rooms.esi2.openDoor
-  },
-  {
-    key: "esi3",
-    esi: 3,
-    badge: "ESI 3",
-    label: "URGENT",
-    description: "Stable now, but likely needs several tests or treatments.",
-    closed: ASSETS.roomsPanel.rooms.esi3.closedDoor,
-    open: ASSETS.roomsPanel.rooms.esi3.openDoor
-  },
-  {
-    key: "esi4",
-    esi: 4,
-    badge: "ESI 4",
-    label: "LESS URGENT",
-    description: "Stable and likely needs one test or treatment.",
-    closed: ASSETS.roomsPanel.rooms.esi4.closedDoor,
-    open: ASSETS.roomsPanel.rooms.esi4.openDoor
-  },
-  {
-    key: "esi5",
-    esi: 5,
-    badge: "ESI 5",
-    label: "NON-URGENT",
-    description: "Stable and generally needs examination or simple care only.",
-    closed: ASSETS.roomsPanel.rooms.esi5.closedDoor,
-    open: ASSETS.roomsPanel.rooms.esi5.openDoor
-  },
-  {
-    key: "psych",
-    badge: "",
-    label: "PSYCH",
-    description: "Behavioral-health evaluation for a medically stable patient. The patient still has an underlying ESI level.",
-    closed: ASSETS.roomsPanel.rooms.psych.closedDoor,
-    open: ASSETS.roomsPanel.rooms.psych.openDoor
-  },
-  {
-    key: "discharge",
-    badge: "",
-    label: "DISCHARGE",
-    description: "Emergency treatment is not needed. Provide guidance, follow-up, or routine care.",
-    closed: ASSETS.roomsPanel.rooms.discharge.closedDoor,
-    open: ASSETS.roomsPanel.rooms.discharge.openDoor
+function shuffle(values) {
+  const copy = [...values];
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
   }
-];
+  return copy;
+}
 
-const roomNames = Object.fromEntries(rooms.map((room) => [room.key, `${room.badge} ${room.label}`.trim()]));
-const queueSlotCount = 5;
-const waitingRoomBackgrounds = ASSETS.waitingRooms;
+function nextPatientId() {
+  const visible = new Set([
+    state.activePatientId,
+    ...state.waiting.map((entry) => entry.patientId)
+  ].filter(Boolean));
+  if (!state.deck.length) state.deck = shuffle(patients.map((patient) => patient.id));
+  let attempts = state.deck.length;
+  while (attempts > 0) {
+    const patientId = state.deck.shift();
+    if (!visible.has(patientId)) return patientId;
+    state.deck.push(patientId);
+    attempts -= 1;
+  }
+  throw new Error("No non-duplicate patient is available.");
+}
 
-const ui = {
-  waitingList: document.querySelector("#waitingList"),
-  waitingPanel: document.querySelector(".waiting-panel"),
-  patientName: document.querySelector("#patientName"),
-  patientDemographics: document.querySelector("#patientDemographics"),
-  patientImage: document.querySelector("#patientImage"),
-  complaintChip: document.querySelector("#complaintChip"),
-  patientQuote: document.querySelector("#patientQuote"),
-  presentationText: document.querySelector("#presentationText"),
-  patientExpandButton: document.querySelector("#patientExpandButton"),
-  roomsPanel: document.querySelector("#roomsPanel"),
-  resultToast: document.querySelector("#resultToast"),
-  patientPanel: document.querySelector(".patient-panel"),
-  roomInfoPopover: document.querySelector("#roomInfoPopover"),
-  roomInfoTitle: document.querySelector("#roomInfoTitle"),
-  roomInfoText: document.querySelector("#roomInfoText"),
-  patientEmptyState: document.querySelector("#patientEmptyState"),
-  emptyStateKicker: document.querySelector("#emptyStateKicker"),
-  emptyStateTitle: document.querySelector("#emptyStateTitle"),
-  emptyStateHint: document.querySelector("#emptyStateHint"),
-  coachButton: document.querySelector("#coachButton"),
-  coachOverlay: document.querySelector("#coachOverlay"),
-  coachCard: document.querySelector("#coachCard"),
-  detailEyebrow: document.querySelector("#detailEyebrow"),
-  detailPresentationSection: document.querySelector("#detailPresentationSection"),
-  detailAnswerSection: document.querySelector("#detailAnswerSection"),
-  detailClinicalSection: document.querySelector("#detailClinicalSection"),
-  detailSectionFeedback: document.querySelector("#detailSectionFeedback"),
-  detailCaution: document.querySelector("#detailCaution"),
-  coachScrollAbove: document.querySelector("#coachScrollAbove"),
-  coachScrollHint: document.querySelector("#coachScrollHint"),
-  statusLabel: document.querySelector("#statusLabel"),
-  statusValue: document.querySelector("#statusValue"),
-  soundButton: document.querySelector("#soundButton"),
-  nextButton: document.querySelector("#nextButton")
-};
-
-let currentPatientIndex = null;
-let currentPatientQueueBackground = null;
-let waiting = makeWaitingQueue(currentPatientIndex);
-let decision = null;
-let openRoom = null;
-let mode = "game";
-let muted = false;
-let seconds = 60;
-let score = 0;
-let tally = { correct: 0, acceptable: 0, close: 0, wrong: 0 };
-let timerId = null;
-let sectionFeedbackTimerId = null;
-let holdGesture = null;
-let awaitingPatient = true;
-let previouslyAssigned = false;
-let detailReturnFocus = null;
-
-function randomIndex(exclude = []) {
-  const blocked = new Set(Array.isArray(exclude) ? exclude : [exclude]);
-  const choices = patients.map((_, index) => index).filter((index) => !blocked.has(index));
+function nextBackground() {
+  const used = new Set(state.waiting.map((entry) => entry.background));
+  if (state.activeBackground) used.add(state.activeBackground);
+  const available = ASSETS.waitingRooms.filter((background) => !used.has(background));
+  const choices = available.length ? available : ASSETS.waitingRooms;
   return choices[Math.floor(Math.random() * choices.length)];
 }
 
-function makeWaitingQueue(activeIndex, queueLength = queueSlotCount) {
-  const queue = [];
-  while (queue.length < queueLength) {
-    const queuedPatientIndexes = queue.map((entry) => entry.patientIndex);
-    const usedBackgrounds = queue.map((entry) => entry.background);
-    const candidate = randomIndex([activeIndex, ...queuedPatientIndexes]);
-    queue.push(createQueueEntry(candidate, usedBackgrounds));
-  }
-  return queue;
+function addWaitingPatient() {
+  if (state.waiting.length >= 10) return;
+  state.waiting.push({ patientId: nextPatientId(), background: nextBackground() });
 }
 
-function createQueueEntry(patientIndex, excludedBackgrounds = []) {
-  const availableBackgrounds = waitingRoomBackgrounds.filter(
-    (background) => !excludedBackgrounds.includes(background)
-  );
-  const choices = availableBackgrounds.length ? availableBackgrounds : waitingRoomBackgrounds;
-  return {
-    patientIndex,
-    background: choices[Math.floor(Math.random() * choices.length)]
-  };
+function fillWaiting(target) {
+  while (state.waiting.length < target) addWaitingPatient();
 }
 
 function activePatient() {
-  return patients[currentPatientIndex];
+  return state.activePatientId ? patientById.get(state.activePatientId) : null;
+}
+
+function startShift() {
+  const requestedMode = document.querySelector('input[name="setupMode"]:checked').value;
+  const requestedDifficulty = document.querySelector('input[name="setupDifficulty"]:checked').value;
+  const lengthValue = requestedMode === "triage"
+    ? document.querySelector('input[name="triageLength"]:checked').value
+    : document.querySelector('input[name="rushLength"]:checked').value;
+  if (state.phase === "active" && !window.confirm("Restart the active shift with these settings?")) return;
+
+  state.phase = "active";
+  state.mode = requestedMode;
+  state.difficulty = requestedDifficulty;
+  state.shiftLength = lengthValue === "none" ? null : Number(lengthValue);
+  state.hints = ui.setupHints.checked;
+  state.rushSounds = ui.setupRushSounds.checked;
+  state.player = {
+    title: ui.playerTitle.value,
+    initials: (ui.playerInitials.value.toUpperCase().replace(/[^A-Z]/g, "") || "AAA").slice(0, 3)
+  };
+  ui.playerInitials.value = state.player.initials;
+  localStorage.setItem("triageRushMobilePlayer", JSON.stringify(state.player));
+  state.startedAt = new Date();
+  state.elapsed = 0;
+  state.remaining = state.shiftLength;
+  state.deck = shuffle(patients.map((patient) => patient.id));
+  state.waiting = [];
+  state.activePatientId = null;
+  state.activeBackground = null;
+  state.decision = null;
+  state.openRoom = null;
+  state.firstAssignmentRecorded = false;
+  state.history = [];
+  state.stats = { correct: 0, close: 0, over: 0, under: 0, wrong: 0 };
+  state.score = 0;
+  state.heartbeatPhase = 0;
+  const initialRushInterval = state.mode === "rush" && state.shiftLength === 120 ? 14.5 : 10;
+  state.rushArrivalIn = initialRushInterval;
+  state.rushInterval = initialRushInterval;
+  fillWaiting(state.mode === "triage" ? 5 : 2);
+  ui.setupOverlay.hidden = true;
+  ui.reviewOverlay.hidden = true;
+  closeChart();
+  renderAll();
+  clearInterval(timerId);
+  timerId = setInterval(heartbeat, 250);
+  if (state.mode === "rush" && state.rushSounds) {
+    ensureAudioContext();
+    playRushTick();
+  }
+}
+
+function isPaused() {
+  return state.phase !== "active" || !ui.setupOverlay.hidden || !ui.reviewOverlay.hidden || !ui.coachOverlay.hidden;
+}
+
+function heartbeat() {
+  if (isPaused()) return;
+  const willEndShift = state.shiftLength !== null && state.remaining === 1 && state.heartbeatPhase === 3;
+  if (state.mode === "rush" && !willEndShift) {
+    state.rushArrivalIn -= 0.25;
+    if (state.rushArrivalIn <= 0) {
+      if (state.rushSounds) playRushArrivalAlert();
+      const hasQueueSpace = state.waiting.length < 10;
+      if (hasQueueSpace) addWaitingPatient();
+      else triggerRushQueueShake();
+      state.rushInterval = Math.max(1, state.rushInterval - 1);
+      state.rushArrivalIn = state.rushInterval;
+      if (hasQueueSpace) {
+        renderWaiting();
+        renderStatus();
+      }
+    }
+  }
+  state.heartbeatPhase += 1;
+  if (state.heartbeatPhase < 4) {
+    if (
+      state.mode === "rush" &&
+      state.rushSounds &&
+      state.remaining <= 5 &&
+      state.remaining > 0 &&
+      state.heartbeatPhase <= 2
+    ) playRushTick();
+    return;
+  }
+  state.heartbeatPhase = 0;
+  tick();
+}
+
+function tick() {
+  state.elapsed += 1;
+  if (state.shiftLength !== null) {
+    state.remaining = Math.max(0, state.remaining - 1);
+  }
+  if (state.mode === "rush") {
+    if (state.rushSounds) {
+      if (state.remaining > 0) playRushTick();
+      else playRushEndDong();
+    }
+    if (state.remaining <= 10 && state.remaining > 0) showRushCountdownNumber(state.remaining);
+  }
+  renderStatus();
+  if (state.shiftLength !== null && state.remaining === 0) endShift();
+}
+
+function triggerRushQueueShake() {
+  ui.waitingPanel.classList.remove("is-rush-shaking");
+  void ui.waitingPanel.offsetWidth;
+  ui.waitingPanel.classList.add("is-rush-shaking");
+}
+
+function showRushCountdownNumber(number) {
+  const shellRect = ui.appShell.getBoundingClientRect();
+  const imageRect = ui.patientImage.getBoundingClientRect();
+  const panelRect = ui.patientPanel.getBoundingClientRect();
+  const fontSize = panelRect.width * 0.5;
+  const numberElement = document.createElement("span");
+  numberElement.className = "rush-countdown-number";
+  numberElement.setAttribute("aria-hidden", "true");
+  numberElement.textContent = String(number);
+  numberElement.style.left = `${imageRect.left - shellRect.left + imageRect.width * 0.5}px`;
+  numberElement.style.top = `${imageRect.top - shellRect.top + imageRect.height * 0.33}px`;
+  numberElement.style.fontSize = `${fontSize}px`;
+  numberElement.addEventListener("animationend", () => numberElement.remove(), { once: true });
+  ui.appShell.append(numberElement);
+  setTimeout(() => numberElement.remove(), 800);
+}
+
+function formatClock(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  return `${minutes}:${String(seconds % 60).padStart(2, "0")}`;
 }
 
 function renderAll() {
+  renderHeader();
   renderPatient();
   renderWaiting();
   renderRooms();
   renderStatus();
-  renderFooterControls();
+  renderFooter();
+}
+
+function renderHeader() {
+  ui.brand.innerHTML = state.mode === "rush"
+    ? "<span>TRIAGE</span><strong>RUSH!</strong>"
+    : "<span>TRIAGE!</span>";
+}
+
+function renderStatus() {
+  if (state.phase === "loading") return;
+  const time = state.shiftLength === null ? `+${formatClock(state.elapsed)}` : formatClock(state.remaining);
+  const total = state.history.length;
+  ui.headerCorrect.textContent = state.stats.correct;
+  ui.headerClose.textContent = state.stats.close;
+  ui.headerWrong.textContent = total - state.stats.correct - state.stats.close;
+  ui.headerScore.textContent = currentScore();
+  const closeEnabled = state.difficulty === "forgiving";
+  ui.headerCloseItem.hidden = !closeEnabled;
+  ui.headerCloseDivider.hidden = !closeEnabled;
+  if (state.mode === "rush") {
+    ui.statusLabel.textContent = `SCORE ${state.score}`;
+    ui.statusValue.textContent = time;
+  } else {
+    ui.statusLabel.textContent = `${state.stats.correct} CORRECT · ${state.history.length} SEEN`;
+    ui.statusValue.textContent = time;
+  }
+  ui.statusLabel.textContent = state.shiftLength === null ? "ELAPSED" : "TIME";
+  ui.statusValue.classList.remove("is-edu");
+}
+
+function currentScore() {
+  return state.score - (state.mode === "rush" ? state.waiting.length * 10 : 0);
+}
+
+function renderFooter() {
+  ui.coachButton.disabled = !state.decision;
+  ui.coachButton.querySelector("small").textContent = state.decision ? "READY" : "LOCKED";
+  ui.resetButton.disabled = state.phase !== "active";
+  ui.resetButton.querySelector("small").textContent = state.shiftLength === null ? "END SHIFT" : "VIEW / END";
 }
 
 function renderPatient() {
   const patient = activePatient();
-  const isCleared = awaitingPatient;
-  const isAssignedCase = Boolean(decision);
-  ui.patientPanel.classList.toggle("is-awaiting-patient", isCleared);
-  ui.patientEmptyState.hidden = !isCleared;
-  ui.patientExpandButton.hidden = isCleared || !patient;
-  ui.emptyStateKicker.hidden = isAssignedCase;
-  ui.emptyStateKicker.textContent = "READY";
-  ui.emptyStateTitle.textContent = "SELECT A PATIENT";
-  ui.emptyStateHint.innerHTML = `
-    <span class="empty-state-action empty-state-action--from-waiting">
-      <b class="empty-state-arrow empty-state-arrow--right" aria-hidden="true"></b>
-      <span>FROM WAITING ROOM</span>
-    </span>
-    ${isAssignedCase ? `
-      <span class="empty-state-divider"><b>or</b></span>
-      <span class="empty-state-action empty-state-action--recall">
-        <span>RECALL FROM THE LAST TREATMENT ROOM</span>
-        <b class="empty-state-arrow empty-state-arrow--left" aria-hidden="true"></b>
-      </span>
-    ` : ""}
-    <span class="empty-state-divider empty-state-divider--before-definition"><b>or</b></span>
-    <span class="empty-state-action empty-state-action--definition">
-      <span>PRESS AND HOLD DOOR FOR ESI DEFINITION</span>
-      <b class="empty-state-arrow empty-state-arrow--right" aria-hidden="true"></b>
-    </span>
-    ${isAssignedCase ? `
-      <span class="empty-state-divider empty-state-divider--before-coach"><b>or</b></span>
-      <span class="empty-state-coach-action">
-        <span>TAP 'COACH' BELOW TO REVIEW THE LAST PATIENT</span>
-        <b class="empty-state-arrow-down" aria-hidden="true"></b>
-      </span>
-    ` : ""}
-  `;
+  const empty = !patient;
+  ui.patientPanel.classList.toggle("is-awaiting-patient", empty);
+  ui.patientEmptyState.hidden = !empty;
+  ui.patientExpandButton.hidden = empty;
   ui.patientPanel
     .querySelectorAll(".patient-scene, .patient-quote, .vitals-card, .presentation-card")
-    .forEach((element) => element.setAttribute("aria-hidden", String(isCleared)));
+    .forEach((element) => element.setAttribute("aria-hidden", String(empty)));
 
-  if (!patient) {
+  if (empty) {
+    ui.emptyStateKicker.textContent = state.phase === "active" ? "READY" : "MOBILE GAME";
+    ui.emptyStateTitle.textContent = state.phase === "active" ? "SELECT A PATIENT" : "START A SHIFT";
+    ui.emptyStateHint.innerHTML = state.hints && state.phase === "active"
+      ? '<span class="empty-state-action empty-state-action--from-waiting"><b class="empty-state-arrow empty-state-arrow--right" aria-hidden="true"></b><span>FROM WAITING ROOM</span></span>'
+      : "";
     ui.patientImage.removeAttribute("src");
-    ui.patientImage.alt = "";
     return;
   }
 
@@ -445,682 +365,556 @@ function renderPatient() {
   ui.patientImage.alt = `${patient.name}, current patient`;
   ui.complaintChip.textContent = patient.complaint;
   ui.patientQuote.textContent = `“${patient.quote}”`;
-  ui.presentationText.textContent = patient.presentation;
-
-  setVital("vitalHr", patient.vitals.hr, patient.vitals.hr > 115 || patient.vitals.hr < 50);
-  setVital("vitalBp", patient.vitals.bp, Number.parseInt(patient.vitals.bp, 10) < 90);
-  setVital("vitalRr", patient.vitals.rr, patient.vitals.rr > 24 || patient.vitals.rr < 10);
-  setVital("vitalSpo2", `${patient.vitals.spo2}%`, patient.vitals.spo2 < 92);
-  setVital("vitalTemp", formatTemperature(patient.vitals.temp), patient.vitals.temp >= 38);
-  setVital("vitalPain", `${patient.vitals.pain}/10`, patient.vitals.pain >= 8, patient.vitals.pain >= 5);
-
-  window.requestAnimationFrame(() => {
+  ui.presentationText.textContent = patient.triageNote;
+  setVital("vitalHr", patient.vitals.hr);
+  setVital("vitalBp", patient.vitals.bp);
+  setVital("vitalRr", patient.vitals.rr);
+  setVital("vitalSpo2", patient.vitals.spo2, "%");
+  setVital("vitalTemp", patient.vitals.temp, " °C");
+  setVital("vitalPain", patient.vitals.pain, "/10");
+  requestAnimationFrame(() => {
     fitTextToBox(ui.patientQuote, 6.5);
     fitTextToBox(ui.presentationText, 6.5);
   });
 }
 
-function formatTemperature(celsius) {
-  const fahrenheit = celsius * 9 / 5 + 32;
-  return `${celsius.toFixed(1)} / ${fahrenheit.toFixed(1)}`;
+function setVital(id, vital, suffix = "") {
+  const element = document.querySelector(`#${id}`);
+  element.textContent = `${vital.value}${suffix}`;
+  element.className = vital.color === "red" ? "is-alert" : vital.color === "yellow" ? "is-watch" : "";
 }
 
 function fitTextToBox(element, minimumSize) {
   element.style.removeProperty("font-size");
-  let size = Number.parseFloat(window.getComputedStyle(element).fontSize);
+  let size = Number.parseFloat(getComputedStyle(element).fontSize);
   while (size > minimumSize && element.scrollHeight > element.clientHeight + 1) {
     size -= 0.25;
     element.style.fontSize = `${size}px`;
   }
 }
 
-function setVital(id, value, alert = false, watch = false) {
-  const element = document.querySelector(`#${id}`);
-  element.textContent = value;
-  element.className = alert ? "is-alert" : watch ? "is-watch" : "";
-}
-
 function renderWaiting() {
   ui.waitingList.replaceChildren();
-  ui.waitingPanel.classList.toggle("is-awaiting-selection", awaitingPatient);
-  waiting.forEach((queueEntry, queueIndex) => {
-    const patient = patients[queueEntry.patientIndex];
-    const actionLabel = awaitingPatient
-      ? `Move ${patient.name} into the patient panel`
-      : `Swap ${patient.name} with the current patient`;
+  const slots = Math.max(5, state.waiting.length);
+  ui.waitingList.style.gridTemplateRows = `repeat(${slots}, minmax(0, 1fr))`;
+  ui.waitingPanel.classList.toggle("is-awaiting-selection", !state.activePatientId);
+  state.waiting.forEach((entry, index) => {
+    const patient = patientById.get(entry.patientId);
     const button = document.createElement("button");
     button.type = "button";
     button.className = "queue-patient";
-    button.classList.toggle("is-selectable", awaitingPatient);
-    button.setAttribute("aria-label", `${actionLabel}: ${patient.complaint}`);
+    if (!state.activePatientId) button.classList.add("is-selectable");
+    button.setAttribute("aria-label", `${state.activePatientId ? "Swap" : "Select"} ${patient.name}: ${patient.complaint}`);
     button.innerHTML = `
-      <img
-        class="queue-background"
-        src="${queueEntry.background}"
-        alt=""
-      />
+      <img class="queue-background" src="${entry.background}" alt="" />
       <img class="queue-patient-image" src="${ASSETS.patientData.image(patient.id)}" alt="" />
       <span class="queue-cell-frame" aria-hidden="true"></span>
       <span class="queue-complaint">${patient.complaint}</span>
-      <span
-        class="queue-transfer-hint ${awaitingPatient ? "is-move" : "is-swap"}"
-        aria-hidden="true"
-      ><b>${awaitingPatient ? "→" : "↔"}</b></span>
+      ${state.hints ? `<span class="queue-transfer-hint ${state.activePatientId ? "is-swap" : "is-move"}" aria-hidden="true"><b>${state.activePatientId ? "↔" : "→"}</b></span>` : ""}
     `;
-    button.addEventListener("click", () => selectWaitingPatient(queueIndex));
+    button.addEventListener("click", () => selectWaitingPatient(index));
     ui.waitingList.append(button);
   });
-
-  for (let slot = waiting.length; slot < queueSlotCount; slot += 1) {
-    const emptySlot = document.createElement("div");
-    emptySlot.className = "queue-slot-empty";
-    emptySlot.setAttribute("aria-hidden", "true");
-    ui.waitingList.append(emptySlot);
+  for (let index = state.waiting.length; index < slots; index += 1) {
+    const empty = document.createElement("div");
+    empty.className = "queue-slot-empty";
+    empty.setAttribute("aria-hidden", "true");
+    const background = ASSETS.waitingRooms[index % ASSETS.waitingRooms.length];
+    empty.innerHTML = `
+      <img class="queue-background" src="${background}" alt="" />
+      <span class="queue-cell-frame" aria-hidden="true"></span>
+    `;
+    ui.waitingList.append(empty);
   }
+}
+
+function selectWaitingPatient(index) {
+  if (state.phase !== "active") return;
+  const selected = state.waiting[index];
+  if (!state.activePatientId) {
+    finalizeOpenCase();
+    state.activePatientId = selected.patientId;
+    state.activeBackground = selected.background;
+    state.waiting.splice(index, 1);
+    if (state.mode === "triage") fillWaiting(5);
+  } else if (!state.decision) {
+    const previous = { patientId: state.activePatientId, background: state.activeBackground };
+    state.activePatientId = selected.patientId;
+    state.activeBackground = selected.background;
+    state.waiting[index] = previous;
+  } else {
+    return;
+  }
+  state.decision = null;
+  state.openRoom = null;
+  state.firstAssignmentRecorded = false;
+  renderAll();
+}
+
+function finalizeOpenCase() {
+  state.activePatientId = null;
+  state.activeBackground = null;
+  state.decision = null;
+  state.openRoom = null;
+  state.firstAssignmentRecorded = false;
 }
 
 function renderRooms() {
   ui.roomsPanel.replaceChildren();
   rooms.forEach((room) => {
+    const open = state.openRoom === room.key;
+    const canRecall = !state.activePatientId && state.decision?.room === room.key;
     const button = document.createElement("button");
     button.type = "button";
     button.className = "room-choice";
-    button.dataset.room = room.key;
-
-    if (openRoom === room.key) button.classList.add("is-open");
-    if (decision) {
-      if (decision.room === room.key) button.classList.add(`pulse-${decision.outcome}`);
-      if (decision.outcome !== "correct" && activePatient().answer === room.key) {
-        button.classList.add("reveal-correct");
-      }
-    }
-
-    const isOpen = openRoom === room.key;
-    const canRecallPatient = awaitingPatient && decision?.room === room.key;
-    button.setAttribute(
-      "aria-label",
-      `${roomNames[room.key]} door, ${isOpen ? "open" : "closed"}. ${room.description}${
-        canRecallPatient ? " Tap to recall the assigned patient." : ""
-      }`
-    );
-    button.setAttribute("aria-describedby", "roomInfoPopover");
-    button.setAttribute("aria-pressed", String(isOpen));
-    button.innerHTML = `
-      ${canRecallPatient ? `<span class="recall-arrow" aria-hidden="true"><b>←</b></span>` : ""}
-      <img class="door-art" src="${isOpen ? room.open : room.closed}" alt="" />
-    `;
-    installRoomHover(button, room);
+    if (open) button.classList.add("is-open");
+    if (state.decision?.room === room.key) button.classList.add(`pulse-${state.decision.outcome}`);
+    button.setAttribute("aria-label", `${room.label} door, ${open ? "open" : "closed"}. ${room.description}${canRecall ? " Tap to recall the patient." : ""}`);
+    button.innerHTML = `${canRecall ? '<span class="recall-arrow" aria-hidden="true"><b>←</b></span>' : ""}<img class="door-art" src="${open ? room.open : room.closed}" alt="" />`;
+    installRoomInteractions(button, room);
     ui.roomsPanel.append(button);
   });
 }
 
-function installRoomHover(button, room) {
+function installRoomInteractions(button, room) {
   button.addEventListener("pointerenter", (event) => {
     if (event.pointerType !== "touch") showRoomInfo(room, button);
   });
-
-  button.addEventListener("pointerleave", (event) => {
-    if (event.pointerType !== "touch") hideRoomInfo();
-    cancelHoldGesture(button, false);
-  });
-
-  button.addEventListener("focus", () => {
-    if (button.matches(":focus-visible")) showRoomInfo(room, button);
-  });
-  button.addEventListener("blur", hideRoomInfo);
-
+  button.addEventListener("pointerleave", hideRoomInfo);
   button.addEventListener("pointerdown", (event) => {
-    if (event.pointerType === "mouse") return;
-
-    cancelHoldGesture(null, false);
-    holdGesture = {
-      button,
-      pointerId: event.pointerId,
-      startX: event.clientX,
-      startY: event.clientY,
-      activated: false,
-      timer: window.setTimeout(() => {
-        if (!holdGesture || holdGesture.button !== button) return;
-        holdGesture.activated = true;
-        button.dataset.suppressClick = "true";
-        showRoomInfo(room, button);
-        if (navigator.vibrate) navigator.vibrate(12);
-      }, 500)
-    };
+    if (event.pointerType !== "touch") return;
+    holdTimer = setTimeout(() => showRoomInfo(room, button), 520);
   });
-
-  button.addEventListener("pointermove", (event) => {
-    if (!holdGesture || holdGesture.button !== button || holdGesture.pointerId !== event.pointerId) return;
-    const moved = Math.hypot(event.clientX - holdGesture.startX, event.clientY - holdGesture.startY);
-    if (moved > 10) {
-      button.dataset.suppressClick = "true";
-      cancelHoldGesture(button, true);
-    }
-  });
-
-  button.addEventListener("pointerup", (event) => {
-    if (!holdGesture || holdGesture.button !== button || holdGesture.pointerId !== event.pointerId) return;
-    const wasActivated = holdGesture.activated;
-    window.clearTimeout(holdGesture.timer);
-    holdGesture = null;
-    if (wasActivated) {
-      hideRoomInfo();
-      window.setTimeout(() => delete button.dataset.suppressClick, 700);
-    }
-  });
-
-  button.addEventListener("pointercancel", () => cancelHoldGesture(button, true));
+  ["pointerup", "pointercancel"].forEach((type) => button.addEventListener(type, () => clearTimeout(holdTimer)));
   button.addEventListener("contextmenu", (event) => event.preventDefault());
-
-  button.addEventListener("click", (event) => {
-    if (button.dataset.suppressClick === "true") {
-      event.preventDefault();
-      event.stopPropagation();
-      delete button.dataset.suppressClick;
-      return;
-    }
+  button.addEventListener("click", () => {
     hideRoomInfo();
     chooseRoom(room.key);
   });
 }
 
-function cancelHoldGesture(button, suppressClick) {
-  if (!holdGesture || (button && holdGesture.button !== button)) return;
-  const activeButton = holdGesture.button;
-  window.clearTimeout(holdGesture.timer);
-  if (suppressClick) {
-    activeButton.dataset.suppressClick = "true";
-    window.setTimeout(() => delete activeButton.dataset.suppressClick, 700);
-  }
-  holdGesture = null;
-  hideRoomInfo();
-}
-
 function showRoomInfo(room, anchor) {
-  ui.roomInfoTitle.textContent = roomNames[room.key];
+  ui.roomInfoTitle.textContent = room.label;
   ui.roomInfoText.textContent = room.description;
   ui.roomInfoPopover.hidden = false;
-
   const panelRect = ui.patientPanel.getBoundingClientRect();
   const anchorRect = anchor.getBoundingClientRect();
-  const popupHeight = ui.roomInfoPopover.offsetHeight;
-  const desiredTop = anchorRect.top + anchorRect.height / 2 - panelRect.top - popupHeight / 2;
-  const maximumTop = panelRect.height - popupHeight - 6;
-  ui.roomInfoPopover.style.top = `${Math.max(6, Math.min(desiredTop, maximumTop))}px`;
+  const desired = anchorRect.top + anchorRect.height / 2 - panelRect.top - ui.roomInfoPopover.offsetHeight / 2;
+  ui.roomInfoPopover.style.top = `${Math.max(6, Math.min(desired, panelRect.height - ui.roomInfoPopover.offsetHeight - 6))}px`;
 }
 
 function hideRoomInfo() {
   ui.roomInfoPopover.hidden = true;
 }
 
-function chooseRoom(roomKey) {
-  if (awaitingPatient) {
-    if (decision?.room === roomKey) recallAssignedPatient();
-    return;
+function fullCreditRooms(patient) {
+  const credit = new Set([patient.answer.correctRoom]);
+  if (["psych", "discharge"].includes(patient.answer.correctRoom)) {
+    credit.add(`esi-${patient.answer.correctEsi}`);
   }
-  if (decision) return;
-
-  const patient = activePatient();
-  const room = rooms.find((item) => item.key === roomKey);
-  const correctRoom = rooms.find((item) => item.key === patient.answer);
-  const hasSpecialDestination = patient.answer === "psych" || patient.answer === "discharge";
-  let outcome = "wrong";
-
-  if (roomKey === patient.answer) {
-    outcome = "correct";
-  } else if (
-    hasSpecialDestination
-    && room.esi
-    && Math.abs(room.esi - patient.esi) <= 1
-  ) {
-    outcome = "acceptable";
-  } else if (room.esi && correctRoom.esi && Math.abs(room.esi - correctRoom.esi) === 1) {
-    outcome = "close";
-  }
-
-  decision = { room: roomKey, outcome };
-  hideRoomInfo();
-  openRoom = roomKey;
-  if (!previouslyAssigned) {
-    tally[outcome] += 1;
-    if (mode === "game") {
-      score += outcome === "correct" ? 100 : outcome === "close" || outcome === "acceptable" ? 35 : -50;
-    }
-    previouslyAssigned = true;
-  }
-  awaitingPatient = true;
-  renderPatient();
-  renderWaiting();
-  renderFooterControls();
-
-  showResult(outcome);
-  playFeedback(outcome);
-  ui.coachButton.disabled = false;
-  ui.coachButton.querySelector("small").textContent = "READY";
-  renderRooms();
-  renderStatus();
+  return credit;
 }
 
-function recallAssignedPatient() {
-  if (!awaitingPatient || !decision) return;
-  awaitingPatient = false;
-  resetDecision();
+function evaluateChoice(patient, roomKey) {
+  if (fullCreditRooms(patient).has(roomKey)) return "correct";
+  if (state.difficulty === "strict") return "wrong";
+  const selected = rooms.find((room) => room.key === roomKey);
+  if (!selected?.esi) return "wrong";
+  return Math.abs(selected.esi - patient.answer.correctEsi) === 1 ? "close" : "wrong";
+}
+
+function triageDirection(patient, roomKey, outcome) {
+  if (outcome === "correct") return "correct";
+  const selected = rooms.find((room) => room.key === roomKey);
+  if (!selected?.esi) return "wrong";
+  return selected.esi < patient.answer.correctEsi ? "over" : "under";
+}
+
+function chooseRoom(roomKey) {
+  if (state.phase !== "active") return;
+  if (!state.activePatientId) {
+    if (state.decision?.room === roomKey) recallPatient();
+    return;
+  }
+  if (state.decision) return;
+  const patient = activePatient();
+  const outcome = evaluateChoice(patient, roomKey);
+  state.decision = { patientId: patient.id, room: roomKey, outcome };
+  state.openRoom = roomKey;
+  if (!state.firstAssignmentRecorded) recordFirstAssignment(patient, roomKey, outcome);
+  state.activePatientId = null;
+  state.activeBackground = null;
+  showResult(outcome);
+  playFeedback(outcome);
+  renderAll();
+}
+
+function recordFirstAssignment(patient, roomKey, outcome) {
+  const direction = triageDirection(patient, roomKey, outcome);
+  state.firstAssignmentRecorded = true;
+  if (outcome === "correct") {
+    state.stats.correct += 1;
+  } else {
+    if (outcome === "close") state.stats.close += 1;
+    state.stats[direction] += 1;
+  }
+  state.score += outcome === "correct" ? 100 : outcome === "close" ? 50 : -50;
+  state.history.push({ patientId: patient.id, room: roomKey, outcome, direction });
+}
+
+function recallPatient() {
+  if (!state.decision || state.activePatientId) return;
+  state.activePatientId = state.decision.patientId;
+  state.decision = null;
+  state.openRoom = null;
   renderAll();
 }
 
 function showResult(outcome) {
-  const labels = {
-    correct: "✓ CORRECT",
-    acceptable: "◇ ACCEPTABLE",
-    close: "△ CLOSE",
-    wrong: "✕ WRONG"
-  };
+  const labels = { correct: "✓ CORRECT", close: "△ CLOSE", wrong: "✕ WRONG" };
   ui.resultToast.textContent = labels[outcome];
   ui.resultToast.className = `result-toast ${outcome} is-visible`;
-  window.setTimeout(() => ui.resultToast.classList.remove("is-visible"), 1250);
+  setTimeout(() => ui.resultToast.classList.remove("is-visible"), 1600);
 }
 
 function playFeedback(outcome) {
   if (muted) return;
-  const AudioContext = window.AudioContext || window.webkitAudioContext;
-  if (!AudioContext) return;
-
-  const context = new AudioContext();
+  const context = ensureAudioContext();
+  if (!context) return;
   const oscillator = context.createOscillator();
   const gain = context.createGain();
-  oscillator.connect(gain);
-  gain.connect(context.destination);
+  oscillator.connect(gain).connect(context.destination);
   const now = context.currentTime;
-
   if (outcome === "correct") {
     oscillator.type = "sine";
-    oscillator.frequency.setValueAtTime(740, now);
-    oscillator.frequency.exponentialRampToValueAtTime(1180, now + 0.14);
-  } else if (outcome === "acceptable") {
-    oscillator.type = "sine";
     oscillator.frequency.setValueAtTime(520, now);
-    oscillator.frequency.exponentialRampToValueAtTime(740, now + 0.2);
+    oscillator.frequency.exponentialRampToValueAtTime(760, now + 0.2);
   } else if (outcome === "close") {
-    oscillator.type = "sine";
-    oscillator.frequency.setValueAtTime(360, now);
-    oscillator.frequency.exponentialRampToValueAtTime(220, now + 0.24);
+    oscillator.type = "triangle";
+    oscillator.frequency.setValueAtTime(390, now);
+    oscillator.frequency.exponentialRampToValueAtTime(260, now + 0.25);
   } else {
     oscillator.type = "sawtooth";
     oscillator.frequency.setValueAtTime(125, now);
-    oscillator.frequency.linearRampToValueAtTime(95, now + 0.34);
+    oscillator.frequency.linearRampToValueAtTime(90, now + 0.35);
   }
-
   gain.gain.setValueAtTime(0.0001, now);
-  gain.gain.exponentialRampToValueAtTime(0.22, now + 0.015);
-  const soundDuration = outcome === "correct" ? 0.18 : outcome === "acceptable" ? 0.24 : 0.36;
-  gain.gain.exponentialRampToValueAtTime(0.0001, now + soundDuration);
+  gain.gain.exponentialRampToValueAtTime(0.2, now + 0.015);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
   oscillator.start(now);
-  oscillator.stop(now + soundDuration + 0.01);
-  oscillator.addEventListener("ended", () => context.close());
+  oscillator.stop(now + 0.36);
 }
 
-function selectWaitingPatient(queueIndex) {
-  const selectedEntry = waiting[queueIndex];
-  if (awaitingPatient) {
-    currentPatientIndex = selectedEntry.patientIndex;
-    currentPatientQueueBackground = selectedEntry.background;
-    waiting.splice(queueIndex, 1);
-    refillWaitingQueue();
-  } else {
-    const previousPatient = currentPatientIndex;
-    const previousBackground =
-      currentPatientQueueBackground
-      || createQueueEntry(previousPatient, waiting.map((entry) => entry.background)).background;
-    currentPatientIndex = selectedEntry.patientIndex;
-    currentPatientQueueBackground = selectedEntry.background;
-    waiting[queueIndex] = {
-      patientIndex: previousPatient,
-      background: previousBackground
-    };
-  }
-
-  awaitingPatient = false;
-  previouslyAssigned = false;
-  resetDecision();
-  renderAll();
+function ensureAudioContext() {
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContext) return null;
+  if (!audioContext) audioContext = new AudioContext();
+  if (audioContext.state === "suspended") audioContext.resume();
+  return audioContext;
 }
 
-function refillWaitingQueue() {
-  while (waiting.length < queueSlotCount) {
-    const queuedPatientIndexes = waiting.map((entry) => entry.patientIndex);
-    const usedBackgrounds = waiting.map((entry) => entry.background);
-    const newPatientIndex = randomIndex([currentPatientIndex, ...queuedPatientIndexes]);
-    waiting.push(createQueueEntry(newPatientIndex, usedBackgrounds));
-  }
+function playRushTick() {
+  if (muted) return;
+  const context = ensureAudioContext();
+  if (!context) return;
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  const now = context.currentTime;
+  oscillator.type = "square";
+  oscillator.frequency.setValueAtTime(1050, now);
+  oscillator.frequency.exponentialRampToValueAtTime(720, now + 0.035);
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(0.055, now + 0.004);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.055);
+  oscillator.connect(gain).connect(context.destination);
+  oscillator.start(now);
+  oscillator.stop(now + 0.06);
 }
 
-function resetDecision() {
-  cancelHoldGesture(null, false);
-  decision = null;
-  openRoom = null;
-  ui.coachButton.disabled = true;
-  ui.coachButton.querySelector("small").textContent = "LOCKED";
-  ui.resultToast.className = "result-toast";
-  closeCoach();
-}
-
-function renderStatus() {
-  if (mode === "game") {
-    ui.statusLabel.textContent = `SCORE ${score}`;
-    ui.statusValue.textContent = seconds;
-  } else {
-    ui.statusLabel.textContent = "C / A / CL / W";
-    ui.statusValue.textContent =
-      `${tally.correct}/${tally.acceptable}/${tally.close}/${tally.wrong}`;
-  }
-  ui.statusValue.classList.toggle("is-edu", mode !== "game");
-}
-
-function renderFooterControls() {
-  ui.nextButton.disabled = true;
-  ui.nextButton.querySelector("span").textContent = awaitingPatient ? "SELECT" : "SWITCH";
-  ui.nextButton.querySelector("small").textContent = "FROM LEFT";
-}
-
-function setMode(nextMode) {
-  if (mode === nextMode) return;
-  mode = nextMode;
-  document.querySelectorAll(".mode-button").forEach((button) => {
-    button.classList.toggle("is-active", button.dataset.mode === mode);
+function playRushArrivalAlert() {
+  if (muted) return;
+  const context = ensureAudioContext();
+  if (!context) return;
+  const now = context.currentTime;
+  [[1046, 0.14], [2093, 0.035]].forEach(([frequency, peakGain]) => {
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+    oscillator.type = "sine";
+    oscillator.frequency.setValueAtTime(frequency, now);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(peakGain, now + 0.006);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.42);
+    oscillator.connect(gain).connect(context.destination);
+    oscillator.start(now);
+    oscillator.stop(now + 0.43);
   });
-  renderAll();
 }
 
-function patientSexLabel(sex) {
-  if (sex === "F") return "female";
-  if (sex === "M") return "male";
-  return sex;
+function playRushEndDong() {
+  if (muted) return;
+  const context = ensureAudioContext();
+  if (!context) return;
+  const now = context.currentTime;
+  [[523, 0.17], [1046, 0.045]].forEach(([frequency, peakGain]) => {
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+    oscillator.type = "sine";
+    oscillator.frequency.setValueAtTime(frequency, now);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(peakGain, now + 0.008);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.8);
+    oscillator.connect(gain).connect(context.destination);
+    oscillator.start(now);
+    oscillator.stop(now + 0.81);
+  });
 }
 
-function patientVitalRows(patient) {
-  return [
-    ["HR", patient.vitals.hr],
-    ["BP", patient.vitals.bp],
-    ["RR", patient.vitals.rr],
-    ["SpO₂", `${patient.vitals.spo2}%`],
-    ["TEMP °C / °F", formatTemperature(patient.vitals.temp)],
-    ["PAIN", `${patient.vitals.pain}/10`]
+function openSetup(requestedMode = null) {
+  if (state.phase === "loading") return;
+  document.querySelector(`input[name="setupMode"][value="${requestedMode || state.mode}"]`).checked = true;
+  document.querySelector(`input[name="setupDifficulty"][value="${state.difficulty}"]`).checked = true;
+  ui.setupHints.checked = state.hints;
+  ui.setupRushSounds.checked = state.rushSounds;
+  ui.playerTitle.value = state.player.title;
+  ui.playerInitials.value = state.player.initials;
+  if (state.mode === "triage") {
+    const triageValue = state.shiftLength === null ? "none" : "300";
+    document.querySelector(`input[name="triageLength"][value="${triageValue}"]`).checked = true;
+  } else {
+    document.querySelector(`input[name="rushLength"][value="${state.shiftLength || 60}"]`).checked = true;
+  }
+  updateSetupForMode();
+  ui.setupTitle.textContent = state.phase === "active" ? "Shift settings" : "Start a shift";
+  ui.startShift.textContent = state.phase === "active" ? "Apply and restart" : "Start shift";
+  ui.setupCancel.hidden = state.phase !== "active";
+  ui.setupOverlay.hidden = false;
+}
+
+function updateSetupForMode() {
+  const mode = document.querySelector('input[name="setupMode"]:checked').value;
+  ui.triageLengthOptions.hidden = mode !== "triage";
+  ui.rushLengthOptions.hidden = mode !== "rush";
+  ui.rushSoundSetting.hidden = mode !== "rush";
+  ui.setupNote.textContent = mode === "triage"
+    ? "Triage starts with five waiting patients, refills immediately, and has no waiting-room penalty."
+    : "RUSH starts with two waiting patients and adds patients faster until the queue reaches ten.";
+}
+
+function endShift() {
+  if (state.phase !== "active") return;
+  state.phase = "complete";
+  renderReview();
+  ui.reviewOverlay.hidden = false;
+  renderFooter();
+}
+
+function requestShiftReview() {
+  if (state.phase === "active") {
+    endShift();
+  } else if (state.history.length) {
+    renderReview();
+    ui.reviewOverlay.hidden = false;
+  }
+}
+
+function renderReview() {
+  reviewIndex = Math.min(reviewIndex, Math.max(0, state.history.length - 1));
+  ui.reviewTitle.textContent = state.mode === "rush" ? "TriageRUSH complete" : "Triage shift complete";
+  const duration = state.shiftLength === null ? state.elapsed : state.shiftLength - state.remaining;
+  ui.reviewMeta.textContent = `${state.player.title} ${state.player.initials} · ${state.difficulty === "strict" ? "Strict" : "Forgiving"} · ${formatClock(duration)} · ${state.startedAt?.toLocaleString() || ""}`;
+  ui.reviewScore.hidden = false;
+  ui.reviewScore.textContent = `SCORE ${currentScore()}`;
+  const wrongCount = state.history.length - state.stats.correct - state.stats.close;
+  const waitingPoints = state.mode === "rush" ? -10 : 0;
+  const scoringValues = [
+    ["Patients seen", state.history.length, "review-stat--seen"],
+    ["Correct", `${state.stats.correct} &times; 100 pts = ${state.stats.correct * 100}`, "review-stat--formula review-stat--correct"],
+    ...(state.difficulty === "forgiving"
+      ? [["Close", `${state.stats.close} &times; 50 pts = ${state.stats.close * 50}`, "review-stat--formula review-stat--close"]]
+      : []),
+    ["Wrong", `${wrongCount} &times; -50 pts = ${wrongCount * -50}`, "review-stat--formula review-stat--wrong"],
+    ["Left waiting", `${state.waiting.length} &times; ${waitingPoints} pts = ${state.waiting.length * waitingPoints}`, "review-stat--formula"]
   ];
-}
-
-function populateDetailedPresentation(patient) {
-  const sexLabel = patientSexLabel(patient.sex);
-  document.querySelector("#coachPatientImage").src = ASSETS.patientData.image(patient.id);
-  document.querySelector("#coachPatientImage").alt = `${patient.name}, current patient`;
-  document.querySelector("#coachTitle").textContent = patient.name;
-  document.querySelector("#coachDemographics").textContent =
-    `${patient.age}-year-old ${sexLabel}`;
-  document.querySelector("#coachComplaint").textContent = patient.complaint;
-  document.querySelector("#coachQuote").textContent = `“${patient.quote}”`;
-  document.querySelector("#coachTriage").textContent = patient.presentation;
-  document.querySelector("#coachVitals").innerHTML = patientVitalRows(patient)
-    .map(([label, value]) => `
-      <div class="coach-vital">
-        <span>${label}</span>
-        <strong>${value}</strong>
-      </div>
-    `)
+  ui.reviewStats.innerHTML = scoringValues
+    .map(([label, value, className]) => `<div class="${className}"><dt>${label}</dt><dd>${value}</dd></div>`)
     .join("");
+  ui.reviewDirections.innerHTML = `
+    <span>TRIAGE DIRECTION</span>
+    <div><small>UNDER-TRIAGED</small><strong>${state.stats.under}</strong></div>
+    <div><small>OVER-TRIAGED</small><strong>${state.stats.over}</strong></div>
+  `;
+  ui.reviewPatientsLink.hidden = !state.history.length;
+  ui.reviewPatientsLink.textContent = `PATIENTS SEEN (${state.history.length})`;
 }
 
-function populateDetailedAnswer(patient) {
-  const assignedRoom = rooms.find((room) => room.key === decision.room);
-  const assignedEsi = assignedRoom?.esi ?? null;
-  document.querySelector("#coachChoice").textContent = roomNames[decision.room];
-  document.querySelector("#coachCorrect").textContent = `ESI ${patient.esi}`;
-  document.querySelector("#coachResult").textContent = evaluateTriageChoice(
-    assignedEsi,
-    patient.esi,
-    decision.room,
-    patient.answer
-  );
-  document.querySelector("#coachDestinationReason").textContent = patient.destinationReason;
-  ui.coachCard.dataset.result = getTriageDirection(assignedEsi, patient.esi);
-}
-
-function populateDetailedClinical(patient) {
-  const clinical = patient.clinical;
-  document.querySelector("#coachSummaryText").textContent = clinical.summary;
-  document.querySelector("#coachAcuityReason").textContent = clinical.acuityReason;
-  document.querySelector("#coachDisposition").textContent =
-    clinical.possibleClinicalOutcome.disposition;
-  renderCoachList("coachResources", clinical.expectedResources);
-  renderCoachList("coachKeyFindings", clinical.keyFindings);
-  renderCoachList("coachTeachingPoints", clinical.teachingPoints);
-  renderCoachList(
-    "coachPossibleDiagnoses",
-    clinical.possibleClinicalOutcome.possibleDiagnoses
-  );
-
-  const redFlags = clinical.redFlags || [];
-  document.querySelector("#coachRedFlagsSection").hidden = redFlags.length === 0;
-  renderCoachList("coachRedFlags", redFlags);
-}
-
-function setDetailedSectionState(sectionName, state) {
-  const section = document.querySelector(`[data-section="${sectionName}"]`);
-  const toggle = section.querySelector("[data-section-toggle]");
-  const content = section.querySelector(":scope > .coach-section-content");
-  const control = toggle.querySelector(".coach-section-control");
-  const isExpanded = state === "expanded";
-
-  section.dataset.sectionState = state;
-  content.hidden = !isExpanded;
-  toggle.setAttribute("aria-expanded", String(isExpanded));
-  if (state === "locked") {
-    toggle.setAttribute("aria-disabled", "true");
-    control.textContent = "LOCKED";
-  } else {
-    toggle.removeAttribute("aria-disabled");
-    control.textContent = isExpanded ? "COLLAPSE" : "EXPAND";
-  }
-}
-
-function showSectionFeedback(message) {
-  window.clearTimeout(sectionFeedbackTimerId);
-  ui.detailSectionFeedback.textContent = message;
-  sectionFeedbackTimerId = window.setTimeout(() => {
-    ui.detailSectionFeedback.textContent = "";
-  }, 1800);
-}
-
-function toggleDetailedSection(sectionName) {
-  const section = document.querySelector(`[data-section="${sectionName}"]`);
-  if (section.dataset.sectionState === "locked") {
-    showSectionFeedback("This section is locked");
-    return;
-  }
-  setDetailedSectionState(
-    sectionName,
-    section.dataset.sectionState === "expanded" ? "collapsed" : "expanded"
-  );
-  window.requestAnimationFrame(updateCoachScrollHint);
-}
-
-function openDetailedPatient({ sectionStates, returnFocus, eyebrow }) {
-  const patient = activePatient();
+function openPatientChart(context, historyEntry = null, preserveReturnFocus = false) {
+  const patient = historyEntry ? patientById.get(historyEntry.patientId) : activePatient();
   if (!patient) return;
-
-  detailReturnFocus = returnFocus;
-  ui.detailEyebrow.textContent = eyebrow;
-  ui.detailSectionFeedback.textContent = "";
-  Object.entries(sectionStates).forEach(([sectionName, state]) => {
-    setDetailedSectionState(sectionName, state);
-  });
-  const answerAvailable = sectionStates.answer !== "locked";
-  const clinicalAvailable = sectionStates.clinical !== "locked";
-  ui.detailCaution.hidden = !clinicalAvailable;
-  populateDetailedPresentation(patient);
-  if (answerAvailable) populateDetailedAnswer(patient);
-  if (clinicalAvailable) populateDetailedClinical(patient);
+  chartContext = { patient, historyEntry };
+  if (!preserveReturnFocus) detailReturnFocus = document.activeElement;
+  const reviewBrowsing = context === "review";
+  ui.reviewChartNav.hidden = !reviewBrowsing;
+  ui.coachFrame.classList.toggle("is-review-browsing", reviewBrowsing);
+  if (reviewBrowsing) updateReviewChartNavigation();
+  populateChart(patient, historyEntry);
+  setSectionState("presentation", "expanded");
+  setSectionState("answer", historyEntry ? "expanded" : "locked");
+  setSectionState("clinical", context === "assignment" ? "collapsed" : "expanded");
+  ui.detailEyebrow.textContent = context === "review" ? "PATIENT REVIEW" : context === "coach" ? "COACH" : "PATIENT ASSIGNMENT";
+  ui.detailCaution.textContent = "Educational prototype · Patient-specific reasoning remains subject to clinical review.";
   ui.coachOverlay.hidden = false;
   ui.coachCard.scrollTop = 0;
-  window.requestAnimationFrame(updateCoachScrollHint);
-  document.querySelector("#coachClose").focus();
+  requestAnimationFrame(updateChartScrollHints);
 }
 
-function openPatientReview() {
-  if (!activePatient() || awaitingPatient) return;
-  openDetailedPatient({
-    sectionStates: {
-      presentation: "expanded",
-      clinical: "collapsed",
-      answer: "locked"
-    },
-    returnFocus: ui.patientExpandButton,
-    eyebrow: "PATIENT CHART · AVAILABLE AT TRIAGE"
-  });
+function updateReviewChartNavigation() {
+  const entry = state.history[reviewIndex];
+  ui.reviewChartLabel.textContent = `${reviewIndex + 1} / ${state.history.length} · ${patientById.get(entry.patientId).name}`;
+  const onlyOnePatient = state.history.length < 2;
+  ui.reviewChartPrevious.disabled = onlyOnePatient;
+  ui.reviewChartNext.disabled = onlyOnePatient;
 }
 
-function openCoach() {
-  if (!decision) return;
-  openDetailedPatient({
-    sectionStates: {
-      presentation: "expanded",
-      clinical: "expanded",
-      answer: "expanded"
-    },
-    returnFocus: ui.coachButton,
-    eyebrow: "TRIAGE COACH · COMPLETE PATIENT CHART"
-  });
+function navigateReviewChart(direction) {
+  if (state.history.length < 2) return;
+  reviewIndex = (reviewIndex + direction + state.history.length) % state.history.length;
+  openPatientChart("review", state.history[reviewIndex], true);
 }
 
-function renderCoachList(elementId, items) {
-  const list = document.querySelector(`#${elementId}`);
+function populateChart(patient, entry) {
+  document.querySelector("#coachPatientImage").src = ASSETS.patientData.image(patient.id);
+  document.querySelector("#coachPatientImage").alt = `${patient.name}, patient`;
+  document.querySelector("#coachTitle").textContent = patient.name;
+  document.querySelector("#coachDemographics").textContent = `${patient.age}-year-old ${patient.sex === "F" ? "female" : patient.sex === "M" ? "male" : patient.sex}`;
+  document.querySelector("#coachComplaint").textContent = patient.complaint;
+  document.querySelector("#coachQuote").textContent = `“${patient.quote}”`;
+  document.querySelector("#coachTriage").textContent = patient.triageNote;
+  document.querySelector("#coachVitals").innerHTML = [
+    ["HR", patient.vitals.hr.value], ["BP", patient.vitals.bp.value], ["RR", patient.vitals.rr.value],
+    ["SpO₂", `${patient.vitals.spo2.value}%`], ["TEMP °C", patient.vitals.temp.value], ["PAIN", `${patient.vitals.pain.value}/10`]
+  ].map(([label, value]) => `<div class="coach-vital"><span>${label}</span><strong>${value}</strong></div>`).join("");
+  document.querySelector("#coachChoice").textContent = entry ? rooms.find((room) => room.key === entry.room).label : "Not assigned";
+  document.querySelector("#coachCorrect").textContent = `${patient.answer.correctRoom.toUpperCase()} · ESI ${patient.answer.correctEsi}`;
+  document.querySelector("#coachResult").textContent = entry ? ({ correct: "Correct assignment", close: "Close assignment", wrong: "Wrong assignment" })[entry.outcome] : "Answer locked until assignment";
+  document.querySelector("#coachDestinationReason").textContent = patient.answer.destinationReason;
+  document.querySelector("#coachSummaryText").textContent = patient.clinical.summary;
+  document.querySelector("#coachAcuityReason").textContent = patient.clinical.acuityReason;
+  populateList("coachResources", patient.clinical.expectedResources);
+  populateList("coachKeyFindings", patient.clinical.keyFindings);
+  populateList("coachRedFlags", patient.clinical.redFlags);
+  document.querySelector("#coachRedFlagsSection").hidden = !patient.clinical.redFlags?.length;
+  populateList("coachTeachingPoints", patient.clinical.teachingPoints);
+  populateList("coachPossibleDiagnoses", patient.clinical.possibleClinicalOutcome.possibleDiagnoses);
+  document.querySelector("#coachDisposition").textContent = patient.clinical.possibleClinicalOutcome.disposition;
+}
+
+function populateList(id, values) {
+  const list = document.querySelector(`#${id}`);
   list.replaceChildren();
-  items.forEach((item) => {
-    const entry = document.createElement("li");
-    entry.textContent = item;
-    if (item.startsWith("(maybe) ")) entry.classList.add("is-maybe");
-    list.append(entry);
+  (values || []).forEach((value) => {
+    const item = document.createElement("li");
+    item.textContent = value;
+    if (value.startsWith("(maybe)")) item.className = "is-maybe";
+    list.append(item);
   });
 }
 
-function getTriageDirection(assignedEsi, correctEsi) {
-  if (!Number.isInteger(assignedEsi)) return "wrong";
-  if (assignedEsi === correctEsi) return "correct";
-  return assignedEsi < correctEsi ? "over" : "under";
+function sectionElement(section) {
+  return { presentation: ui.detailPresentationSection, answer: ui.detailAnswerSection, clinical: ui.detailClinicalSection }[section];
 }
 
-function evaluateTriageChoice(assignedEsi, correctEsi, assignedRoom, correctRoom) {
-  if (assignedRoom === correctRoom || assignedEsi === correctEsi) {
-    return "You correctly triaged this patient.";
-  }
-  if (!Number.isInteger(assignedEsi)) {
-    return "You assigned this patient to an incorrect destination.";
-  }
-  return assignedEsi < correctEsi
-    ? "You over-triaged this patient."
-    : "You under-triaged this patient.";
+function setSectionState(section, sectionState) {
+  const element = sectionElement(section);
+  const button = element.querySelector("[data-section-toggle]");
+  const content = element.querySelector(".coach-section-content");
+  const control = button.querySelector(".coach-section-control");
+  element.dataset.sectionState = sectionState;
+  const expanded = sectionState === "expanded";
+  button.setAttribute("aria-expanded", String(expanded));
+  button.setAttribute("aria-disabled", String(sectionState === "locked"));
+  content.hidden = !expanded;
+  control.textContent = sectionState === "locked" ? "LOCKED" : expanded ? "COLLAPSE" : "EXPAND";
 }
 
-function closeCoach() {
+function toggleSection(section) {
+  const element = sectionElement(section);
+  if (element.dataset.sectionState === "locked") {
+    ui.detailSectionFeedback.textContent = "This section is locked until the patient is assigned.";
+    setTimeout(() => { ui.detailSectionFeedback.textContent = ""; }, 1800);
+    return;
+  }
+  setSectionState(section, element.dataset.sectionState === "expanded" ? "collapsed" : "expanded");
+  requestAnimationFrame(updateChartScrollHints);
+}
+
+function closeChart() {
   if (ui.coachOverlay.hidden) return;
   ui.coachOverlay.hidden = true;
   if (detailReturnFocus?.isConnected) detailReturnFocus.focus();
   detailReturnFocus = null;
+  chartContext = null;
+  ui.reviewChartNav.hidden = true;
+  ui.coachFrame.classList.remove("is-review-browsing");
 }
 
-function updateCoachScrollHint() {
-  const hasMore = ui.coachCard.scrollHeight > ui.coachCard.clientHeight + 4;
-  const isAtTop = ui.coachCard.scrollTop <= 4;
-  const isAtBottom =
-    ui.coachCard.scrollTop + ui.coachCard.clientHeight >= ui.coachCard.scrollHeight - 4;
-  ui.coachScrollAbove.hidden = !hasMore || isAtTop;
-  ui.coachScrollHint.hidden = !hasMore || isAtBottom;
+function updateChartScrollHints() {
+  const more = ui.coachCard.scrollHeight > ui.coachCard.clientHeight + 4;
+  ui.coachScrollAbove.hidden = !more || ui.coachCard.scrollTop <= 4;
+  ui.coachScrollHint.hidden = !more || ui.coachCard.scrollTop + ui.coachCard.clientHeight >= ui.coachCard.scrollHeight - 4;
 }
 
-function resetRound() {
-  score = 0;
-  tally = { correct: 0, acceptable: 0, close: 0, wrong: 0 };
-  seconds = 60;
-  currentPatientIndex = null;
-  currentPatientQueueBackground = null;
-  waiting = makeWaitingQueue(currentPatientIndex);
-  awaitingPatient = true;
-  previouslyAssigned = false;
-  resetDecision();
-  renderAll();
-}
-
-function startTimer() {
-  window.clearInterval(timerId);
-  timerId = window.setInterval(() => {
-    if (mode !== "game" || !ui.coachOverlay.hidden) return;
-    seconds = seconds <= 0 ? 60 : seconds - 1;
-    renderStatus();
-  }, 1000);
-}
-
-document.querySelectorAll(".mode-button").forEach((button) => {
-  button.addEventListener("click", () => setMode(button.dataset.mode));
-});
-
-document.querySelector("#resetButton").addEventListener("click", resetRound);
-ui.patientPanel.addEventListener("click", openPatientReview);
-ui.coachButton.addEventListener("click", openCoach);
-document.querySelector("#coachClose").addEventListener("click", closeCoach);
-document.querySelectorAll("[data-section-toggle]").forEach((button) => {
-  button.addEventListener("click", () => toggleDetailedSection(button.dataset.sectionToggle));
-});
-ui.coachCard.addEventListener("scroll", updateCoachScrollHint, { passive: true });
-ui.coachScrollAbove.addEventListener("click", () => {
-  ui.coachCard.scrollBy({
-    top: -ui.coachCard.clientHeight * 0.7,
-    behavior: "smooth"
-  });
-});
-ui.coachScrollHint.addEventListener("click", () => {
-  ui.coachCard.scrollBy({
-    top: ui.coachCard.clientHeight * 0.7,
-    behavior: "smooth"
-  });
-});
-document.querySelector("#coachPatientImage").addEventListener("load", updateCoachScrollHint);
-window.addEventListener("resize", () => {
-  updateCoachScrollHint();
-});
-ui.coachOverlay.addEventListener("click", (event) => {
-  if (event.target === ui.coachOverlay) closeCoach();
-});
-
+document.querySelectorAll('input[name="setupMode"]').forEach((input) => input.addEventListener("change", updateSetupForMode));
+ui.startShift.addEventListener("click", startShift);
+ui.setupCancel.addEventListener("click", () => { ui.setupOverlay.hidden = true; });
+ui.nextButton.addEventListener("click", openSetup);
+ui.resetButton.addEventListener("click", requestShiftReview);
+ui.reviewClose.addEventListener("click", () => { ui.reviewOverlay.hidden = true; });
+ui.newShift.addEventListener("click", () => { ui.reviewOverlay.hidden = true; state.phase = "ready"; openSetup(); });
+ui.reviewPatientsLink.addEventListener("click", () => openPatientChart("review", state.history[reviewIndex]));
+ui.reviewChartPrevious.addEventListener("click", () => navigateReviewChart(-1));
+ui.reviewChartNext.addEventListener("click", () => navigateReviewChart(1));
+ui.reviewChartClose.addEventListener("click", closeChart);
+ui.patientExpandButton.addEventListener("click", () => openPatientChart("assignment"));
+ui.coachButton.addEventListener("click", () => openPatientChart("coach", state.history.findLast((entry) => entry.patientId === state.decision?.patientId)));
+document.querySelector("#coachClose").addEventListener("click", closeChart);
+document.querySelectorAll("[data-section-toggle]").forEach((button) => button.addEventListener("click", () => toggleSection(button.dataset.sectionToggle)));
+ui.coachCard.addEventListener("scroll", updateChartScrollHints, { passive: true });
+ui.coachScrollAbove.addEventListener("click", () => ui.coachCard.scrollBy({ top: -ui.coachCard.clientHeight * 0.7, behavior: "smooth" }));
+ui.coachScrollHint.addEventListener("click", () => ui.coachCard.scrollBy({ top: ui.coachCard.clientHeight * 0.7, behavior: "smooth" }));
+ui.coachOverlay.addEventListener("click", (event) => { if (event.target === ui.coachOverlay) closeChart(); });
 ui.soundButton.addEventListener("click", () => {
   muted = !muted;
   ui.soundButton.setAttribute("aria-pressed", String(muted));
   ui.soundButton.setAttribute("aria-label", muted ? "Unmute sounds" : "Mute sounds");
   ui.soundButton.textContent = muted ? "×" : "♪";
 });
+document.addEventListener("keydown", (event) => { if (event.key === "Escape") closeChart(); });
+window.addEventListener("resize", updateChartScrollHints);
 
-document.addEventListener("keydown", (event) => {
-  if (event.key !== "Escape") return;
-  closeCoach();
-});
-
-async function initializeDemo() {
-  waiting = [];
+async function initialize() {
   renderAll();
-  ui.emptyStateKicker.textContent = "LOADING";
-  ui.emptyStateTitle.textContent = "PATIENT RECORDS";
-  ui.emptyStateHint.textContent = "Loading all 23 provisional 2.2 demo patients";
-
   try {
-    patients = await loadReviewedPatients();
-    currentPatientIndex = null;
-    waiting = makeWaitingQueue(currentPatientIndex);
-    awaitingPatient = true;
+    try {
+      const savedPlayer = JSON.parse(localStorage.getItem("triageRushMobilePlayer"));
+      if (savedPlayer?.title && savedPlayer?.initials) state.player = savedPlayer;
+    } catch (error) {
+      console.warn("Saved player settings could not be read.", error);
+    }
+    await loadPatients();
+    state.phase = "ready";
+    ui.statusLabel.textContent = "READY";
+    ui.statusValue.textContent = "160";
     renderAll();
-    startTimer();
+    openSetup();
+    timerId = setInterval(heartbeat, 250);
   } catch (error) {
     console.error(error);
+    state.phase = "error";
+    ui.setupOverlay.hidden = true;
     ui.emptyStateKicker.textContent = "DATA ERROR";
     ui.emptyStateTitle.textContent = "PATIENTS NOT LOADED";
     ui.emptyStateHint.textContent = "Start the mobile preview server and refresh.";
   }
 }
 
-initializeDemo();
+initialize();

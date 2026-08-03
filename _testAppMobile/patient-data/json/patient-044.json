@@ -1,0 +1,110 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-044",
+  "number": 44,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Greg",
+        "age": 55,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-044.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Bad cough and fever",
+      "quote": "I've had a nasty cough for days, bringing up green gunk, and now it hurts to take a deep breath on my right side. I've been feverish and totally wiped out.",
+      "triageNote": "55-year-old male with several days of productive cough, fever, fatigue, and right-sided pain on deep inspiration. He has focal right-sided crackles and egophony, respiratory rate 22, and oxygen saturation 94%.",
+      "vitals": {
+        "hr": {
+          "value": 104,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "126/78",
+          "color": "green"
+        },
+        "rr": {
+          "value": 22,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 94,
+          "color": "yellow"
+        },
+        "temp": {
+          "value": 38.9,
+          "color": "yellow"
+        },
+        "pain": {
+          "value": 4,
+          "color": "yellow"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 3,
+      "correctRoom": "esi-3",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 3 is appropriate because a febrile lower-respiratory illness with mild hypoxemia is expected to need multiple diagnostic and treatment resources."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has productive cough, fever, focal pleuritic pain, right-sided crackles and egophony, tachycardia, tachypnea, and oxygen saturation 94%.",
+      "acuityReason": "He is stable without severe respiratory distress, but focal lung findings and abnormal physiology require imaging, testing, and treatment.",
+      "expectedResources": [
+        "Chest X-ray",
+        "Laboratory testing",
+        "Antibiotic treatment",
+        "Supplemental oxygen and IV fluids as indicated"
+      ],
+      "keyFindings": [
+        "Several days of productive cough",
+        "Temperature 38.9 C",
+        "Right-sided pleuritic pain",
+        "Focal crackles and egophony",
+        "Respiratory rate 22",
+        "Oxygen saturation 94%"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Focal lung findings and pleuritic pain help distinguish lower-respiratory infection from an uncomplicated upper-respiratory illness.",
+        "Oxygenation, respiratory effort, age, comorbidity, and mental status guide disposition."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Community-acquired pneumonia",
+          "Parapneumonic effusion",
+          "Viral lower-respiratory infection"
+        ],
+        "disposition": "Chest imaging, testing, and antibiotics would be followed by risk-based discharge, observation, or admission depending on oxygenation and response."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "55-year-old man, flushed and feverish",
+    "pose": "seated, one hand on his right chest, mid-cough",
+    "expression": "tired, unwell",
+    "signs": [
+      "hand on the right chest",
+      "flushed, feverish look"
+    ],
+    "lookSeverity": "unwell but stable",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-044.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 55-year-old man, flushed and feverish, seated on a blue padded clinic chair. Pose: seated, one hand pressed to his right chest as if mid-cough. Expression: tired and unwell. Clearly visible: a hand on the right side of the chest and a flushed, feverish face. No text, no logos."
+  }
+}

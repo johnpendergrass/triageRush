@@ -4,24 +4,29 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#071822" />
-    <title>triageRush - Interactive Design Mockup</title>
-    <link rel="stylesheet" href="styles.css?v=20260731d" />
+    <title>triageRush - Mobile Game</title>
+    <link rel="stylesheet" href="styles.css?v=20260803-patients-seen" />
   </head>
   <body>
-    <main class="app-shell" aria-label="triageRush interactive game mockup">
+    <main class="app-shell" aria-label="triageRush mobile game">
       <header class="game-header">
         <div class="brand" aria-label="triageRush">
           <span>TRIAGE</span><strong>RUSH!</strong>
         </div>
 
-        <div class="mode-switch" role="group" aria-label="Play mode">
-          <button class="mode-button is-active" type="button" data-mode="game">GAME</button>
-          <button class="mode-button" type="button" data-mode="edu">EDU</button>
+        <div class="header-scorecard" aria-label="Assignment scorecard" aria-live="polite">
+          <span class="header-score header-score--correct" aria-label="Correct"><strong id="headerCorrect">0</strong></span>
+          <b class="score-divider" aria-hidden="true">/</b>
+          <span class="header-score header-score--close" id="headerCloseItem" aria-label="Close"><strong id="headerClose">0</strong></span>
+          <b class="score-divider" id="headerCloseDivider" aria-hidden="true">/</b>
+          <span class="header-score header-score--wrong" aria-label="Wrong"><strong id="headerWrong">0</strong></span>
+          <b class="score-divider" aria-hidden="true">=</b>
+          <span class="header-score header-score--total" aria-label="Score"><strong id="headerScore">0</strong></span>
         </div>
 
         <div class="status-box" aria-live="polite">
-          <span id="statusLabel">TIME</span>
-          <strong id="statusValue">60</strong>
+          <span id="statusLabel">LOADING</span>
+          <strong id="statusValue">--</strong>
         </div>
 
         <button class="sound-button" id="soundButton" type="button" aria-label="Mute sounds" aria-pressed="false">
@@ -91,21 +96,105 @@
 
       <footer class="game-footer">
         <button class="footer-button next-button" id="nextButton" type="button">
-          <span>NEXT</span>
-          <small>PATIENT</small>
+          <span>HOME</span>
+          <small>SETTINGS</small>
         </button>
         <button class="footer-button coach-button" id="coachButton" type="button" disabled>
           <span>COACH</span>
           <small>LOCKED</small>
         </button>
         <button class="footer-button reset-button" id="resetButton" type="button">
-          <span>RESET</span>
-          <small>ROUND</small>
+          <span>SHIFT REVIEW</span>
+          <small>END SHIFT</small>
         </button>
       </footer>
 
+      <section class="game-overlay setup-overlay" id="setupOverlay">
+        <div class="setup-card" role="dialog" aria-modal="true" aria-labelledby="setupTitle">
+          <span class="overlay-eyebrow">MOBILE GAME</span>
+          <h1 id="setupTitle">Start a shift</h1>
+          <p class="setup-intro">Choose the current gameplay settings. Changes made during a shift restart it.</p>
+
+          <fieldset>
+            <legend>Player</legend>
+            <div class="player-settings">
+              <label>
+                <span>Title</span>
+                <select id="playerTitle">
+                  <option>Doctor</option><option>Nurse</option><option>RN</option><option>LPN</option>
+                  <option>RES</option><option>EMS</option><option>PA</option><option>MS1</option>
+                  <option>MS2</option><option>MS3</option><option>MS4</option>
+                </select>
+              </label>
+              <label>
+                <span>Initials</span>
+                <input id="playerInitials" type="text" maxlength="3" value="AAA" inputmode="text" autocomplete="off" />
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Mode</legend>
+            <div class="setting-options">
+              <label><input type="radio" name="setupMode" value="triage" checked /> Triage</label>
+              <label><input type="radio" name="setupMode" value="rush" /> RUSH</label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Difficulty</legend>
+            <div class="setting-options">
+              <label><input type="radio" name="setupDifficulty" value="forgiving" checked /> Forgiving</label>
+              <label><input type="radio" name="setupDifficulty" value="strict" /> Strict</label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Shift length</legend>
+            <div class="setting-options" id="triageLengthOptions">
+              <label><input type="radio" name="triageLength" value="300" checked /> 5 minutes</label>
+              <label><input type="radio" name="triageLength" value="none" /> No timer</label>
+            </div>
+            <div class="setting-options" id="rushLengthOptions" hidden>
+              <label><input type="radio" name="rushLength" value="60" checked /> 60 seconds</label>
+              <label><input type="radio" name="rushLength" value="120" /> 120 seconds</label>
+            </div>
+          </fieldset>
+
+          <label class="hint-setting"><input type="checkbox" id="setupHints" checked /> Show UI hints</label>
+          <label class="hint-setting" id="rushSoundSetting" hidden><input type="checkbox" id="setupRushSounds" checked /> RUSH clock and arrival sounds</label>
+          <p class="setup-note" id="setupNote">Triage starts with five waiting patients, refills immediately, and has no waiting-room penalty.</p>
+          <div class="overlay-actions">
+            <button class="secondary-action" id="setupCancel" type="button" hidden>Resume shift</button>
+            <button class="primary-action" id="startShift" type="button">Start shift</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="game-overlay review-overlay" id="reviewOverlay" hidden>
+        <div class="review-card" role="dialog" aria-modal="true" aria-labelledby="reviewTitle">
+          <span class="overlay-eyebrow">SHIFT REVIEW</span>
+          <h1 id="reviewTitle">Shift complete</h1>
+          <p id="reviewMeta"></p>
+          <div class="review-score" id="reviewScore" hidden></div>
+          <dl class="review-stats" id="reviewStats"></dl>
+          <section class="review-directions" id="reviewDirections" aria-label="Triage direction summary"></section>
+          <button class="review-patients-link" id="reviewPatientsLink" type="button" hidden>PATIENTS SEEN</button>
+          <div class="overlay-actions">
+            <button class="secondary-action" id="reviewClose" type="button">Return to game</button>
+            <button class="primary-action" id="newShift" type="button">New shift</button>
+          </div>
+        </div>
+      </section>
+
       <section class="coach-overlay" id="coachOverlay" hidden>
         <div class="coach-frame" role="dialog" aria-modal="true" aria-labelledby="coachTitle">
+          <nav class="review-chart-nav" id="reviewChartNav" aria-label="Patients seen navigation" hidden>
+            <button type="button" id="reviewChartPrevious" aria-label="Previous patient">←</button>
+            <strong id="reviewChartLabel"></strong>
+            <button type="button" id="reviewChartNext" aria-label="Next patient">→</button>
+            <button class="review-chart-close" type="button" id="reviewChartClose" aria-label="Close patients seen">×</button>
+          </nav>
           <article class="coach-card" id="coachCard">
             <span class="chart-rail" aria-hidden="true"></span>
             <span class="coach-eyebrow" id="detailEyebrow">PATIENT CHART</span>
@@ -221,7 +310,7 @@
       </section>
     </main>
 
-    <script src="assets.js?v=20260731d"></script>
-    <script src="app.js?v=20260731d"></script>
+    <script src="assets.js?v=20260803-patients-seen"></script>
+    <script src="app.js?v=20260803-patients-seen"></script>
   </body>
 </html>

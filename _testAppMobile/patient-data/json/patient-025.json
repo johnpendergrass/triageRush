@@ -1,0 +1,112 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-025",
+  "number": 25,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Elijah",
+        "age": 2,
+        "sex": "M",
+        "race": "black"
+      },
+      "image": {
+        "imageFilename": "patient-025.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Had a seizure with fever",
+      "quote": "(Mom) He has had a cold and fever, then his arms and legs shook for about a minute and his eyes rolled back. It stopped on its own. He is still sleepy but wakes when I talk to him. It was terrifying.",
+      "triageNote": "2-year-old boy with a temperature of 39.5 C after approximately one minute of generalized shaking and eye-rolling that stopped without treatment. He remains sleepy but rousable, with no rash or neck stiffness.",
+      "vitals": {
+        "hr": {
+          "value": 150,
+          "color": "green"
+        },
+        "bp": {
+          "value": "94/58",
+          "color": "green"
+        },
+        "rr": {
+          "value": 30,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 98,
+          "color": "green"
+        },
+        "temp": {
+          "value": 39.5,
+          "color": "red"
+        },
+        "pain": {
+          "value": 1,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because the child remains postictal with altered responsiveness after a seizure and has a high fever, requiring rapid reassessment rather than routine resource-based sorting."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This febrile toddler had a brief generalized seizure and remains sleepy but rousable, requiring prompt reassessment of neurologic recovery and the fever source.",
+      "acuityReason": "The seizure has stopped and breathing is adequate, but the child has not yet returned to baseline responsiveness and has a temperature of 39.5 C.",
+      "expectedResources": [
+        "Frequent neurologic and vital-sign reassessment",
+        "Antipyretic treatment",
+        "Focused evaluation for the source of fever",
+        "Laboratory or other testing if examination suggests serious infection"
+      ],
+      "keyFindings": [
+        "Approximately one minute of generalized shaking",
+        "Stopped without treatment",
+        "Still sleepy but rousable",
+        "Temperature 39.5 C",
+        "No rash or neck stiffness reported"
+      ],
+      "redFlags": [
+        "Persistent postictal altered responsiveness",
+        "High fever in a young child"
+      ],
+      "teachingPoints": [
+        "A brief generalized febrile seizure may ultimately be benign, but triage must reflect the child's current mental status rather than the eventual diagnosis.",
+        "Failure to return to baseline, focal seizure activity, recurrence, meningismus, petechiae, or respiratory compromise would heighten concern."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Simple febrile seizure with ongoing postictal recovery",
+          "Viral febrile illness",
+          "Serious infection if additional findings emerge"
+        ],
+        "disposition": "The child would be observed until back to baseline while the fever source is assessed; discharge may be appropriate after reassuring recovery and examination, with caregiver education and return precautions."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "2-year-old boy, flushed with fever, in pajamas",
+    "pose": "drowsy on the clinic chair, leaning back",
+    "expression": "dazed and sleepy (postictal)",
+    "signs": [
+      "flushed cheeks",
+      "drowsy, heavy eyes"
+    ],
+    "lookSeverity": "postictal but stable",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-025.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a black 2-year-old boy in pajamas, flushed with fever, seated leaning back on a blue padded clinic chair. Pose: drowsy, leaning back, limp and sleepy. Expression: dazed and sleepy, a postictal look. Clearly visible: flushed cheeks and heavy, drowsy eyes. No text, no logos."
+  }
+}

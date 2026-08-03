@@ -1,0 +1,105 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-135",
+  "number": 135,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Nicole",
+        "age": 28,
+        "sex": "F",
+        "race": "asian"
+      },
+      "image": {
+        "imageFilename": "patient-135.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Jammed my thumb",
+      "quote": "Volleyball. I went up to block and the ball blocked me instead. It's swollen but I can still move it, so it's probably fine, right?",
+      "triageNote": "28-year-old female with a hyperextension injury to the thumb, swollen and tender over the ulnar collateral ligament with mild laxity on stress testing.",
+      "vitals": {
+        "hr": {
+          "value": 80,
+          "color": "green"
+        },
+        "bp": {
+          "value": "114/70",
+          "color": "green"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 5,
+          "color": "yellow"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 4,
+      "correctRoom": "esi-4",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 4 is appropriate because this stable thumb ligament injury is expected to require one resource for radiographic assessment."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has a partial ulnar collateral ligament injury after thumb hyperextension.",
+      "acuityReason": "This stable thumb ligament injury is expected to require one resource for radiographic assessment.",
+      "expectedResources": [
+        "Thumb X-ray"
+      ],
+      "keyFindings": [
+        "Hyperextension mechanism",
+        "Ulnar-sided swelling and tenderness",
+        "Mild laxity on stress testing",
+        "No gross instability",
+        "Normal distal function"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Ulnar-sided thumb pain after hyperextension is a UCL injury until proven otherwise. Gross laxity means a complete tear and a surgical referral — hers is partial.",
+        "Triage should be based on the current presentation and expected care, with reassessment if new warning signs appear."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Partial thumb ulnar collateral ligament injury",
+          "Avulsion fracture"
+        ],
+        "disposition": "Imaging would be followed by thumb-spica immobilization and hand follow-up."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "an asian 28-year-old woman in volleyball kit with knee pads, seated on a blue padded clinic chair",
+    "pose": "sitting forward holding her right hand cradled in her left, thumb held slightly away from the palm",
+    "expression": "practical and unimpressed with herself",
+    "signs": [
+      "a visibly swollen thumb base",
+      "volleyball kit and knee pads"
+    ],
+    "lookSeverity": "entirely well, sore thumb",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-135.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. Subject: an asian 28-year-old woman in volleyball kit with knee pads, seated on a blue padded clinic chair. Pose: sitting forward holding her right hand cradled in her left, thumb held slightly away from the palm. Expression: practical and unimpressed with herself. Clearly visible: a visibly swollen thumb base; volleyball kit and knee pads. Overall: entirely well, sore thumb. No text, no logos, no watermarks, no border."
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-071",
+  "number": 71,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Susan",
+        "age": 55,
+        "sex": "F",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-071.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Dizzy when she rolls over",
+      "quote": "When I roll over in bed or tip my head back, the room spins hard for about 20 seconds, then it settles. I can walk fine otherwise. It's awful but it passes each time.",
+      "triageNote": "55-year-old female with brief spinning episodes triggered by rolling in bed or tipping her head back. Each lasts about 20 seconds and settles completely; she walks normally and has no focal neurological findings.",
+      "vitals": {
+        "hr": {
+          "value": 76,
+          "color": "green"
+        },
+        "bp": {
+          "value": "128/78",
+          "color": "green"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 0,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "esi-5",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because this brief positional dizziness pattern with normal gait and neurologic findings is not expected to require a counted emergency resource."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has short, fully resolving episodes of position-triggered vertigo without central neurologic warning signs.",
+      "acuityReason": "Episodes last seconds, have reproducible head-position triggers, and leave her walking normally between events.",
+      "expectedResources": [],
+      "keyFindings": [
+        "Triggered by rolling in bed or tipping the head back",
+        "Episodes last about 20 seconds",
+        "Complete resolution between episodes",
+        "Normal gait",
+        "No focal neurologic findings"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Persistent symptoms, inability to walk, new headache, direction-changing nystagmus, or focal deficits suggest a central process.",
+        "A bedside repositioning maneuver may be both diagnostic and therapeutic."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Benign paroxysmal positional vertigo",
+          "Other peripheral vestibular disorder"
+        ],
+        "disposition": "A focused bedside examination and repositioning maneuver would usually allow discharge with recurrence guidance."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "55-year-old woman",
+    "pose": "seated, steadying herself with one hand on the chair",
+    "expression": "queasy but composed",
+    "signs": [
+      "one hand steadying on the chair"
+    ],
+    "lookSeverity": "uncomfortable but well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-071.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. ANATOMY AND OBJECTS (critical): exactly one head, exactly two arms ending in exactly two hands, exactly two legs ending in two feet, five fingers on each hand. No extra, duplicated, floating or partial limbs anywhere. Anything the character touches must be plausibly held by one of those two hands. All furniture is solid and fully opaque - the chair must never look transparent or see-through, and its back, seat and legs must all be completely drawn. Subject: a white 55-year-old woman, seated on a blue padded clinic chair. Pose: steadying herself with one hand on the chair arm. Expression: queasy but composed. Clearly visible: a hand steadying on the chair. No text, no logos."
+  }
+}

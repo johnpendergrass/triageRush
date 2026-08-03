@@ -1,0 +1,102 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-063",
+  "number": 63,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Linh",
+        "age": 40,
+        "sex": "F",
+        "race": "asian"
+      },
+      "image": {
+        "imageFilename": "patient-063.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Itchy rash on hands",
+      "quote": "I switched to a new dish soap and now both my hands are red, dry, and so itchy. It's just where the soap touched — no fever, I feel totally fine otherwise.",
+      "triageNote": "40-year-old female with an itchy, red, dry, scaling rash on both hands after changing dish soap. The rash follows the contact areas; she is afebrile and has no facial swelling, breathing symptoms, or systemic illness.",
+      "vitals": {
+        "hr": {
+          "value": 72,
+          "color": "green"
+        },
+        "bp": {
+          "value": "118/74",
+          "color": "green"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 1,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "esi-5",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because this localized contact-pattern dermatitis requires no counted emergency resource."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has a symmetric itchy hand rash following a new soap exposure, without systemic allergic features.",
+      "acuityReason": "The exposure pattern, scaling, and absence of fever, facial swelling, or respiratory symptoms support localized skin inflammation.",
+      "expectedResources": [],
+      "keyFindings": [
+        "New dish soap",
+        "Itchy red dry scaling rash on both hands",
+        "Rash follows contact areas",
+        "No facial swelling or breathing symptoms",
+        "Afebrile and otherwise well"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Avoiding the trigger is central to recovery.",
+        "Rapidly spreading hives, facial or tongue swelling, wheeze, vomiting, or hypotension would indicate a systemic reaction."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Irritant or allergic contact dermatitis",
+          "Hand eczema"
+        ],
+        "disposition": "Trigger avoidance, skin protection, emollient use, and topical medication would allow discharge."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "40-year-old woman",
+    "pose": "seated, holding out both reddened hands",
+    "expression": "mildly bothered, well",
+    "signs": [
+      "red, irritated hands"
+    ],
+    "lookSeverity": "well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-063.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: an asian 40-year-old woman, seated on a blue padded clinic chair. Pose: holding out both reddened, irritated hands. Expression: mildly bothered but well. Clearly visible: red, irritated skin on both hands. No text, no logos."
+  }
+}

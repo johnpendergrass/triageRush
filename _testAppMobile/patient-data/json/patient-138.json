@@ -1,0 +1,101 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-138",
+  "number": 138,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Erin",
+        "age": 31,
+        "sex": "F",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-138.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Tick bite",
+      "quote": "It was on me after a hike and I got the whole thing out with tweezers — head and all, I checked twice. No rash, I feel fine, but the internet was very dramatic about it.",
+      "triageNote": "31-year-old female who removed an intact tick six hours after a hike, with no rash, fever or systemic symptoms.",
+      "vitals": {
+        "hr": {
+          "value": 72,
+          "color": "green"
+        },
+        "bp": {
+          "value": "116/72",
+          "color": "green"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 1,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "discharge",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because the tick was removed intact after brief attachment and there are no symptoms requiring an emergency resource."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has an uncomplicated recent tick bite without rash or systemic illness.",
+      "acuityReason": "The tick was removed intact after brief attachment and there are no symptoms requiring an emergency resource.",
+      "expectedResources": [],
+      "keyFindings": [
+        "Tick removed intact",
+        "Attached for approximately six hours",
+        "No rash",
+        "No fever or systemic symptoms"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Removed intact, no rash, no fever, and well inside the transmission window. Nothing to do here but educate and set return precautions.",
+        "Triage should be based on the current presentation and expected care, with reassessment if new warning signs appear."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Uncomplicated tick bite"
+        ],
+        "disposition": "Education about local care, symptom monitoring, and exposure-specific follow-up would allow discharge."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a white 31-year-old woman in hiking clothes with a small plaster on her forearm, seated on a blue padded clinic chair",
+    "pose": "sitting relaxed with one sleeve rolled up, showing her forearm",
+    "expression": "calm and slightly apologetic for coming in",
+    "signs": [
+      "a small plaster on the forearm",
+      "hiking clothes and boots"
+    ],
+    "lookSeverity": "entirely well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-138.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. Subject: a white 31-year-old woman in hiking clothes with a small plaster on her forearm, seated on a blue padded clinic chair. Pose: sitting relaxed with one sleeve rolled up, showing her forearm. Expression: calm and slightly apologetic for coming in. Clearly visible: a small plaster on the forearm; hiking clothes and boots. Overall: entirely well. No text, no logos, no watermarks, no border."
+  }
+}

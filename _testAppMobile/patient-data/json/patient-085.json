@@ -1,0 +1,114 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-085",
+  "number": 85,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Otis",
+        "age": 72,
+        "sex": "M",
+        "race": "black"
+      },
+      "image": {
+        "imageFilename": "patient-085.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Drowning in his own lungs",
+      "quote": "I woke up gasping like I was drowning — I can't breathe lying down at all, I have to sit bolt upright. I'm coughing up frothy spit and my heart's pounding. Came on fast tonight.",
+      "triageNote": "72-year-old male who woke suddenly gasping and cannot tolerate lying flat. He has frothy sputum and diffuse crackles; blood pressure is 212/118, respiratory rate 32, and oxygen saturation 85%.",
+      "vitals": {
+        "hr": {
+          "value": 118,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "212/118",
+          "color": "red"
+        },
+        "rr": {
+          "value": 32,
+          "color": "red"
+        },
+        "spo2": {
+          "value": 85,
+          "color": "red"
+        },
+        "temp": {
+          "value": 36.9,
+          "color": "green"
+        },
+        "pain": {
+          "value": 2,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 1,
+      "correctRoom": "esi-1",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 1 is appropriate because oxygen saturation 85%, respiratory rate 32, frothy sputum, and inability to lie flat require immediate noninvasive ventilatory support and aggressive afterload reduction."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has severe hypertensive pulmonary edema with acute gas-exchange failure and marked respiratory distress.",
+      "acuityReason": "Profound hypoxemia and work of breathing require immediate lifesaving respiratory intervention while blood pressure is treated.",
+      "expectedResources": [
+        "Immediate noninvasive positive-pressure ventilation",
+        "Supplemental oxygen",
+        "Immediate IV vasodilator treatment",
+        "Cardiac monitoring, ECG, and IV access",
+        "Chest imaging and cardiac laboratory testing"
+      ],
+      "keyFindings": [
+        "Awoke suddenly gasping",
+        "Cannot lie flat",
+        "Frothy sputum",
+        "Diffuse crackles",
+        "Blood pressure 212/118",
+        "Respiratory rate 32 and oxygen saturation 85%"
+      ],
+      "redFlags": [
+        "Severe hypoxemic respiratory failure",
+        "Hypertensive pulmonary edema"
+      ],
+      "teachingPoints": [
+        "Rapid positive-pressure support and afterload reduction can reverse this physiology quickly.",
+        "Fatigue, worsening mental status, or failure of noninvasive support may require intubation."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Flash hypertensive pulmonary edema",
+          "Acute heart failure",
+          "Acute coronary syndrome precipitating edema"
+        ],
+        "disposition": "Immediate ventilatory and blood-pressure treatment would be followed by intensive cardiac evaluation and admission."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "72-year-old man, sweaty, struggling",
+    "pose": "bolt upright, gripping the chair, gasping",
+    "expression": "panicked, air-hungry",
+    "signs": [
+      "bolt upright, gripping the chair",
+      "gasping, sweaty"
+    ],
+    "lookSeverity": "critically short of breath",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-085.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a black 72-year-old man, sweaty and struggling, sitting bolt upright on a blue padded clinic chair. Pose: bolt upright, gripping the chair arms, gasping for air. Expression: panicked and air-hungry. Clearly visible: a rigid upright posture, white-knuckle grip, and gasping effort. No text, no logos."
+  }
+}

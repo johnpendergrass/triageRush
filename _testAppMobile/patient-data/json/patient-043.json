@@ -52,19 +52,19 @@
       }
     },
     "answer": {
-      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player assignment remains session state.",
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
       "correctEsi": 4,
       "correctRoom": "psych",
       "otherAcceptableRooms": null,
-      "destinationReason": "Psych is the preferred destination for this medically stable behavioral-health presentation; the underlying clinical acuity is ESI 4."
+      "destinationReason": "ESI 4 is appropriate because a stable, cooperative psychiatric relapse without dangerous behavior or signs of an organic emergency requires one specialty-evaluation resource."
     },
     "clinical": {
       "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
-      "summary": "This is a medically stable patient with known schizophrenia, medication interruption, and recurrent hallucinations who is calm and denies intent to harm self or others.",
-      "acuityReason": "Normal vital signs, cooperation, known psychiatric history, and absence of disclosed medical or immediate safety red flags support behavioral-health evaluation after appropriate screening.",
+      "summary": "This patient with known schizophrenia stopped medication and now has recurrent hallucinations but remains calm, cooperative, medically stable, and denies intent to harm self or others.",
+      "acuityReason": "The normal vital signs and familiar relapse pattern are reassuring after medical screening, while the hallucinations still require structured safety and psychiatric assessment.",
       "expectedResources": [
-        "Focused medical and substance screening",
-        "Psychiatric assessment and medication review"
+        "Focused medical screening",
+        "Psychiatric evaluation"
       ],
       "keyFindings": [
         "Known schizophrenia",
@@ -76,15 +76,16 @@
       ],
       "redFlags": null,
       "teachingPoints": [
-        "New visual hallucinations can suggest an organic or substance-related cause, so the known history should not replace medical screening.",
-        "Behavior, ability to cooperate, and immediate danger to self or others influence urgency and observation needs."
+        "Visual hallucinations or a new pattern should prompt consideration of delirium, intoxication, withdrawal, or metabolic disease.",
+        "Safety assessment includes intent, command hallucinations, ability to care for self, supports, and access to weapons."
       ],
       "possibleClinicalOutcome": {
         "possibleDiagnoses": [
-          "Psychotic relapse related to medication interruption",
-          "Substance-induced or medical psychosis if screening identifies another cause"
+          "Psychotic relapse related to medication nonadherence",
+          "Substance-induced psychosis",
+          "Organic delirium if new findings emerge"
         ],
-        "disposition": "The patient would receive a low-stimulation environment, medical and safety screening, psychiatric evaluation, and a plan to restart or adjust treatment."
+        "disposition": "After medical and safety screening, psychiatric evaluation would guide medication restart and determine whether supported discharge or psychiatric admission is safest."
       }
     }
   },

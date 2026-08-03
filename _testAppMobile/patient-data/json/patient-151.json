@@ -1,0 +1,112 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-151",
+  "number": 151,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Raymond",
+        "age": 68,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-151.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "My face has swollen up",
+      "quote": "It started with my collar feeling tight and now look at me — my face is like a balloon and my eyes are half shut. It's far worse when I lie down. They told me the lung cancer was in the middle of my chest.",
+      "triageNote": "68-year-old male with known non-small-cell lung cancer, four days of progressive facial and arm swelling that is much worse lying flat, with distended neck and chest wall veins.",
+      "vitals": {
+        "hr": {
+          "value": 104,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "138/84",
+          "color": "green"
+        },
+        "rr": {
+          "value": 24,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 93,
+          "color": "yellow"
+        },
+        "temp": {
+          "value": 36.9,
+          "color": "green"
+        },
+        "pain": {
+          "value": 3,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because progressive facial and arm swelling, positional worsening, venous distention, and known lung cancer are high risk for central venous obstruction and airway compromise."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has a classic central venous obstruction pattern from thoracic malignancy.",
+      "acuityReason": "Progressive facial and arm swelling, positional worsening, venous distention, and known lung cancer are high risk for central venous obstruction and airway compromise.",
+      "expectedResources": [
+        "Upright positioning and airway monitoring",
+        "Contrast chest imaging",
+        "CBC and metabolic testing",
+        "Oncology, radiation, or interventional consultation"
+      ],
+      "keyFindings": [
+        "Known lung cancer",
+        "Four days of facial and arm swelling",
+        "Worse lying flat",
+        "Distended neck and chest-wall veins",
+        "Respiratory rate 24",
+        "Oxygen saturation 93%"
+      ],
+      "redFlags": [
+        "Risk of airway or cerebral edema"
+      ],
+      "teachingPoints": [
+        "Sit them up and never lie them flat. Facial and arm swelling with distended chest wall veins in known lung cancer is SVC obstruction — it is the airway and the cerebral oedema that make it an emergency, not the appearance.",
+        "Triage should be based on the current presentation and expected care, with reassessment if new warning signs appear."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Superior vena cava obstruction",
+          "Other mediastinal vascular compression"
+        ],
+        "disposition": "Upright monitored evaluation and urgent oncologic intervention would likely require admission."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a white 68-year-old man in an open-collared shirt, seated bolt upright on a blue padded clinic chair",
+    "pose": "sitting bolt upright and refusing to lean back, both hands on his knees",
+    "expression": "uncomfortable and alarmed",
+    "signs": [
+      "a puffy swollen face with half-closed swollen eyelids",
+      "distended veins standing out across the neck and upper chest",
+      "a dusky reddish-purple flush across the face"
+    ],
+    "lookSeverity": "visibly abnormal and uncomfortable, alert and talking",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-151.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. Subject: a white 68-year-old man in an open-collared shirt, seated bolt upright on a blue padded clinic chair. Pose: sitting bolt upright and refusing to lean back, both hands on his knees. Expression: uncomfortable and alarmed. Clearly visible: a puffy swollen face with half-closed swollen eyelids; distended veins standing out across the neck and upper chest; a dusky reddish-purple flush across the face. Overall: visibly abnormal and uncomfortable, alert and talking. No text, no logos, no watermarks, no border."
+  }
+}

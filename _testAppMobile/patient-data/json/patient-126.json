@@ -1,0 +1,110 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-126",
+  "number": 126,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Bernard",
+        "age": 64,
+        "sex": "M",
+        "race": "black"
+      },
+      "image": {
+        "imageFilename": "patient-126.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Missed dialysis, feeling off",
+      "quote": "I skipped Tuesday's session, my ride fell through. I feel a bit weak and my legs are heavy, but honestly I've felt worse. I'll just go Thursday.",
+      "triageNote": "64-year-old male with end-stage renal disease on haemodialysis who missed a session, now with generalised weakness; alert and well-appearing.",
+      "vitals": {
+        "hr": {
+          "value": 52,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "158/92",
+          "color": "yellow"
+        },
+        "rr": {
+          "value": 16,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 98,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.7,
+          "color": "green"
+        },
+        "pain": {
+          "value": 1,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because missed dialysis, generalized weakness, bradycardia, and hypertension create a high-risk electrolyte presentation requiring immediate ECG assessment."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This dialysis patient may have a dangerous potassium disturbance despite appearing well.",
+      "acuityReason": "Missed dialysis, generalized weakness, bradycardia, and hypertension create a high-risk electrolyte presentation requiring immediate ECG assessment.",
+      "expectedResources": [
+        "Immediate ECG and cardiac monitoring",
+        "Rapid electrolyte and renal testing",
+        "IV membrane-stabilizing and potassium-shifting treatment if ECG or laboratory findings confirm danger",
+        "Urgent dialysis coordination"
+      ],
+      "keyFindings": [
+        "Missed hemodialysis session",
+        "Generalized weakness",
+        "Heart rate 52",
+        "Blood pressure 158/92",
+        "Alert and well appearing"
+      ],
+      "redFlags": [
+        "Possible hyperkalemia with bradycardia"
+      ],
+      "teachingPoints": [
+        "A missed session plus 'a bit weak' is a potassium until proven otherwise. Get the ECG immediately: peaked T waves and a widening QRS mean calcium now, not when the lab phones back.",
+        "Triage should be based on the current presentation and expected care, with reassessment if new warning signs appear."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Hyperkalemia after missed dialysis",
+          "Other uremic or electrolyte complication"
+        ],
+        "disposition": "Rapid ECG and testing would guide immediate medical stabilization and urgent dialysis."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a black 64-year-old man in a button-down shirt with a visible dialysis fistula on his left forearm, seated on a blue padded clinic chair",
+    "pose": "sitting comfortably with forearms resting on his thighs, left forearm turned outward",
+    "expression": "relaxed and mildly apologetic",
+    "signs": [
+      "a prominent dialysis fistula scar on the left forearm",
+      "generally well-kept appearance"
+    ],
+    "lookSeverity": "looks well and comfortable — nothing outward suggests danger",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-126.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. Subject: a black 64-year-old man in a button-down shirt with a visible dialysis fistula on his left forearm, seated on a blue padded clinic chair. Pose: sitting comfortably with forearms resting on his thighs, left forearm turned outward. Expression: relaxed and mildly apologetic. Clearly visible: a prominent dialysis fistula scar on the left forearm; generally well-kept appearance. Overall: looks well and comfortable — nothing outward suggests danger. No text, no logos, no watermarks, no border."
+  }
+}

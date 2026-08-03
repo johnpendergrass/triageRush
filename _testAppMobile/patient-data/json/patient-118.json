@@ -1,0 +1,104 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-118",
+  "number": 118,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Derek",
+        "age": 44,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-118.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Headache",
+      "quote": "Before you ask: yes, the arrow is part of the hat. No, it is not new. I've had this headache since the third birthday party this morning.",
+      "triageNote": "44-year-old male with a bilateral band-like headache after a long working shift, with a completely normal neurological examination.",
+      "vitals": {
+        "hr": {
+          "value": 76,
+          "color": "green"
+        },
+        "bp": {
+          "value": "124/78",
+          "color": "green"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 4,
+          "color": "yellow"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "discharge",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because this typical tension-pattern headache with a normal neurologic examination has no expected counted emergency resource."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has bilateral band-like headache after a long work shift without neurologic or systemic warning signs.",
+      "acuityReason": "The gradual mechanical pattern and normal examination support conservative treatment.",
+      "expectedResources": [],
+      "keyFindings": [
+        "Bilateral band-like pain",
+        "After a long work shift",
+        "Normal neurologic examination",
+        "No thunderclap onset",
+        "No fever or focal deficit"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Thunderclap onset, fever, neck stiffness, neurologic deficit, trauma, pregnancy-related risk, or a major pattern change would alter assessment.",
+        "Hydration, sleep, posture, vision strain, and medication overuse may contribute."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Tension-type headache",
+          "Other uncomplicated primary headache"
+        ],
+        "disposition": "Oral treatment, reassurance, and return guidance would allow discharge without imaging."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a white 44-year-old man in full clown costume and greasepaint, wearing a novelty headband with a toy arrow that appears to pass through the head, seated on a blue padded clinic chair",
+    "pose": "sitting slouched with oversized shoes planted flat on the floor, pinching the bridge of his nose",
+    "expression": "weary, deadpan and long-suffering",
+    "signs": [
+      "an obviously fake novelty toy arrow headband resting on top of the hair",
+      "smudged clown greasepaint",
+      "oversized clown shoes"
+    ],
+    "lookSeverity": "completely well, thoroughly tired of today",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-118.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. ANATOMY AND OBJECTS (critical): exactly one head, exactly two arms ending in exactly two hands, exactly two legs ending in two feet, five fingers on each hand. No extra, duplicated, floating or partial limbs anywhere. Anything the character touches must be plausibly held by one of those two hands. All furniture is solid and fully opaque - the chair must never look transparent or see-through, and its back, seat and legs must all be completely drawn. Subject: a white 44-year-old man in a BOLD, brightly coloured full clown costume - a vivid red and yellow polka-dot jumpsuit with a huge ruffled collar, bright blue and orange striped socks, enormous red shoes, a round red foam nose and full white-and-red greasepaint - wearing a novelty headband with a toy arrow that appears to pass through the head, seated on a blue padded clinic chair. The costume colours must be saturated, playful and circus-bright, with absolutely NO olive, drab, brown, grey or muted tones anywhere on the costume. Pose: sitting slouched with the enormous shoes planted flat on the floor, pinching the bridge of his nose. Expression: weary, deadpan and long-suffering. Clearly visible: an obviously fake novelty toy arrow headband resting on top of the hair; a vivid multicoloured clown costume; a huge ruffled collar; enormous red shoes. Overall: completely well and thoroughly tired of today. No text, no logos, no watermarks, no border."
+  }
+}

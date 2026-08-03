@@ -1,0 +1,105 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-097",
+  "number": 97,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Chloe",
+        "age": 22,
+        "sex": "F",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-097.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Can't breathe, hands tingling",
+      "quote": "I got really overwhelmed during finals and suddenly couldn't breathe right — I'm breathing super fast, my hands and lips are tingling and cramping up. It's terrifying but there's no chest pain.",
+      "triageNote": "22-year-old female who began breathing rapidly while overwhelmed during finals, followed by tingling and cramping around her mouth and hands. Lungs are clear, oxygen saturation is 100%, and she reports no chest pain.",
+      "vitals": {
+        "hr": {
+          "value": 100,
+          "color": "green"
+        },
+        "bp": {
+          "value": "124/78",
+          "color": "green"
+        },
+        "rr": {
+          "value": 26,
+          "color": "yellow"
+        },
+        "spo2": {
+          "value": 100,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 1,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "esi-5",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because this situational hyperventilation pattern has normal oxygenation, clear lungs, no chest pain, and no expected counted emergency resource."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient developed rapid breathing during emotional stress followed by perioral and hand tingling and cramping.",
+      "acuityReason": "Normal oxygen saturation, clear lungs, lack of chest pain, and a clear trigger support coached breathing after focused screening.",
+      "expectedResources": [],
+      "keyFindings": [
+        "Began while overwhelmed during finals",
+        "Rapid breathing",
+        "Tingling and cramping around mouth and hands",
+        "Clear lungs",
+        "Oxygen saturation 100%",
+        "No chest pain"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Anxiety should not be assigned until dangerous cardiopulmonary and metabolic features are considered.",
+        "Coached slow breathing is safer than paper-bag rebreathing."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Hyperventilation syndrome",
+          "Panic reaction",
+          "Cardiopulmonary or metabolic mimic if new findings appear"
+        ],
+        "disposition": "Focused examination and coached breathing would usually lead to rapid improvement and discharge with support and return guidance."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "22-year-old woman",
+    "pose": "seated, hands held up cramped, breathing fast",
+    "expression": "frightened, overwhelmed",
+    "signs": [
+      "hands held up, fingers cramped",
+      "breathing fast"
+    ],
+    "lookSeverity": "distressed but stable vitals",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-097.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 22-year-old woman, seated on a blue padded clinic chair. Pose: hands held up with fingers cramped, breathing fast. Expression: frightened and overwhelmed. Clearly visible: hands held up with cramped fingers and rapid breathing. No text, no logos."
+  }
+}

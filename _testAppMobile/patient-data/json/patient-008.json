@@ -22,7 +22,7 @@
         "imageScale": 1
       },
       "chiefComplaint": "Confused",
-      "quote": "She keeps calling me by her late sister's name, and she is burning up. She does the crossword in pen every morning; today she did not know what the pen was. This is not her normal self.",
+      "quote": "(Daughter) She keeps calling me by her late sister's name, and she is burning up. She does the crossword in pen every morning; today she did not know what the pen was. This is not her normal self.",
       "triageNote": "84-year-old woman brought by family for an abrupt change from her normally sharp baseline. She is confused without a localizing complaint and has a temperature of 38.9°C, heart rate of 112, respiratory rate of 24, and blood pressure of 92/60.",
       "vitals": {
         "hr": {
@@ -43,7 +43,7 @@
         },
         "temp": {
           "value": 38.9,
-          "color": "red"
+          "color": "yellow"
         },
         "pain": {
           "value": 2,

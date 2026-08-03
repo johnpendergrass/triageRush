@@ -1,0 +1,103 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-054",
+  "number": 54,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Diego",
+        "age": 38,
+        "sex": "M",
+        "race": "hispanic"
+      },
+      "image": {
+        "imageFilename": "patient-054.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Cut his finger",
+      "quote": "I was chopping onions and the knife slipped. It's a clean cut on my finger, bled a lot but stopped with pressure. I can still bend it fine and feel everything.",
+      "triageNote": "38-year-old male with a clean 1.5 cm volar finger laceration from a kitchen knife, bleeding controlled, with intact flexion and distal sensation.",
+      "vitals": {
+        "hr": {
+          "value": 76,
+          "color": "green"
+        },
+        "bp": {
+          "value": "124/78",
+          "color": "green"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 3,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 4,
+      "correctRoom": "esi-4",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 4 is appropriate because this stable uncomplicated finger laceration is expected to require one resource for wound repair."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has a small clean finger laceration with controlled bleeding and intact tendon and nerve function.",
+      "acuityReason": "The wound needs irrigation and closure, but there is no uncontrolled hemorrhage, tendon injury, sensory deficit, or contamination concern.",
+      "expectedResources": [
+        "Laceration irrigation and closure"
+      ],
+      "keyFindings": [
+        "Clean 1.5 cm volar finger wound",
+        "Bleeding controlled",
+        "Flexion intact",
+        "Distal sensation intact"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Tendon movement and distal sensation should be documented before local anesthetic and closure.",
+        "The wound should be explored for depth, contamination, and foreign material."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Simple finger laceration",
+          "Partial tendon injury if examination changes"
+        ],
+        "disposition": "After irrigation and closure, tetanus status and wound precautions would be addressed before discharge."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "38-year-old man in a casual shirt",
+    "pose": "seated, holding gauze wrapped around one finger",
+    "expression": "calm, a little sheepish",
+    "signs": [
+      "gauze wrapped around one finger"
+    ],
+    "lookSeverity": "well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-054.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a hispanic 38-year-old man in a casual shirt, seated on a blue padded clinic chair. Pose: holding a gauze-wrapped finger up. Expression: calm and a little sheepish. Clearly visible: gauze wrapped around one finger. No text, no logos."
+  }
+}

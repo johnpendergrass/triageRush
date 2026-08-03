@@ -1,0 +1,109 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-068",
+  "number": 68,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Gary",
+        "age": 50,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-068.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Severe upper belly pain",
+      "quote": "I've got this boring pain in the pit of my stomach that goes straight through to my back, and I keep throwing up. It's a bit better if I lean forward. I do drink most nights.",
+      "triageNote": "50-year-old male with severe upper abdominal pain radiating straight through to his back and repeated vomiting. Leaning forward gives partial relief. He reports drinking alcohol on most nights.",
+      "vitals": {
+        "hr": {
+          "value": 106,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "128/78",
+          "color": "green"
+        },
+        "rr": {
+          "value": 18,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 98,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37.6,
+          "color": "green"
+        },
+        "pain": {
+          "value": 8,
+          "color": "red"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 3,
+      "correctRoom": "esi-3",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 3 is appropriate because this stable severe upper-abdominal presentation is expected to require multiple diagnostic and treatment resources."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has severe epigastric pain radiating to the back, repeated vomiting, and partial relief leaning forward.",
+      "acuityReason": "The presentation requires IV treatment and laboratory and imaging assessment, but there is no current hypotension, altered mental status, or respiratory failure.",
+      "expectedResources": [
+        "CBC, metabolic, liver, and pancreatic enzyme testing",
+        "IV fluids",
+        "Parenteral analgesia and antiemetic medication",
+        "Abdominal imaging when indicated"
+      ],
+      "keyFindings": [
+        "Severe upper-abdominal pain",
+        "Radiation directly to the back",
+        "Repeated vomiting",
+        "Partial relief leaning forward",
+        "Frequent alcohol use"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Severity is determined by physiology, organ dysfunction, and complications rather than the pain score alone.",
+        "Biliary disease, alcohol exposure, medication, triglyceride, and other triggers should be considered."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Acute pancreatitis",
+          "Perforated peptic ulcer",
+          "Biliary disease"
+        ],
+        "disposition": "IV fluids, symptom control, and diagnostic assessment would likely be followed by admission when oral intake, pain, or organ function remains abnormal."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "50-year-old man",
+    "pose": "hunched forward, both hands over his upper abdomen",
+    "expression": "in pain, sweaty",
+    "signs": [
+      "hunched forward",
+      "hands over the upper belly"
+    ],
+    "lookSeverity": "in pain, stable",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-068.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 50-year-old man, seated on a blue padded clinic chair. Pose: hunched forward, both hands over his upper abdomen. Expression: in pain and a little sweaty. Clearly visible: a forward-hunched posture with hands over the upper belly. No text, no logos."
+  }
+}

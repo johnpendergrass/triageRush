@@ -1,134 +1,94 @@
-triageRush mobile interactive design mockup
-===========================================
+triageRush self-contained mobile game
+=====================================
 
-This is a disposable, self-contained HTML/CSS/JavaScript mockup. It does not
-change or depend on the production triageRush application, shared patient
-library, or standalone CRUD pipeline.
+This folder is an independently runnable HTML/CSS/JavaScript implementation of
+the current triageRush game loop. It does not load files from the production
+application, the Desktop demo, the HOME demo, or the repository-level patient
+library at runtime.
 
-This folder is exclusively for the mobile pre-production test app. Do not
-share code or runtime assets directly with _testAppDesktop. Each test app must
-remain independently runnable and self-contained.
+Run it
+------
 
-Quick desktop preview
----------------------
-
-Double-click start-mobile-preview.bat, then open:
+Double-click start-mobile-preview.bat and open the address printed in the
+window. The local-computer address is normally:
 
     http://localhost:8080
 
-iPhone preview
---------------
+For an iPhone, use the printed network address while the phone and computer are
+on the same Wi-Fi network. Keep the server window open. Stop it with Ctrl+C.
 
-1. Connect the iPhone and this computer to the same Wi-Fi network.
-2. Double-click start-mobile-preview.bat.
-3. Keep the black server window open.
-4. The window prints an iPhone address such as:
-
-       http://192.168.1.25:8080
-
-5. Enter that exact address in Safari on the iPhone.
-6. If Windows Firewall asks, allow Python on Private networks only.
-
-Stop the server by closing its window or pressing Ctrl+C.
-
-The current reversible sizing experiment uses the smallest mobile-browser
-viewport and safe-area insets so the complete 9:16 game remains above visible
-browser controls. It may render slightly smaller while those controls are
-expanded. To restore the earlier sizing for comparison, remove only the clearly
-marked "REVERSIBLE MOBILE SAFE-VIEWPORT EXPERIMENT" block in styles.css.
-
-What is interactive
--------------------
-
-- Tap a waiting-room portrait to make that person the active patient.
-- The demo patient store is temporarily the complete provisional schema 2.2
-  mobile set: patients 001-016, 021-023, 032, 037, 043, and 098.
-  The JSON records and matching images are copied into this test app so it
-  remains independently runnable.
-- The complete quote and complete triage note are shown in the compact patient
-  panel. Text is fitted down only to a readability floor.
-- Tap the occupied patient panel or the magnifying-glass icon in the lower-right
-  of its triage note to open the sole
-  detailed-patient chart. Before assignment, Presentation is expanded,
-  Clinical is collapsed but expandable, and Answer is visibly locked. Activating
-  the locked Answer header displays `This section is locked`.
-- The detailed patient chart scrolls smoothly. MORE ABOVE and MORE BELOW appear
-  only when useful, Close stays anchored at the upper-right, and the game timer
-  pauses while the chart is open.
-- Browser refresh and Reset Round start with an empty patient panel and five
-  patients in the five compact queue slots.
-- Each queued patient receives one of the 16 selected waiting-room backgrounds.
-  The background is stored with that queued patient and survives redraws,
-  compaction, and patient-panel swaps.
-- Queue numbering and the WAITING plaque are intentionally omitted.
-- A small static translucent `→` marker means the patient can move into an
-  empty patient panel. A static `↔` marker means selecting that patient swaps
-  them with the active patient in that exact queue cell.
-- Selecting a queue patient while the panel is empty removes that patient,
-  shifts every lower queue patient upward, and appends a fresh patient from the
-  patient store to the fifth slot.
-- Tap a treatment door to commit the choice and open the door.
-- On a computer, hover over a room to see its simple definition.
-- On a phone, press and hold a room for about half a second to see the same
-  definition; releasing closes it and does not commit the room choice. The
-  empty patient-panel instructions identify the waiting-room and recall
-  directions and advertise this gesture.
-- Keyboard focus also displays the room definition.
-- After assigning a room, tap that still-open room to recall the same patient
-  into the patient panel. The door closes and the patient can be assigned
-  again.
-- While recall is available, a matching compact static left arrow straddles
-  the assigned room/patient-panel boundary at the center of that room row.
-- Correct, Acceptable, Close, and Wrong choices produce labeled feedback with
-  distinct pulses and sounds.
-- The intended room also pulses light green after an Acceptable, Close, or
-  Wrong choice.
-- In either mode, assigning a room removes the patient from the center panel
-  and displays the brief result.
-- Only the patient's first assignment affects Game points or Edu tallies.
-  Recalled attempts still receive normal feedback and Coach access.
-- The triage queue remains selectable while a patient is in the center. That
-  action swaps the current unassigned patient back into the selected queue
-  position.
-- Selecting a queued patient after an assignment finalizes the assigned case;
-  that patient is not returned to the queue.
-- Coach remains locked until a door choice has been made. Once unlocked, it
-  reopens the same schema 2.2 detailed-patient chart with Presentation,
-  Answer, and Clinical expanded. Every available section can then be collapsed
-  and expanded from the same persistent header controls.
-- When the Coach card has more content below the visible area, a bouncing
-  MORE BELOW arrow appears at its lower edge. It disappears at the bottom and
-  can also be tapped to scroll forward.
-- The detailed-patient window uses 94 percent of the overlay's available
-  height. Close remains fixed at the upper-right while only the chart content
-  scrolls.
-- Game mode shows a timer and numeric prototype score.
-- Edu mode shows Correct / Acceptable / Close / Wrong tallies.
-- The disabled footer control reminds you to select or switch patients from
-  the left triage queue.
-- Reset Round clears the score and selects a new random patient.
-- The music-note button mutes or unmutes feedback sounds.
-
-Prototype limitations
+Current game behavior
 ---------------------
 
-The prototype currently expresses each section with one combined state of
-expanded, collapsed, or locked. The intended production model has three
-independent in-memory view profiles: PATIENT ASSIGNMENT, PATIENT-ROOM, and
-PATIENT-REVIEW. Each profile has its own hard-coded section defaults and retains
-player expansion/collapse changes only for later patients opened in that same
-view. Application rules control locked/unlocked access; a locked section is
-always collapsed and cannot expose its content. Resetting or restarting the
-game, or closing/reloading the tab, restores all three profiles. No state is
-written to local storage or promoted to a new default.
+- Loads private copies of all 160 schema 2.2 patient records and portraits.
+- Uses private copies of the current game-page patient panel, 16 waiting-room
+  backgrounds, room wall, and all 14 open/closed door images.
+- Supports Triage and TriageRUSH shifts.
+- Supports Strict and Forgiving evaluation.
+- The game header shows color-coded Correct / Close / Wrong counts followed by
+  the live score; Strict hides Close.
+- Triage starts and remains at five queued patients and can run for five
+  minutes or without a timer.
+- Triage uses Correct +100, Close +50, and Wrong -50 without accelerated
+  arrivals or a penalty for patients left waiting.
+- TriageRUSH starts with two queued patients. The 60-second curve begins at
+  10 seconds; the 120-second curve begins at 14.5 seconds. Both accelerate by
+  one second per arrival to a one-second floor and stop adding patients when
+  ten patients are waiting.
+- RUSH can run for 60 or 120 seconds and uses the current provisional values:
+  Correct +100, Close +50, Wrong -50, and each patient left waiting -10.
+- The live RUSH score continuously includes the -10 penalty for every patient
+  currently waiting, so a shift begins at -20 with its first two patients.
+- Optional RUSH sounds provide a clock tick at shift start and every elapsed
+  second, plus a bright chime at each scheduled arrival. Arrival alerts and
+  interval acceleration continue even while the ten-patient queue is full.
+- During the final five seconds, the clock plays a three-beat pattern on the
+  second, quarter second, and half second, rests on the three-quarter second,
+  and ends at zero with a low chime complementary to the patient-arrival ding.
+- During the final ten seconds, large white countdown numbers pop into the
+  upper third of the patient image and quickly fade in place.
+- At ten waiting patients, the waiting-room panel gives a brief shake whenever
+  a scheduled arrival would otherwise add another patient.
+- Ordinary patients receive full credit only for their matching ESI room.
+- Psych and Discharge patients receive full credit for the special destination
+  or the underlying ESI room.
+- Forgiving mode gives Close for an adjacent ESI room. Strict mode does not.
+- Wrong and Close feedback marks only the selected door; the correct door is
+  not revealed.
+- A queued patient can move into an empty center panel or swap with an active,
+  unassigned patient.
+- The first assignment alone affects the shift totals and RUSH score.
+- The open assigned room can recall the patient for another attempt.
+- Selecting a new queued patient finalizes the previously assigned case.
+- Presentation is available before assignment, while Answer remains locked.
+- Coach unlocks after assignment and shows the complete patient explanation.
+- Patient charts pause the timer and provide anchored Close plus conditional
+  MORE ABOVE and MORE BELOW controls.
+- Shift Review reports patients seen, assignment direction, patients waiting,
+  and RUSH score. Every seen patient can be reopened in Patient Review.
+- Shift Review expands each scoring category into count, point value, and
+  subtotal, with under-triage and over-triage counts in a separate section.
+- The Patients Seen link opens the existing full patient chart inside a review
+  browser with previous, next, and close controls beneath the clipboard clamp.
+- HOME opens shift settings. Applying gameplay changes to an active shift asks
+  for restart confirmation.
+- The sound button controls all synthesized sounds. RUSH sounds can be enabled
+  before starting and begin from the Start Shift interaction.
 
-For Psych and Discharge patients, the named special destination is Correct. A
-numbered ESI assignment matching the patient's underlying ESI or differing by
-one level is Acceptable. The demo temporarily scores Acceptable the same as
-Close. Exact scoring values, the detailed evaluation table, Coach wording, and
-room labels remain provisional and require clinical and design review.
+The no-timer End Shift control is the SHIFT REVIEW button. The RUSH arrival
+curve and numeric values remain intentionally provisional, as specified in the
+current gameplay document.
 
-Showing the assigned patient inside an open room is intentionally not included.
-The current open-room PNG files combine the medical equipment and open door in
-one bitmap. That feature requires separate interior and foreground-door assets
-before the patient can be composited at the correct depth.
+Self-contained copies
+---------------------
+
+Runtime artwork is under assets/game-page/. Patient records and portraits are
+under patient-data/. To resynchronize the demo after canonical content changes,
+copy from:
+
+    triageRush/assets/game-page/
+    patient-data/patient-json/
+    patient-data/patient-images/
+
+The older assets/ subfolders and assets-legacy/ remain historical compatibility
+copies. The current manifest does not load them.

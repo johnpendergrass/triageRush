@@ -1,0 +1,113 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-038",
+  "number": 38,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Destiny",
+        "age": 26,
+        "sex": "F",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-038.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "One-sided belly pain and spotting",
+      "quote": "My lower belly's been hurting on one side and I've had some spotting. My period's a couple weeks late — I figured it was just a weird cycle. I got really dizzy standing up.",
+      "triageNote": "26-year-old female with one-sided pelvic pain, vaginal spotting, and a menstrual period about two weeks late. She becomes lightheaded when standing; heart rate is 104 and blood pressure is 100/62.",
+      "vitals": {
+        "hr": {
+          "value": 104,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "100/62",
+          "color": "green"
+        },
+        "rr": {
+          "value": 18,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 98,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 7,
+          "color": "red"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because unilateral pelvic pain, spotting, delayed menses, orthostatic lightheadedness, and tachycardia require rapid evaluation for internal bleeding."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This reproductive-age patient has possible early pregnancy with one-sided pain and bleeding, plus symptoms that may indicate reduced circulating volume.",
+      "acuityReason": "A potentially rupturing pregnancy-related process must be excluded promptly even though the measured blood pressure is not yet frankly hypotensive.",
+      "expectedResources": [
+        "Immediate pregnancy testing",
+        "CBC, blood type, and crossmatch",
+        "Bedside and formal pelvic ultrasound",
+        "IV access and fluids as indicated",
+        "Urgent obstetric consultation"
+      ],
+      "keyFindings": [
+        "Menstrual period about two weeks late",
+        "One-sided pelvic pain",
+        "Vaginal spotting",
+        "Lightheaded on standing",
+        "Heart rate 104",
+        "Blood pressure 100/62"
+      ],
+      "redFlags": [
+        "Possible pregnancy with pain, bleeding, and orthostatic symptoms"
+      ],
+      "teachingPoints": [
+        "Pregnancy status should be established early in reproductive-age patients with abdominal or pelvic pain.",
+        "A single reassuring blood-pressure reading does not exclude evolving internal hemorrhage."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Ectopic pregnancy",
+          "Early intrauterine pregnancy with bleeding",
+          "Hemorrhagic ovarian cyst"
+        ],
+        "disposition": "Pregnancy testing and urgent ultrasound would guide medical or operative treatment, with resuscitation and emergency surgery if rupture or instability is identified."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "26-year-old woman, pale",
+    "pose": "seated, holding her lower abdomen, guarded",
+    "expression": "uncomfortable, pale",
+    "signs": [
+      "holding her lower abdomen",
+      "pale"
+    ],
+    "lookSeverity": "uncomfortable, pale",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-038.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. ANATOMY AND OBJECTS (critical): exactly one head, exactly two arms ending in exactly two hands, exactly two legs ending in two feet, five fingers on each hand. No extra, duplicated, floating or partial limbs anywhere. Anything the character touches must be plausibly held by one of those two hands. All furniture is solid and fully opaque - the chair must never look transparent or see-through, and its back, seat and legs must all be completely drawn. Subject: a clearly ADULT woman of 26 - a grown woman in her mid-twenties with fully adult facial proportions, definitely NOT a teenager and NOT a child - with a pale drawn face, in jeans and a plain top, seated on a blue padded clinic chair. Pose: seated leaning forward, both hands pressed low over her lower abdomen, guarded and very still. Expression: pale, frightened and in real pain. Clearly visible: both hands pressed low over the lower abdomen; noticeably pale, washed-out skin; an adult woman in her twenties. Overall: a young adult woman who is genuinely unwell and frightened. No text, no logos, no watermarks, no border."
+  }
+}

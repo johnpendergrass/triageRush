@@ -1,9 +1,10 @@
 # Development History
 
-**Last modified:** 2026-08-02
+**Last modified:** 2026-08-03
 
-**Changes from the previous version:** Consolidated the useful project timeline
-and major direction changes into one curated history.
+**Changes from the previous version:** Recorded the completed self-contained
+mobile rebuild and the accepted timing, scoring, sound, header, countdown, and
+Shift Review refinements.
 
 ## Purpose
 
@@ -73,11 +74,43 @@ operation. Detailed source notes remain in `archive/`.
 - Strict and Forgiving replaced the former Strict, Tolerant, and Forgiving
   scoring set.
 - `Shift` replaced `round` in player-facing terminology.
-- Triage became the measured teaching mode with shift statistics but no numeric
-  score.
+- Triage became the measured teaching mode with a numeric assignment score but
+  no accelerated arrivals or waiting-room penalty.
 - TriageRUSH became the timed scoring mode with a growing waiting-room queue.
 - STATS/REVIEW became Shift Review, including a shift summary and later review
   of patients seen.
+
+### Self-contained mobile checkpoint
+
+- On 2026-08-02 `_testAppMobile/` was rebuilt as a self-contained reference
+  using all 160 schema 2.2 patients, all matching portraits, and private copies
+  of the current game-page artwork.
+- The rebuilt reference verified Triage and TriageRUSH, Strict and Forgiving,
+  first-choice accounting, recall, Coach, detailed charts, settings, timers,
+  queue growth, score review, and mobile layout.
+- The private copies were hash-checked against the canonical patient library
+  and production artwork.
+
+### Timing and review refinement
+
+- On 2026-08-03 the 60-second RUSH arrival curve was accepted as 10 seconds,
+  then one second faster per arrival to a one-second floor.
+- The 120-second curve was accepted as 14.5 seconds, then one second faster per
+  arrival to a one-second floor, reaching that floor with about eight seconds
+  remaining.
+- RUSH adopted a five-slot visual minimum, two starting patients, a ten-patient
+  maximum, continuing full-queue arrival pulses, an arrival ding, and a brief
+  full-panel shake on blocked arrivals.
+- The RUSH clock adopted start/second ticks, a three-beat quarter-second cadence
+  during the final five seconds, a complementary zero-second dong, and pop/fade
+  countdown numerals for the final ten seconds.
+- The mode switch left the game header. A color-coded numbers-only scorecard and
+  larger unboxed timer replaced it.
+- Triage adopted the same +100/+50/-50 assignment scoring as RUSH. RUSH live
+  score now continuously includes -10 per waiting patient.
+- Shift Review adopted explicit scoring formulas, a separate triage-direction
+  section, and one Patients Seen link that opens the unchanged detailed chart
+  inside a previous/next/close review wrapper.
 
 ### Production preparation
 

@@ -1,0 +1,111 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-069",
+  "number": 69,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Ed",
+        "age": 68,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-069.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Heart racing and fluttering",
+      "quote": "My heart's been racing and fluttering for a few hours — it feels irregular, like it's skipping all over. I'm a little short of breath and lightheaded but no chest pain.",
+      "triageNote": "68-year-old male with several hours of a racing, fluttering heartbeat. His pulse is irregularly irregular at 142; he is mildly short of breath and lightheaded, without chest pain, and blood pressure is 118/76.",
+      "vitals": {
+        "hr": {
+          "value": 142,
+          "color": "red"
+        },
+        "bp": {
+          "value": "118/76",
+          "color": "green"
+        },
+        "rr": {
+          "value": 18,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 97,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 1,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because a symptomatic irregular tachyarrhythmia at 142 carries risk of deterioration and requires rapid monitored cardiac evaluation."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This older adult has a sustained irregularly irregular tachycardia with dyspnea and lightheadedness but preserved blood pressure.",
+      "acuityReason": "He is currently hemodynamically stable, yet the marked rate and symptoms make this a high-risk rhythm requiring prompt monitoring and treatment.",
+      "expectedResources": [
+        "Immediate ECG and cardiac monitoring",
+        "IV access and laboratory testing",
+        "Rate-control medication",
+        "Assessment for ischemia, heart failure, and stroke risk"
+      ],
+      "keyFindings": [
+        "Several hours of palpitations",
+        "Irregularly irregular pulse at 142",
+        "Mild shortness of breath",
+        "Lightheadedness",
+        "No chest pain",
+        "Blood pressure 118/76"
+      ],
+      "redFlags": [
+        "Symptomatic rapid tachyarrhythmia"
+      ],
+      "teachingPoints": [
+        "Stability is determined by perfusion, ischemia, mental status, heart failure, and blood pressure—not rate alone.",
+        "Onset timing and thromboembolic risk affect rhythm-control and anticoagulation decisions."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Atrial fibrillation with rapid ventricular response",
+          "Atrial flutter with variable conduction",
+          "Other supraventricular tachyarrhythmia"
+        ],
+        "disposition": "Monitored rate control and evaluation for triggers and complications would determine the need for admission, cardioversion planning, and anticoagulation."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "68-year-old man",
+    "pose": "seated, one hand on his chest, alert",
+    "expression": "anxious, a little breathless",
+    "signs": [
+      "hand on the chest"
+    ],
+    "lookSeverity": "stable but anxious",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-069.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 68-year-old man, seated on a blue padded clinic chair. Pose: one hand resting on his chest, sitting up alert. Expression: anxious and a little breathless. Clearly visible: a hand resting over the heart. No text, no logos."
+  }
+}

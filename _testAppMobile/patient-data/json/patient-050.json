@@ -1,0 +1,105 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-050",
+  "number": 50,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Miguel",
+        "age": 40,
+        "sex": "M",
+        "race": "hispanic"
+      },
+      "image": {
+        "imageFilename": "patient-050.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Throbbing tooth, swollen cheek",
+      "quote": "This tooth's been throbbing for days and now my whole cheek is puffed up like a chipmunk. It hurts to chew, hurts to touch — honestly I'd trade the tooth for a nap.",
+      "triageNote": "40-year-old male with several days of throbbing molar pain and localized tender swelling of the adjacent cheek. There is no drooling, floor-of-mouth swelling, voice change, difficulty swallowing, or airway concern.",
+      "vitals": {
+        "hr": {
+          "value": 82,
+          "color": "green"
+        },
+        "bp": {
+          "value": "128/80",
+          "color": "green"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37.4,
+          "color": "green"
+        },
+        "pain": {
+          "value": 7,
+          "color": "red"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "esi-5",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because a localized dental infection without airway or deep-neck warning signs is not expected to require a counted emergency resource."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has several days of molar pain and localized adjacent cheek swelling but no drooling, voice change, dysphagia, floor-of-mouth swelling, or respiratory concern.",
+      "acuityReason": "The infection requires dental follow-up and medication but has no evidence of deep-space spread or airway threat.",
+      "expectedResources": [],
+      "keyFindings": [
+        "Several days of throbbing molar pain",
+        "Localized tender cheek swelling",
+        "Pain with chewing",
+        "No drooling or difficulty swallowing",
+        "No floor-of-mouth swelling or voice change",
+        "No airway concern"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Emergency treatment does not replace definitive dental drainage or extraction.",
+        "Floor-of-mouth swelling, tongue elevation, drooling, muffled voice, trismus, toxic appearance, or breathing difficulty would require urgent airway-focused evaluation."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Periapical dental abscess",
+          "Dental caries with localized infection",
+          "Facial cellulitis"
+        ],
+        "disposition": "Oral analgesia, antibiotics when indicated, and urgent dental referral for definitive care would usually allow discharge with strict return precautions."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "40-year-old man with a swollen cheek",
+    "pose": "seated, holding a hand to his swollen jaw",
+    "expression": "glum, aching",
+    "signs": [
+      "swollen cheek",
+      "hand held to the jaw"
+    ],
+    "lookSeverity": "in pain but well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-050.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a hispanic 40-year-old man with a visibly swollen cheek, seated on a blue padded clinic chair. Pose: seated, one hand held gently to his swollen jaw. Expression: glum and aching. Clearly visible: a swollen cheek and a hand cradling the jaw. No text, no logos."
+  }
+}

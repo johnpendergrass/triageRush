@@ -1,0 +1,111 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-084",
+  "number": 84,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Mei",
+        "age": 70,
+        "sex": "F",
+        "race": "asian"
+      },
+      "image": {
+        "imageFilename": "patient-084.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Sudden weakness and slurred speech",
+      "quote": "(Husband) All of a sudden the left side of her face drooped, her left arm went weak, and her words got slurred. It started exactly 40 minutes ago while we were eating.",
+      "triageNote": "70-year-old female with sudden left facial droop, left arm weakness, and slurred speech witnessed by her husband during a meal. She was last normal 40 minutes ago; blood pressure is 182/100.",
+      "vitals": {
+        "hr": {
+          "value": 88,
+          "color": "green"
+        },
+        "bp": {
+          "value": "182/100",
+          "color": "red"
+        },
+        "rr": {
+          "value": 16,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 98,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 0,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because sudden focal neurologic deficits with a known onset 40 minutes ago are a time-sensitive high-risk stroke presentation."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has acute left facial and arm weakness with slurred speech and a precisely witnessed recent onset.",
+      "acuityReason": "The deficit is disabling and within a treatment window; rapid imaging and reperfusion assessment are required despite preserved airway and perfusion.",
+      "expectedResources": [
+        "Immediate bedside glucose and stroke assessment",
+        "Non-contrast head CT and vascular imaging",
+        "ECG and laboratory testing",
+        "Neurology and reperfusion evaluation"
+      ],
+      "keyFindings": [
+        "Sudden left facial droop",
+        "Left arm weakness",
+        "Slurred speech",
+        "Last known normal 40 minutes ago",
+        "Blood pressure 182/100"
+      ],
+      "redFlags": [
+        "Acute focal neurologic deficit within a treatment window"
+      ],
+      "teachingPoints": [
+        "Exact last-known-well time is critical for reperfusion decisions.",
+        "Glucose must be checked because hypoglycemia can mimic stroke."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Acute ischemic stroke",
+          "Intracranial hemorrhage",
+          "Metabolic stroke mimic"
+        ],
+        "disposition": "Immediate imaging and neurologic evaluation would guide thrombolysis, thrombectomy, blood-pressure management, and monitored admission."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "70-year-old woman",
+    "pose": "seated, one side of the face drooping, left arm limp in her lap",
+    "expression": "frightened, uneven face",
+    "signs": [
+      "one-sided facial droop",
+      "left arm limp in the lap"
+    ],
+    "lookSeverity": "acute deficit, alert",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-084.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: an asian 70-year-old woman, seated on a blue padded clinic chair. Pose: seated with the left side of her face drooping and her left arm resting limp in her lap. Expression: frightened, with an uneven, drooping face. Clearly visible: a one-sided facial droop and a limp left arm. No text, no logos."
+  }
+}

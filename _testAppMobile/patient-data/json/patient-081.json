@@ -1,0 +1,111 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-081",
+  "number": 81,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Tanya",
+        "age": 35,
+        "sex": "F",
+        "race": "black"
+      },
+      "image": {
+        "imageFilename": "patient-081.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Had a seizure",
+      "quote": "(Bystander) She dropped and started convulsing — full-body shaking for a couple of minutes, bit her tongue. It stopped on its own. She's coming around now but she's groggy and confused.",
+      "triageNote": "35-year-old female who suddenly collapsed and had about two minutes of whole-body stiffening and shaking witnessed by a bystander. She bit her tongue; the movements stopped spontaneously and she is now groggy but rousable.",
+      "vitals": {
+        "hr": {
+          "value": 104,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "134/84",
+          "color": "green"
+        },
+        "rr": {
+          "value": 18,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 97,
+          "color": "green"
+        },
+        "temp": {
+          "value": 37.1,
+          "color": "green"
+        },
+        "pain": {
+          "value": 2,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because the patient remains postictal and groggy after a generalized seizure, making altered responsiveness a high-risk neurologic presentation."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient had a witnessed two-minute generalized convulsion with tongue injury and remains groggy but rousable.",
+      "acuityReason": "The seizure has stopped and breathing is maintained, but she has not returned to neurologic baseline and needs prompt reassessment for recurrence and cause.",
+      "expectedResources": [
+        "Immediate bedside glucose",
+        "Frequent neurologic and airway reassessment",
+        "CBC, metabolic and pregnancy testing",
+        "Brain imaging or toxicologic testing when indicated"
+      ],
+      "keyFindings": [
+        "Sudden collapse",
+        "Two minutes of generalized stiffening and shaking",
+        "Tongue bite",
+        "Stopped spontaneously",
+        "Currently groggy but rousable"
+      ],
+      "redFlags": [
+        "Persistent postictal altered responsiveness"
+      ],
+      "teachingPoints": [
+        "Glucose should be checked promptly in every seizure presentation.",
+        "Ongoing seizure activity or failure to recover may require immediate anticonvulsant and airway treatment."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Generalized seizure with postictal state",
+          "Metabolic or toxic provoked seizure",
+          "Structural neurologic cause"
+        ],
+        "disposition": "Prompt assessment and observation would determine whether recovery permits discharge or whether imaging, treatment, and admission are required."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "35-year-old woman, groggy",
+    "pose": "slumped and dazed, being supported in the chair",
+    "expression": "dazed, confused (postictal)",
+    "signs": [
+      "dazed, unfocused gaze",
+      "a little blood at the lip"
+    ],
+    "lookSeverity": "postictal, recovering",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-081.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a black 35-year-old woman, groggy and dazed, slumped on a blue padded clinic chair. Pose: slumped and supported, head heavy. Expression: dazed and confused, a postictal look. Clearly visible: an unfocused dazed gaze and a small bit of blood at the lip. No text, no logos."
+  }
+}

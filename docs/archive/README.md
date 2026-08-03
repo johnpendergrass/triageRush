@@ -1,9 +1,10 @@
 # triageRush Documentation Archive
 
-**Last modified:** 2026-08-02
+**Last modified:** 2026-08-03
 
-**Changes from the previous version:** Reorganized historical documentation by
-the same numbered purposes as the current documentation system.
+**Changes from the previous version:** Added archived snapshots of the outgoing
+project map, development history, gameplay specification, and coding contract
+before the 2026-08-03 mobile-reference update.
 
 Everything in this folder is historical. Current rules live one level above in
 `docs/0-README.md` through `docs/6-asset-organization-and-specs.md` and the
@@ -13,6 +14,7 @@ current `docs/99-ai-handoff--*.md`.
 
 ```text
 0-documentation-system/          old indexes, workflows, and docs-project tree
+1-start-here-toc/                superseded current-project maps
 2-dev-history/                   timelines and durable development notes
 3-gameplay-rules-and-specs/      superseded gameplay, scoring, and guides
 4-coding-contracts-and-specs/    superseded UI, implementation, and technical contracts
@@ -21,9 +23,8 @@ current `docs/99-ai-handoff--*.md`.
 99-ai-handoffs/                  outgoing tactical handoffs
 ```
 
-There is no `1-start-here-toc/` archive because the current start page replaces
-old navigation rather than preserving it as project guidance. Old tables of
-contents are retained under `0-documentation-system/`.
+Old tables of contents remain under `0-documentation-system/`; timestamped
+snapshots of the stable current-project map now live under `1-start-here-toc/`.
 
 ## Historical-use rules
 

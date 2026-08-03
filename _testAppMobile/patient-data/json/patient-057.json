@@ -1,0 +1,106 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-057",
+  "number": 57,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Emma",
+        "age": 27,
+        "sex": "F",
+        "race": "asian"
+      },
+      "image": {
+        "imageFilename": "patient-057.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Something scratched her eye",
+      "quote": "I think my contact lens tore and scratched my eye. It feels like there's sand in it, it's watering like crazy and the light hurts, but I can still see fine.",
+      "triageNote": "27-year-old female who believes a torn contact lens scratched her eye. She has a persistent gritty sensation, tearing, and light sensitivity, but visual acuity remains intact.",
+      "vitals": {
+        "hr": {
+          "value": 80,
+          "color": "green"
+        },
+        "bp": {
+          "value": "118/74",
+          "color": "green"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 4,
+          "color": "yellow"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 4,
+      "correctRoom": "esi-4",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 4 is appropriate because this stable eye injury is expected to require one focused diagnostic resource using fluorescein examination."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has a likely superficial corneal injury with tearing and photophobia but preserved visual acuity.",
+      "acuityReason": "The intact vision and lack of penetrating mechanism are reassuring, while contact-lens use requires careful examination and appropriate antimicrobial coverage.",
+      "expectedResources": [
+        "Fluorescein and slit-lamp examination"
+      ],
+      "keyFindings": [
+        "Possible torn contact-lens scratch",
+        "Persistent gritty sensation",
+        "Tearing",
+        "Photophobia",
+        "Visual acuity intact"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Visual acuity should be documented before treatment in eye complaints.",
+        "Contact-lens-associated abrasions require attention to infection risk and should not be treated with topical anesthetic for home use."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Corneal abrasion",
+          "Retained contact-lens fragment",
+          "Early infectious keratitis"
+        ],
+        "disposition": "Focused examination and topical treatment would usually be followed by discharge with prompt follow-up and return precautions."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "27-year-old woman",
+    "pose": "seated, dabbing one watering eye with a tissue",
+    "expression": "squinting, uncomfortable",
+    "signs": [
+      "one red, watering eye",
+      "squinting"
+    ],
+    "lookSeverity": "uncomfortable but well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-057.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: an asian 27-year-old woman, seated on a blue padded clinic chair. Pose: dabbing one watering eye with a tissue, squinting. Expression: uncomfortable, squinting against light. Clearly visible: one red, watering, squinted eye. No text, no logos."
+  }
+}

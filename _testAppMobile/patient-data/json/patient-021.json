@@ -22,8 +22,8 @@
         "imageScale": 1
       },
       "chiefComplaint": "Won't use her arm",
-      "quote": "(Mom) We were crossing the street and I swung her up by the hand — now she won't use that arm at all and cries if I touch it. She just holds it kind of limp.",
-      "triageNote": "2-year-old female, arm pulled while crossing the street, now holds the right arm slightly flexed and pronated and refuses to use it, with no swelling, deformity, or point tenderness.",
+      "quote": "(Mom) We were crossing the street and I swung her up by the hand — now she won't use her left arm at all and cries if I touch it. She just holds it kind of limp.",
+      "triageNote": "2-year-old female, arm pulled while crossing the street, now holds the left arm slightly flexed and pronated and refuses to use it, with no swelling, deformity, or point tenderness.",
       "vitals": {
         "hr": {
           "value": 120,
@@ -47,7 +47,7 @@
         },
         "pain": {
           "value": 3,
-          "color": "yellow"
+          "color": "green"
         }
       }
     },
@@ -60,14 +60,14 @@
     },
     "clinical": {
       "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
-      "summary": "This is a stable toddler with arm nonuse after axial traction and no swelling, deformity, point tenderness, or neurovascular deficit.",
+      "summary": "This is a stable toddler with left-arm nonuse after axial traction and no swelling, deformity, point tenderness, or neurovascular deficit.",
       "acuityReason": "The mechanism and resting position support a focused extremity assessment, while the absence of traumatic warning signs makes major injury less likely.",
       "expectedResources": [
         "Focused examination and bedside reduction maneuver"
       ],
       "keyFindings": [
         "Arm pulled while crossing the street",
-        "Right arm held slightly flexed and pronated",
+        "Left arm held slightly flexed and pronated",
         "Refuses to use the arm",
         "No swelling or deformity",
         "No point tenderness",
@@ -90,16 +90,16 @@
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
     "who": "2-year-old toddler girl with curly hair",
-    "pose": "on the clinic chair, holding one arm limp against her body",
+    "pose": "on the clinic chair, holding her left arm limp against her body",
     "expression": "unhappy and teary",
     "signs": [
-      "right arm held limp and close to the body"
+      "left arm held limp and close to the body"
     ],
     "lookSeverity": "distressed but well",
     "anchor_image": "default-schemas/_patient-style-anchor.png",
     "size": "1024x1024",
     "outputFolder": "images-hires",
     "outputFile": "patient-021.png",
-    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 2-year-old toddler girl with curly hair, seated on a blue padded clinic chair. Pose: holding her right arm limp against her body, refusing to move it. Expression: unhappy and teary. Clearly visible: the right arm held limp and close to the body. No text, no logos."
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 2-year-old toddler girl with curly hair, seated on a blue padded clinic chair. Pose: holding her left arm limp against her body, refusing to move it. Expression: unhappy and teary. Clearly visible: the left arm held limp and close to the body. No text, no logos."
   }
 }

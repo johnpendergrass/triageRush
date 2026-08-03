@@ -1,0 +1,113 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-125",
+  "number": 125,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Marisol",
+        "age": 36,
+        "sex": "F",
+        "race": "hispanic"
+      },
+      "image": {
+        "imageFilename": "patient-125.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Whole family has the flu",
+      "quote": "All four of us — headache, sick, dizzy. It started Saturday when we finally turned the heat on. I thought it was food poisoning, but nobody ate the same thing.",
+      "triageNote": "36-year-old female with two days of headache, nausea and dizziness, with every member of the household affected at the same time since the furnace was switched on.",
+      "vitals": {
+        "hr": {
+          "value": 102,
+          "color": "yellow"
+        },
+        "bp": {
+          "value": "124/76",
+          "color": "green"
+        },
+        "rr": {
+          "value": 18,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.9,
+          "color": "green"
+        },
+        "pain": {
+          "value": 6,
+          "color": "yellow"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 2,
+      "correctRoom": "esi-2",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 2 is appropriate because simultaneous headache, nausea, and dizziness throughout a household after furnace use is high risk for toxic gas exposure despite normal pulse oximetry."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has a classic shared-environment toxic exposure pattern after a furnace was activated.",
+      "acuityReason": "Conventional pulse oximetry cannot distinguish carboxyhemoglobin and may appear normal despite dangerous tissue hypoxia.",
+      "expectedResources": [
+        "Immediate high-flow oxygen",
+        "Co-oximetry and blood gas testing",
+        "ECG and cardiac laboratory testing",
+        "Toxicology and hyperbaric consultation when indicated",
+        "Notification and evaluation of other exposed household members"
+      ],
+      "keyFindings": [
+        "Every household member became ill simultaneously",
+        "Symptoms began after furnace use",
+        "Headache, nausea, and dizziness",
+        "Oxygen saturation displayed as 99%",
+        "Heart rate 102"
+      ],
+      "redFlags": [
+        "Possible carbon monoxide exposure affecting multiple people"
+      ],
+      "teachingPoints": [
+        "The exposure story is more informative than conventional saturation in this condition.",
+        "Patients should not return to the environment until the source has been investigated and made safe."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "Carbon monoxide poisoning",
+          "Other combustion-product exposure",
+          "Shared viral illness"
+        ],
+        "disposition": "Immediate oxygen and exposure testing would guide observation, admission, or hyperbaric treatment and coordinated household safety action."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "a hispanic 36-year-old woman in a winter coat still zipped up, seated on a blue padded clinic chair",
+    "pose": "sitting with elbows on knees, heels of both hands pressed against her temples",
+    "expression": "nauseated and squinting against the light",
+    "signs": [
+      "hands pressed against the temples",
+      "slightly flushed complexion",
+      "eyes squeezed half shut"
+    ],
+    "lookSeverity": "unwell with a severe headache but alert and talking",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-125.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. Subject: a hispanic 36-year-old woman in a winter coat still zipped up, seated on a blue padded clinic chair. Pose: sitting with elbows on knees, heels of both hands pressed against her temples. Expression: nauseated and squinting against the light. Clearly visible: hands pressed against the temples; slightly flushed complexion; eyes squeezed half shut. Overall: unwell with a severe headache but alert and talking. No text, no logos, no watermarks, no border."
+  }
+}

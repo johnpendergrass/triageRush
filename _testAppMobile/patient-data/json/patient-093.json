@@ -1,0 +1,101 @@
+{
+  "schema": {
+    "version": "2.2",
+    "date": "2026-08-01"
+  },
+  "id": "patient-093",
+  "number": 93,
+  "johnsComments": "",
+  "patient": {
+    "_comment": "'patient' contains the three sections that may be exposed in the detailed patient display: presentation, answer, and clinical.",
+    "presentation": {
+      "_comment": "The immutable patient evidence package available for triage. Panel context controls whether other sections are locked or available.",
+      "personal": {
+        "name": "Raymond",
+        "age": 48,
+        "sex": "M",
+        "race": "white"
+      },
+      "image": {
+        "imageFilename": "patient-093.png",
+        "imageFlipped": false,
+        "imageScale": 1
+      },
+      "chiefComplaint": "Bleeding with bowel movements",
+      "quote": "I've noticed bright red blood on the toilet paper after I go, and some itching and a tender lump back there. No black stools, no belly pain, no weight loss — it's bright red on the paper only.",
+      "triageNote": "48-year-old male with bright-red blood limited to the toilet paper after bowel movements, itching, and a tender external anal lump. He has no black stool, abdominal pain, weight loss, or systemic symptoms.",
+      "vitals": {
+        "hr": {
+          "value": 74,
+          "color": "green"
+        },
+        "bp": {
+          "value": "124/78",
+          "color": "green"
+        },
+        "rr": {
+          "value": 14,
+          "color": "green"
+        },
+        "spo2": {
+          "value": 99,
+          "color": "green"
+        },
+        "temp": {
+          "value": 36.8,
+          "color": "green"
+        },
+        "pain": {
+          "value": 2,
+          "color": "green"
+        }
+      }
+    },
+    "answer": {
+      "_comment": "The authoritative game answer. Explicit ESI, destination, and destination rationale are answer-bearing content; the player's assignment remains session state.",
+      "correctEsi": 5,
+      "correctRoom": "discharge",
+      "otherAcceptableRooms": null,
+      "destinationReason": "ESI 5 is appropriate because this limited bright-red rectal bleeding pattern with a visible external source and no systemic warning signs requires no counted emergency resource."
+    },
+    "clinical": {
+      "_comment": "Display-ready clinical interpretation derived from patient.presentation. It preserves clinical meaning but must not explicitly name or identify the correct ESI level or destination; it does not participate in scoring.",
+      "summary": "This patient has minor bright-red bleeding, itching, and a tender external anal lump without abdominal or systemic symptoms.",
+      "acuityReason": "Blood limited to toilet paper and a visible local lesion are reassuring, although age-appropriate colorectal screening remains important.",
+      "expectedResources": [],
+      "keyFindings": [
+        "Bright-red blood only on toilet paper",
+        "Itching",
+        "Tender external anal lump",
+        "No melena or abdominal pain",
+        "No weight loss or systemic symptoms"
+      ],
+      "redFlags": null,
+      "teachingPoints": [
+        "Persistent bleeding should not automatically be attributed to hemorrhoids without appropriate follow-up.",
+        "Melena, large-volume bleeding, syncope, anemia symptoms, weight loss, or abdominal pain would change evaluation."
+      ],
+      "possibleClinicalOutcome": {
+        "possibleDiagnoses": [
+          "External hemorrhoid",
+          "Anal fissure",
+          "Other lower gastrointestinal source"
+        ],
+        "disposition": "Conservative local care, stool-softening measures, and appropriate colorectal follow-up would allow discharge."
+      }
+    }
+  },
+  "aiImageGeneration": {
+    "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
+    "who": "48-year-old man",
+    "pose": "seated, a little uncomfortable, otherwise well",
+    "expression": "slightly embarrassed",
+    "signs": [],
+    "lookSeverity": "completely well",
+    "anchor_image": "default-schemas/_patient-style-anchor.png",
+    "size": "1024x1024",
+    "outputFolder": "images-hires",
+    "outputFile": "patient-093.png",
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character. Match the painterly STYLE of the attached reference image - its brushwork, shading, line weight, lighting and palette - but do NOT copy its cropping, camera distance or composition. FRAMING (follow exactly): a full-body WIDE SHOT, square 1:1, 3/4 front view, subject centred. The ENTIRE figure must be inside the frame from the top of the head to the soles of both feet, and the ENTIRE chair must be inside the frame including all four chair legs meeting the floor. Leave clear empty margin on all four sides - roughly 10% of the image width as space above the head and below the feet. This is NOT a close-up, NOT a bust, NOT a head-and-shoulders portrait, NOT a cropped view: the camera is pulled well back so the whole person and the whole chair sit comfortably inside the picture with room around them. Draw the COMPLETE body - head, neck, torso, both arms, both hands, lap, both legs, both feet with shoes. Nothing cropped by the edges, no missing or truncated limbs, no body part fading out or left unfinished. ANATOMY AND OBJECTS (critical): exactly one head, exactly two arms ending in exactly two hands, exactly two legs ending in two feet, five fingers on each hand. No extra, duplicated, floating or partial limbs anywhere. Anything the character touches must be plausibly held by one of those two hands. All furniture is solid and fully opaque - the chair must never look transparent or see-through, and its back, seat and legs must all be completely drawn. Subject: a white 48-year-old man in casual clothes, perched very gingerly on a blue padded clinic chair, shifted carefully onto one hip as though sitting squarely is uncomfortable. Pose: sitting shifted onto one buttock, hands clasped awkwardly in his lap, leaning slightly away. Expression: acutely and visibly EMBARRASSED - cheeks flushed pink, a tight awkward closed-mouth half-smile, eyes glancing away and down, thoroughly mortified to be here but otherwise perfectly well. Clearly visible: a distinctly flushed, embarrassed face; a careful lopsided perch on the edge of the chair; no signs of illness at all. Overall: entirely healthy and deeply uncomfortable about being here. No text, no logos, no watermarks, no border."
+  }
+}

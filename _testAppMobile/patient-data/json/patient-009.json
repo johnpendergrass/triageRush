@@ -43,7 +43,7 @@
         },
         "temp": {
           "value": 37.8,
-          "color": "yellow"
+          "color": "green"
         },
         "pain": {
           "value": 7,

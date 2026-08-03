@@ -21,9 +21,9 @@
         "imageFlipped": false,
         "imageScale": 1
       },
-      "chiefComplaint": "Worst pain, left flank",
-      "quote": "I have fought in a cage and broken my nose twice, but this pain brought me to my knees. It started in my left side and shoots toward my groin. I cannot stay still.",
-      "triageNote": "34-year-old man with abrupt severe left flank pain radiating toward the groin. He is visibly distressed and unable to remain still, rates the pain 10 of 10, and has no fever or hypotension.",
+      "chiefComplaint": "Worst pain, right flank",
+      "quote": "I have fought in a cage and broken my nose twice, but this pain brought me to my knees. It started in my right side and shoots toward my groin. I cannot stay still.",
+      "triageNote": "34-year-old man with abrupt severe right flank pain radiating toward the groin. He is visibly distressed and unable to remain still, rates the pain 10 of 10, and has no fever or hypotension.",
       "vitals": {
         "hr": {
           "value": 104,
@@ -68,7 +68,7 @@
         "Renal ultrasound or CT imaging"
       ],
       "keyFindings": [
-        "Abrupt severe left flank pain",
+        "Abrupt severe right flank pain",
         "Radiation toward the groin",
         "Pain rated 10 out of 10",
         "Visible distress with inability to remain still",
@@ -95,10 +95,10 @@
   "aiImageGeneration": {
     "_comment": "'aiImageGeneration' is info for AI to generate the image of the patient. Most images were done with openAI gpt-image-1 using an API, not the app, in July 2026. Look for some python scripts that are used to create these images. Be sure that the anchor-image is available and is provided to the AI - otherwise the images will not be consistent.",
     "who": "34-year-old fit man in a gym tank top",
-    "pose": "half off the chair, unable to find any comfortable position, clutching his left flank",
+    "pose": "half off the chair, unable to find any comfortable position, clutching his right flank",
     "expression": "grimacing, restless, shifting constantly",
     "signs": [
-      "clutching the left flank",
+      "clutching the right flank",
       "can't hold still, mid-writhe"
     ],
     "lookSeverity": "dramatic pain but vitally stable",
@@ -106,6 +106,6 @@
     "size": "1024x1024",
     "outputFolder": "images-hires",
     "outputFile": "patient-010.png",
-    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 34-year-old fit man in a gym tank top, on the same blue clinic chair. Pose: half off the chair, unable to find a comfortable position, clutching his left flank, mid-writhe. Expression: grimacing, restless, shifting. Clearly visible: hand clutching the left flank, a body that can't hold still. Overall dramatic pain but vitally stable. No text, no logos."
+    "prompt": "Softly-shaded painterly cartoon illustration in a semi-realistic Pixar/Disney style: smooth gradient shading, soft natural lighting, gentle rounded volumes, fine delicate outlines (NOT thick flat cartoon outlines), warm detailed rendering, natural realistic proportions, single character, 3/4 front view, centered, square 1:1. Match the exact painterly style, brushwork, shading, line weight, lighting, and palette of the attached reference image. Subject: a white 34-year-old fit man in a gym tank top, on the same blue clinic chair. Pose: half off the chair, unable to find a comfortable position, clutching his right flank, mid-writhe. Expression: grimacing, restless, shifting. Clearly visible: hand clutching the right flank, a body that can't hold still. Overall dramatic pain but vitally stable. No text, no logos."
   }
 }
