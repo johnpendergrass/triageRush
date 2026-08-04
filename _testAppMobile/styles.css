@@ -34,9 +34,9 @@ body {
   display: grid;
   place-items: center;
   padding:
-    max(4px, env(safe-area-inset-top))
+    max(5dvh, env(safe-area-inset-top))
     max(4px, env(safe-area-inset-right))
-    max(4px, env(safe-area-inset-bottom))
+    max(5dvh, env(safe-area-inset-bottom))
     max(4px, env(safe-area-inset-left));
 }
 
@@ -47,8 +47,8 @@ button {
 
 .app-shell {
   position: relative;
-  width: min(100vw, calc(100dvh * 0.5625), 430px);
-  height: min(100dvh, calc(100vw * 1.7778), 764px);
+  width: min(calc(100vw - 8px), calc(90dvh * 0.5625));
+  height: min(90dvh, calc((100vw - 8px) * 1.7778));
   min-width: 300px;
   min-height: 533px;
   overflow: hidden;
@@ -124,17 +124,16 @@ button {
       calc(
         (
           100svh
-          - max(4px, env(safe-area-inset-top, 0px))
-          - max(4px, env(safe-area-inset-bottom, 0px))
+          - max(5svh, env(safe-area-inset-top, 0px))
+          - max(5svh, env(safe-area-inset-bottom, 0px))
         ) * 0.5625
-      ),
-      430px
+      )
     );
     height: min(
       calc(
         100svh
-        - max(4px, env(safe-area-inset-top, 0px))
-        - max(4px, env(safe-area-inset-bottom, 0px))
+        - max(5svh, env(safe-area-inset-top, 0px))
+        - max(5svh, env(safe-area-inset-bottom, 0px))
       ),
       calc(
         (
@@ -142,8 +141,7 @@ button {
           - max(4px, env(safe-area-inset-left, 0px))
           - max(4px, env(safe-area-inset-right, 0px))
         ) * 1.7778
-      ),
-      764px
+      )
     );
     min-width: 0;
     min-height: 0;

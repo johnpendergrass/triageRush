@@ -31,8 +31,8 @@ window.TRIAGE_RUSH_ASSETS = Object.freeze({
           (room) => [
             room,
             Object.freeze({
-              closedDoor: `assets/game-page/triage-rooms-panel/door-${room}-closed.png`,
-              openDoor: `assets/game-page/triage-rooms-panel/door-${room}-open.png`,
+              closedDoor: `assets/game-page/triage-rooms-panel/door-${room}-closed.png?v=20260803-door-contrast`,
+              openDoor: `assets/game-page/triage-rooms-panel/door-${room}-open.png?v=20260803-door-contrast`,
               interior: `assets/game-page/triage-rooms-panel/background-${room}-room.png`
             })
           ]
