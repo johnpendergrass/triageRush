@@ -1,283 +1,328 @@
 # Coding Contracts and Specifications
 
-**Last modified:** 2026-08-03
+**Last modified:** 2026-08-04
 
-**Changes from the previous version:** Aligned the production contract with the
-verified self-contained mobile runtime, derived live scoring, synchronized
-quarter-second scheduling, reusable review-chart wrapper, and current header
-and Shift Review design.
+**Latest change:** Aligned engineering contracts with replaceable patient
+results, active-patient Coach, one responsive presentation, revised timing
+cues, successful-insertion audio, and probabilistic RUSH bursts.
 
 ## Production scope
 
-The production application lives under `triageRush/`. It is a small standalone
-responsive web application. Use ordinary HTML, CSS, and JavaScript unless real
-complexity justifies another dependency.
+The production application lives under `triageRush/`. It is a standalone
+responsive web application. Plain HTML, CSS, and JavaScript are sufficient; add
+a dependency only when it removes demonstrated complexity and remains compatible
+with static hosting.
 
-The demo applications are temporary references. `_testAppMobile/` is now the
-verified behavioral reference for the complete game loop. Do not make the
-production application depend on it or import its code as an unexamined
-architecture.
+`_testAppMobile/` is the immediate conformance target. Production code must
+load canonical patients and production assets from their owned locations rather
+than depending on test-app copies.
 
 ## Ownership
 
-- Root `index.html` is the GitHub Pages entry point.
-- `triageRush/` owns production application code and runtime game assets.
+- Root `index.html` is the site entry point.
+- `triageRush/` owns production application code and runtime artwork.
 - `patient-data/` owns authoritative patient JSON and portraits.
-- `___patient-CRUD (standalone)/` is reserved for an independent local patient
-  editor and must not become a runtime dependency.
-- `_testAppMobile/`, `_testAppDesktop/`, and `_testAppHomeScreen/` are temporary
-  design references.
-- `docs/` owns the current numbered project documentation.
+- `___patient-CRUD (standalone)/` remains an independent future editor.
+- `docs/` owns current product and engineering requirements.
+- `_testAppMobile/` is a test implementation, not a production dependency.
 
-## Application state and derived values
+## Core architecture
 
-Use one lightweight state object as the source of truth:
+Use one explicit state tree and a unidirectional update cycle:
 
 ```text
-player action -> validate -> update state -> render affected views
-              -> perform one-time effects
+user or clock event
+  -> validate action legality
+  -> calculate one state transition
+  -> calculate queued one-time effects
+  -> render affected view/component
+  -> execute effects once
 ```
 
-State should cover:
+Rendering must never:
 
-- active view and open auxiliary panels;
-- player identity and preferences;
-- mode, difficulty, shift length, hints, and sound choices;
-- shuffled patient deck and queue entries with attached backgrounds;
-- active patient;
-- assigned/open room and recall state;
-- first-assignment outcomes and patients seen;
-- assignment-point subtotal and outcome/direction counts;
-- timer, arrival interval, scheduler phase, pause, and shift phase;
-- Coach/detailed-chart context and section profiles; and
-- Shift Review and Patients Seen navigation.
+- add or score a patient;
+- play a sound;
+- restart or advance a timer;
+- draw a new random burst decision;
+- mutate persistence merely because a component rerendered; or
+- duplicate an effect after resize or view restoration.
 
-Keep derived values derived. In particular:
+Keep domain logic independent from DOM elements so evaluation, replacement
+scoring, queue growth, and timing can be unit tested.
+
+## Required state domains
+
+The state must cover:
+
+- application view: HOME, GAME, or SHIFT REVIEW;
+- blocking overlay and focus-return information;
+- player identity and persisted preferences;
+- mode, difficulty, shift length, hints, and sound settings;
+- shift phase and timestamps;
+- shuffled patient deck and cursor;
+- waiting entries, each with patient ID and attached background;
+- active patient and its attached background;
+- assigned/open room and recall availability;
+- one ordered result ledger keyed by patient ID;
+- derived scoring and direction counts;
+- clock heartbeat, remaining time, and pause state;
+- RUSH arrival countdown and current base interval;
+- active two-patient burst staging;
+- Coach Clinical expanded/collapsed preference for this shift; and
+- Patients Seen review index.
+
+The concrete reference shape is in
+[Implementation blueprint](8-implementation-blueprint.md).
+
+## Derived values
+
+Do not store independently mutable copies of totals that can be derived from the
+ledger.
 
 ```text
-Triage live score = assignment points
-RUSH live score   = assignment points - (10 * patients currently waiting)
-Wrong count       = patients seen - Correct - Close
+assignment points = sum(latest ledger-entry points)
+Correct count     = count(latest outcome == correct)
+Close count       = count(latest outcome == close)
+Wrong count       = count(latest outcome == wrong)
+Over count        = count(latest direction == over)
+Under count       = count(latest direction == under)
+
+Triage score = assignment points
+RUSH score   = assignment points - (10 * waiting.length)
+Patients seen = ledger order length
 ```
 
-Do not mutate the assignment subtotal at shift end to apply the RUSH waiting
-penalty; doing so risks double deduction when review rerenders.
+A reassignment replaces a ledger entry atomically. Do not append another entry
+or apply compensating score mutations in scattered UI code.
 
-Suggested production phases are `home`, `awaiting-patient`, `patient-active`,
-`awaiting-next-patient`, and `shift-complete`. Timer and arrival scheduling may
-be orthogonal. Do not add a state-machine framework unless the implementation
-actually needs one.
+## Action contracts
 
-## Actions
-
-Meaningful actions should have explicit legality checks, such as:
+At minimum, expose testable domain actions equivalent to:
 
 ```text
-startShift()
-resumeShift()
-endShift()
-selectPatient()
-assignRoom()
-recallPatient()
-openCoach()
-openPatientChart(context)
-openShiftReview()
-openPatientsSeen()
-reviewPreviousPatient()
-reviewNextPatient()
-applySafeSettings()
-applyGameplaySettingsAndRestart()
-resetApplicationSettings()
+startShift(settings)
++ resumeShift()
++ openView(view)
++ selectWaitingPatient(index)
++ assignRoom(roomKey)
++ recallAssignedPatient(roomKey)
++ openCoach()
++ setCoachClinicalExpanded(value)
++ closeCoach()
++ processHeartbeat()
++ processRushArrival()
++ endShift(reason)
++ openPatientsSeen()
++ navigatePatientsSeen(direction)
++ applySettings(settings)
++ toggleGlobalMute()
++```
+
+Each action must reject illegal state without partial mutation. Examples:
+
+- `openCoach` is legal only with an active patient.
+- `assignRoom` is legal only with an active patient and no unresolved action.
+- `recallAssignedPatient` is legal only for the currently open assigned room.
+- `selectWaitingPatient` may swap only before assignment.
+- `processHeartbeat` is inert while paused or outside an active shift.
+- `processRushArrival` is inert outside RUSH.
+
+## Result-ledger contract
+
+A ledger record contains patient ID, selected room, outcome, direction, points,
+first-seen order, assignment count, and latest-assignment timestamp.
+
+On initial assignment, insert it once into both the keyed ledger and its stable
+order list. On reassignment:
+
+1. Evaluate the new room without using the old outcome.
+2. Create a complete replacement record.
+3. Preserve the original first-seen order.
+4. Increment assignment count.
+5. Replace the keyed record in one transition.
+6. Derive all totals from the new ledger.
+
+Recall alone leaves the record unchanged. If the shift ends while that patient
+is active and unreassigned, the last completed record remains final.
+
+## Scheduler and clock
+
+Use a monotonic-clock scheduler. A 250 ms logical heartbeat is the supported
+reference because it exactly represents quarter- and half-second cues and the
+120-second RUSH half-second intervals.
+
+The implementation may compensate for delayed browser callbacks, but it must
+emit each logical boundary once and never replay missed audio in an unusable
+burst after a long suspension.
+
+One scheduler owns:
+
+- displayed whole-second countdown;
+- RUSH arrival countdown;
+- RUSH ten-second lead-in beats;
+- Triage ten-second and minute beats;
+- final-five quarter/half beats;
+- final-ten countdown numerals;
+- zero completion; and
+- staged second insertion in a RUSH burst.
+
+Use event IDs or boundary keys to guarantee one-time delivery. Zero completion
+has highest priority and suppresses coincident arrival/cue effects.
+
+## RUSH arrival transaction
+
+At a scheduled event, draw randomness once:
+
+```text
+requested = random() < 0.20 ? 2 : 1
+capacity  = 10 - waiting.length
+actual    = min(requested, capacity)
+blocked   = actual < requested
 ```
 
-Rendering must not replay sounds, duplicate scoring, restart timers, create
-patients, or repeat arrival effects merely because a view rerendered.
+Insert the first patient immediately. If `actual == 2`, stage the second after
+a short documented beat without rescheduling the next base arrival. Each
+successful insertion gets its own doink. A blocked portion gets no doink; one
+queue shake is allowed for the event.
 
-## Timer and arrival scheduling
+Then decrement the base interval by one second, with a one-second floor, and
+re-arm the arrival countdown from that new interval. Burst staging and base
+arrival scheduling are separate concepts.
 
-Use one synchronized scheduler rather than independent drifting intervals. The
-verified reference uses a 250 ms heartbeat:
+For deterministic tests, inject the random-number source and clock.
 
-- four heartbeats advance the displayed shift timer by one second;
-- RUSH arrival time decrements by 0.25 seconds per heartbeat;
-- 14.5/13.5-style arrival intervals therefore remain exact;
-- pause state freezes both the clock and arrival countdown; and
-- restarting a shift reanchors the heartbeat to the Start Shift action.
+## Sound contract
 
-Separate timekeeping from effects. Whole-second clock ticks, final-five-second
-quarter beats, arrival dings, the full-queue shake, final countdown numerals,
-and the zero-second dong must be triggered once at their legal boundaries.
-Suppress a scheduled arrival effect on the same boundary as shift completion so
-the final dong is not masked.
+Use one resumed Web Audio context created from a user gesture. Centralize sound
+functions and keep them independent of rendering.
 
-## Responsive UI contract
+Required effect families:
 
-- Preserve the mobile-derived frame: header, three gameplay panels, footer.
-- Keep the queue and seven rooms in single columns on desktop.
-- Center the game horizontally and size it primarily from available height.
-- Respect safe areas and visible mobile browser controls.
-- Do not allow page-level scrolling on the main game screen.
-- Allocate additional height first to legibility and narrative content.
-- On wide screens, HOME may occupy a symmetrical left region and Shift Review a
-  symmetrical right region without shifting the centered game.
-- At compact sizes, HOME, GAME, and Shift Review become separate full-frame
-  views.
+- Correct, Close, and Wrong feedback;
+- queue insertion `doink`;
+- ordinary clock tick;
+- ten-second/minute emphasis tick;
+- zero completion dong; and
+- optional HOME stream.
+
+The global mute suppresses synthesized game/UI sounds. The RUSH clock/arrival
+preference suppresses RUSH timing and arrival cues but not feedback; Triage cues
+remain governed by global mute. Doink is emitted only by the successful
+`insertWaitingPatient` effect, never by recall, swap, initial seed, or a blocked
+capacity attempt.
+
+## Single responsive UI contract
+
+The application has one 9:16 shell on all device classes.
+
+- HOME, GAME, and SHIFT REVIEW are separate views within the same shell.
+- Do not create a wide-screen multi-page presentation.
+- Center the shell and size it from available width and height.
+- On height-limited larger viewports, reserve approximately 5% viewport height
+  above and below: about 10% combined.
+- Preserve safe-area insets whenever larger than the nominal spacing.
+- Keep the GAME panel columns at 22% / 56% / 22%.
+- Keep header, play area, and footer at 7.2% / 85.8% / 7%.
+- Do not allow page-level scrolling on the main view.
+- Overlays may scroll internally.
 - Use viewport geometry, not device-name detection.
+- Browser zoom behavior may remain viewport-relative; do not add an unapproved
+  scale control.
 
-The iPhone 16 Pro remains the primary mobile reference, but phone, tablet,
-laptop, and desktop geometries must all be tested.
+Exact geometry and component behavior are in document `7`.
 
-## Header, panels, and footer
+## Coach component contract
 
-The header contains:
-
-- mode title: `TRIAGE!` or `TRIAGE RUSH!`;
-- bordered numbers-only Correct / Close / Wrong = score card;
-- larger, unboxed timer or elapsed-time presentation; and
-- compact sound state.
-
-Use semantic/accessibility labels even though the scorecard's visible labels
-are omitted. Strict removes Close and its separator without leaving a layout
-gap.
-
-RUSH renders a minimum of five equal-height, background-backed queue rows and a
-maximum of ten. The first two are occupied at shift start. As the queue grows
-beyond five, set the row count to the patient count. Do not raise the maximum
-without a compact visual treatment.
-
-The footer remains:
+Build one reusable detailed-chart renderer with two current contexts:
 
 ```text
-<-- HOME        COACH        SHIFT REVIEW -->
+ACTIVE PATIENT / COACH
+  presentation: unlocked, expanded
+  answer:       locked, collapsed
+  clinical:     unlocked, shift-memory value (initially collapsed)
+
+PATIENT REVIEW
+  presentation: unlocked, expanded
+  answer:       unlocked, expanded
+  clinical:     unlocked, expanded
 ```
 
-Shift Review is the explicit way to end No Timer and timed shifts.
+The occupied patient panel is a semantic button/hit target for active Coach.
+There is no footer Coach control. Clinical expansion memory belongs to current
+shift UI state, not patient JSON or local storage. Starting a new shift resets
+it.
 
-## Input, modal, and motion behavior
-
-- Use pointer events for mouse, touch, pen, and trackpad.
-- Required play must not depend on hover.
-- Preserve keyboard activation and useful focus behavior on desktop.
-- Use semantic buttons, useful accessible names, non-color feedback, and
-  touch-sized targets.
-- Open detailed charts and blocking overlays freeze the shift.
-- Close controls remain predictable and do not mutate gameplay state.
-- Restore focus to the control that opened a dismissed overlay when practical.
-- Respect reduced-motion preferences, including queue shake and countdown
-  animation.
+Review browsing wraps the same chart with previous, next, current position/name,
+and close controls. It must not duplicate patient-chart markup or clinical
+mapping.
 
 ## Data loading and manifests
 
-- Load reviewed patient records from `patient-data/`; do not embed production
-  patient objects in application JavaScript.
-- Generate or maintain an explicit patient manifest before production loading
-  depends on `patient-index.json`.
-- Centralize runtime asset paths in one obvious manifest.
-- Validate missing assets and malformed patient records with actionable errors.
-- Keep queue traversal, backgrounds, and session scoring in application state,
-  not patient JSON.
-
-## Detailed-patient component and Patients Seen wrapper
-
-Build one reusable chart for Patient Assignment, Patient-Room/Coach, and
-Patient Review. Content comes from schema 2.2 while session-specific comparison
-data comes from application state.
-
-Each context owns an independent in-memory section profile. Do not persist
-section expansion state in patient JSON or local storage.
-
-Do not duplicate or redesign the chart for Patients Seen. Place the existing
-full chart inside a review wrapper/frame that conditionally adds a fixed banner
-below the clipboard clamp. That banner owns:
-
-- circular previous and next controls;
-- current index, total, and patient name; and
-- a dedicated close box.
-
-When review browsing is active, hide the chart's ordinary close button, reserve
-top padding for the banner, reset chart scroll on patient change, and restore
-focus to the Shift Review Patients Seen link on close.
-
-## Shift Review rendering
-
-Render the final score from the same derived score function used in the header.
-The scoring summary should show count, points per item, and subtotal for
-Correct, Close when enabled, Wrong, and Left Waiting. Keep Over-triaged and
-Under-triaged counts in a separate direction section because they explain Wrong
-without contributing additional points.
+- Load schema 2.2 records from `patient-data/`.
+- Load portraits from `patient-data/patient-images/`.
+- Centralize all runtime asset paths in one manifest.
+- Validate patient and asset manifests before enabling Start Shift.
+- Produce actionable, non-destructive error UI when loading fails.
+- Keep waiting backgrounds, ledger entries, settings, and random state outside
+  patient JSON.
+- Do not compute vital display colors; use authored schema colors.
+- Do not ship copied test patient data as production authority.
 
 ## Persistence
 
-No server-side persistence is required. Version local-storage data and fail
-safely to defaults when stored data is invalid or incompatible.
+No server is required. Version every local-storage payload and validate it
+before use.
 
-Potential domains are:
+Persist:
 
 - player title and initials;
-- sound and UI-hint preferences;
-- default mode, difficulty, and shift length;
-- resumable active shift;
-- per-player lifetime statistics; and
-- per-player score history and best scores.
+- safe sound and UI-hint preferences;
+- default mode, difficulty, and mode-specific shift lengths; and
+- resumable active-shift state when resume is supported.
 
-Gameplay-affecting setting changes require explicit restart confirmation. A
-clear-lifetime action applies only to the currently named player and requires
-confirmation.
+A resumable shift snapshot must include ledger order and records, queue entries
+with backgrounds, active/assigned patient state, deck/cursor, clock and arrival
+state, Coach Clinical preference, and settings. Do not persist live timer IDs,
+DOM state, audio contexts, or focus nodes.
 
-## Sound
+Gameplay-setting changes during an active shift require explicit restart
+confirmation. Invalid or incompatible stored data falls back safely and never
+partially resumes.
 
-- Create or resume Web Audio only from a user gesture.
-- Reuse one audio context rather than creating one per sound.
-- Treat feedback, clock, arrival, and completion sounds as one-time action
-  effects, never render effects.
-- Keep the RUSH sound preference separate from the global mute state.
-- Start streaming HOME audio only from a user gesture.
-- Centralize the Classical KING endpoint.
-- Handle rejected `play()` promises and station errors without crashing.
+## Accessibility and interaction
 
-## Production implementation order
+- Use semantic buttons for queue patients, rooms, patient-panel Coach, navigation,
+  and overlay controls.
+- Preserve keyboard activation and visible focus.
+- Required behavior cannot depend on hover or long press.
+- Room descriptions may use hover/long press as supplemental help.
+- Provide useful accessible names for number-only score fields and door artwork.
+- Feedback must not rely on color alone.
+- Blocking overlays manage focus and pause the shift.
+- Respect reduced motion for shake, pulse, and countdown animation.
+- Maintain minimum practical touch targets and safe-area spacing.
 
-1. Establish the application shell, manifests, state defaults, and storage
-   version.
-2. Load and validate canonical patient data and shuffled traversal.
-3. Implement the centered responsive frame and Triage queue.
-4. Transfer patient selection, swapping, detailed chart, and room assignment.
-5. Transfer scoring, feedback, open rooms, recall, and first-choice history.
-6. Transfer Coach and all three detailed-chart contexts.
-7. Integrate HOME, settings, lobby states, and sound.
-8. Transfer Shift Review and the Patients Seen chart wrapper.
-9. Transfer the synchronized RUSH timer, arrival curves, sounds, shake, and
-   countdown effects.
-10. Add persistence and recovery.
-11. Verify supported viewport geometries and physical devices.
+## Error handling and observability
 
-## Verification baseline
+- A missing patient or asset prevents starting a shift and identifies the path.
+- A malformed stored snapshot is quarantined or ignored, not partially applied.
+- An impossible state transition logs a development warning and leaves state
+  unchanged.
+- Audio-context or streaming failure does not stop gameplay.
+- Development builds should expose a serializable state snapshot and injected
+  clock/random sources for repeatable tests.
 
-Automated checks should cover:
+## Engineering verification gate
 
-- all patient JSON and image pairings;
-- schema 2.2 and vital-band validation;
-- all production asset paths;
-- shuffled traversal, queue uniqueness, five-slot minimum, refill, growth, and
-  ten-patient maximum;
-- Strict and Forgiving evaluation boundaries;
-- Psych and Discharge dual-correct behavior;
-- first-assignment accounting across recall;
-- Triage and RUSH assignment scoring;
-- live RUSH waiting penalties without double deduction;
-- 60- and 120-second arrival curves and one-second floor;
-- quarter-second final clock cadence and zero-second completion;
-- pause/resume and shift completion; and
-- missing-data and storage-recovery behavior.
+Implementation is not complete until it passes document `9`, including:
 
-Manual/browser checks should cover:
-
-- iPhone safe areas and visible browser UI;
-- other phone, tablet, laptop, and desktop dimensions;
-- header scorecard and enlarged timer fit;
-- five through ten queue-row legibility;
-- countdown pop/fade, full-queue shake, and reduced motion;
-- sound controls and browser autoplay behavior;
-- Shift Review formulas and Patients Seen navigation;
-- modal close, focus restoration, freezing, and scrolling; and
-- visual comparison with accepted demos.
+- schema and asset validation;
+- deterministic evaluation and reassignment tests;
+- queue, burst, cap, and doink tests;
+- both mode timers and all cue boundaries;
+- pause/resume and zero-priority behavior;
+- Coach availability and section memory;
+- single-presentation viewport checks;
+- keyboard/touch/accessibility checks; and
+- current door readability in all 14 states.

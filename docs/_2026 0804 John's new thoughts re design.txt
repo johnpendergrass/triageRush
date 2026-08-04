@@ -1,0 +1,94 @@
+2026 0804
+
+some random thoughts about the design of triageRush, as it stands on now.
+
+1. The scoring should be revised to allow a re-scoring of a patient if they are recalled
+	and later moved to a different room.  The old scoring, of the original room, should
+	be removed and the scoring applied to the newly selected room.
+
+	Why?  we are not trying to punish the player - if they reconsider they should be
+	given credit for that.
+
+2. The coaches panel should be available to the player any time there is a patient in the
+	patient panel.  When a new patient appears, or when a patient is recalled, the
+	coaches panel should be available.
+
+	The coaches panel should be available ONLY when there is a patient in the patient
+	panel.  Currently when a patient has been assigned to a room, and the patient panel
+	is empty the coach is available, but with this change the coaches panel would NOT
+	be available.  The player would need to recall the patient from the room in order
+	to see the coaches panel again.
+
+	Why?  To simplify the game actions.  The coaches is always available for a patient,
+	the player should not have to wonder why it is, or isn't, available during the game.
+
+3. The coaches panel button can go away.  Just tapping the patient anywhere in the patient
+	panel will now bring up the coaches panel.  The behavior of the coaches panel will
+	not change - while still evaluating a patient, whether a new patient or a recalled
+	patient, the panel will lock the answer.  The clinical section will default to
+	collapsed when the game starts, but will remember its last state throughout the
+	game - ie. if the player expands the coaches panel to view the clinical section,
+	then the clinical panel will remain expanded for future patients, unless the player
+	collapses it again.
+
+	Why? There is no need for a button anymore.  Tapping the patient panel at any point,
+	when there is a patient being evaluated, is the action.  We can use that button
+	real estate better for something else.
+
+
+4. Should we add some more patients that are Indigenous race?  Or maybe change some of the
+	existing patients to that race?  Do we need to?  Right now we have black/white/Asian/
+	Hispanic... is that sufficient, or would that be offensive to an native American?
+
+5. Need to fix the readability of the text on the triage room doors.  Has this been done already?
+
+6. Need to work on the pacing of the Rush game.  Perhaps some intermediate quarter and half second
+	'ticks' at every 10 seconds?  Until the final 10 seconds when the countdown begins?
+	Think about this.
+
+7. The timer options for 'triage mode' should change.  Timer options of 5 min, and 10 min,
+	should be available.  Default is 5 minutes.  The timer in the Game page should
+	always be counting down, not showing elapsed.
+
+	There should be an audible 'tick' every ten seconds during 'triage' mode. Every minute
+	should have a 'tick tick tick', at (for instance) 59 1/2 seconds tick, 59 3/4 seconds tick,
+	60 seconds tick.  Repeat that every minute.
+
+	The last ten seconds should be the same as the Rush mode ticks.
+
+8. There should be the audible 'doink' when a new patient is added to the waiting room, which
+	means anytime a patient is selected from the waiting room, since a new patient is
+	automatically added.  The 'doink' will not sound if the patient is recalled from a
+	triage room, only from the waiting room.
+
+9. 'Intern' should be added to the titles options in settings.
+
+10. In Rush mode, occasionally more than one patient can be added, until there are 10 patients in
+	the waiting room queue, at which point patients are not additionally added.
+	That means that (maybe) when there were four patients in the room and it was time to add one more,
+	that TWO more would be added at the next opportunity, with only a very short beat between them.
+	The queue and display size will adjust accordingly. The 'doink' sound will sound for each
+	new patient, one right after the other (ie. doink, doink).
+
+	Start with a 20% chance of adding two patients.
+
+	This does not alter the behavior of the waiting room queue or appearance of it.  It is
+	just adding an additional patient.
+
+	Why? To add some interest in the Rush mode pacing.
+
+11. This is a restatement/change to the overall game presentation:
+
+	a) the old game had two different modes, one for mobile, and one for desktop (or wider
+		browsers.  The desktop version expanded to show all three pages (lobby, game, review)
+		if space was available.
+	b) this will change.  Now there will be only ONE presentation, the mobile version.  It will
+		be appear the same regardless of device it is viewed on.  That view will adjust
+		to the available screen size - the only difference is that if a larger view is
+		available (such as a desktop), it will not completely fill the vertical height, it
+		will leave about 10% 'breathing' room above and below the app (ie. between the browser
+		controls/url/etc and the top of the app; same on the bottom).
+	c) The current mobile demo has this behavior.  I am just restating it make it official.
+
+	d) The new presentation will always require the player to select 'lobby' or 'review' in order
+		to view those screens.

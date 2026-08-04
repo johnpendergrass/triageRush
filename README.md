@@ -1,46 +1,40 @@
 # triageRush
 
-This repository is the development home for the responsive triageRush
-Triage/TriageRUSH application, its shared patient library, temporary
-design-reference apps, and a future standalone Patient CRUD tool.
+triageRush is a responsive emergency-department triage teaching game with
+Triage and TriageRUSH modes, a shared 160-patient library, and a future
+standalone patient editor.
 
-## Current structure
+## Forward project structure
 
 ```text
 triageRush/
-|-- docs/
-|   `-- archive/
-|-- triageRush/
-|-- patient-data/
-|-- ___patient-CRUD (standalone)/
-|-- _testAppMobile/
-|-- _testAppDesktop/
-|-- _testAppHomeScreen/
-`-- index.html
+|-- index.html                    site entry point
+|-- docs/                         current product and implementation specification
+|-- triageRush/                   production application and runtime artwork
+|-- patient-data/                 authoritative patient JSON and portraits
+|-- _testAppMobile/               mobile implementation and verification target
+`-- ___patient-CRUD (standalone)/ future independent patient editor
 ```
 
 ## Ownership
 
-- Root `index.html` is the GitHub Pages entry point.
-- `docs/` contains the small numbered set of current project documentation.
-- `docs/archive/` preserves superseded specifications, development history,
-  prototype references, and artwork development.
-- `triageRush/` owns the responsive production application and game assets.
-- `patient-data/` owns authoritative patient JSON and final patient images.
-- `___patient-CRUD (standalone)/` is reserved for the future independent local
-  patient creation and editing tool.
-- `_testAppMobile/` and `_testAppDesktop/` are temporary self-contained design
-  references. Remove them only after accepted behavior has been verified in
-  production.
-- `_testAppHomeScreen/` is the temporary HOME composition and live-sound
-  reference.
+- Root `index.html` is the published entry point.
+- `docs/` defines current behavior, UI, engineering contracts, algorithms, and
+  acceptance tests.
+- `triageRush/` owns production code and runtime artwork.
+- `patient-data/` owns authoritative patient JSON, portraits, schema, vital
+  bands, and validators.
+- `_testAppMobile/` is the self-contained implementation target used to prove
+  the documented behavior before production transfer.
+- `___patient-CRUD (standalone)/` is reserved for an independent local patient
+  creation and editing tool.
+
+## Current direction
+
+Every device uses the same centered, responsive 9:16 mobile presentation. HOME,
+GAME, and SHIFT REVIEW are separate player-selected views. The current
+documentation specifies replaceable recall scoring, active-patient Coach access,
+five-/ten-minute Triage countdowns, RUSH pacing and two-patient bursts, accepted
+door artwork, and complete implementation/acceptance guidance.
 
 Start with [the current project map](docs/1-start-here-toc.md).
-
-## Current milestone
-
-The demo-design phase is substantially complete. Production development begins
-under `triageRush/` with one centered responsive application whose compact form
-preserves the established mobile composition. The HOME artwork, registered
-state overlays, patient library, and sound-control prototype are ready for
-integration.
