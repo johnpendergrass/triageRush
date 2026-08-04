@@ -2,8 +2,8 @@
 
 **Last modified:** 2026-08-04
 
-**Latest change:** Added 4K/iPhone rendering references and made CSS-owned image
-geometry a requirement for later transparent asset optimization.
+**Latest change:** Defined terminal primary-view navigation: GAME can be quit
+to HOME or stopped to SHIFT REVIEW, and SHIFT REVIEW returns only to HOME.
 
 ## Scope and authority
 
@@ -44,29 +44,12 @@ shellWidth   = shellHeight * 9 / 16
 For height-limited large screens, nominal top and bottom insets are each
 `5vh`; for width-limited phones, width determines shell size.
 
-Reference presentations for artwork inspection:
-
-| Environment | Approximate shell | Artwork demand |
-|---|---:|---:|
-| Full HD, 1920 x 1080 at 100% | 547 x 972 CSS px | 547 x 972 device px |
-| Normal 4K, 3840 x 2160 at 100% | 1094 x 1944 CSS px | 1094 x 1944 device px |
-| iPhone 16 Pro Max, 440 x 956 CSS px at 3x | 432 x 768 CSS px | 1296 x 2304 device px |
-
-The phone can therefore require more source pixels for a full-shell image than
-the 4K desktop even though its CSS box is smaller. These are audit references,
-not separate layouts; all three retain the same composition.
-
 ### Frame
 
 - Dark navy/steel hospital visual system.
 - Thin steel border, modest rounded corners, and deep outer shadow.
 - Internal views occupy the entire shell; they do not sit side by side.
 - All overlay stacking is relative to the shell, not the browser page.
-- CSS defines the box, crop, fit, and alignment of every bitmap layer. Replacing
-  an image with a smaller optimized file at the same logical path must not alter
-  layout, controls, or game behavior.
-- Do not branch on an image's intrinsic or decoded dimensions. Preserve the
-  documented `object-fit`, aspect-ratio, and anchor behavior instead.
 - Base font stack: Arial Narrow or a compatible condensed sans serif, then
   Arial/sans-serif.
 - Educational chart prose may use regular Arial; patient quotation may use

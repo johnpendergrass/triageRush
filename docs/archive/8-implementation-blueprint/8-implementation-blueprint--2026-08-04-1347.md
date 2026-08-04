@@ -2,17 +2,14 @@
 
 **Last modified:** 2026-08-04
 
-**Latest change:** Replaced the large module tree with the approved compact file
-map and added schema-preserving loading, staged preloading, readable naming, and
-asset-size-independent rendering.
+**Latest change:** Added terminal Quit/Stop/Return navigation and automatic
+direct-to-GAME interruption recovery, removing the HOME Resume Shift state.
 
 ## Purpose
 
 This document translates the product rules into implementation structure and
-algorithms. Its meaning-oriented names are the approved starting vocabulary;
-material schema or architecture changes should be reviewed with John before
-they become difficult to reverse. Every behavior and state invariant is
-required.
+algorithms. Names are recommended, not a requirement, but every behavior and
+state invariant is required.
 
 ## Suggested production files
 
@@ -20,30 +17,27 @@ required.
 triageRush/
 |-- index.html
 |-- styles.css
+|-- app.js                    application bootstrap and event wiring
 |-- assets.js                 validated logical asset manifest
-|-- game.js                   state, rules, queue, scoring, clock, persistence
-|-- ui.js                     shell, HOME, GAME, Coach, and review rendering
-|-- app.js                    bootstrap, loading, events, and one-time effects
+|-- domain/
+|   |-- state.js              defaults, serialization, invariants
+|   |-- patients.js           load, normalize, deck traversal
+|   |-- queue.js              selection, swap, refill, arrivals
+|   |-- evaluation.js         credit, outcome, direction, points
+|   |-- ledger.js             insert/replace patient results
+|   |-- scheduler.js          monotonic heartbeat and boundary events
+|   `-- persistence.js        versioned local storage
+|-- ui/
+|   |-- shell.js              primary view selection
+|   |-- game.js               header, queue, patient, rooms, footer
+|   |-- coach.js              detailed chart and section state
+|   |-- home.js               lobby/settings/about/sound
+|   `-- review.js             score formulas and Patients Seen wrapper
 `-- assets/                   paths specified in document 6
 ```
 
-This is a conceptual separation inside a small physical file set. Use section
-dividers within `game.js` and `ui.js` for the responsibilities that a larger
-application might put in separate modules. `ui.js` and `app.js` may be combined
-if that improves readability. Do not create a directory of one-function modules
-or introduce a framework/build chain without a demonstrated need and John's
-review.
-
-Meaning-oriented naming rules:
-
-- prefer `shiftRemainingMs`, `waitingPatients`, `selectedRoomKey`, and
-  `waitingBackgroundKey` over context-poor abbreviations;
-- suffix measured values with units where ambiguity is possible;
-- name actions with verbs and booleans so they read as statements;
-- use `x`, `y`, `index`, or `counter` only in the conventional small scope where
-  their meaning is immediately visible; and
-- comment decisions, invariants, and non-obvious edge cases rather than restating
-  individual lines of code.
+A smaller file set is acceptable if the same boundaries remain testable. Do not
+split files merely to match this tree.
 
 ## Canonical constants
 
@@ -116,17 +110,17 @@ Doctor, Nurse, RN, LPN, RES, Intern, EMS, PA, MS1, MS2, MS3, MS4
   },
 
   waiting: [
-    // { patientId, waitingBackgroundKey }
+    // { patientId, background }
   ],
 
-  active: null,                 // { patientId, waitingBackgroundKey, recalledFromRoomKey? }
-  assigned: null,               // { patientId, roomKey, waitingBackgroundKey }
+  active: null,                 // { patientId, background, recalledFromRoom? }
+  assigned: null,               // { patientId, room, background }
   recallAvailable: false,
 
   ledger: {
     order: [],                  // stable first-assignment patient IDs
     byPatientId: {
-      // id: { patientId, roomKey, outcome, direction, points,
+      // id: { patientId, room, outcome, direction, points,
       //       assignmentCount, firstAssignedAt, lastAssignedAt }
     }
   },
@@ -179,42 +173,33 @@ A development assertion function should check these after every action.
 ### Manifest
 
 Use an explicit ordered manifest of all patient IDs. Load JSON in parallel with
-a bounded reasonable failure strategy. Validate every response before creating
-the patient index. A failed or malformed response prevents Start Shift and
-identifies its patient or path.
+a reasonable failure strategy, then normalize only after all responses succeed.
 
-### Schema-preserving runtime index
+### Normalized runtime record
 
 ```js
-patientsById = {
-  "patient-001": patientRecordLoadedFromDisk,
-  "patient-002": patientRecordLoadedFromDisk
+{
+  id,
+  presentation: {
+    personal,
+    image,
+    chiefComplaint,
+    quote,
+    triageNote,
+    vitals
+  },
+  answer: {
+    correctEsi,
+    correctRoom,
+    otherAcceptableRooms,
+    destinationReason
+  },
+  clinical
 }
 ```
 
-Each `patientRecordLoadedFromDisk` retains the exact schema 2.2 property names,
-casing, nesting, and authored values, including the top-level `schema`, `id`,
-`number`, `johnsComments`, `patient`, and `aiImageGeneration` groups. Game code
-reads `patientRecord.patient.presentation`, `.answer`, and `.clinical` rather
-than creating renamed copies. Queue, active, assigned, and ledger records store
-the patient ID and their own game fields only.
-
-### Startup and rolling preload
-
-Use three loading stages:
-
-1. Render HOME after its critical interface artwork and code are available.
-2. While the player reviews settings, load and validate the patient manifest,
-   JSON records, shared game artwork, and portrait URLs needed to plan a deck.
-3. On Start Shift, show a blocking `PATIENTS ARE ARRIVING` status, choose the
-   initial deck entries, and wait until the initial queue portraits plus a
-   measured reserve are fetched and decoded.
-
-Only then seed the queue, switch to GAME, and anchor the shift scheduler. During
-play, preload a rolling reserve ahead of `deck.cursor`. Determine the reserve by
-testing the fastest RUSH arrival curve on representative mobile networks; do
-not make all 160 portraits a startup requirement. A preload failure offers retry
-or return to HOME and never starts a partially prepared timer.
+Keep the schema grouping intact. Do not flatten away image metadata or personal
+fields that the UI may need.
 
 ### Deck traversal
 
@@ -233,7 +218,7 @@ When a patient is inserted:
    retained.
 2. Choose randomly from unused production backgrounds.
 3. If all 16 are in use, choose from the full set.
-4. Store its manifest key as `waitingBackgroundKey` on the waiting entry.
+4. Store the chosen background on the waiting entry.
 
 Selection and swapping move the stored background with the patient.
 
@@ -242,12 +227,10 @@ Selection and swapping move the stored background with the patient.
 ```text
 validate settings
 require phase ready and view HOME
-set phase loading and show PATIENTS ARE ARRIVING
 create new shift id/timestamps
 clear ledger, queue, active, assigned, review, and pause state
 reset Coach Clinical to collapsed
 shuffle deck and reset cursor
-fetch and decode initial portraits plus measured reserve
 set selected countdown
 set RUSH base interval: 10s for 60s, 14.5s for 120s
 seed 5 patients for Triage or 2 for RUSH without doinks
@@ -258,7 +241,6 @@ play RUSH start tick when enabled
 ```
 
 Initial seeding uses the insertion primitive with `announce: false`.
-The timer anchor is created only after required assets decode successfully.
 
 ## Queue insertion primitive
 
@@ -268,7 +250,7 @@ insertWaitingPatient({ announce, eventId }) {
 
   const entry = {
     patientId: drawUniquePatientId(),
-    waitingBackgroundKey: chooseWaitingBackgroundKey()
+    background: chooseWaitingBackground()
   }
 
   commit waiting.push(entry)
@@ -305,24 +287,22 @@ open door closes and recall becomes unavailable.
 ## Evaluation
 
 ```js
-function fullCreditRooms(patientRecord) {
-  const answer = patientRecord.patient.answer
-  const rooms = new Set([answer.correctRoom])
-  if (answer.correctRoom === "psych" ||
-      answer.correctRoom === "discharge") {
-    rooms.add(`esi-${answer.correctEsi}`)
+function fullCreditRooms(patient) {
+  const rooms = new Set([patient.answer.correctRoom])
+  if (patient.answer.correctRoom === "psych" ||
+      patient.answer.correctRoom === "discharge") {
+    rooms.add(`esi-${patient.answer.correctEsi}`)
   }
   return rooms
 }
 
-function evaluate(patientRecord, roomKey, difficulty) {
-  const answer = patientRecord.patient.answer
-  if (fullCreditRooms(patientRecord).has(roomKey)) return "correct"
+function evaluate(patient, room, difficulty) {
+  if (fullCreditRooms(patient).has(room)) return "correct"
   if (difficulty === "strict") return "wrong"
 
-  const selectedEsi = parseEsiRoom(roomKey) // null for psych/discharge
+  const selectedEsi = parseEsiRoom(room) // null for psych/discharge
   if (selectedEsi == null) return "wrong"
-  return Math.abs(selectedEsi - answer.correctEsi) === 1
+  return Math.abs(selectedEsi - patient.answer.correctEsi) === 1
     ? "close"
     : "wrong"
 }
@@ -332,7 +312,7 @@ Direction:
 
 ```js
 if (outcome === "correct") direction = "correct"
-else if (!isEsiRoom(roomKey)) direction = "wrong"
+else if (!isEsiRoom(room)) direction = "wrong"
 else if (selectedEsi < correctEsi) direction = "over"
 else direction = "under"
 ```
@@ -340,18 +320,18 @@ else direction = "under"
 ## Assignment and ledger replacement
 
 ```js
-assignRoom(roomKey) {
+assignRoom(room) {
   require phase active and active patient
 
-  const patientRecord = patientsById[active.patientId]
-  const outcome = evaluate(patientRecord, roomKey, settings.difficulty)
-  const direction = classifyDirection(patientRecord, roomKey, outcome)
-  const previous = ledger.byPatientId[patientRecord.id]
+  const patient = get(active.patientId)
+  const outcome = evaluate(patient, room, settings.difficulty)
+  const direction = classifyDirection(patient, room, outcome)
+  const previous = ledger.byPatientId[patient.id]
   const now = wallClockTimestamp()
 
   const nextRecord = {
-    patientId: patientRecord.id,
-    roomKey,
+    patientId: patient.id,
+    room,
     outcome,
     direction,
     points: POINTS[outcome],
@@ -360,18 +340,18 @@ assignRoom(roomKey) {
     lastAssignedAt: now
   }
 
-  if (!previous) ledger.order.push(patientRecord.id)
-  ledger.byPatientId[patientRecord.id] = nextRecord
+  if (!previous) ledger.order.push(patient.id)
+  ledger.byPatientId[patient.id] = nextRecord
 
   assigned = {
-    patientId: patientRecord.id,
-    roomKey,
-    waitingBackgroundKey: active.waitingBackgroundKey
+    patientId: patient.id,
+    room,
+    background: active.background
   }
   active = null
   recallAvailable = true
 
-  queue visualEffect("assignment-feedback", outcome, roomKey)
+  queue visualEffect("assignment-feedback", outcome, room)
   queue soundEffect("assignment-feedback", outcome)
   render affected components
 }
@@ -383,19 +363,19 @@ the previous points/counts. Never append a second history record.
 ## Recall
 
 ```js
-recallAssignedPatient(roomKey) {
+recallAssignedPatient(room) {
   require recallAvailable
-  require assigned.roomKey === roomKey
+  require assigned.room === room
 
   active = {
     patientId: assigned.patientId,
-    waitingBackgroundKey: assigned.waitingBackgroundKey,
-    recalledFromRoomKey: roomKey
+    background: assigned.background,
+    recalledFromRoom: room
   }
   assigned = null
   recallAvailable = false
 
-  close roomKey
+  close room
   render patient, rooms, footer
 }
 ```
@@ -557,12 +537,6 @@ through event delegation. Do not recreate global listeners on every render.
 
 Effects such as sound, focus, animation restart, and scroll reset are explicit
 objects returned by actions and consumed once after render.
-
-All asset URLs come from `assets.js`. CSS owns each image's rendered box,
-`object-fit`, crop, and anchor. Rendering code must not inspect `naturalWidth`,
-`naturalHeight`, or source pixel dimensions to choose layout or game behavior.
-This guarantees that a visually equivalent optimized file can later replace a
-high-resolution file at the same logical manifest key without changing code.
 
 ## HOME/settings
 

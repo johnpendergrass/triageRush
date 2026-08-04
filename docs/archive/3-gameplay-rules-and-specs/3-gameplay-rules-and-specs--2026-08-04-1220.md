@@ -2,8 +2,10 @@
 
 **Last modified:** 2026-08-04
 
-**Latest change:** Made GAME exits terminal: Quit Game discards the shift to
-HOME, Stop Game finalizes it to SHIFT REVIEW, and review returns only to HOME.
+**Latest change:** Made recall scoring replaceable, moved Coach access to the
+occupied patient panel, revised Triage timers and sound, added RUSH ten-second
+emphasis and two-patient bursts, added Intern, and made one mobile presentation
+the only supported experience.
 
 ## Product definition
 
@@ -17,7 +19,7 @@ esi-1, esi-2, esi-3, esi-4, esi-5, psych, discharge
 
 The product has three full-frame views:
 
-1. HOME: identity, settings, sound, and Start Shift.
+1. HOME: identity, settings, sound, Start Shift, and Resume Shift.
 2. GAME: waiting queue, active patient, seven rooms, score, and clock.
 3. SHIFT REVIEW: final score, formulas, triage direction, and Patients Seen.
 
@@ -27,15 +29,14 @@ all three at once. The one-presentation rule is fully specified in
 
 ## Core shift loop
 
-1. Start a new shift from HOME.
+1. Start or resume a shift from HOME.
 2. Select a waiting patient.
 3. Review Presentation evidence and optionally open Coach by tapping the patient.
 4. Assign one of the seven rooms.
 5. Receive immediate Correct, Close, or Wrong feedback on the selected room.
 6. Either select the next waiting patient, or recall the assigned patient by
    activating the open room and choose again.
-7. Continue until time expires, the player stops for Shift Review, or the
-   player quits and discards the shift.
+7. Continue until time expires or the player selects Shift Review.
 8. Review the score and any patient charts.
 
 A patient is considered **active** only while occupying the center patient
@@ -346,15 +347,9 @@ Strict omits Close and its adjacent separator without a gap. RUSH score equals
 assignment points minus ten times the number currently waiting. Triage score is
 assignment points only.
 
-The GAME footer exposes exactly two navigation actions and no Coach button:
-
-- `QUIT GAME` asks for confirmation, discards the active shift without creating
-  a Shift Review result, clears its recovery snapshot, and opens HOME.
-- `STOP GAME` finalizes the active shift and immediately opens SHIFT REVIEW.
-  Timer expiry performs the same finalization automatically.
-
-Neither path can return to that GAME. HOME and SHIFT REVIEW are not temporary
-tabs during an active shift.
+The GAME footer contains HOME and SHIFT REVIEW. HOME opens the separate HOME
+view without replacing an active shift. SHIFT REVIEW ends an active shift and
+opens review. No Coach button appears.
 
 ## Shift Review
 
@@ -379,15 +374,9 @@ The `PATIENTS SEEN (n)` action opens the complete review chart with previous,
 next, position/name, and close controls. Long-term history and personal-best
 presentation are not part of the current build.
 
-The only primary-view action from SHIFT REVIEW is `RETURN TO LOBBY`. It clears
-the completed shift from active runtime/recovery state and opens HOME. Starting
-another shift happens from HOME; there is no direct New Shift or Return to Game
-action on SHIFT REVIEW.
-
 ## HOME and settings
 
-HOME is the pre-shift lobby. It presents settings and Start Shift only; it has
-no Resume Shift or Return to Game state.
+HOME presents the lobby in Start Shift, Resume Shift, or active-shift state.
 
 ### Player settings
 
@@ -406,9 +395,9 @@ no Resume Shift or Return to Game state.
 - RUSH clock and arrival sounds on/off.
 - Global mute remains separate.
 
-Settings are edited on HOME before Start Shift. GAME does not open HOME settings
-without first completing the confirmed Quit Game flow, so there is no mid-shift
-settings/restart path. The in-GAME global mute control remains available.
+Gameplay-affecting changes during an active shift require explicit restart
+confirmation. Identity and safe display/sound preferences may update without
+destroying the shift.
 
 ### HOME sound and About
 

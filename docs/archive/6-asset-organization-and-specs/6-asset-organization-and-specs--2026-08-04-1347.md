@@ -2,17 +2,15 @@
 
 **Last modified:** 2026-08-04
 
-**Latest change:** Adopted the approved development-first asset lifecycle:
-current high-resolution production art during implementation, measured
-optimization after final CSS and visual approval.
+**Latest change:** Aligned HOME assets with terminal navigation: only the Start
+Shift overlay remains part of the forward lobby specification.
 
 ## Ownership
 
 - `triageRush/assets/` owns production game and HOME artwork.
 - `patient-data/patient-images/` owns production patient portraits.
+- `_testAppMobile/assets/` is an intentional self-contained test mirror.
 - Runtime code never loads artwork from `docs/` or `docs/archive/`.
-- `triageRush/assets/_asset-audit-and-resize/` owns audit code, reports, trial
-  outputs, and planning notes; nothing under it is a runtime asset.
 - Only assets named in this document or the current runtime manifest are part of
   the forward specification.
 
@@ -28,8 +26,7 @@ triageRush/assets/
 |-- audio/
 |-- icons/
 |-- patient-chart-popup/
-|-- review-page/
-`-- _asset-audit-and-resize/    non-runtime audit and trial workspace
+`-- review-page/
 ```
 
 Empty component directories are reserved ownership locations, not permission to
@@ -105,10 +102,11 @@ esi-1, esi-2, esi-3, esi-4, esi-5, psych, discharge
 
 #### Accepted door baseline
 
-As verified on 2026-08-04, the current high-resolution source/runtime baseline
-contains:
+As verified on 2026-08-04:
 
 - Production contains exactly 14 `door-*.png` files.
+- `_testAppMobile/assets/game-page/triage-rooms-panel/` contains the same 14.
+- Every matching production/test file has the same SHA-256 hash.
 - ESI 1-5 and Psych open/closed files are 1152 x 1792 RGBA.
 - Discharge open/closed files are 1777 x 1792 RGBA.
 - Sign backgrounds and lettering are accepted and readable.
@@ -121,19 +119,16 @@ older door set.
 
 Any later door edit must:
 
-- preserve the logical filename, visible geometry, aspect ratio, and placement;
+- preserve the exact filename, dimensions, geometry, and placement;
 - preserve alpha exactly unless John explicitly approves a transparency change;
 - preserve unrelated pixels when the change is sign/lettering-only;
 - keep ESI, Psych, and Discharge wording readable in all seven rows at the
   smallest supported shell;
 - keep dark lettering on the accepted lighter sign backgrounds where used;
 - verify both open and closed state;
+- copy the approved result to both active asset trees;
+- prove pairwise hashes match; and
 - refresh the asset cache key only after visual approval.
-
-An approved optimization pass may reduce pixel dimensions or change encoding
-without being treated as a design edit, provided the rendered appearance and
-alpha edges pass the regression checks below. High-resolution masters retain
-the original dimensions outside the runtime manifest.
 
 The implementation displays the door art at approximately 61% of its room-cell
 width and 91% of its height, centered horizontally and bottom-aligned. Acceptance
@@ -212,33 +207,6 @@ usable.
 - Provide useful text alternatives or semantic labels where an asset conveys
   function.
 - Verify at the smallest supported phone layout and height-limited desktop layout.
-- CSS containers own displayed width, height, crop, and fit. Runtime layout and
-  game logic must never depend on source pixels, `naturalWidth`, or
-  `naturalHeight`.
-
-## Approved source-to-runtime lifecycle
-
-1. Build and visually approve the complete game with the current
-   high-resolution assets in their existing production locations.
-2. Keep all layout geometry in CSS so a later pixel-size reduction cannot alter
-   composition, hit targets, or game behavior.
-3. After final CSS, rerun the audit for iPhone 16 Pro Max at 3x, Full HD, and a
-   normal 3840 x 2160 desktop at 100% browser scale.
-4. Create representative resize/compression trials under
-   `_asset-audit-and-resize/resized-assets/`; compare doors, transparent edges,
-   text, backgrounds, and portraits before approving a batch.
-5. Preserve high-resolution masters in an archival source location outside the
-   runtime manifest and preferably outside the deployed web root.
-6. Replace optimized runtime assets at the same logical paths and filenames
-   when practical. If encoding or path changes, update the centralized manifest
-   only.
-7. Change the production cache version, validate every manifest entry, and run
-   visual, alpha-edge, lettering, and loading-performance checks.
-
-This optimization is a release phase after functional and visual implementation,
-not a prerequisite for starting the game. Never upscale a source merely to
-match an audit target; keep it if it already looks good at its largest approved
-presentation.
 
 ## Naming rules
 
@@ -250,16 +218,28 @@ presentation.
 - Do not add dimensions to new names unless variants are intentionally supported.
 - Do not create an unowned catch-all folder.
 
+## Test-app mirroring
+
+The mobile test app remains independently runnable and may mirror the production
+game-page hierarchy. A mirror is valid only when:
+
+- filenames and logical manifest keys match production;
+- all expected files exist;
+- the content hash matches the approved production asset;
+- cache keys identify the current approved revision; and
+- production code never imports from the mirror.
+
+Patient-data mirroring follows document `5`; it is not asset ownership.
+
 ## Asset acceptance checklist
 
 - Every manifest path returns successfully through the preview server.
 - All 16 waiting backgrounds render.
 - All 14 accepted doors render in open and closed states with readable signs.
-- Door counts, manifest paths, decoding, alpha, and rendered geometry pass.
+- Pairwise production/test door hashes match.
+- Door dimensions and alpha pass automated comparison.
 - Patient panel layers align without clipping or text obstruction.
 - HOME Start Shift state registers to the lobby background.
 - The boombox artwork and hit targets align.
 - All assets survive shell scaling, safe areas, and reduced motion settings.
 - No current runtime path names a discarded or historical asset.
-- Audit scripts, reports, trials, and archived masters are absent from the
-  runtime manifest and deployment payload.

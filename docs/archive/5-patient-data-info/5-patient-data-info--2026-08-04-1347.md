@@ -2,8 +2,8 @@
 
 **Last modified:** 2026-08-04
 
-**Latest change:** Required schema-preserving runtime records, ID-based game
-references, and staged portrait preloading without duplicating patient data.
+**Latest change:** Aligned runtime integration with active-patient Coach,
+replaceable assignment history, and the two current detailed-chart contexts.
 
 ## Ownership and status
 
@@ -163,29 +163,14 @@ not by treating the record as invalid.
 - Production loads JSON from `patient-data/patient-json/`.
 - Production loads portraits from `patient-data/patient-images/`.
 - A deliberate explicit manifest lists the 160 IDs.
-- After validation, retain each loaded JSON record with the same property names,
-  casing, nesting, and values found on disk. Do not flatten it into a second
-  patient schema or rename fields for runtime convenience.
-- Store canonical records once in an index such as `patientsById`. Selectors and
-  renderers read paths such as `patientRecord.patient.presentation` directly.
-- Waiting and active entries store only the patient ID plus game-owned data such
-  as `waitingBackgroundKey`. Ledger records store the patient ID and assignment
-  result. They never copy the complete canonical patient record.
-- Derived display values and shift/session fields remain separate from the
-  canonical record so they cannot accidentally be written back as patient data.
+- The test app may mirror data to remain self-contained, but mirrors never become
+  the production authority.
 - The shuffled deck, queue backgrounds, active patient, ledger, and Coach state
   belong to application state.
 - Patients Seen order is the ledger's stable first-seen order.
 - A recalled/reassigned patient is still one Patients Seen record.
 - The future CRUD tool may read/write this library but remains independent from
   game runtime code.
-
-Portrait files do not all need to decode before HOME appears. Patient JSON and
-the manifest can load while the player reviews settings. Start Shift then waits
-behind `PATIENTS ARE ARRIVING` until the initial queue portraits and a measured
-reserve are fetched and decoded. Gameplay maintains a rolling reserve ahead of
-the deck cursor. The reserve size is finalized through network testing against
-the fastest supported RUSH sequence rather than by preloading all 160 portraits.
 
 ## Load-time validation
 

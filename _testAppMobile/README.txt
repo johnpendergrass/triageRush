@@ -16,6 +16,8 @@ window. The local-computer address is normally:
 
 For an iPhone, use the printed network address while the phone and computer are
 on the same Wi-Fi network. Keep the server window open. Stop it with Ctrl+C.
+The preview server disables browser and proxy caching, so reloading the page
+requests the current HTML, CSS, JavaScript, JSON, and image files.
 
 Current game behavior
 ---------------------

@@ -2,9 +2,9 @@
 
 **Last modified:** 2026-08-04
 
-**Latest change:** Added the approved compact source layout, meaning-oriented
-naming, schema-preserving patient access, staged preloading, and post-build
-asset-optimization contracts.
+**Latest change:** Aligned engineering contracts with replaceable patient
+results, active-patient Coach, one responsive presentation, revised timing
+cues, successful-insertion audio, and probabilistic RUSH bursts.
 
 ## Production scope
 
@@ -13,8 +13,9 @@ responsive web application. Plain HTML, CSS, and JavaScript are sufficient; add
 a dependency only when it removes demonstrated complexity and remains compatible
 with static hosting.
 
-The next implementation target is the actual application under `triageRush/`,
-using canonical data and production artwork from their owned locations.
+`_testAppMobile/` is the immediate conformance target. Production code must
+load canonical patients and production assets from their owned locations rather
+than depending on test-app copies.
 
 ## Ownership
 
@@ -23,41 +24,7 @@ using canonical data and production artwork from their owned locations.
 - `patient-data/` owns authoritative patient JSON and portraits.
 - `___patient-CRUD (standalone)/` remains an independent future editor.
 - `docs/` owns current product and engineering requirements.
-
-## Readability, naming, and file budget
-
-The application is intentionally small. Begin with this compact source set:
-
-```text
-index.html
-styles.css
-assets.js
-game.js
-ui.js
-app.js
-```
-
-Three to four JavaScript files are the target, not a quota. `ui.js` and
-`app.js` may be combined if that is clearer. Add a file only when one distinct
-responsibility has become difficult to understand or test in the existing
-files; review a materially larger file map with John before adopting it.
-
-Use names that expose purpose without requiring the reader to infer context:
-
-- include the subject and unit where useful, such as `shiftRemainingMs`,
-  `waitingPatients`, and `selectedRoomKey`;
-- use verbs for actions and booleans that read as statements, such as
-  `startShift`, `isMuted`, and `hasActivePatient`;
-- avoid private abbreviations and generic names such as `data`, `obj`, `tmp`, or
-  `val` when a more specific name is available; and
-- use conventional small-scope names such as `x`, `y`, `index`, or `counter`
-  when their meaning is genuinely obvious.
-
-Organize each file with clear section dividers. Comments should explain why a
-rule exists, what invariant a transition protects, or why an edge case is
-handled. Do not narrate obvious syntax line by line. Plain HTML, CSS, and
-JavaScript remain the default; introduce a framework or build system only after
-a concrete need is demonstrated and discussed.
+- `_testAppMobile/` is a test implementation, not a production dependency.
 
 ## Core architecture
 
@@ -135,9 +102,8 @@ At minimum, expose testable domain actions equivalent to:
 
 ```text
 startShift(settings)
-+ quitShift()
-+ stopShift(reason)
-+ returnToLobby()
++ resumeShift()
++ openView(view)
 + selectWaitingPatient(index)
 + assignRoom(roomKey)
 + recallAssignedPatient(roomKey)
@@ -146,6 +112,7 @@ startShift(settings)
 + closeCoach()
 + processHeartbeat()
 + processRushArrival()
++ endShift(reason)
 + openPatientsSeen()
 + navigatePatientsSeen(direction)
 + applySettings(settings)
@@ -160,10 +127,6 @@ Each action must reject illegal state without partial mutation. Examples:
 - `selectWaitingPatient` may swap only before assignment.
 - `processHeartbeat` is inert while paused or outside an active shift.
 - `processRushArrival` is inert outside RUSH.
-- `quitShift` is legal only during an active GAME and destroys the active shift
-  after confirmation without producing review results.
-- `stopShift` finalizes an active GAME and opens SHIFT REVIEW.
-- `returnToLobby` is legal from SHIFT REVIEW and cannot restore GAME.
 
 ## Result-ledger contract
 
@@ -254,8 +217,6 @@ capacity attempt.
 The application has one 9:16 shell on all device classes.
 
 - HOME, GAME, and SHIFT REVIEW are separate views within the same shell.
-- While phase is active, GAME is the only primary view. HOME is reached only by
-  confirmed quit; SHIFT REVIEW is reached only by stop or timer completion.
 - Do not create a wide-screen multi-page presentation.
 - Center the shell and size it from available width and height.
 - On height-limited larger viewports, reserve approximately 5% viewport height
@@ -268,9 +229,6 @@ The application has one 9:16 shell on all device classes.
 - Use viewport geometry, not device-name detection.
 - Browser zoom behavior may remain viewport-relative; do not add an unapproved
   scale control.
-- CSS containers own rendered image width, height, crop, and fit. JavaScript
-  must not use `naturalWidth`, `naturalHeight`, or source pixel dimensions to
-  decide game layout or behavior.
 
 Exact geometry and component behavior are in document `7`.
 
@@ -303,12 +261,6 @@ mapping.
 
 - Load schema 2.2 records from `patient-data/`.
 - Load portraits from `patient-data/patient-images/`.
-- Preserve each validated record's authored property names, casing, nesting,
-  and values. Do not flatten or rename the disk schema into a second patient
-  model.
-- Index canonical records by ID for lookup. Waiting, active, and ledger state
-  store patient IDs plus game-owned fields; they do not copy the full patient
-  record.
 - Centralize all runtime asset paths in one manifest.
 - Validate patient and asset manifests before enabling Start Shift.
 - Produce actionable, non-destructive error UI when loading fails.
@@ -316,40 +268,6 @@ mapping.
   patient JSON.
 - Do not compute vital display colors; use authored schema colors.
 - Do not ship copied test patient data as production authority.
-
-## Loading and portrait-preload contract
-
-HOME should become interactive after only its critical artwork and interface
-code are ready. While the player reviews settings, load and validate the patient
-manifest, patient JSON, shared game artwork, and enough metadata to plan the
-first queue.
-
-After Start Shift is pressed, show a blocking `PATIENTS ARE ARRIVING` status
-while the initial queue portraits and a measured near-term reserve are fetched
-and decoded. The shift timer and RUSH arrival scheduler do not start until that
-set is ready. Once play begins, maintain a rolling portrait reserve ahead of
-the deck cursor without downloading all 160 portraits up front.
-
-The exact reserve size is a measured implementation choice, not a guessed
-constant in this specification. It must survive the fastest supported arrival
-curve under normal mobile-network testing without delaying a patient insertion.
-Loading failures provide retry or return-to-HOME behavior and never start a
-partial shift.
-
-## Asset source and optimization contract
-
-Build and visually approve the complete game with the current high-resolution
-production assets. Do not resize production artwork merely to begin coding.
-After final CSS establishes maximum rendered boxes, rerun the audit at the
-approved iPhone, Full HD, and normal 4K reference viewports. Create and compare
-representative resize/compression trials before any batch replacement.
-
-Preserve high-resolution masters outside the runtime manifest, preferably
-outside the deployed web root. Optimized runtime files should keep the same
-logical paths and filenames when the format remains suitable. If a format or
-path changes, change only the centralized manifest rather than scattered UI
-code. Every production replacement requires a cache-version change plus path,
-decode, alpha-edge, lettering, and visual-regression checks.
 
 ## Persistence
 
@@ -361,18 +279,16 @@ Persist:
 - player title and initials;
 - safe sound and UI-hint preferences;
 - default mode, difficulty, and mode-specific shift lengths; and
-- an optional active-shift recovery snapshot used only for automatic
-  interruption recovery directly into GAME.
+- resumable active-shift state when resume is supported.
 
-A recovery snapshot must include ledger order and records, queue entries
+A resumable shift snapshot must include ledger order and records, queue entries
 with backgrounds, active/assigned patient state, deck/cursor, clock and arrival
 state, Coach Clinical preference, and settings. Do not persist live timer IDs,
 DOM state, audio contexts, or focus nodes.
 
-On load, a valid active snapshot restores directly into GAME; it must never
-create a HOME Resume Shift state. Confirmed quit, stop, and Return to Lobby
-clear the active recovery snapshot at the appropriate transition. Invalid or
-incompatible stored data falls back safely to HOME and never partially recovers.
+Gameplay-setting changes during an active shift require explicit restart
+confirmation. Invalid or incompatible stored data falls back safely and never
+partially resumes.
 
 ## Accessibility and interaction
 

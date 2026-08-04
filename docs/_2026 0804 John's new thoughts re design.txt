@@ -92,3 +92,17 @@ some random thoughts about the design of triageRush, as it stands on now.
 
 	d) The new presentation will always require the player to select 'lobby' or 'review' in order
 		to view those screens.
+
+12. Currently when the game is in progress the player can supposedly select the Lobby page, or the Review
+	page, make acceptable changes, and then return to the game.  
+
+	This will change so that once the game is started the player can either:
+		a) quit game, return to the Lobby page
+		b) stop game, go immediately to the Review Shift page.
+
+		The Review Shift page will only have an option to 'Return to Lobby', where
+		the player can change settings, or start a new shift.
+
+		The Lobby page will allow a change of settings (any change, since the game
+		is being restarted), and then the Start Shift button to start the game.
+

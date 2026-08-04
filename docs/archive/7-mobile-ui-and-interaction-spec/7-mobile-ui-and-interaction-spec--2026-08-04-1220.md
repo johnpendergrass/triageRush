@@ -2,8 +2,9 @@
 
 **Last modified:** 2026-08-04
 
-**Latest change:** Added 4K/iPhone rendering references and made CSS-owned image
-geometry a requirement for later transparent asset optimization.
+**Latest change:** Established one exact 9:16 presentation for every device,
+specified separate HOME/GAME/SHIFT REVIEW views, and moved Coach interaction to
+the occupied patient panel.
 
 ## Scope and authority
 
@@ -44,29 +45,12 @@ shellWidth   = shellHeight * 9 / 16
 For height-limited large screens, nominal top and bottom insets are each
 `5vh`; for width-limited phones, width determines shell size.
 
-Reference presentations for artwork inspection:
-
-| Environment | Approximate shell | Artwork demand |
-|---|---:|---:|
-| Full HD, 1920 x 1080 at 100% | 547 x 972 CSS px | 547 x 972 device px |
-| Normal 4K, 3840 x 2160 at 100% | 1094 x 1944 CSS px | 1094 x 1944 device px |
-| iPhone 16 Pro Max, 440 x 956 CSS px at 3x | 432 x 768 CSS px | 1296 x 2304 device px |
-
-The phone can therefore require more source pixels for a full-shell image than
-the 4K desktop even though its CSS box is smaller. These are audit references,
-not separate layouts; all three retain the same composition.
-
 ### Frame
 
 - Dark navy/steel hospital visual system.
 - Thin steel border, modest rounded corners, and deep outer shadow.
 - Internal views occupy the entire shell; they do not sit side by side.
 - All overlay stacking is relative to the shell, not the browser page.
-- CSS defines the box, crop, fit, and alignment of every bitmap layer. Replacing
-  an image with a smaller optimized file at the same logical path must not alter
-  layout, controls, or game behavior.
-- Do not branch on an image's intrinsic or decoded dimensions. Preserve the
-  documented `object-fit`, aspect-ratio, and anchor behavior instead.
 - Base font stack: Arial Narrow or a compatible condensed sans serif, then
   Arial/sans-serif.
 - Educational chart prose may use regular Arial; patient quotation may use
@@ -96,18 +80,18 @@ paired with text, symbol, shape, or sound.
 Only one primary view is visible:
 
 ```text
-HOME -- Start Shift --> GAME -- Stop Game --> SHIFT REVIEW
- ^                       |                         |
- |----- Quit Game -------+----- Return to Lobby --+
+HOME <-> GAME -> SHIFT REVIEW
+ ^        |            |
+ |--------+------------|
 ```
 
-- HOME edits settings and starts a new shift.
+- HOME may start/resume a shift and edit settings.
 - GAME owns live play.
 - SHIFT REVIEW owns final scoring and Patients Seen.
-- Quit Game confirms, discards the active shift, and opens HOME without review.
-- Stop Game finalizes the active shift before opening SHIFT REVIEW.
-- Return to Lobby is SHIFT REVIEW's only primary-view destination.
-- No HOME or SHIFT REVIEW action returns to the previous GAME.
+- Returning HOME from an active GAME preserves the shift.
+- Resume Shift returns to GAME.
+- Shift Review ends the active shift before showing final results.
+- New Shift returns to HOME/setup.
 
 A blocking board, Coach chart, or confirmation appears as an overlay within its
 own view and pauses live timing where required.
@@ -300,12 +284,11 @@ assigns or recalls.
 Retain the three-column visual band so future approved controls can be added
 without changing the game frame.
 
-- Left: green `QUIT GAME` with a small `RETURN TO LOBBY` caption.
+- Left: green `HOME` with a small settings/navigation caption.
 - Center: no button and no hidden gameplay action; use neutral footer background.
-- Right: red/orange `STOP GAME` with a small `REVIEW SHIFT` caption.
-- Selecting Quit Game opens a destructive confirmation. Confirming discards
-  the shift and opens HOME; canceling returns to the unchanged GAME.
-- Selecting Review Shift finalizes the shift and immediately opens review.
+- Right: red/orange `SHIFT REVIEW` with `END SHIFT` or equivalent caption.
+- Selecting HOME preserves an active shift and shows Resume Shift on HOME.
+- Selecting SHIFT REVIEW ends the shift and opens the review view.
 - Do not render a disabled Coach button.
 
 ## Coach overlay
@@ -329,8 +312,11 @@ without changing the game frame.
 Use the accepted 852 x 1515 lobby composition and registered overlays described
 in document `6`.
 
-HOME has one gameplay state: pre-shift setup with a Start Shift overlay/action.
-There is no Resume Shift, active-lobby, or Return to Game presentation.
+HOME states:
+
+- no resumable shift: Start Shift overlay/action;
+- resumable shift: Resume Shift overlay/action;
+- active/open lobby: permanent background with explicit GAME navigation.
 
 The settings board contains:
 
@@ -339,7 +325,8 @@ The settings board contains:
 - Strict/Forgiving;
 - mode-specific length;
 - UI Hints;
-- RUSH timing/arrival sounds.
+- RUSH timing/arrival sounds; and
+- restart confirmation when a gameplay setting changes mid-shift.
 
 Title choices include `Intern`. Settings controls use real labels, radios,
 checkboxes, and selects over the board artwork. About uses the accepted About
@@ -359,12 +346,11 @@ Show:
 - formula rows for Correct, optional Close, Wrong, and Left Waiting;
 - separate Under-triaged and Over-triaged counts;
 - `PATIENTS SEEN (n)` action;
-- one `RETURN TO LOBBY` primary-view action.
+- Return/Home as appropriate; and
+- New Shift.
 
 Formula rows use a compact two-column grid and color accent on outcome rows.
 Do not show reassignment attempts as separate patients.
-SHIFT REVIEW has no Return to Game or direct New Shift action. Return to Lobby
-opens HOME, where settings may be changed and Start Shift creates a new game.
 
 ### Patients Seen browser
 

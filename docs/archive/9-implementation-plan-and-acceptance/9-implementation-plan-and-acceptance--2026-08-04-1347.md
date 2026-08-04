@@ -2,20 +2,15 @@
 
 **Last modified:** 2026-08-04
 
-**Latest change:** Approved direct production implementation with a compact
-source map, schema-preserving data access, staged preloading, and asset
-optimization only after final functional and visual approval.
+**Latest change:** Added implementation and acceptance coverage for terminal
+Quit Game, Stop Game, Return to Lobby, and direct-to-GAME recovery behavior.
 
 ## Objective
 
-Build the actual application under `triageRush/` using canonical patient data
-and the current production assets. Keep the implementation small and readable,
-and review material changes to the source map, state shape, or patient-data
-boundary with John before they become entrenched.
-
-Use current high-resolution artwork throughout functional implementation and
-visual approval. Asset resizing/compression is Phase 10, after final CSS gives
-reliable maximum rendered sizes. It must not block work on the game.
+First revise `_testAppMobile/` to match the current documents. Do not change
+the mobile test app until John accepts this documentation revision. After the
+test app passes every applicable gate, transfer or align the same behavior under
+`triageRush/` using canonical data and production assets.
 
 A phase is complete only when its automated checks pass and its visible behavior
 has been reviewed at the specified viewports.
@@ -27,15 +22,14 @@ The implementation is complete when:
 - documents `3`, `4`, `5`, `6`, `7`, and `8` have no known runtime
   contradiction;
 - all 160 patients load from the intended manifest with matched portraits;
-- all current production assets load; after Phase 10, optimized runtime copies
-  remain visually equivalent to their approved high-resolution masters;
+- all current production assets load and the accepted doors remain unchanged;
 - every gameplay, scoring, timing, sound, Coach, and review test below passes;
 - HOME, GAME, and SHIFT REVIEW use one 9:16 presentation on every device;
 - an active GAME can only be quit to HOME or stopped to SHIFT REVIEW, and no
   primary-view path resumes that GAME;
 - keyboard, touch, safe-area, reduced-motion, and audio-failure checks pass;
 - no current path depends on a historical/discarded asset or application; and
-- John visually accepts the production implementation.
+- John visually accepts the updated mobile implementation.
 
 ## Phase 0: documentation approval
 
@@ -43,8 +37,6 @@ Deliverables:
 
 - current numbered specification set;
 - exact treatment of all approved 2026-08-04 changes;
-- John's approval of the compact file map, meaning-oriented naming rules,
-  schema-preserving patient boundary, and development-first asset sequence;
 - no runtime edits;
 - no obsolete asset/code inventories in live docs.
 
@@ -58,10 +50,7 @@ Implement:
 
 - validated asset manifest;
 - explicit 160-patient manifest;
-- schema 2.2 validation and schema-preserving indexing;
-- compact source skeleton using `assets.js`, `game.js`, `ui.js`, and `app.js`,
-  with `ui.js`/`app.js` combination allowed when clearer;
-- meaning-oriented names, unit suffixes, section dividers, and intent comments;
+- schema 2.2 loading and normalization;
 - serializable state defaults;
 - state invariant checks in development;
 - injected clock and random source;
@@ -71,9 +60,6 @@ Implement:
 Automated gate:
 
 - all patient JSON parses and reports version 2.2;
-- loaded records retain authored names, casing, nesting, and values;
-- queue, active, assigned, and ledger records reference patient IDs rather than
-  duplicate or reshape complete patient records;
 - all portrait and asset paths exist;
 - room keys and answer fields are legal;
 - missing or malformed input blocks Start Shift with an actionable error;
@@ -101,12 +87,9 @@ Viewport gate:
 | 1280 x 720 | Approximately 648px shell height with 36px top/bottom |
 | 1600 x 1000 | Approximately 900px shell height with 50px top/bottom |
 | 1920 x 1080 | Approximately 972px shell height with 54px top/bottom |
-| 3840 x 2160 | Approximately 1944px shell height with 108px top/bottom |
 
 Allow minor border-rounding differences, but aspect ratio must be exact within
 normal subpixel rounding. No viewport may reveal multiple primary views.
-Every image box is controlled by CSS; changing a source file's pixel dimensions
-must not change shell geometry, hit targets, crop rules, or game behavior.
 
 ## Phase 3: HOME and settings
 
@@ -137,10 +120,6 @@ Acceptance:
 Implement:
 
 - shuffled non-duplicate deck;
-- HOME-time patient-data/shared-art preparation;
-- blocking `PATIENTS ARE ARRIVING` Start Shift status;
-- initial-queue portrait decode plus a measured reserve before the timer starts;
-- rolling portrait preloading ahead of the deck cursor;
 - five-patient Triage seed;
 - two-patient RUSH seed with five visible slots;
 - selection, compaction, and pre-assignment swap;
@@ -153,11 +132,6 @@ Implement:
 
 Automated gate:
 
-- Start Shift cannot anchor the timer before required initial portraits decode;
-- preload failure offers retry or return to HOME without a partial shift;
-- the rolling reserve supports the fastest RUSH curve in representative
-  throttled-network tests without delaying insertion;
-- startup does not require decoding all 160 portraits;
 - seed operations are silent;
 - Triage selection produces exactly one replacement and one doink;
 - RUSH selection does not refill;
@@ -361,62 +335,24 @@ Acceptance scenarios:
 
 ## Phase 10: assets and visual regression
 
-Precondition: Phases 1 through 9 are functionally complete and the game has been
-visually approved with the current high-resolution production assets.
+Automated:
 
-### 10A: measure final demand
+- all manifest paths exist;
+- production and test-app door sets each contain exactly 14 files;
+- pairwise door SHA-256 hashes match;
+- ESI/Psych files are 1152 x 1792 RGBA;
+- Discharge files are 1777 x 1792 RGBA;
+- later sign-only edits preserve alpha and unrelated pixels.
 
-- Rerun `triageRush/assets/_asset-audit-and-resize/audit_assets.py` against the
-  final production CSS and manifest.
-- Measure maximum rendered and requested pixel sizes at iPhone 16 Pro Max 3x,
-  Full HD, and normal 3840 x 2160 desktop reference presentations.
-- Record startup, Start Shift, and rolling-preload transferred bytes and decode
-  timing before optimization.
+Manual:
 
-### 10B: approve representative trials
-
-- Create trials only under
-  `triageRush/assets/_asset-audit-and-resize/resized-assets/`.
-- Include representative opaque backgrounds, transparent doors/overlays,
-  lettering, and patient portraits.
-- Compare the trials in their real CSS boxes at all three reference displays.
-- Obtain John's visual approval before batching comparable assets.
-
-### 10C: preserve masters and replace runtime copies
-
-- Preserve a complete checksummed high-resolution master set outside the
-  runtime manifest and preferably outside the deployed web root.
-- Replace optimized runtime assets at the same logical paths/filenames when
-  practical. If encoding or path changes, update only the centralized manifest.
-- Do not upscale a source merely to match an audit target.
-- Change the production cache version after the approved replacement.
-
-Automated gate:
-
-- every runtime manifest path exists, returns, and decodes;
-- the high-resolution master archive is complete and checksummed;
-- production contains all seven open/closed door pairs;
-- no JavaScript or layout rule depends on `naturalWidth`, `naturalHeight`, or
-  source pixel dimensions;
-- cache version differs from the pre-optimization build;
-- transparent assets retain clean alpha edges without unintended matte halos;
-- startup, Start Shift, and rolling-preload byte/timing measurements are saved.
-
-Manual gate:
-
-- before/after game behavior, geometry, crop, registration, and hit targets are
-  unchanged;
-- all open/closed door labels remain readable in the seven-row layout;
+- all open/closed door labels readable in seven-row layout;
 - HOME overlays register at all tested sizes;
 - waiting and patient-panel art does not clip;
-- portrait scale/orientation metadata renders correctly without visible softness;
+- portrait scale/orientation metadata renders correctly;
 - countdown and feedback do not obscure required controls;
-- 10-row queue remains usable; and
+- 10-row queue is still usable;
 - 200% zoom retains readable content and keyboard access.
-
-Acceptance requires measured loading improvement without a visually meaningful
-loss at any approved reference presentation. Assets that do not benefit enough
-remain at their current resolution.
 
 ## Phase 11: accessibility and failure testing
 
@@ -443,14 +379,6 @@ remain at their current resolution.
 - RUSH double probability is exactly 20%.
 - RUSH and Triage emphasis cues match their documented boundaries.
 - Doors are the accepted matching set.
-- Patient records retain the canonical schema; game state references them by ID.
-- Source files remain compact and meaningfully organized; additional modules
-  have a documented reason and John's review.
-- CSS, not source-image dimensions, owns rendered geometry.
-- The game was approved with current high-resolution art before Phase 10, and
-  representative optimized trials were approved before batch replacement.
-- High-resolution masters are outside the runtime manifest and the optimized
-  build has a new cache version.
 - Only one 9:16 presentation exists.
 - No Resume Shift, active-lobby, Return to Game, or direct review-to-New-Shift
   action remains.
