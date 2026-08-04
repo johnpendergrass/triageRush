@@ -29,6 +29,20 @@ triageRush/
 - `___patient-CRUD (standalone)/` is reserved for an independent local patient
   creation and editing tool.
 
+## Running the game locally
+
+Double-click **`start-triageRush.bat`** in this folder. It starts a small local
+web server and opens the game in your browser at `http://localhost:8090/`.
+Keep the black server window open while playing; close it to stop.
+
+Do not open `index.html` directly from the file system: browsers block a local
+page from fetching the patient data files, so the game cannot start that way.
+(GitHub Pages serves everything over HTTP, so the published game needs no
+server step.)
+
+The window also prints an iPhone address for testing on a phone connected to
+the same Wi-Fi network.
+
 ## Current direction
 
 Every device uses the same centered, responsive 9:16 mobile presentation. HOME,

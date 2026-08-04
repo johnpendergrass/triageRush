@@ -94,10 +94,26 @@ Pain), transparent backgrounds.
 `.gitkeep`). The six vital icons must be produced (extracted from the existing
 panel art or newly generated) before the vitals card can be built.
 
-## Open questions deferred (ask at or after Phase-1 design review)
+## Open questions — RESOLVED at design review (2026-08-04, later same day)
 
-- Exact settings-state field names for the three sound toggles and how the
-  in-game mute is stored (e.g. does it *be* the GAME SOUNDS toggle or shadow it).
-- Whether tapping the locked/collapsed strips opens Coach directly (proposed
-  above, not yet decided).
-- Source of the six vital icons (extract vs. regenerate).
+- **Sound settings shape (decided):** persisted `settings.soundGlobal`,
+  `settings.soundGame`, `settings.soundMusic` edited on the blackboard.
+  Music plays iff `soundGlobal && soundMusic`, decided at HOME only. Runtime
+  flag `gameSoundsAudible` initialized at shift start to
+  `soundGlobal && soundGame`; the in-game mute button flips only that flag and
+  never rewrites the persisted preferences. Sound registry gives every sound a
+  named entry with its own enabled flag (all true for now).
+- **Panel tap behavior (John decided): uniform tap.** The whole patient panel
+  is one tap target with one behavior — open Coach in its remembered state.
+  Tapping the CLINICAL strip gets no special shortcut; Clinical is expanded
+  from inside Coach.
+- **Vital icons (John decided): generate new icons.** Six fresh transparent
+  icons in a matching style, rather than extracting from
+  `patient-panel-vitals-bubble-hires.png`.
+
+## Still pending (housekeeping, needs John's OK before acting)
+
+- Move now-unused art into `archived/` subfolders: `lobby-page/boombox.png`
+  (+ boombox.txt), the four `game-page/patient-panel/*-bubble-hires.png`
+  files, and the seven `triage-rooms-panel/background-*-room.png` interiors
+  (open-door art already shows the interior; demo never used them).

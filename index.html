@@ -1,16 +1,249 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>triageRush</title>
-    <link rel="stylesheet" href="./triageRush/styles.css">
-  </head>
-  <body>
-    <main>
-      <h1>triageRush</h1>
-      <p>New application scaffold. Production migration is in progress.</p>
-    </main>
-    <script src="./triageRush/app.js"></script>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071822">
+  <title>triageRush</title>
+  <link rel="stylesheet" href="./triageRush/styles.css?v=2026-0804-phase1">
+</head>
+<body>
+
+<!-- One 9:16 shell on every device. HOME, GAME, and SHIFT REVIEW are separate
+     full-shell views inside it; only one is ever visible (doc 7). -->
+<div class="app-shell" id="appShell">
+
+  <!-- ====================================================================
+       HOME view: the 852x1515 lobby composition. The title, sidewalk
+       boards, and ABOUT cover are baked into the background artwork;
+       transparent buttons registered over them are the real controls.
+       ================================================================= -->
+  <section class="home-view" id="homeView">
+    <img class="home-background" id="homeBackground" alt="">
+
+    <!-- Closed-doors patch with START SHIFT lettering, registered at
+         source X319 Y447, 514x232 on the 852x1515 canvas. -->
+    <button class="door-start-button" id="startShiftButton" type="button">
+      <img class="door-start-art" id="startShiftArt" alt="">
+      <span class="visually-hidden">Start Shift</span>
+    </button>
+
+    <!-- Sidewalk boards: live summary text over the blank board art. -->
+    <button class="board-hotspot board-hotspot--player" id="playerBoardButton"
+            type="button" aria-haspopup="dialog">
+      <span class="board-summary board-summary--player">
+        <span class="board-summary-line board-summary-kicker">PLAYER</span>
+        <span class="board-summary-line" id="playerBoardTitleLine">DOCTOR</span>
+        <span class="board-summary-line board-summary-initials"
+              id="playerBoardInitialsLine">AAA</span>
+      </span>
+    </button>
+
+    <button class="board-hotspot board-hotspot--shift" id="shiftBoardButton"
+            type="button" aria-haspopup="dialog">
+      <span class="board-summary board-summary--shift">
+        <span class="board-summary-line board-summary-kicker">SHIFT</span>
+        <span class="board-summary-line" id="shiftBoardModeLine">TRIAGE</span>
+        <span class="board-summary-line" id="shiftBoardDifficultyLine">FORGIVING</span>
+        <span class="board-summary-line" id="shiftBoardLengthLine">5:00</span>
+      </span>
+    </button>
+
+    <!-- Green utility-cover oval embossed ABOUT at bottom left. -->
+    <button class="about-hotspot" id="aboutButton" type="button"
+            aria-haspopup="dialog">
+      <span class="visually-hidden">About triageRush</span>
+    </button>
+
+    <!-- Quiet loading status; Start Shift stays blocked until ready. -->
+    <p class="home-loading-status" id="homeLoadingStatus" role="status">
+      Loading&hellip;
+    </p>
+  </section>
+
+  <!-- ====================================================================
+       Board popups. One dialog layer; content swaps between the player
+       board, the shift board (both on the shared blackboard art), and
+       the About whiteboard. Red X cancels; green check applies.
+       ================================================================= -->
+  <section class="popup-layer" id="popupLayer" role="dialog" aria-modal="true"
+           aria-label="Settings" hidden>
+    <div class="popup-card" id="popupCard">
+      <img class="popup-board-art" id="popupBoardArt" alt="">
+
+      <button class="popup-close" id="popupCloseButton" type="button"
+              aria-label="Cancel and close">&#10005;</button>
+
+      <!-- Player board content -->
+      <div class="popup-content popup-content--chalk" id="playerBoardContent" hidden>
+        <h2 class="popup-heading">PLAYER</h2>
+        <label class="field-label" for="playerTitleSelect">TITLE</label>
+        <select class="chalk-select" id="playerTitleSelect"></select>
+        <label class="field-label" for="playerInitialsInput">INITIALS</label>
+        <input class="chalk-input" id="playerInitialsInput" type="text"
+               maxlength="3" autocomplete="off" autocapitalize="characters"
+               spellcheck="false">
+      </div>
+
+      <!-- Shift settings board content -->
+      <div class="popup-content popup-content--chalk" id="shiftBoardContent" hidden>
+        <h2 class="popup-heading">SHIFT SETTINGS</h2>
+
+        <fieldset class="chalk-fieldset">
+          <legend>MODE</legend>
+          <label><input type="radio" name="settingMode" value="triage"> Triage</label>
+          <label><input type="radio" name="settingMode" value="rush"> TriageRUSH</label>
+        </fieldset>
+
+        <fieldset class="chalk-fieldset">
+          <legend>SCORING</legend>
+          <label><input type="radio" name="settingDifficulty" value="forgiving"> Forgiving</label>
+          <label><input type="radio" name="settingDifficulty" value="strict"> Strict</label>
+        </fieldset>
+
+        <fieldset class="chalk-fieldset" id="triageLengthFieldset">
+          <legend>SHIFT LENGTH</legend>
+          <label><input type="radio" name="settingTriageLength" value="300"> 5 minutes</label>
+          <label><input type="radio" name="settingTriageLength" value="600"> 10 minutes</label>
+        </fieldset>
+
+        <fieldset class="chalk-fieldset" id="rushLengthFieldset" hidden>
+          <legend>SHIFT LENGTH</legend>
+          <label><input type="radio" name="settingRushLength" value="60"> 60 seconds</label>
+          <label><input type="radio" name="settingRushLength" value="120"> 120 seconds</label>
+        </fieldset>
+
+        <fieldset class="chalk-fieldset">
+          <legend>SOUND</legend>
+          <label><input type="checkbox" id="settingSoundGlobal"> Global sound</label>
+          <label><input type="checkbox" id="settingSoundGame"> Game sounds</label>
+          <label><input type="checkbox" id="settingSoundMusic"> Music (KING-FM)</label>
+        </fieldset>
+
+        <fieldset class="chalk-fieldset">
+          <legend>HELP</legend>
+          <label><input type="checkbox" id="settingHints"> Show UI hints</label>
+        </fieldset>
+
+        <p class="popup-note" id="musicStatusNote" hidden></p>
+      </div>
+
+      <!-- About board content -->
+      <div class="popup-content popup-content--marker" id="aboutBoardContent" hidden>
+        <h2 class="popup-heading popup-heading--marker">triageRush</h2>
+        <p>Patients are waiting. Read each chart, judge how sick they really
+           are, and send them to the right triage room.</p>
+        <p><strong>Triage</strong> is a timed, thoughtful shift.
+           <strong>TriageRUSH</strong> keeps them coming faster and faster.</p>
+        <p>Wrong guesses cost points &mdash; but you can always recall a
+           patient and try a better room.</p>
+        <p class="popup-fine-print">A game by John Pendergrass.
+           Patients and artwork are fictional.</p>
+      </div>
+
+      <button class="popup-apply" id="popupApplyButton" type="button"
+              aria-label="Apply and close" hidden>&#10003;</button>
+    </div>
+  </section>
+
+  <!-- Blocking Start Shift status (doc 4 loading contract). -->
+  <section class="arriving-overlay" id="arrivingOverlay" role="alert" hidden>
+    <p class="arriving-text">PATIENTS ARE ARRIVING&hellip;</p>
+  </section>
+
+  <!-- ====================================================================
+       GAME view: Phase 2 skeleton. Bands 7.2% / 85.8% / 7%, columns
+       22% / 56% / 22%. Panels fill with gameplay in later phases.
+       ================================================================= -->
+  <section class="game-view" id="gameView" hidden>
+    <header class="game-header">
+      <p class="brand" id="gameBrand">TRIAGE!</p>
+      <p class="header-scorecard" id="gameScorecard">
+        <strong class="score-correct" id="scoreCorrect">0</strong>
+        <span class="score-divider" id="scoreCloseDivider">/</span>
+        <strong class="score-close" id="scoreClose">0</strong>
+        <span class="score-divider">/</span>
+        <strong class="score-wrong" id="scoreWrong">0</strong>
+        <span class="score-divider">=</span>
+        <strong class="score-total" id="scoreTotal">0</strong>
+      </p>
+      <p class="status-box">
+        <small>TIME</small>
+        <strong id="gameTimer">5:00</strong>
+      </p>
+      <button class="sound-button" id="gameSoundButton" type="button"
+              aria-label="Mute sounds">&#9834;</button>
+    </header>
+
+    <div class="play-area">
+      <aside class="waiting-panel" id="waitingPanel">
+        <!-- Waiting queue arrives in Phase 4 -->
+      </aside>
+
+      <div class="patient-panel" id="patientPanel">
+        <div class="patient-empty-state" id="patientEmptyState">
+          <small>READY</small>
+          <strong>SELECT A PATIENT</strong>
+        </div>
+      </div>
+
+      <aside class="rooms-panel" id="roomsPanel">
+        <!-- Seven-room door rail arrives in Phase 4 -->
+      </aside>
+    </div>
+
+    <footer class="game-footer">
+      <button class="footer-button footer-button--quit" id="quitGameButton"
+              type="button">
+        <span>QUIT GAME</span>
+        <small>RETURN TO LOBBY</small>
+      </button>
+      <div class="footer-neutral" aria-hidden="true"></div>
+      <button class="footer-button footer-button--stop" id="stopGameButton"
+              type="button">
+        <span>STOP GAME</span>
+        <small>REVIEW SHIFT</small>
+      </button>
+    </footer>
+  </section>
+
+  <!-- Quit confirmation: destructive, so it always confirms (doc 7). -->
+  <section class="confirm-overlay" id="confirmQuitOverlay" role="dialog"
+           aria-modal="true" aria-label="Quit game confirmation" hidden>
+    <div class="confirm-card">
+      <h2>Quit this shift?</h2>
+      <p>The shift will be discarded. There will be no shift review.</p>
+      <div class="confirm-actions">
+        <button class="confirm-cancel" id="confirmQuitCancel" type="button">
+          KEEP PLAYING
+        </button>
+        <button class="confirm-accept" id="confirmQuitAccept" type="button">
+          QUIT GAME
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       SHIFT REVIEW view: Phase 2 skeleton; full scoring arrives Phase 8.
+       ================================================================= -->
+  <section class="review-view" id="reviewView" hidden>
+    <div class="review-card">
+      <p class="review-eyebrow" id="reviewEyebrow">TRIAGE SHIFT COMPLETE</p>
+      <h2 class="review-player" id="reviewPlayerLine">Doctor AAA</h2>
+      <p class="review-score" id="reviewScoreLine">SCORE: 0</p>
+      <p class="review-note">Full shift results arrive in a later phase.</p>
+      <button class="review-return" id="returnToLobbyButton" type="button">
+        RETURN TO LOBBY
+      </button>
+    </div>
+  </section>
+
+</div>
+
+<script src="./triageRush/assets.js?v=2026-0804-phase1"></script>
+<script src="./triageRush/game.js?v=2026-0804-phase1"></script>
+<script src="./triageRush/ui.js?v=2026-0804-phase1"></script>
+<script src="./triageRush/app.js?v=2026-0804-phase1"></script>
+</body>
 </html>
