@@ -65,7 +65,6 @@ The application reads:
 ```text
 patient.answer.correctEsi
 patient.answer.correctRoom
-patient.answer.otherAcceptableRooms
 patient.answer.destinationReason
 ```
 
@@ -73,8 +72,13 @@ patient.answer.destinationReason
 `psych`, or `discharge`. Ordinary room suffixes match `correctEsi`; Psych
 and Discharge retain a clinically valid underlying ESI.
 
-`otherAcceptableRooms` is required but currently `null`. Scoring derives
-from `correctRoom`, `correctEsi`, and Strict/Forgiving application state.
+`otherAcceptableRooms` is required by the schema but is `null` for all 160
+patients, and NO application code reads it. It is an authoring hook held in
+reserve. The full-credit set is DERIVED at runtime by
+`game.js fullCreditRoomKeys`: `correctRoom`, plus `esi-<correctEsi>` when
+`correctRoom` is `psych` or `discharge`. Anything that needs to display or
+score the full-credit set must call that function rather than the field, so
+the review chart and the scoring can never disagree (2026-08-05).
 
 Patient records never carry point values. The latest room assigned during the
 shift is session data. Reassignment replaces the same patient's session-ledger

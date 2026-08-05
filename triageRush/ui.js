@@ -53,8 +53,15 @@
     "chartOverlayMount", "chartMoreAbove", "chartMoreBelow", "chartZoomView",
     "chartTimer", "chartTimerValue",
     // REVIEW
-    "reviewView", "reviewEyebrow", "reviewPlayerLine", "reviewScoreLine",
-    "returnToLobbyButton"
+    "reviewView", "reviewTitleLine", "reviewModeLine", "reviewProvider",
+    "reviewDate", "reviewDuration", "reviewSeen", "reviewScoreValue",
+    "reviewFormulas", "reviewUnder", "reviewOver",
+    "patientsSeenButton", "returnToLobbyButton",
+    "shiftOverOverlay", "shiftOverHeadline", "shiftOverCount",
+    // Patients Seen browser
+    "patientsSeenOverlay", "seenPositionValue",
+    "seenPreviousButton", "seenNextButton", "seenCloseButton",
+    "seenScroll", "seenMount", "seenMoreAbove", "seenMoreBelow"
   ];
 
   const ui = {};
@@ -389,6 +396,34 @@
      panel setting; the Chart clipboard setting reuses the same builder.
      ------------------------------------------------------------------- */
 
+  /* Room names as a reader sees them on the review chart. The longer
+     ROOM_ACCESSIBLE_NAMES strings in 5d are written for screen readers;
+     these are written to sit in a sentence. */
+  const ROOM_DISPLAY_NAMES = {
+    "esi-1": "ESI 1 · Resuscitation",
+    "esi-2": "ESI 2 · Emergent",
+    "esi-3": "ESI 3 · Urgent",
+    "esi-4": "ESI 4 · Less urgent",
+    "esi-5": "ESI 5 · Non-urgent",
+    "psych": "Psych",
+    "discharge": "Discharge"
+  };
+
+  const OUTCOME_DISPLAY_NAMES = {
+    correct: "CORRECT",
+    close: "CLOSE",
+    wrong: "WRONG"
+  };
+
+  /* The same three glyphs the in-game result toast uses (5e), so a mark
+     on the review chart means what it meant during play. U+FE0E keeps
+     the triangle a plain character instead of a boxed emoji on iPhones. */
+  const OUTCOME_MARK_GLYPHS = {
+    correct: "✓",
+    close: "△︎",
+    wrong: "✕"
+  };
+
   const VITAL_DISPLAY_ORDER = [
     { vitalKey: "hr", label: "HR" },
     { vitalKey: "bp", label: "BP" },
@@ -479,7 +514,33 @@
     /* The presentation cards are always visible in every setting; the
        panel shows nothing else (John, 2026-08-04 addendum). */
     chart.append(nameplate, scene, complaintChip, quote, vitals, note);
-    if (chartContext.setting !== "clipboard") return chart;
+    if (chartContext.setting === "panel") return chart;
+
+    /* Review (Patients Seen): the shift is over, so nothing is secret.
+       Answer and Clinical are both unlocked and start expanded (doc 5).
+       Toggling them here is deliberately DOM-only - review expansion is
+       separate from the shift's Clinical preference (doc 5). */
+    if (chartContext.setting === "review") {
+      /* The outcome stamped on the photo itself (John, 2026-08-05): the
+         player sees how the case went before reading a word. Same three
+         glyphs as the Answer mark and the in-game toast, at twice the
+         size, in the photo's bottom-right corner. */
+      if (chartContext.ledgerRecord) {
+        const outcome = chartContext.ledgerRecord.outcome;
+        const badge = document.createElement("span");
+        badge.className = "chart-outcome-badge is-outcome-" + outcome;
+        badge.textContent = OUTCOME_MARK_GLYPHS[outcome] || "";
+        badge.setAttribute("aria-hidden", "true");
+        scene.append(badge);
+      }
+
+      chart.append(
+        buildChartSectionHeader("answer", "ANSWER", { expanded: true }),
+        buildAnswerSectionBody(patientRecord, chartContext.ledgerRecord),
+        buildChartSectionHeader("clinical", "CLINICAL", { expanded: true }),
+        buildClinicalSectionBody(patientRecord.patient.clinical, true));
+      return chart;
+    }
 
     /* In the chart overlay the photo zooms. The hit box is the scene's
        top-right quadrant (John, 2026-08-05): one transparent button
@@ -546,6 +607,102 @@
       header.append(chevron);
     }
     return header;
+  }
+
+  /* The Answer body exists only in the review setting - during play this
+     section is locked and has no body at all. Doc 5 fixes its content:
+     the player's latest choice and result from the ledger, the correct
+     room and ESI from the record, and the destination rationale.
+
+     ledgerRecord is the patient's SINGLE ledger entry, so a recalled and
+     reassigned patient shows only the assignment that finally stood
+     (doc 3). It is passed in rather than looked up because the chart
+     builder never reads game state. */
+  function buildAnswerSectionBody(patientRecord, ledgerRecord) {
+    const answer = patientRecord.patient.answer;
+    const body = document.createElement("div");
+    body.className = "chart-section-body chart-answer-body";
+
+    /* The verdict line: what the player picked and what it scored. */
+    if (ledgerRecord) {
+      const verdict = document.createElement("div");
+      verdict.className =
+        "chart-answer-verdict is-outcome-" + ledgerRecord.outcome;
+
+      const choice = document.createElement("p");
+      choice.className = "chart-answer-choice";
+      const choiceKicker = document.createElement("small");
+      choiceKicker.textContent = "YOU SENT THEM TO";
+
+      /* The room the player picked, marked with the same glyph the
+         in-game feedback toast uses for that outcome (John, 2026-08-05),
+         so the review speaks the language of play. */
+      const choiceLine = document.createElement("span");
+      choiceLine.className = "chart-answer-choice-line";
+      const mark = document.createElement("span");
+      mark.className = "chart-answer-mark";
+      mark.textContent = OUTCOME_MARK_GLYPHS[ledgerRecord.outcome] || "";
+      mark.setAttribute("aria-hidden", "true");
+      const choiceValue = document.createElement("strong");
+      choiceValue.textContent =
+        ROOM_DISPLAY_NAMES[ledgerRecord.roomKey] || ledgerRecord.roomKey;
+      choiceLine.append(mark, choiceValue);
+      choice.append(choiceKicker, choiceLine);
+
+      const result = document.createElement("p");
+      result.className = "chart-answer-result";
+      const resultLabel = document.createElement("strong");
+      resultLabel.textContent =
+        OUTCOME_DISPLAY_NAMES[ledgerRecord.outcome] || ledgerRecord.outcome;
+      const resultPoints = document.createElement("span");
+      resultPoints.textContent = ledgerRecord.points > 0
+        ? `+${ledgerRecord.points}`
+        : String(ledgerRecord.points);
+      result.append(resultLabel, resultPoints);
+
+      verdict.append(choice, result);
+      body.append(verdict);
+    }
+
+    const addCard = (kickerText, valueText) => {
+      if (typeof valueText !== "string" || valueText.length === 0) return;
+      const card = document.createElement("div");
+      card.className = "chart-clinical-card";
+      const kicker = document.createElement("small");
+      kicker.textContent = kickerText;
+      const text = document.createElement("p");
+      text.textContent = valueText;
+      card.append(kicker, text);
+      body.append(card);
+    };
+
+    /* An ESI room's name already states its number, so repeating it reads
+       as a stutter ("ESI 4 · Less urgent (ESI 4)"). Psych and Discharge
+       carry a clinically valid ESI that the name does NOT show, and that
+       is worth saying (doc 5). */
+    const correctRoomName =
+      ROOM_DISPLAY_NAMES[answer.correctRoom] || answer.correctRoom;
+    const isEsiRoom = String(answer.correctRoom).startsWith("esi-");
+    addCard("CORRECT ROOM", isEsiRoom
+      ? correctRoomName
+      : `${correctRoomName}  (clinically ESI ${answer.correctEsi})`);
+
+    /* Special destinations accept more than one room, and the player
+       deserves to see the whole full-credit set rather than guess why a
+       different pick also counted (doc 3). Ask game.js rather than
+       reading answer.otherAcceptableRooms: that field is null for every
+       current patient, and the real dual-credit rule (Psych/Discharge
+       also accept their underlying esi-N) is DERIVED in
+       fullCreditRoomKeys. One source of truth for what scores. */
+    const alsoAccepted = [...GAME.fullCreditRoomKeys(patientRecord)]
+      .filter(roomKey => roomKey !== answer.correctRoom)
+      .map(roomKey => ROOM_DISPLAY_NAMES[roomKey] || roomKey);
+    if (alsoAccepted.length > 0) {
+      addCard("ALSO FULL CREDIT", alsoAccepted.join(", "));
+    }
+
+    addCard("WHY", answer.destinationReason);
+    return body;
   }
 
   /* The Clinical body renders schema 2.2's display-ready clinical
@@ -844,17 +1001,171 @@
   }
 
   /* ----------------------------------------------------------------------
-     6. SHIFT REVIEW rendering (skeleton).
+     6. SHIFT REVIEW rendering (Phase 8).
+     A printed discharge summary. Every number comes from the live score
+     selector, so the formula rows and the headline score can never
+     disagree (doc 9: "formulas sum exactly to displayed score").
      ------------------------------------------------------------------- */
 
+  /* The shift's own date and start time: "Aug 5, 2026 - 2:14 PM".
+     Locale-formatted, so it reads correctly outside the US too. */
+  function formatShiftDate(timestampMs) {
+    if (!timestampMs) return "—";
+    const when = new Date(timestampMs);
+    const datePart = when.toLocaleDateString(undefined,
+      { month: "short", day: "numeric", year: "numeric" });
+    const timePart = when.toLocaleTimeString(undefined,
+      { hour: "numeric", minute: "2-digit" });
+    return `${datePart} · ${timePart}`;
+  }
+
+  /* One formula line. The four cells are appended straight into the grid
+     (not wrapped in a row element) so columns align down the whole page. */
+  function appendFormulaRow(mount, outcomeModifier, label, count, multiplier) {
+    const cells = [
+      ["review-formula-label", label],
+      ["review-formula-count", String(count)],
+      ["review-formula-multiplier", `× ${multiplier}`],
+      ["review-formula-subtotal", String(count * multiplier)]
+    ];
+    for (const [className, text] of cells) {
+      const cell = document.createElement("span");
+      cell.className = outcomeModifier
+        ? `${className} review-formula--${outcomeModifier}`
+        : className;
+      cell.textContent = text;
+      mount.append(cell);
+    }
+  }
+
   function renderReview(state) {
-    ui.reviewEyebrow.textContent = state.settings.mode === "rush"
-      ? "TRIAGE RUSH COMPLETE"
-      : "TRIAGE SHIFT COMPLETE";
-    ui.reviewPlayerLine.textContent =
-      `${state.player.title} ${state.player.initials}`;
+    /* HOME and GAME renders call this too; an unstarted shift has no
+       timestamps to format, so leave the hidden view alone. */
+    if (state.view !== "review") return;
+
+    const isRush = state.settings.mode === "rush";
     const totals = GAME.selectScoreTotals(state);
-    ui.reviewScoreLine.textContent = `SCORE: ${totals.score}`;
+
+    ui.reviewTitleLine.textContent = isRush
+      ? "TRIAGERUSH COMPLETE"
+      : "TRIAGE SHIFT COMPLETE";
+    ui.reviewModeLine.textContent = isRush
+      ? `TRIAGERUSH · ${state.settings.difficulty.toUpperCase()}`
+      : `TRIAGE · ${state.settings.difficulty.toUpperCase()}`;
+
+    ui.reviewProvider.textContent =
+      `${state.player.title} ${state.player.initials}`;
+    ui.reviewDate.textContent = formatShiftDate(state.shift.startedAtMs);
+    /* Duration is time actually RUN, so ending early at 3:12 of a 5:00
+       shift prints 3:12 (John, 2026-08-05). */
+    ui.reviewDuration.textContent = formatClock(state.shift.elapsedMs);
+    ui.reviewSeen.textContent = String(totals.patientsSeen);
+
+    ui.reviewScoreValue.textContent = String(totals.score);
+    ui.reviewScoreValue.classList.toggle("is-negative", totals.score < 0);
+
+    /* Rows are rebuilt rather than toggled: Strict must omit Close
+       entirely, with no empty gap where it would have been (doc 9). */
+    const formulas = ui.reviewFormulas;
+    formulas.replaceChildren();
+    appendFormulaRow(formulas, "correct", "CORRECT",
+      totals.correct, GAME.GAME_CONSTANTS.POINTS.correct);
+    if (state.settings.difficulty === "forgiving") {
+      appendFormulaRow(formulas, "close", "CLOSE",
+        totals.close, GAME.GAME_CONSTANTS.POINTS.close);
+    }
+    appendFormulaRow(formulas, "wrong", "WRONG",
+      totals.wrong, GAME.GAME_CONSTANTS.POINTS.wrong);
+    /* Triage still shows the row at x 0 rather than hiding it, so the
+       player learns that waiting patients cost nothing there (doc 9). */
+    appendFormulaRow(formulas, null, "LEFT WAITING",
+      state.waiting.length,
+      isRush ? GAME.GAME_CONSTANTS.RUSH_WAITING_PENALTY_PER_PATIENT : 0);
+
+    ui.reviewUnder.textContent = String(totals.under);
+    ui.reviewOver.textContent = String(totals.over);
+
+    ui.patientsSeenButton.textContent =
+      `PATIENTS SEEN (${totals.patientsSeen})`;
+    ui.patientsSeenButton.disabled = totals.patientsSeen === 0;
+  }
+
+  /* The Patients Seen browser: one ledger patient at a time, in the
+     review setting of the same chart builder used during play.
+
+     Rebuilding the chart on every navigation is what resets scroll to
+     the top (doc 3) - the new paper simply starts at its beginning. */
+  function renderPatientsSeen(state, portraitUrlFor) {
+    const isShowing = state.overlay === "patients-seen";
+    ui.patientsSeenOverlay.hidden = !isShowing;
+    if (!isShowing) {
+      ui.seenMount.replaceChildren();
+      return;
+    }
+
+    const ledgerRecord = GAME.selectPatientSeenRecord(state);
+    if (!ledgerRecord) return;
+    const record = window.TRIAGE_RUSH_PATIENTS_BY_ID[ledgerRecord.patientId];
+    const total = state.ledger.order.length;
+
+    /* The name is deliberately NOT repeated here: the chart's own
+       nameplate carries it a few pixels below (John, 2026-08-05). */
+    ui.seenPositionValue.textContent =
+      `${state.review.patientIndex + 1} / ${total}`;
+
+    /* Carry the reading position across patients as a PROPORTION rather
+       than resetting to the top (John, 2026-08-05): someone comparing
+       everyone's ANSWER section should not have to scroll down again for
+       each one. Charts differ in length, so the same fraction lands in
+       the same neighbourhood, not on the same card.
+
+       Measured before the rebuild and reapplied after. On first open the
+       previous chart is empty, so the fraction is 0 and the browser
+       opens at the top, which is what it should do. */
+    const previousScrollable =
+      ui.seenScroll.scrollHeight - ui.seenScroll.clientHeight;
+    const scrolledFraction = previousScrollable > 0
+      ? ui.seenScroll.scrollTop / previousScrollable
+      : 0;
+
+    const chart = buildPatientChart(
+      record,
+      { setting: "review", ledgerRecord },
+      portraitUrlFor(ledgerRecord.patientId));
+    ui.seenMount.replaceChildren(chart);
+
+    /* Reading scrollHeight here forces the new layout, so the fraction
+       applies to the chart that is actually on screen now. */
+    const nextScrollable =
+      ui.seenScroll.scrollHeight - ui.seenScroll.clientHeight;
+    ui.seenScroll.scrollTop = Math.round(nextScrollable * scrolledFraction);
+  }
+
+  /* Same rule as the Chart's hints: offer a direction only when content
+     actually exists that way (doc 7). */
+  function updatePatientsSeenScrollHints() {
+    const scroll = ui.seenScroll;
+    const hiddenBelow =
+      scroll.scrollHeight - scroll.clientHeight - scroll.scrollTop;
+    ui.seenMoreAbove.hidden = scroll.scrollTop <= 4;
+    ui.seenMoreBelow.hidden = hiddenBelow <= 4;
+  }
+
+  /* The acknowledgement that covers the summary until the player taps.
+     The two endings read differently because the shift ending on its own
+     and the player choosing to stop are different moments (John,
+     2026-08-05); state.shift.endReason already tells them apart. */
+  function renderShiftOverAcknowledgement(state) {
+    const isShowing = state.overlay === "shift-over";
+    ui.shiftOverOverlay.hidden = !isShowing;
+    if (!isShowing) return;
+
+    ui.shiftOverHeadline.textContent =
+      state.shift.endReason === "timer" ? "TIME’S UP" : "SHIFT ENDED";
+
+    const seen = GAME.selectScoreTotals(state).patientsSeen;
+    ui.shiftOverCount.textContent =
+      seen === 1 ? "1 patient seen" : `${seen} patients seen`;
   }
 
   /* ----------------------------------------------------------------------
@@ -886,7 +1197,10 @@
     renderConfirmQuit,
     renderConfirmStop,
     renderArrivingOverlay,
-    renderReview
+    renderReview,
+    renderShiftOverAcknowledgement,
+    renderPatientsSeen,
+    updatePatientsSeenScrollHints
   };
 
 })();

@@ -30,3 +30,15 @@ they were made: Chart does not pause, 2-second acclimation delay, last-two-
 seconds countdown run-in, numerals centered on the patient image with an
 expand-dissolve exit, and the clipboard header row (PATIENT CHART + live
 clock + red X, metal clamp retired but kept commented in styles.css).
+
+Phase 8 (2026-08-05 evening) is folded into docs 1/3/5/7/8/9: the shift-over
+acknowledgement (TIME'S UP / SHIFT ENDED, waits for a tap), the Patients Seen
+browser (position in the header slot, no name banner, fixed arrows beside the
+photo, scrolled fraction carried between patients, pinned nameplate, outcome
+mark plus photo badge, no photo zoom), and the correction that
+`answer.otherAcceptableRooms` is dead data - full credit is derived by
+`fullCreditRoomKeys`.
+
+ONE THING IS DELIBERATELY NOT WRITTEN DOWN AS FINAL: the Shift Review's
+printed-discharge-summary LOOK. Doc 7 marks it provisional because John has
+an open backlog item to reshape it as a supervisor's evaluation form.

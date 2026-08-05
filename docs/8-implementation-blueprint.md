@@ -87,7 +87,7 @@ implemented against it):
   view: "home",                 // home | game | review
   overlay: null,                // settings-player | settings-shift | about |
                                 // chart | patients-seen | confirm-quit |
-                                // confirm-stop | null
+                                // confirm-stop | shift-over | null
   phase: "ready",               // loading | ready | active | complete | error
   pauseReasons: [],             // "confirmation" | "document-hidden"
 
@@ -179,6 +179,9 @@ At every committed transition:
 - recall is available only for the assigned patient's open room;
 - the Chart can open only when `active != null`, and no `"chart"` pause
   reason ever exists (the Chart stopped pausing 2026-08-05);
+- the `shift-over` and `patients-seen` overlays exist only while the view is
+  `review` and the phase is `complete`;
+- while `patients-seen` is open, `review.patientIndex` is within the ledger;
 - RUSH-only arrival state has no gameplay effect in Triage;
 - remaining time never goes below zero; and
 - view/overlay changes never alter scoring or queue content by themselves;
@@ -430,11 +433,16 @@ the chart content for every location. `context.setting` selects the wrapper:
   only (Answer and Clinical hidden).
 - `"clipboard"`: the Chart overlay — CSS-drawn clipboard plus the locked
   ANSWER and toggling CLINICAL sections.
-- `"review"` (future, Phase 8): the Patients Seen browser reuses the clipboard
-  wrapper with navigation chrome and unlocked sections.
+- `"review"` (built, Phase 8): the Patients Seen browser reuses the clipboard
+  wrapper with navigation chrome and unlocked sections. It additionally takes
+  `context.ledgerRecord` — the patient's single ledger entry — because the
+  Answer body reports what the player actually chose. The builder never reads
+  game state, so the record is passed in.
 
 The chart root gets class `chart--<setting>`; clipboard-specific CSS scopes
-under `.chart-overlay-mount`. Content is written once; CSS owns all
+under `.chart-overlay-mount`, which BOTH scrolling wrappers use, so rules
+written there (the pinned nameplate, the scene treatment) apply to the Chart
+overlay and the review browser alike. Content is written once; CSS owns all
 per-setting flow, sizing, and background.
 
 The patient panel click/keyboard handler dispatches `openChart` in `game.js`:
@@ -460,6 +468,43 @@ it is never stored in the state tree and always starts closed on Chart open.
 
 Closing restores focus to the patient panel hit target. The clock runs the
 whole time the Chart is open (John, 2026-08-05).
+
+## Ending a shift and the review browser (Phase 8)
+
+`stopShift(endReason)` finalizes the shift for both endings — timer expiry
+passes `"timer"`, END SHIFT EARLY passes `"stop"` — and raises the
+acknowledgement overlay rather than leaving the review bare:
+
+```js
+stopShift(endReason) {
+  require phase active
+  phase = "complete"; view = "review"
+  shift.completedAt = wallClockNow(); shift.endReason = endReason
+  overlay = "shift-over"          // dismissed by the player, never timed
+  pauseReasons = []
+}
+dismissShiftOverAcknowledgement()  // any tap/Enter/Space
+```
+
+The browser walks `ledger.order`, so a reassigned patient is one entry
+showing only the assignment that finally stood:
+
+```js
+openPatientsSeen()      // requires complete + review + a non-empty ledger;
+                        // resets review.patientIndex to 0
+stepPatientsSeen(dir)   // wraps: (index + step + total) % total
+closePatientsSeen()
+selectPatientSeenRecord()   // the ledger record now on show, or null
+```
+
+Rendering rebuilds the chart on every step; the reading position is carried
+by measuring the scrolled fraction before the rebuild and reapplying it
+after (document `3`). Because the previous chart is empty on first open, the
+fraction is naturally 0 and the browser opens at the top — no special case.
+
+Section toggles inside the review browser are deliberately DOM-only: review
+expansion must never write `state.chart.clinicalExpanded`, which belongs to
+the shift (document `5`).
 
 ## Score selectors
 

@@ -2,14 +2,16 @@
 
 **Last modified:** 2026-08-05
 
-**Latest change:** Phase 7 complete (2026-08-05): scheduler, countdown,
-clock sounds, RUSH numerals, and RUSH arrivals/bursts, plus the session's
-clock decisions (2-second acclimation delay, Chart does not pause, last two
-seconds beat on every quarter).
+**Latest change:** Phase 8 complete (2026-08-05): Shift Review, the
+shift-over acknowledgement, and the Patients Seen browser, plus the
+session's review decisions (scroll position carried between patients,
+pinned nameplate, outcome mark and photo badge).
 
-**Build status (2026-08-05):** Phases 1 through 7 are implemented in
-`triageRush/`; Phases 1-6 are visually approved by John and Phase 7 awaits
-his play-through. Phase 8 (Shift Review and Patients Seen) is next.
+**Build status (2026-08-05):** Phases 1 through 8 are implemented in
+`triageRush/`; Phases 1-6 are visually approved by John. Phase 7 awaits his
+play-through. Phase 8's review screens were reviewed and adjusted with him
+during the build; the printed-summary LOOK is provisional pending his
+supervisor-evaluation backlog item. Phase 9 (persistence) is next.
 
 ## Objective
 
@@ -348,6 +350,7 @@ Implement:
 - actual duration and metadata;
 - formula rows;
 - separate direction counts;
+- the shift-over acknowledgement covering both endings;
 - Patients Seen from stable ledger order;
 - reusable unlocked review chart (the review setting of the chart builder);
 - wrapping previous/next navigation;
@@ -360,12 +363,26 @@ Acceptance:
 - Strict omits Close without a gap;
 - Triage Left Waiting uses x 0;
 - RUSH Left Waiting uses x -10;
+- duration reports time actually run, not the selected shift length;
+- zero patients seen disables Patients Seen rather than opening it empty;
 - reassigned patient appears once with latest result and room;
 - previous/next wraps;
 - one patient disables or safely no-ops navigation;
-- patient change resets chart scroll;
-- close restores focus to Patients Seen;
-- End Shift Early confirms, finalizes once, and opens review immediately;
+- patient change CARRIES the scrolled fraction; opening starts at the top;
+- the nameplate stays pinned while the rest of the chart scrolls, in the
+  review browser and the Chart overlay alike;
+- the outcome shows as a mark beside the chosen room and as a badge on the
+  patient photo, using the in-game glyphs;
+- the review chart's full-credit set comes from `fullCreditRoomKeys`, never
+  from `answer.otherAcceptableRooms`;
+- review section toggles never change `state.chart.clinicalExpanded`;
+- close restores focus to Patients Seen, by both the close box and Escape;
+- End Shift Early confirms, finalizes once, and opens review behind the
+  acknowledgement; timer expiry does the same without a dialog;
+- the acknowledgement reads `TIME'S UP` for expiry and `SHIFT ENDED` for
+  ending early, waits for input rather than timing out, accepts tap, Enter
+  and Space, and reveals a summary already rendered underneath;
+- quitting shows no acknowledgement and produces no review result;
 - review exposes no Return to Game or direct New Shift action;
 - Return to ER Entrance clears completed runtime state and opens HOME.
 

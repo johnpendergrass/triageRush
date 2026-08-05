@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#071822">
   <title>triageRush</title>
-  <link rel="stylesheet" href="./triageRush/styles.css?v=2026-0805-phase7i">
+  <link rel="stylesheet" href="./triageRush/styles.css?v=2026-0805-phase8h">
 </head>
 <body>
 
@@ -261,6 +261,52 @@
     </div>
   </section>
 
+  <!-- ====================================================================
+       Patients Seen browser (Phase 8). The same clipboard as the in-game
+       Chart, so a reviewed patient looks like the patient did during
+       play. Two differences: the header slot that carries the live clock
+       during a shift carries the POSITION here (a finished shift has no
+       clock to show - John, 2026-08-05), and a fixed banner below the
+       header holds the name between circular previous/next buttons.
+       ================================================================= -->
+  <section class="chart-overlay seen-overlay" id="patientsSeenOverlay"
+           role="dialog" aria-modal="true" aria-label="Patients seen" hidden>
+    <div class="chart-clipboard">
+      <div class="chart-timer" aria-hidden="true">
+        <small>PATIENT</small>
+        <strong id="seenPositionValue">1 / 1</strong>
+      </div>
+      <div class="chart-title" aria-hidden="true">PATIENT CHART</div>
+      <button class="chart-close" id="seenCloseButton" type="button"
+              aria-label="Close Patients Seen">&#10005;</button>
+
+      <div class="chart-scroll" id="seenScroll">
+        <div class="chart-overlay-mount" id="seenMount"></div>
+      </div>
+
+      <!-- Navigation rails (John, 2026-08-05): tall arrows down both
+           edges of the paper, beside the patient photo, replacing the
+           old name banner - the chart's own nameplate already shows the
+           name, so the banner only repeated it. They are pinned to the
+           clipboard rather than sitting in the paper, so they stay
+           reachable after the player scrolls down a long chart. The
+           paper is inset (see .seen-overlay .chart-scroll) so no content
+           ever hides beneath them. -->
+      <button class="seen-nav seen-nav--previous" id="seenPreviousButton"
+              type="button" aria-label="Previous patient">
+        <span aria-hidden="true">&#9664;&#xFE0E;</span>
+      </button>
+      <button class="seen-nav seen-nav--next" id="seenNextButton"
+              type="button" aria-label="Next patient">
+        <span aria-hidden="true">&#9654;&#xFE0E;</span>
+      </button>
+      <button class="chart-more chart-more--above" id="seenMoreAbove"
+              type="button" hidden>&#9650;&#xFE0E; MORE ABOVE</button>
+      <button class="chart-more chart-more--below" id="seenMoreBelow"
+              type="button" hidden>&#9660;&#xFE0E; MORE BELOW</button>
+    </div>
+  </section>
+
   <!-- Quit confirmation: destructive, so it always confirms (doc 7). -->
   <section class="confirm-overlay" id="confirmQuitOverlay" role="dialog"
            aria-modal="true" aria-label="End shift confirmation" hidden>
@@ -296,25 +342,100 @@
   </section>
 
   <!-- ====================================================================
-       SHIFT REVIEW view: Phase 2 skeleton; full scoring arrives Phase 8.
+       SHIFT REVIEW view (Phase 8). Printed discharge-summary treatment
+       (John, 2026-08-05): paper, rule lines, dotted leaders, small caps.
+
+       Everything fits one screen with no scrolling, so every box below
+       sizes from container-relative clamps rather than fixed pixels.
+       The formula rows are built in ui.js because which rows exist
+       depends on mode and difficulty (Strict has no Close row at all).
        ================================================================= -->
   <section class="review-view" id="reviewView" hidden>
-    <div class="review-card">
-      <p class="review-eyebrow" id="reviewEyebrow">TRIAGE SHIFT COMPLETE</p>
-      <h2 class="review-player" id="reviewPlayerLine">Doctor AAA</h2>
-      <p class="review-score" id="reviewScoreLine">SCORE: 0</p>
-      <p class="review-note">Full shift results arrive in a later phase.</p>
-      <button class="review-return" id="returnToLobbyButton" type="button">
-        RETURN TO ER ENTRANCE
-      </button>
+    <div class="review-paper">
+
+      <header class="review-head">
+        <p class="review-title" id="reviewTitleLine">TRIAGE SHIFT COMPLETE</p>
+        <p class="review-mode" id="reviewModeLine">TRIAGE &middot; FORGIVING</p>
+      </header>
+
+      <!-- Dotted-leader meta rows: label, leader rule, value. -->
+      <div class="review-meta">
+        <div class="review-meta-row">
+          <span class="review-meta-key">PROVIDER</span>
+          <span class="review-leader" aria-hidden="true"></span>
+          <span class="review-meta-value" id="reviewProvider">Doctor AAA</span>
+        </div>
+        <div class="review-meta-row">
+          <span class="review-meta-key">DATE</span>
+          <span class="review-leader" aria-hidden="true"></span>
+          <span class="review-meta-value" id="reviewDate">&mdash;</span>
+        </div>
+        <div class="review-meta-row">
+          <span class="review-meta-key">DURATION</span>
+          <span class="review-leader" aria-hidden="true"></span>
+          <span class="review-meta-value" id="reviewDuration">0:00</span>
+        </div>
+        <div class="review-meta-row">
+          <span class="review-meta-key">PATIENTS SEEN</span>
+          <span class="review-leader" aria-hidden="true"></span>
+          <span class="review-meta-value" id="reviewSeen">0</span>
+        </div>
+      </div>
+
+      <div class="review-score-block">
+        <p class="review-score-value" id="reviewScoreValue">0</p>
+        <p class="review-score-label">FINAL SCORE</p>
+      </div>
+
+      <!-- Rows built by ui.js renderReview: label, count, multiplier,
+           subtotal. They always sum to the score above (doc 9). -->
+      <div class="review-formulas" id="reviewFormulas"></div>
+
+      <!-- Direction counters explain wrong placement without scoring it
+           (doc 3), so they sit apart from the formula grid. -->
+      <div class="review-directions">
+        <p class="review-direction">
+          <span class="review-direction-label">UNDER-TRIAGED</span>
+          <span class="review-direction-count" id="reviewUnder">0</span>
+        </p>
+        <p class="review-direction">
+          <span class="review-direction-label">OVER-TRIAGED</span>
+          <span class="review-direction-count" id="reviewOver">0</span>
+        </p>
+      </div>
+
+      <div class="review-actions">
+        <button class="review-seen" id="patientsSeenButton" type="button">
+          PATIENTS SEEN (0)
+        </button>
+        <button class="review-return" id="returnToLobbyButton" type="button">
+          RETURN TO ER ENTRANCE
+        </button>
+      </div>
+
     </div>
   </section>
 
+  <!-- ====================================================================
+       Shift-over acknowledgement (Phase 8). A beat between the last
+       patient and the score: it waits for the player rather than timing
+       out (John, 2026-08-05). The whole frame is ONE button so a tap
+       anywhere works on touch while Enter and Space work for keyboard
+       players, who must be able to finish a shift without a mouse
+       (doc 9 Phase 11). Declared last so it paints over the finished
+       summary without needing a z-index.
+       ================================================================= -->
+  <button class="shift-over" id="shiftOverOverlay" type="button" hidden>
+    <span class="shift-over-headline" id="shiftOverHeadline">TIME&rsquo;S UP</span>
+    <span class="shift-over-count" id="shiftOverCount">0 patients</span>
+    <span class="shift-over-hint">tap to see your results</span>
+  </button>
+
 </div>
 
-<script src="./triageRush/assets.js?v=2026-0805-phase7i"></script>
-<script src="./triageRush/game.js?v=2026-0805-phase7i"></script>
-<script src="./triageRush/ui.js?v=2026-0805-phase7i"></script>
-<script src="./triageRush/app.js?v=2026-0805-phase7i"></script>
+<script src="./triageRush/assets.js?v=2026-0805-phase8h"></script>
+<script src="./triageRush/game.js?v=2026-0805-phase8h"></script>
+<script src="./triageRush/ui.js?v=2026-0805-phase8h"></script>
+<script src="./triageRush/app.js?v=2026-0805-phase8h"></script>
 </body>
 </html>

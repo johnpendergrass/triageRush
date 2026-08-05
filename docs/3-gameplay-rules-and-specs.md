@@ -2,10 +2,10 @@
 
 **Last modified:** 2026-08-05
 
-**Latest change:** Swept in all 2026-08-04/05 amendments: Coach renamed to
-Chart, ER ENTRANCE naming, QUIT THIS SHIFT / END SHIFT EARLY footer wording,
-the three-toggle sound model, the recall sound, the persistent door halo, and
-the Chart overlay details (no Presentation header, photo zoom lightbox).
+**Latest change:** Phase 8 (2026-08-05): the shift-over acknowledgement
+before Shift Review, and the review chart's behavior - scroll position
+carried between patients, pinned nameplate, outcome mark and photo badge,
+no photo zoom.
 
 ## Product definition
 
@@ -308,9 +308,25 @@ a third (review) setting.
 
 - The Presentation cards remain always visible; Answer and Clinical are
   unlocked.
-- Review initially expands Answer and Clinical.
+- Review initially expands Answer and Clinical. Toggling them here never
+  changes the shift's Clinical preference.
 - Previous and next navigation wraps through the shift ledger order.
-- Changing patients resets chart scroll to the top.
+- Changing patients CARRIES THE READING POSITION as a proportion of the
+  chart's scrollable height rather than resetting to the top (John,
+  2026-08-05): a player comparing everyone's Answer section should not have
+  to scroll down again for each patient. Charts differ in length, so the
+  same fraction lands in the same region, not on the same card. Opening the
+  browser still starts at the top.
+- The patient's nameplate is pinned to the top of the scrolling area, so the
+  name and age stay visible however far the reader scrolls. This applies to
+  the Chart overlay during play as well.
+- The outcome appears twice: as a mark beside the room the player chose in
+  the Answer section, and as a larger badge in the bottom-right corner of
+  the patient photo. Both use the same glyphs as the in-game feedback -
+  a green check for Correct, an amber triangle for Close, a red cross for
+  Wrong.
+- The review chart has no photo-zoom lightbox; that belongs to play, where
+  the player is still reading evidence (John, 2026-08-05).
 - Closing returns to Shift Review and restores focus to Patients Seen.
 
 Full content mappings are in
@@ -392,8 +408,23 @@ The GAME footer exposes exactly two navigation actions and no Chart button:
   clears its recovery snapshot, and opens HOME.
 - `END SHIFT EARLY ▶` (subtitle `REVIEW THIS SHIFT`) asks for confirmation
   ("End this shift early?" — "Yes, end shift early" vs "Whoops! I want to keep
-  playing!"), finalizes the active shift, and immediately opens SHIFT REVIEW.
-  Timer expiry performs the same finalization automatically, without a dialog.
+  playing!"), finalizes the active shift, and opens SHIFT REVIEW behind a
+  brief acknowledgement. Timer expiry performs the same finalization
+  automatically, without a dialog.
+
+### Shift-over acknowledgement
+
+Both endings pause on a short acknowledgement before the score is revealed
+(John, 2026-08-05), so the player registers that the shift is over rather
+than being dropped straight into results.
+
+- Timer expiry reads `TIME'S UP`; ending early reads `SHIFT ENDED`.
+- It also states how many patients were seen.
+- It WAITS for the player instead of timing out: a glance away never costs
+  them the moment. Any tap, Enter, or Space dismisses it.
+- The completed Shift Review is already rendered underneath, so dismissing
+  reveals the finished summary rather than assembling one.
+- Quitting does not show it: a quit shift is discarded and never scored.
 
 Neither path can return to that GAME. HOME and SHIFT REVIEW are not temporary
 tabs during an active shift.

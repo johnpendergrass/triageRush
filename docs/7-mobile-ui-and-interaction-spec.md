@@ -108,7 +108,9 @@ HOME -- Start Shift --> GAME -- End Shift Early --> SHIFT REVIEW
 - Quit This Shift confirms, discards the active shift, and opens HOME without
   review.
 - End Shift Early confirms, then finalizes the active shift before opening
-  SHIFT REVIEW.
+  SHIFT REVIEW. Timer expiry does the same without a dialog. Both endings
+  land on SHIFT REVIEW behind the shift-over acknowledgement overlay
+  described below.
 - Return to ER Entrance is SHIFT REVIEW's only primary-view destination.
 - No HOME or SHIFT REVIEW action returns to the previous GAME.
 
@@ -425,21 +427,52 @@ Show:
 - one `RETURN TO ER ENTRANCE` primary-view action.
 
 Formula rows use a compact two-column grid and color accent on outcome rows.
+Strict omits the Close row entirely rather than leaving a gap; Triage still
+shows Left Waiting at x 0 rather than hiding it. Duration is time actually
+run, so a shift ended early at 3:12 of 5:00 reads 3:12. The whole summary
+fits one screen with no scrolling.
 Do not show reassignment attempts as separate patients.
 SHIFT REVIEW has no Return to Game or direct New Shift action. Return to ER
 Entrance opens HOME, where settings may be changed and Start Shift creates a
 new game.
 
+The built treatment (2026-08-05) is a printed discharge summary: warm paper,
+double rule under the heading, dotted-leader meta rows, one large score, a
+four-column formula grid. TREAT THE LOOK AS PROVISIONAL - John has an open
+backlog item to reshape it as a supervisor's evaluation form (Mini-CEX /
+end-of-rotation / Milestones conventions), which would replace this styling
+rather than extend it. The CONTENT list above is settled either way.
+
+### Shift-over acknowledgement
+
+An overlay, not a fourth view, so the three-view model above is untouched.
+It covers the finished summary until dismissed: a near-opaque scrim with a
+blur, the headline (`TIME'S UP` or `SHIFT ENDED`), the patients-seen count,
+and a prompt. The whole frame is one button, so a tap anywhere works on
+touch while Enter and Space serve keyboard players. It takes focus when it
+appears and hands focus to the summary's first enabled action when
+dismissed.
+
 ### Patients Seen browser
 
-Opening Patients Seen displays the same detailed chart inside a review wrapper.
+Opening Patients Seen displays the same detailed chart inside a review
+wrapper built from the Chart's clipboard, so a reviewed patient looks like
+that patient did during play.
 
-- Fixed banner below the chart's header row.
-- Previous and next circular buttons.
-- `index / total · patient name`.
+- The header slot that carries the live shift clock during play carries
+  `index / total` here; a finished shift has no clock to show.
+- No name banner: the chart's own nameplate sits directly below the header
+  and already gives the name and age, so a banner would only repeat it.
+- Previous and next are large arrowheads in the blank paper margin either
+  side of the patient photo, clear of the image. They are fixed to the
+  clipboard rather than the scrolling paper, so they stay reachable at any
+  scroll position, and they claim no layout width.
 - Dedicated close box.
-- Navigation wraps when at least two patients exist.
-- Patient change returns chart scroll to top.
+- Navigation wraps when at least two patients exist; with one patient it
+  safely lands back on that patient.
+- Patient change carries the reading position as a proportion of scrollable
+  height (see document 3); opening starts at the top.
+- The nameplate is pinned to the top of the scrolling area.
 - Close restores focus to the Patients Seen action.
 
 ## Responsive typography and overflow

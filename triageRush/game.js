@@ -79,7 +79,7 @@ function createInitialState() {
     view: "home",              // home | game | review
     overlay: null,             // settings-player | settings-shift | about |
                                // chart | patients-seen | confirm-quit |
-                               // confirm-stop | null
+                               // confirm-stop | shift-over | null
     phase: "ready",            // loading | ready | active | complete | error
     pauseReasons: [],          // "confirmation" | "document-hidden"
                                // (Chart deliberately does NOT pause)
@@ -905,16 +905,74 @@ function quitShift(state) {
   return true;
 }
 
-/* Stop finalizes the shift and opens SHIFT REVIEW. */
+/* Stop finalizes the shift and opens SHIFT REVIEW.
+
+   The review is fully rendered underneath, but a short acknowledgement
+   sits on top of it first (John, 2026-08-05): the player gets a beat to
+   register that the shift is over before the score is in front of them.
+   It is an overlay rather than a fourth view, so the HOME/GAME/REVIEW
+   model in doc 7 is untouched. */
 function stopShift(state, endReason, context) {
   if (state.phase !== "active") return false;
   state.phase = "complete";
   state.shift.completedAtMs = context.wallClockNowMs();
   state.shift.endReason = endReason; // "stop" | "timer"
   state.view = "review";
-  state.overlay = null;
+  state.overlay = "shift-over";
   state.pauseReasons = [];
   return true;
+}
+
+/* The acknowledgement waits for the player rather than timing out, so a
+   glance away never costs them the moment (John, 2026-08-05). Any tap or
+   key on it lands here and reveals the summary underneath. */
+function dismissShiftOverAcknowledgement(state) {
+  if (state.overlay !== "shift-over") return false;
+  state.overlay = null;
+  return true;
+}
+
+/* ------------------------------------------------------------------------
+   7b. Patients Seen browser (Phase 8).
+   Walks the ledger in its stable first-assignment order. A recalled and
+   reassigned patient is ONE entry showing the assignment that finally
+   stood, because replacement rewrites the record in place (doc 3).
+   --------------------------------------------------------------------- */
+
+function openPatientsSeen(state) {
+  if (state.phase !== "complete" || state.view !== "review") return false;
+  if (state.overlay !== null) return false;
+  if (state.ledger.order.length === 0) return false;
+  state.overlay = "patients-seen";
+  state.review.patientIndex = 0;
+  return true;
+}
+
+function closePatientsSeen(state) {
+  if (state.overlay !== "patients-seen") return false;
+  state.overlay = null;
+  return true;
+}
+
+/* Navigation wraps in both directions (doc 9). With a single patient
+   every step lands back on that patient, which is the documented
+   "safely no-ops" behavior rather than a disabled control. */
+function stepPatientsSeen(state, direction) {
+  if (state.overlay !== "patients-seen") return false;
+  const total = state.ledger.order.length;
+  if (total === 0) return false;
+  const step = direction === "previous" ? -1 : 1;
+  state.review.patientIndex =
+    (state.review.patientIndex + step + total) % total;
+  return true;
+}
+
+/* The ledger record currently on show, or null when the browser is not
+   open. ui.js needs both this and its patient record. */
+function selectPatientSeenRecord(state) {
+  const patientId = state.ledger.order[state.review.patientIndex];
+  if (patientId === undefined) return null;
+  return state.ledger.byPatientId[patientId];
 }
 
 /* Return to Lobby is SHIFT REVIEW's only primary-view destination. */
@@ -1001,6 +1059,16 @@ function collectInvariantViolations(state) {
     "recall available without an assigned patient");
   check(state.overlay !== "chart" || !!state.active,
     "Chart open without an active patient");
+  check(state.overlay !== "shift-over"
+    || (state.view === "review" && state.phase === "complete"),
+    "shift-over acknowledgement outside a completed shift review");
+  check(state.overlay !== "patients-seen"
+    || (state.view === "review" && state.phase === "complete"),
+    "Patients Seen open outside a completed shift review");
+  check(state.overlay !== "patients-seen"
+    || (state.review.patientIndex >= 0
+      && state.review.patientIndex < state.ledger.order.length),
+    "Patients Seen index outside the ledger");
   check(!state.pauseReasons.includes("chart"),
     "chart pause reason exists (Chart stopped pausing 2026-08-05)");
   check(state.overlay === "confirm-quit" || state.overlay === "confirm-stop"
@@ -1138,6 +1206,11 @@ window.TRIAGE_RUSH_GAME = {
   activateShift,
   quitShift,
   stopShift,
+  dismissShiftOverAcknowledgement,
+  openPatientsSeen,
+  closePatientsSeen,
+  stepPatientsSeen,
+  selectPatientSeenRecord,
   returnToLobby,
   toggleGameSoundsAudible,
   collectInvariantViolations,

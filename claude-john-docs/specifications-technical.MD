@@ -1,6 +1,6 @@
 # triageRush — technical notes (pointer file)
 
-**Last modified:** 2026-08-05 (Phase 7 complete)
+**Last modified:** 2026-08-05 (Phase 8 complete)
 
 Full technical contracts: `docs/4`, `docs/8`. This file records only
 practical build knowledge that lives nowhere else.
@@ -12,7 +12,7 @@ practical build knowledge that lives nowhere else.
   file:// does not work (fetch).
 - Cache busting: one version string in TWO places — index.html query
   params (5 refs) and `TRIAGE_RUSH_CACHE_VERSION` in assets.js. Bump BOTH
-  on every asset/CSS/JS change (currently "2026-0805-phase7i"; the
+  on every asset/CSS/JS change (currently "2026-0805-phase8h"; the
   trailing letter increments per tweak).
 
 ## Architecture in one breath
@@ -49,6 +49,28 @@ pause. RUSH arrivals/bursts run inside the same quarter loop; the staged
 burst second-member time is LOGICAL elapsed ms, so pauses freeze it.
 Effects flow back as the advance result (soundCues, countdownNumeral,
 doinks, queueChanged, blockedShake); app.js plays/renders them.
+
+## Review screens (Phase 8, built)
+
+One builder still: `buildPatientChart` gained a `"review"` setting that also
+takes `context.ledgerRecord` (the builder never reads game state). Both
+scrolling wrappers use the `.chart-overlay-mount` class, so CSS written
+there hits the Chart overlay AND the Patients Seen browser - that is how the
+pinned nameplate reached both at once. The pinned nameplate needs a solid
+paper-colored shadow above it to paint over the scroll container's top
+padding, which content would otherwise show through.
+
+The Patients Seen browser reuses `.chart-overlay`/`.chart-clipboard`
+wholesale. Its nav arrows are children of the clipboard, NOT of
+`.chart-scroll`, which is what makes them fixed while the paper scrolls;
+they sit in the blank margin the 74%-wide scene leaves beside the photo, so
+they cost no layout width. Scroll position carries between patients by
+measuring the scrolled fraction before the rebuild and reapplying after
+(reading `scrollHeight` forces the layout first).
+
+`answer.otherAcceptableRooms` is null for all 160 patients and is read by
+nothing; the full-credit set is derived by `game.js fullCreditRoomKeys`.
+Anything displaying or scoring that set must call the function.
 
 ## Ephemeral vs state-tree UI
 

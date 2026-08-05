@@ -11,8 +11,10 @@
      5. Board popups (settings + about)
      6. PATIENTS ARE ARRIVING overlay
      7. GAME view skeleton (bands 7.2/85.8/7, columns 22/56/22)
+     7g. Patients Seen browser
      8. Quit confirmation
-     9. SHIFT REVIEW skeleton
+     9. SHIFT REVIEW - printed discharge summary
+     9b. Shift-over acknowledgement
     10. Reduced motion
    ========================================================================= */
 
@@ -1506,7 +1508,9 @@ img {
   box-shadow: 0 2px 6px #000a;
 }
 
-.chart-more--above { top: clamp(32px, 11cqw, 54px); }
+/* MORE ABOVE clears the sticky nameplate, which now holds the top of the
+   paper (John, 2026-08-05) - otherwise the pill lands on the name. */
+.chart-more--above { top: clamp(66px, 22cqw, 110px); }
 .chart-more--below { bottom: clamp(12px, 4cqw, 22px); }
 
 /* --- Clipboard-setting overrides for the shared chart --- */
@@ -1516,6 +1520,21 @@ img {
 .chart-overlay-mount .patient-chart {
   height: auto;
   gap: clamp(6px, 2cqw, 12px);
+}
+
+/* The nameplate stays put while everything below it scrolls (John,
+   2026-08-05), so the patient's name and age are never out of sight
+   deep in a long chart. Applies to BOTH scrolling settings - the Chart
+   overlay during play and the review browser - because they share this
+   mount. The panel setting does not scroll, so it is unaffected.
+
+   The solid shadow above paints over the scroll container's top padding,
+   which content would otherwise show through as it passes behind. */
+.chart-overlay-mount .chart-nameplate {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  box-shadow: 0 calc(-1 * clamp(8px, 2.8cqw, 15px)) 0 #f7f0e1;
 }
 
 /* The scene loses the corridor art (the paper is opaque): a quiet
@@ -1772,6 +1791,152 @@ img {
   gap: 3px;
 }
 
+/* --- Answer cards (review setting only) ---
+   During play this section is locked and empty; after the shift it opens
+   with the verdict on top, then the correct room and the rationale. */
+
+.chart-answer-verdict {
+  border-radius: 6px;
+  border: 2px solid var(--outcome-ink, #8b979c);
+  background: #f6ecddf5;
+  padding: clamp(5px, 1.8cqw, 10px) clamp(7px, 2.4cqw, 12px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(6px, 2cqw, 12px);
+}
+
+/* The outcome color drives the border and the result text together, so
+   one variable per outcome sets the whole card. */
+.chart-answer-verdict.is-outcome-correct { --outcome-ink: #17703f; }
+.chart-answer-verdict.is-outcome-close   { --outcome-ink: #8a6100; }
+.chart-answer-verdict.is-outcome-wrong   { --outcome-ink: #b3271c; }
+
+.chart-answer-choice {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.chart-answer-choice small {
+  color: #8a4c16;
+  font-size: clamp(7px, 2.2cqw, 10px);
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+.chart-answer-choice-line {
+  display: flex;
+  align-items: center;
+  gap: clamp(4px, 1.6cqw, 8px);
+}
+
+.chart-answer-choice strong {
+  color: #243036;
+  font-size: clamp(10px, 3cqw, 14px);
+  font-weight: 900;
+}
+
+/* The outcome mark beside the room the player chose: the same glyph the
+   in-game toast shows, in the same outcome color as the card's rim. */
+.chart-answer-mark {
+  flex: none;
+  color: var(--outcome-ink);
+  font-size: clamp(14px, 4.6cqw, 22px);
+  font-weight: 900;
+  line-height: 1;
+}
+
+/* The same mark stamped on the photo, bottom-right, at twice the Answer
+   mark's size (John, 2026-08-05). A pale disc carries it so the glyph
+   stays readable over any portrait, light or dark. */
+.chart-outcome-badge {
+  position: absolute;
+  right: clamp(6px, 2.2cqw, 12px);
+  bottom: clamp(6px, 2.2cqw, 12px);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: clamp(38px, 12.6cqw, 60px);
+  height: clamp(38px, 12.6cqw, 60px);
+  border-radius: 50%;
+  border: 3px solid currentColor;
+  background: #f7f0e1ee;
+  font-size: clamp(28px, 9.2cqw, 44px);
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 2px 8px #0006;
+}
+
+.chart-outcome-badge.is-outcome-correct { color: #17703f; }
+.chart-outcome-badge.is-outcome-close   { color: #8a6100; }
+.chart-outcome-badge.is-outcome-wrong   { color: #b3271c; }
+
+.chart-answer-result {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+  color: var(--outcome-ink);
+  white-space: nowrap;
+}
+
+.chart-answer-result strong {
+  font-size: clamp(10px, 3.2cqw, 15px);
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+
+.chart-answer-result span {
+  font-size: clamp(9px, 2.8cqw, 13px);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------------
+   7g. Patients Seen browser
+
+   Reuses the Chart's clipboard wholesale. The only structural difference
+   is the fixed banner between the header row and the paper, so the paper
+   starts lower here than it does during play.
+   --------------------------------------------------------------------- */
+
+/* The paper keeps its full width here: the chart is framed exactly as it
+   is during play. The arrows claim no layout at all - they sit in the
+   blank paper margin BESIDE the patient photo, which the chart scene
+   already leaves empty (the scene is 74% wide and centred).
+
+   They are children of the clipboard, not of .chart-scroll, so they are
+   genuinely fixed: scrolling the chart never moves them. */
+.seen-nav {
+  position: absolute;
+  top: clamp(96px, 32cqw, 164px);
+  z-index: 3;
+  width: clamp(24px, 8cqw, 38px);
+  height: clamp(34px, 11cqw, 52px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: none;
+  color: #7a5a2e;
+  font-size: clamp(20px, 6.8cqw, 32px);
+  line-height: 1;
+  /* A pale halo keeps the arrowhead readable if a scrolled card passes
+     underneath it. */
+  text-shadow:
+    0 0 3px #f7f0e1, 0 0 6px #f7f0e1, 0 1px 0 #fff;
+}
+
+.seen-nav--previous { left: clamp(11px, 3.6cqw, 20px); }
+.seen-nav--next { right: clamp(11px, 3.6cqw, 20px); }
+
+.seen-nav:active {
+  background: #00000014;
+  color: #4a3517;
+}
+
 /* ------------------------------------------------------------------------
    8. Quit confirmation
    --------------------------------------------------------------------- */
@@ -1841,73 +2006,300 @@ img {
 }
 
 /* ------------------------------------------------------------------------
-   9. SHIFT REVIEW skeleton
+   9. SHIFT REVIEW - printed discharge summary (John, 2026-08-05)
+
+   The whole summary fits one screen with NO scrolling, so every size here
+   is a container-width clamp. The shell is a fixed 9:16 box, so its height
+   is always 1.78x its width: sizing from width alone keeps the vertical
+   budget proportional at every device size. The paper stretches to the
+   full shell and spreads its blocks, so small leftovers become breathing
+   room instead of a short page.
    --------------------------------------------------------------------- */
 
 .review-view {
   position: absolute;
   inset: 0;
   display: grid;
-  place-items: center;
-  padding: 6%;
+  place-items: stretch;
+  padding: clamp(8px, 3cqw, 18px);
   background: linear-gradient(180deg, #0b2d3e, #031019 70%);
 }
 
-.review-card {
-  width: 100%;
-  max-width: 420px;
-  padding: clamp(16px, 6cqw, 28px);
-  border-radius: 12px;
-  border: 3px solid #81939a;
-  background: linear-gradient(145deg,
-    rgb(249 246 236 / 98%), rgb(220 229 230 / 98%));
-  color: #12232b;
-  box-shadow: 0 20px 60px #000d;
-  text-align: center;
+/* Paper: warm stock, hairline rule border, faint ruled tint at the top so
+   it reads as a printed form rather than a plain white card. */
+.review-paper {
+  --paper-ink: #1b2a31;
+  --paper-faint: #6d7b81;
+  --paper-rule: #b9b2a0;
+  /* Outcome accents darkened for ink-on-paper legibility; the bright
+     --score-* variants are tuned for the dark GAME screen. */
+  --paper-correct: #17703f;
+  --paper-close: #8a6100;
+  --paper-wrong: #b3271c;
+
   display: flex;
   flex-direction: column;
-  gap: clamp(8px, 2.6cqw, 14px);
+  justify-content: space-between;
+  padding: clamp(10px, 4cqw, 22px) clamp(12px, 4.5cqw, 26px);
+  border: 1px solid #8d8676;
+  border-radius: 3px; /* printed forms have square corners, not app corners */
+  background:
+    linear-gradient(180deg, rgb(0 0 0 / 4%), rgb(0 0 0 / 0%) 12%),
+    #f6f1e4;
+  color: var(--paper-ink);
+  box-shadow: 0 18px 50px #000c;
+  text-align: left;
+  overflow: hidden;
 }
 
-.review-eyebrow {
-  font-size: clamp(9px, 2.8cqw, 13px);
-  letter-spacing: 0.2em;
+/* --- Head: double rule above and below, like a form banner --- */
+
+.review-head {
+  border-top: 3px double var(--paper-rule);
+  border-bottom: 3px double var(--paper-rule);
+  padding: clamp(4px, 1.6cqw, 9px) 0;
+  text-align: center;
+}
+
+.review-title {
+  font-size: clamp(13px, 5.4cqw, 26px);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.review-mode {
+  margin-top: 0.2em;
+  font-size: clamp(8px, 3cqw, 14px);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--paper-faint);
+}
+
+/* --- Meta rows with dotted leaders --- */
+
+.review-meta {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2px, 1cqw, 6px);
+}
+
+.review-meta-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+  font-size: clamp(9px, 3.2cqw, 15px);
+}
+
+.review-meta-key {
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--paper-faint);
+}
+
+/* The leader fills whatever space the label and value leave over. */
+.review-leader {
+  flex: 1 1 auto;
+  border-bottom: 1px dotted var(--paper-rule);
+  transform: translateY(-0.25em);
+}
+
+.review-meta-value {
   font-weight: 800;
-  color: #55707d;
+  white-space: nowrap;
 }
 
-.review-player {
-  font-size: clamp(18px, 6cqw, 28px);
+/* --- Final score: the one large element on the page --- */
+
+.review-score-block {
+  text-align: center;
+  padding: clamp(2px, 1cqw, 6px) 0;
+}
+
+.review-score-value {
+  font-size: clamp(34px, 17cqw, 84px);
   font-weight: 900;
-  color: #0c3548;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
-.review-score {
-  padding: clamp(8px, 3cqw, 14px);
-  border-radius: 9px;
-  background: #092b3a;
-  border: 2px solid #d49b32;
-  color: #ffc860;
-  font-size: clamp(18px, 6.4cqw, 28px);
+/* A losing shift is legitimately negative; say so in red rather than
+   letting a minus sign hide in the ink color. */
+.review-score-value.is-negative {
+  color: var(--paper-wrong);
+}
+
+.review-score-label {
+  font-size: clamp(8px, 3cqw, 14px);
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  color: var(--paper-faint);
+}
+
+/* --- Formula rows: label | count | multiplier | subtotal --- */
+
+.review-formulas {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  align-items: baseline;
+  column-gap: clamp(4px, 2cqw, 12px);
+  row-gap: clamp(2px, 1cqw, 6px);
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: clamp(4px, 2cqw, 10px) 0;
+  font-size: clamp(9px, 3.4cqw, 16px);
+  font-variant-numeric: tabular-nums;
+}
+
+.review-formula-label {
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.review-formula-count,
+.review-formula-multiplier {
+  color: var(--paper-faint);
+  font-weight: 700;
+}
+
+.review-formula-subtotal {
   font-weight: 900;
-  letter-spacing: 0.04em;
+  text-align: right;
+  min-width: 3.4em;
 }
 
-.review-note {
-  font-size: clamp(10px, 3.2cqw, 14px);
-  opacity: 0.75;
+/* Outcome rows carry their color on the subtotal only, so the grid stays
+   calm and the eye still finds the good and bad numbers (doc 7). The
+   modifier sits on the same cell as the role class (the grid has no row
+   element to hang it on), so these are compound, not descendant. */
+.review-formula-subtotal.review-formula--correct { color: var(--paper-correct); }
+.review-formula-subtotal.review-formula--close   { color: var(--paper-close); }
+.review-formula-subtotal.review-formula--wrong   { color: var(--paper-wrong); }
+
+/* --- Direction counters: explanatory, never scored (doc 3) --- */
+
+.review-directions {
+  display: flex;
+  justify-content: space-between;
+  gap: clamp(6px, 3cqw, 16px);
+  font-size: clamp(8px, 3cqw, 14px);
+}
+
+.review-direction {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+}
+
+.review-direction-label {
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--paper-faint);
+}
+
+.review-direction-count {
+  font-weight: 900;
+  font-size: 1.25em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Actions --- */
+
+.review-actions {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 2.4cqw, 12px);
+}
+
+.review-seen,
+.review-return {
+  min-height: 44px; /* touch target floor (doc 7) */
+  border-radius: 4px;
+  font-weight: 900;
+  font-size: clamp(11px, 3.6cqw, 16px);
+  letter-spacing: 0.08em;
+  color: #fff;
+  border: 1px solid rgb(255 255 255 / 35%);
+  box-shadow: inset 0 1px #ffffff55, 0 2px 4px #0007;
+}
+
+.review-seen {
+  background: linear-gradient(#2a6f92, #123f57);
+}
+
+/* No patients seen means nothing to browse; the button says so quietly
+   instead of opening an empty browser. */
+.review-seen[disabled] {
+  cursor: default;
+  color: #6f6a5e;
+  background: #ddd6c6;
+  border-color: #c3bcaa;
+  box-shadow: none;
 }
 
 .review-return {
-  min-height: 44px;
-  border-radius: 8px;
-  font-weight: 900;
-  font-size: clamp(12px, 3.8cqw, 16px);
-  letter-spacing: 0.04em;
-  color: #fff;
   background: linear-gradient(#15935b, #07572f);
-  border: 1px solid rgb(255 255 255 / 35%);
-  box-shadow: inset 0 1px #ffffff55, 0 2px 4px #0007;
+}
+
+/* ------------------------------------------------------------------------
+   9b. Shift-over acknowledgement
+
+   Deliberately almost empty: it is a pause, not a screen. It sits over
+   the finished summary and dims it, so the score is already there the
+   moment the player taps through.
+   --------------------------------------------------------------------- */
+
+.shift-over {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(6px, 2.4cqw, 14px);
+  padding: 8%;
+  text-align: center;
+  /* Near-opaque plus a blur: the finished summary stays faintly present
+     behind the message, but as a soft wash rather than readable text
+     competing with the headline. */
+  background: rgb(3 12 18 / 95%);
+  backdrop-filter: blur(7px);
+  animation: shift-over-in 260ms ease-out both;
+}
+
+.shift-over-headline {
+  font-size: clamp(26px, 11cqw, 56px);
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  color: var(--cream);
+  text-shadow: 0 3px 14px #000a;
+}
+
+.shift-over-count {
+  font-size: clamp(11px, 4cqw, 19px);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--orange);
+}
+
+/* The prompt fades up late so the headline lands first. */
+.shift-over-hint {
+  margin-top: clamp(10px, 4cqw, 24px);
+  font-size: clamp(9px, 3.2cqw, 15px);
+  letter-spacing: 0.14em;
+  color: var(--steel);
+  animation: shift-over-hint-in 900ms ease-out both;
+}
+
+@keyframes shift-over-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes shift-over-hint-in {
+  0%   { opacity: 0; }
+  55%  { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 /* ------------------------------------------------------------------------

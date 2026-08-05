@@ -2,19 +2,19 @@
 
 **Last modified:** 2026-08-05
 
-**Latest change:** Swept all 2026-08-04/05 amendments into the numbered set
-(Chart naming, ER Entrance, footer wording, sound model, and the Phase 4-6
-build decisions). The numbered docs once again describe the game as designed
-and built, with no separate amendment layer.
+**Latest change:** Phase 8 folded in (2026-08-05): Shift Review, the
+shift-over acknowledgement, and the Patients Seen browser. The numbered docs
+describe the game as designed and built, with no separate amendment layer.
 
 ## Current milestone
 
 The production application is being built under `triageRush/`. Phases 1
-through 6 of document `9` are implemented and visually approved: shell, HOME
-(ER Entrance) with settings, queue and patient presentation, evaluation with
-recall and ledger replacement, and the Chart overlay. Phase 7 (the 250ms
-scheduler: clock, timing sounds, and RUSH arrivals) is next, followed by
-Shift Review (8), persistence (9), and asset optimization (10).
+through 8 of document `9` are implemented: shell, HOME (ER Entrance) with
+settings, queue and patient presentation, evaluation with recall and ledger
+replacement, the Chart overlay, the 250ms scheduler (clock, timing sounds,
+RUSH arrivals), and Shift Review with Patients Seen. Phases 1-6 are
+visually approved; Phase 7 awaits John's play-through. Persistence (9) and
+asset optimization (10) remain.
 
 ## Read in this order
 
@@ -88,11 +88,8 @@ triageRush/
 
 ## Immediate priorities
 
-1. Phase 7: the single 250ms scheduler — countdown, tick/minute/countdown/dong
-   sounds (registry slots already reserved), pause via `state.pauseReasons`,
-   and RUSH arrivals with 20% double bursts.
-2. Then Phases 8 (Shift Review and Patients Seen, reusing the chart builder's
-   review setting) and 9 (persistence and recovery).
+1. John's play-through verdict on Phases 7 and 8.
+2. Then Phase 9 (persistence and recovery).
 3. At Phase 10 planning, also rework the asset-loading strategy: stage-2
    startup currently blocks READY on 160 JSON fetches plus decoding every
    manifest image; decide what blocks READY versus loads lazily.

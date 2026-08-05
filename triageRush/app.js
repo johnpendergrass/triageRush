@@ -371,6 +371,8 @@
     UI.renderConfirmQuit(state);
     UI.renderConfirmStop(state);
     UI.renderReview(state);
+    UI.renderShiftOverAcknowledgement(state);
+    UI.renderPatientsSeen(state, portraitUrlFor);
   }
 
   /* ----------------------------------------------------------------------
@@ -479,6 +481,10 @@
       GAME.assertStateInvariants(state, "advanceShiftTime");
       stopShiftScheduler();
       renderAll();
+      /* The acknowledgement is what the player must act on next, so it
+         takes focus: a keyboard player can finish a shift without a
+         mouse (doc 9 Phase 11). */
+      ui.shiftOverOverlay.focus();
       return;
     }
 
@@ -668,6 +674,7 @@
       GAME.stopShift(state, "stop", context);
       GAME.assertStateInvariants(state, "stopShift");
       renderAll();
+      ui.shiftOverOverlay.focus();
     });
 
     /* Switching away from the tab pauses the clock (doc 8 pause model);
@@ -794,6 +801,84 @@
   }
 
   function wireReviewEvents() {
+    /* One button covering the frame: a tap anywhere, Enter, or Space all
+       arrive here and reveal the summary already rendered underneath. */
+    ui.shiftOverOverlay.addEventListener("click", () => {
+      GAME.dismissShiftOverAcknowledgement(state);
+      GAME.assertStateInvariants(state, "dismissShiftOver");
+      renderAll();
+      /* Hand focus to the summary's first real action, so the keyboard
+         path continues instead of falling back to the document. */
+      const nextFocus = ui.patientsSeenButton.disabled
+        ? ui.returnToLobbyButton
+        : ui.patientsSeenButton;
+      nextFocus.focus();
+    });
+
+    /* --- Patients Seen browser --- */
+
+    ui.patientsSeenButton.addEventListener("click", () => {
+      if (!GAME.openPatientsSeen(state)) return;
+      GAME.assertStateInvariants(state, "openPatientsSeen");
+      renderAll();
+      UI.updatePatientsSeenScrollHints();
+      ui.seenCloseButton.focus();
+    });
+
+    const closePatientsSeenAndRestoreFocus = () => {
+      if (!GAME.closePatientsSeen(state)) return;
+      GAME.assertStateInvariants(state, "closePatientsSeen");
+      renderAll();
+      /* Focus returns to the action that opened it (doc 9). */
+      ui.patientsSeenButton.focus();
+    };
+
+    ui.seenCloseButton.addEventListener("click",
+      closePatientsSeenAndRestoreFocus);
+
+    /* Navigation wraps; with one patient it lands back on that patient
+       rather than dead-ending (doc 9). */
+    const stepPatientsSeen = (direction) => {
+      if (!GAME.stepPatientsSeen(state, direction)) return;
+      GAME.assertStateInvariants(state, "stepPatientsSeen");
+      renderAll();
+      UI.updatePatientsSeenScrollHints();
+    };
+
+    ui.seenPreviousButton.addEventListener("click",
+      () => stepPatientsSeen("previous"));
+    ui.seenNextButton.addEventListener("click",
+      () => stepPatientsSeen("next"));
+
+    ui.seenScroll.addEventListener("scroll", UI.updatePatientsSeenScrollHints);
+
+    ui.seenMoreAbove.addEventListener("click", () => {
+      ui.seenScroll.scrollBy({
+        top: -ui.seenScroll.clientHeight * 0.7, behavior: "smooth" });
+    });
+
+    ui.seenMoreBelow.addEventListener("click", () => {
+      ui.seenScroll.scrollBy({
+        top: ui.seenScroll.clientHeight * 0.7, behavior: "smooth" });
+    });
+
+    /* Answer and Clinical are unlocked here, and toggling them is
+       deliberately DOM-only: review expansion must not disturb the
+       shift's Clinical preference (doc 5). */
+    ui.seenMount.addEventListener("click", (event) => {
+      const header = event.target.closest("[data-chart-section]");
+      if (!header) return;
+      const bodyClass = header.dataset.chartSection === "answer"
+        ? ".chart-answer-body"
+        : ".chart-clinical-body";
+      const body = ui.seenMount.querySelector(bodyClass);
+      if (!body) return;
+      const nowExpanded = body.hidden;
+      body.hidden = !nowExpanded;
+      header.setAttribute("aria-expanded", String(nowExpanded));
+      UI.updatePatientsSeenScrollHints();
+    });
+
     ui.returnToLobbyButton.addEventListener("click", () => {
       GAME.returnToLobby(state);
       GAME.assertStateInvariants(state, "returnToLobby");
@@ -819,6 +904,11 @@
         GAME.closeConfirmDialog(state);
         UI.renderConfirmStop(state);
         ui.stopGameButton.focus();
+      } else if (state.overlay === "patients-seen") {
+        GAME.closePatientsSeen(state);
+        GAME.assertStateInvariants(state, "closePatientsSeen");
+        renderAll();
+        ui.patientsSeenButton.focus();
       }
     });
   }
