@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#071822">
   <title>triageRush</title>
-  <link rel="stylesheet" href="./triageRush/styles.css?v=2026-0805-phase6o">
+  <link rel="stylesheet" href="./triageRush/styles.css?v=2026-0805-phase7i">
 </head>
 <body>
 
@@ -197,6 +197,12 @@
                 type="button" hidden>
           <span class="visually-hidden">Open the patient chart</span>
         </button>
+
+        <!-- RUSH final-countdown numerals (10..1) pop and fade over the
+             patient image; purely decorative and never an input layer
+             (doc 7). -->
+        <div class="countdown-numeral" id="countdownNumeral"
+             aria-hidden="true"></div>
         <!-- Transient assignment result: ✓ CORRECT / △ CLOSE / ✕ WRONG. -->
         <p class="result-toast" id="resultToast" role="status" hidden></p>
       </div>
@@ -225,14 +231,21 @@
 
   <!-- ====================================================================
        Chart overlay: the clipboard setting of the unified patient chart.
-       Opaque paper on a clipboard board with a metal clamp (CSS-drawn; no
+       Opaque paper on a clipboard board with a header row (CSS-drawn; no
        clipboard artwork exists). The paper scrolls internally; MORE
        ABOVE / MORE BELOW appear only when hidden content exists (doc 7).
        ================================================================= -->
   <section class="chart-overlay" id="chartOverlay" role="dialog"
            aria-modal="true" aria-label="Patient chart" hidden>
     <div class="chart-clipboard" id="chartClipboard">
-      <div class="chart-clamp" aria-hidden="true"></div>
+      <!-- Clipboard header row (John, 2026-08-05): PATIENT CHART
+           left-justified, then the live shift clock (the clock keeps
+           running while the chart is open), then the red X. -->
+      <div class="chart-timer" id="chartTimer" aria-hidden="true">
+        <small>TIME</small>
+        <strong id="chartTimerValue">0:00</strong>
+      </div>
+      <div class="chart-title" aria-hidden="true">PATIENT CHART</div>
       <button class="chart-close" id="chartCloseButton" type="button"
               aria-label="Close the patient chart">&#10005;</button>
       <div class="chart-scroll" id="chartScroll">
@@ -299,9 +312,9 @@
 
 </div>
 
-<script src="./triageRush/assets.js?v=2026-0805-phase6o"></script>
-<script src="./triageRush/game.js?v=2026-0805-phase6o"></script>
-<script src="./triageRush/ui.js?v=2026-0805-phase6o"></script>
-<script src="./triageRush/app.js?v=2026-0805-phase6o"></script>
+<script src="./triageRush/assets.js?v=2026-0805-phase7i"></script>
+<script src="./triageRush/game.js?v=2026-0805-phase7i"></script>
+<script src="./triageRush/ui.js?v=2026-0805-phase7i"></script>
+<script src="./triageRush/app.js?v=2026-0805-phase7i"></script>
 </body>
 </html>

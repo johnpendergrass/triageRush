@@ -252,6 +252,57 @@
     oscillator.stop(startAt + 0.42);
   }
 
+  /* Shared clock-tick voice (Phase 7): one short quiet blip. The three
+     tick flavors differ only in pitch and level so the ear reads them as
+     the same clock speaking with more or less urgency. */
+  function playTickBlip(audio, frequencyHz, peakGain) {
+    const startAt = audio.currentTime;
+    const oscillator = audio.createOscillator();
+    const gain = audio.createGain();
+    oscillator.type = "sine";
+    oscillator.frequency.value = frequencyHz;
+    gain.gain.setValueAtTime(0.0001, startAt);
+    gain.gain.exponentialRampToValueAtTime(peakGain, startAt + 0.008);
+    gain.gain.exponentialRampToValueAtTime(0.0001, startAt + 0.07);
+    oscillator.connect(gain).connect(audio.destination);
+    oscillator.start(startAt);
+    oscillator.stop(startAt + 0.09);
+  }
+
+  /* Ordinary clock tick: RUSH whole seconds, Triage ten-second marks. */
+  function playTickSound(audio) {
+    playTickBlip(audio, 1200, 0.06);
+  }
+
+  /* Emphasis lead-in beat: the 0.50/0.25 ticks before a Triage minute
+     or a RUSH ten-second boundary - a touch brighter than ordinary. */
+  function playMinuteTickSound(audio) {
+    playTickBlip(audio, 1600, 0.08);
+  }
+
+  /* Final-countdown tick: highest and most insistent of the family. */
+  function playCountdownTickSound(audio) {
+    playTickBlip(audio, 2000, 0.1);
+  }
+
+  /* The lower completion dong at zero: fundamental plus a quiet octave,
+     ringing out much longer than any tick (doc 3). */
+  function playEndDongSound(audio) {
+    const startAt = audio.currentTime;
+    for (const [frequencyHz, peakGain] of [[220, 0.2], [440, 0.05]]) {
+      const oscillator = audio.createOscillator();
+      const gain = audio.createGain();
+      oscillator.type = "sine";
+      oscillator.frequency.value = frequencyHz;
+      gain.gain.setValueAtTime(0.0001, startAt);
+      gain.gain.exponentialRampToValueAtTime(peakGain, startAt + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startAt + 1.4);
+      oscillator.connect(gain).connect(audio.destination);
+      oscillator.start(startAt);
+      oscillator.stop(startAt + 1.5);
+    }
+  }
+
   /* The registry: one named entry per game sound. The GAME SOUNDS toggle
      governs the whole family today; `enabled` is the future hook for
      per-sound preferences. */
@@ -260,9 +311,11 @@
     correct: { enabled: true, play: playCorrectSound },
     recall: { enabled: true, play: playRecallSound },
     close: { enabled: true, play: playCloseSound },
-    wrong: { enabled: true, play: playWrongSound }
-    /* tick, minuteTick, countdownTick, endDong arrive with the
-       scheduler phase. */
+    wrong: { enabled: true, play: playWrongSound },
+    tick: { enabled: true, play: playTickSound },
+    minuteTick: { enabled: true, play: playMinuteTickSound },
+    countdownTick: { enabled: true, play: playCountdownTickSound },
+    endDong: { enabled: true, play: playEndDongSound }
   };
 
   function playGameSound(soundName) {
@@ -358,7 +411,91 @@
     GAME.assertStateInvariants(state, "activateShift");
     UI.renderArrivingOverlay(false);
     renderAll();
+    startShiftSchedulerAfterDelay();
     topUpPortraitReserve();
+  }
+
+  /* ----------------------------------------------------------------------
+     5b. Shift scheduler (Phase 7).
+     One 250ms interval per shift. The anchor is the monotonic moment the
+     shift's ACTIVE time started; while paused (a confirm dialog or a
+     hidden tab - the Chart deliberately does NOT pause) each callback
+     moves the anchor forward instead of advancing the clock, so game
+     time simply freezes (doc 8 pause model). The clock starts only after
+     the required assets decode PLUS a 2-second acclimation delay so the
+     player can take in the game screen (John, 2026-08-05); the interval
+     removes itself when the shift stops being active for any reason
+     (timer, END SHIFT EARLY, QUIT).
+     ------------------------------------------------------------------- */
+
+  const SCHEDULER_START_DELAY_MS = 2000;
+
+  const scheduler = {
+    startDelayId: null,
+    intervalId: null,
+    anchorMs: null
+  };
+
+  function startShiftSchedulerAfterDelay() {
+    stopShiftScheduler(); /* never two schedulers, however fast a restart */
+    scheduler.startDelayId = setTimeout(() => {
+      scheduler.startDelayId = null;
+      if (state.phase !== "active") return; /* quit during the delay */
+      scheduler.anchorMs = context.monotonicNowMs();
+      scheduler.intervalId = setInterval(runSchedulerCallback, 250);
+      /* RUSH plays one clock tick the moment its clock starts (doc 3). */
+      if (state.settings.mode === "rush") playGameSound("tick");
+    }, SCHEDULER_START_DELAY_MS);
+  }
+
+  function stopShiftScheduler() {
+    if (scheduler.startDelayId !== null) clearTimeout(scheduler.startDelayId);
+    if (scheduler.intervalId !== null) clearInterval(scheduler.intervalId);
+    scheduler.startDelayId = null;
+    scheduler.intervalId = null;
+    scheduler.anchorMs = null;
+  }
+
+  function runSchedulerCallback() {
+    if (state.phase !== "active") {
+      stopShiftScheduler();
+      return;
+    }
+
+    const nowMs = context.monotonicNowMs();
+
+    if (!GAME.schedulerCanRun(state)) {
+      /* Paused: hold elapsed time still by dragging the anchor along. */
+      scheduler.anchorMs = nowMs - state.shift.elapsedMs;
+      return;
+    }
+
+    const result = GAME.advanceShiftTime(
+      state, nowMs - scheduler.anchorMs, context);
+
+    if (result.shiftEnded) {
+      /* The completion dong wins over every coincident cue (doc 3). */
+      playGameSound("endDong");
+      GAME.assertStateInvariants(state, "advanceShiftTime");
+      stopShiftScheduler();
+      renderAll();
+      return;
+    }
+
+    if (result.timeChanged) {
+      for (const cueName of result.soundCues) playGameSound(cueName);
+      for (let i = 0; i < result.doinks; i++) playGameSound("doink");
+      if (result.blockedShake) UI.showWaitingBlockedShake();
+      if (result.queueChanged) {
+        GAME.assertStateInvariants(state, "rushArrival");
+        UI.renderWaiting(state, portraitUrlFor);
+        topUpPortraitReserve();
+      }
+      if (result.countdownNumeral !== null) {
+        UI.showCountdownNumeral(result.countdownNumeral);
+      }
+      UI.renderGameHeader(state);
+    }
   }
 
   /* ----------------------------------------------------------------------
@@ -496,19 +633,20 @@
       UI.renderGameHeader(state);
     });
 
+    /* Both confirm dialogs pause the clock through the "confirmation"
+       pause reason (game.js owns the overlay + reason together). */
     ui.quitGameButton.addEventListener("click", () => {
-      state.overlay = "confirm-quit";
+      if (!GAME.openConfirmDialog(state, "quit")) return;
       UI.renderConfirmQuit(state);
     });
 
     ui.confirmQuitCancel.addEventListener("click", () => {
-      state.overlay = null;
+      GAME.closeConfirmDialog(state);
       UI.renderConfirmQuit(state);
       ui.quitGameButton.focus();
     });
 
     ui.confirmQuitAccept.addEventListener("click", () => {
-      state.overlay = null;
       GAME.quitShift(state);
       GAME.assertStateInvariants(state, "quitShift");
       renderAll();
@@ -516,21 +654,26 @@
 
     /* Stop confirms first: ending early is final (John, 2026-08-04). */
     ui.stopGameButton.addEventListener("click", () => {
-      state.overlay = "confirm-stop";
+      if (!GAME.openConfirmDialog(state, "stop")) return;
       UI.renderConfirmStop(state);
     });
 
     ui.confirmStopCancel.addEventListener("click", () => {
-      state.overlay = null;
+      GAME.closeConfirmDialog(state);
       UI.renderConfirmStop(state);
       ui.stopGameButton.focus();
     });
 
     ui.confirmStopAccept.addEventListener("click", () => {
-      state.overlay = null;
       GAME.stopShift(state, "stop", context);
       GAME.assertStateInvariants(state, "stopShift");
       renderAll();
+    });
+
+    /* Switching away from the tab pauses the clock (doc 8 pause model);
+       coming back resumes it, without trying to catch up missed time. */
+    document.addEventListener("visibilitychange", () => {
+      GAME.setDocumentHidden(state, document.hidden);
     });
   }
 
@@ -669,11 +812,11 @@
         if (isPortraitZoomOpen()) closePortraitZoom();
         else closeChartAndRestoreFocus();
       } else if (state.overlay === "confirm-quit") {
-        state.overlay = null;
+        GAME.closeConfirmDialog(state);
         UI.renderConfirmQuit(state);
         ui.quitGameButton.focus();
       } else if (state.overlay === "confirm-stop") {
-        state.overlay = null;
+        GAME.closeConfirmDialog(state);
         UI.renderConfirmStop(state);
         ui.stopGameButton.focus();
       }

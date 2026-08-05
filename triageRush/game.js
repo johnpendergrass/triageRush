@@ -81,7 +81,8 @@ function createInitialState() {
                                // chart | patients-seen | confirm-quit |
                                // confirm-stop | null
     phase: "ready",            // loading | ready | active | complete | error
-    pauseReasons: [],          // logical reasons, e.g. "chart", "confirm-quit"
+    pauseReasons: [],          // "confirmation" | "document-hidden"
+                               // (Chart deliberately does NOT pause)
 
     player: {
       title: "Doctor",
@@ -534,12 +535,11 @@ function recallAssignedPatient(state, roomKey) {
 /* ------------------------------------------------------------------------
    5d. Chart (doc 3, doc 8; Phase 6).
    Chart is an active-patient tool: it can open only while a patient
-   occupies the center panel. Opening adds the "chart" pause reason so the
-   Phase-7 scheduler will freeze the clock and RUSH arrivals; the reason
-   list is already the single pause authority. Only the Clinical section's
-   expanded/collapsed choice is remembered (for the rest of the shift);
-   Answer never unlocks here, and Presentation resets to expanded on the
-   next open, so neither needs state.
+   occupies the center panel. Reading the chart does NOT pause the clock
+   (John, 2026-08-05): studying a patient costs shift time. Only the
+   Clinical section's expanded/collapsed choice is remembered (for the
+   rest of the shift); Answer never unlocks here, and Presentation resets
+   to expanded on the next open, so neither needs state.
    --------------------------------------------------------------------- */
 
 function addPauseReason(state, reason) {
@@ -554,20 +554,243 @@ function openChart(state) {
   if (state.phase !== "active" || state.active === null) return false;
   if (state.overlay !== null) return false;
   state.overlay = "chart";
-  addPauseReason(state, "chart");
   return true;
 }
 
 function closeChart(state) {
   if (state.overlay !== "chart") return false;
   state.overlay = null;
-  removePauseReason(state, "chart");
   return true;
 }
 
 /* Called only when the player toggles the Clinical section inside Chart. */
 function setChartClinicalExpanded(state, expanded) {
   state.chart.clinicalExpanded = Boolean(expanded);
+}
+
+/* ------------------------------------------------------------------------
+   5e. Confirmation dialogs and document visibility (doc 8 pause model).
+   The two things that pause the game are a confirm dialog being open and
+   the browser tab being hidden - each a pause reason, so the scheduler
+   needs no special cases. Both must clear before time moves again.
+   --------------------------------------------------------------------- */
+
+function openConfirmDialog(state, kind) {
+  if (kind !== "quit" && kind !== "stop") return false;
+  if (state.phase !== "active" || state.overlay !== null) return false;
+  state.overlay = "confirm-" + kind;
+  addPauseReason(state, "confirmation");
+  return true;
+}
+
+/* Cancel path only; accepting runs quitShift/stopShift, which clear all
+   pause state themselves. */
+function closeConfirmDialog(state) {
+  if (state.overlay !== "confirm-quit" && state.overlay !== "confirm-stop") {
+    return false;
+  }
+  state.overlay = null;
+  removePauseReason(state, "confirmation");
+  return true;
+}
+
+function setDocumentHidden(state, hidden) {
+  if (hidden && state.phase === "active") {
+    addPauseReason(state, "document-hidden");
+  } else if (!hidden) {
+    removePauseReason(state, "document-hidden");
+  }
+}
+
+/* ------------------------------------------------------------------------
+   5f. Logical scheduler (doc 8; Phase 7).
+   app.js runs one 250ms interval and asks this pure function to advance
+   the clock. Time is quantized to 250ms "logical quarters": elapsedMs is
+   always lastLogicalQuarter * 250, so a delayed browser callback that
+   reports the same quarter twice changes nothing. Each newly crossed
+   quarter is processed one at a time so no boundary event can be skipped
+   even when several quarters arrive in one late callback.
+   --------------------------------------------------------------------- */
+
+const QUARTER_MS = 250;
+
+/* The scheduler advances only when nothing is pausing the game (doc 8):
+   phase active, view GAME, and the pause-reason set empty. */
+function schedulerCanRun(state) {
+  return state.phase === "active" &&
+    state.view === "game" &&
+    state.pauseReasons.length === 0;
+}
+
+/* The clock cue for one logical quarter, or null for a silent quarter
+   (doc 3 "Clock, countdown, and sound timing"). Every cue lands on its
+   own 250ms boundary, so each quarter carries at most one cue; that is
+   also what makes "no duplicate tick at a coincident boundary" automatic
+   (a Triage minute boundary IS that ten-second boundary's tick).
+   Returns { sound, numeral } where numeral is 10..1 for the RUSH
+   pop-over-the-patient display and null otherwise. */
+function clockCueForQuarter(state) {
+  const remainingMs = state.shift.remainingMs;
+  const elapsedMs = state.shift.elapsedMs;
+  const isRush = state.settings.mode === "rush";
+
+  /* Final ten seconds (both modes use the RUSH audio cadence, doc 3):
+     countdown tick on each whole second 10..1; during the final five,
+     extra beats at one-quarter and one-half second AFTER the integer,
+     silence at three-quarters - EXCEPT the last TWO seconds, which beat
+     on every quarter as a run-in to the dong (John, 2026-08-05).
+     Numerals are RUSH-only (doc 7). */
+  if (remainingMs <= 10000) {
+    if (remainingMs % 1000 === 0) {
+      return {
+        sound: "countdownTick",
+        numeral: isRush ? remainingMs / 1000 : null
+      };
+    }
+    if (remainingMs < 2000) return { sound: "countdownTick", numeral: null };
+    const beatInSecond = remainingMs % 1000;
+    if (remainingMs < 5000 && (beatInSecond === 750 || beatInSecond === 500)) {
+      return { sound: "countdownTick", numeral: null };
+    }
+    return null;
+  }
+
+  if (isRush) {
+    /* Ten-second boundaries B above the final ten get a three-beat
+       emphasis: lead-in ticks at B+0.50 and B+0.25, then the ordinary
+       whole-second tick lands on B itself. The transition to 10 starts
+       the countdown instead, so B = 10s gets no lead-ins (doc 3). */
+    if ((remainingMs - 500) % 10000 === 0 && remainingMs - 500 > 10000) {
+      return { sound: "minuteTick", numeral: null };
+    }
+    if ((remainingMs - 250) % 10000 === 0 && remainingMs - 250 > 10000) {
+      return { sound: "minuteTick", numeral: null };
+    }
+    /* Ordinary tick on every whole second while time remains. Elapsed
+       zero is shift start, whose immediate tick app.js already plays. */
+    if (remainingMs % 1000 === 0 && elapsedMs > 0) {
+      return { sound: "tick", numeral: null };
+    }
+    return null;
+  }
+
+  /* Triage counts cues in ELAPSED time: a tick every ten seconds, and a
+     three-beat emphasis around each completed minute (lead-ins at
+     minute-0.50 and minute-0.25; the on-minute beat is the ordinary
+     ten-second tick itself, never a fourth beat - doc 8). */
+  if ((elapsedMs + 500) % 60000 === 0) return { sound: "minuteTick", numeral: null };
+  if ((elapsedMs + 250) % 60000 === 0) return { sound: "minuteTick", numeral: null };
+  if (elapsedMs % 10000 === 0 && elapsedMs > 0) {
+    return { sound: "tick", numeral: null };
+  }
+  return null;
+}
+
+/* One scheduled RUSH arrival (doc 8). Draws the 20% double-burst chance,
+   inserts what capacity allows, stages the burst's second member exactly
+   one 250ms beat later (in LOGICAL game time, so pauses freeze it), and
+   walks the base interval down by one second to a 1-second floor. */
+function processRushArrival(state, context, effects) {
+  const requested =
+    context.random() < GAME_CONSTANTS.RUSH_DOUBLE_PROBABILITY ? 2 : 1;
+  const available = GAME_CONSTANTS.MAX_WAITING - state.waiting.length;
+  const actual = Math.min(requested, available);
+  const blocked = actual < requested;
+  state.rush.currentArrivalEventId += 1;
+
+  if (actual >= 1) {
+    const insertion = insertWaitingPatient(state, context, { announce: true });
+    if (insertion.inserted) {
+      effects.doinks += 1;
+      effects.queueChanged = true;
+    }
+  }
+  if (actual === 2) {
+    state.rush.stagedSecondArrivalAtMs =
+      state.shift.elapsedMs + GAME_CONSTANTS.BURST_BEAT_MS;
+  }
+  /* One shake per blocked event, however many members were refused. */
+  if (blocked) effects.blockedShake = true;
+
+  /* The next interval shrinks regardless of insertion success; a burst
+     never resets or delays the base schedule (doc 8). */
+  state.rush.nextBaseIntervalMs =
+    Math.max(1000, state.rush.nextBaseIntervalMs - 1000);
+  state.rush.arrivalRemainingMs = state.rush.nextBaseIntervalMs;
+}
+
+/* elapsedActiveMs is active play time only: app.js freezes it during
+   pauses by moving its anchor, so this function never sees paused time.
+   soundCues lists this callback's cue sounds in order; countdownNumeral
+   is the latest numeral to pop over the patient image (or null);
+   doinks/queueChanged/blockedShake are RUSH arrival effects. */
+function advanceShiftTime(state, elapsedActiveMs, context) {
+  const noChange = { timeChanged: false, shiftEnded: false,
+    soundCues: [], countdownNumeral: null,
+    doinks: 0, queueChanged: false, blockedShake: false };
+  if (state.phase !== "active") return noChange;
+
+  const reachedQuarter = Math.floor(elapsedActiveMs / QUARTER_MS);
+  if (reachedQuarter <= state.shift.lastLogicalQuarter) return noChange;
+
+  const shiftLengthMs = selectedShiftLengthSeconds(state) * 1000;
+  const isRush = state.settings.mode === "rush";
+  const soundCues = [];
+  let countdownNumeral = null;
+  const effects = { doinks: 0, queueChanged: false, blockedShake: false };
+
+  for (let quarter = state.shift.lastLogicalQuarter + 1;
+       quarter <= reachedQuarter; quarter++) {
+    state.shift.lastLogicalQuarter = quarter;
+    state.shift.elapsedMs = quarter * QUARTER_MS;
+    state.shift.remainingMs = Math.max(0, shiftLengthMs - state.shift.elapsedMs);
+
+    /* Zero completes the shift exactly once, before anything else this
+       quarter would do (doc 8 order); the completion dong suppresses
+       every other coincident cue INCLUDING a same-instant arrival
+       (doc 3). Later quarters in a late callback are ignored because
+       the phase is no longer active. */
+    if (state.shift.remainingMs === 0) {
+      stopShift(state, "timer", context);
+      return { timeChanged: true, shiftEnded: true,
+        soundCues: ["endDong"], countdownNumeral: null,
+        doinks: 0, queueChanged: effects.queueChanged, blockedShake: false };
+    }
+
+    if (isRush) {
+      /* The burst's staged second member lands exactly one beat after
+         the first; capacity is rechecked and a blocked staged insertion
+         is silent, sharing its event's one shake (doc 8). */
+      if (state.rush.stagedSecondArrivalAtMs !== null &&
+          state.shift.elapsedMs >= state.rush.stagedSecondArrivalAtMs) {
+        state.rush.stagedSecondArrivalAtMs = null;
+        const staged = insertWaitingPatient(state, context, { announce: true });
+        if (staged.inserted) {
+          effects.doinks += 1;
+          effects.queueChanged = true;
+        }
+      }
+    }
+
+    const cue = clockCueForQuarter(state);
+    if (cue) {
+      soundCues.push(cue.sound);
+      if (cue.numeral !== null) countdownNumeral = cue.numeral;
+    }
+
+    /* Quarter 0 is the anchor instant - no play time has passed yet -
+       so the arrival countdown only ticks from quarter 1 on. */
+    if (isRush && state.shift.elapsedMs > 0) {
+      state.rush.arrivalRemainingMs -= QUARTER_MS;
+      if (state.rush.arrivalRemainingMs <= 0) {
+        processRushArrival(state, context, effects);
+      }
+    }
+  }
+
+  return { timeChanged: true, shiftEnded: false, soundCues, countdownNumeral,
+    doinks: effects.doinks, queueChanged: effects.queueChanged,
+    blockedShake: effects.blockedShake };
 }
 
 /* ------------------------------------------------------------------------
@@ -778,8 +1001,13 @@ function collectInvariantViolations(state) {
     "recall available without an assigned patient");
   check(state.overlay !== "chart" || !!state.active,
     "Chart open without an active patient");
-  check(state.overlay === "chart" || !state.pauseReasons.includes("chart"),
-    "chart pause reason without Chart open");
+  check(!state.pauseReasons.includes("chart"),
+    "chart pause reason exists (Chart stopped pausing 2026-08-05)");
+  check(state.overlay === "confirm-quit" || state.overlay === "confirm-stop"
+    || !state.pauseReasons.includes("confirmation"),
+    "confirmation pause reason without a confirm dialog open");
+  check(state.phase === "active" || state.pauseReasons.length === 0,
+    "pause reasons outside an active shift");
   check(state.shift.remainingMs >= 0, "remaining time below zero");
   check(state.phase !== "active" || state.view === "game",
     "active phase outside GAME view");
@@ -899,6 +1127,11 @@ window.TRIAGE_RUSH_GAME = {
   openChart,
   closeChart,
   setChartClinicalExpanded,
+  openConfirmDialog,
+  closeConfirmDialog,
+  setDocumentHidden,
+  schedulerCanRun,
+  advanceShiftTime,
   selectLedgerRecords,
   selectScoreTotals,
   startShift,

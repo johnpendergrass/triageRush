@@ -128,6 +128,27 @@ not inventory superseded code or assets. Historical detail remains in
 - Phases 1 through 6 of document `9` were implemented and visually approved on
   desktop and iPhone.
 
+### 2026-08-05 Phase 7: the clock comes alive
+
+- One 250ms logical scheduler landed: live countdown, pause via reasons, and
+  the timer-zero ending. Pause reasons settled as `confirmation` and
+  `document-hidden` only — the Chart deliberately does NOT pause (reading a
+  patient costs shift time), reversing the earlier chart-pause plan.
+- The clock starts after a 2-second acclimation delay so the player can take
+  in the game screen.
+- Four clock sounds joined the Web Audio registry (tick, minuteTick,
+  countdownTick, endDong), with the doc 3 cue schedule verified quarter by
+  quarter under Node. John tuned the ending: the last TWO seconds beat on
+  every quarter as a run-in to the dong.
+- RUSH gained its white pop-and-dissolve countdown numerals (10..1, centered
+  on the middle of the patient image) and the full arrival engine: intervals
+  walking down 10,9,8...1s (14.5s start for 120s), 20% double bursts with the
+  second member exactly 250ms behind, and a silent queue shake when a full
+  waiting room refuses an arrival.
+- The clipboard lost its metal clamp: the header row is now PATIENT CHART
+  (left), the LIVE shift clock, and the red X. The clamp CSS is kept
+  commented in styles.css in case the look returns.
+
 ## Historical lookup
 
 Use [the archive index](archive/README.md) only when older rationale is needed.

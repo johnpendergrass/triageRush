@@ -319,17 +319,12 @@ Full content mappings are in
 ## Clock, countdown, and sound timing
 
 Use one quarter-second heartbeat and trigger every cue once at a defined
-boundary. A confirmation dialog (or the browser tab being hidden) pauses both
-the clock and the RUSH arrival countdown. The Chart overlay deliberately does
-NOT pause: studying a patient costs shift time (John, 2026-08-05).
-
-The clock starts only after a 2-second acclimation delay once the GAME screen
-appears, so the player can take in the board before time moves.
+boundary. Opening the Chart overlay or a confirmation dialog pauses both the
+clock and the RUSH arrival countdown.
 
 ### RUSH clock sequence
 
-- Play one clock tick the moment the clock starts (after the acclimation
-  delay).
+- Play one clock tick immediately when the shift starts.
 - Play the ordinary clock tick on every whole-second boundary while time remains.
 - Before the final ten seconds, emphasize every ten-second boundary with three
   beats: additional ticks at 0.50 and 0.25 seconds before the boundary, followed
@@ -341,9 +336,6 @@ appears, so the player can take in the board before time moves.
 - During each of the final five seconds, use the established three-beat cadence:
   a tick on the whole second, then at one-quarter and one-half second after it,
   with silence at three-quarters.
-- The last TWO seconds beat on every quarter instead - ticks at 2.00, 1.75,
-  1.50, 1.25, 1.00, 0.75, 0.50, and 0.25 seconds remaining - as a run-in to
-  the dong.
 - At zero, suppress any coincident arrival cue and play the lower completion dong.
 
 ### Triage clock sequence

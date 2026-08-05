@@ -284,10 +284,9 @@ in the Chart overlay and review settings of the same chart builder.
 - Assignment result appears transiently over the center panel:
   `✓ CORRECT`, `△ CLOSE`, or `✕ WRONG`.
 - The result includes matching color but remains readable in monochrome.
-- RUSH final numerals 10 through 1 are white, heavy, and centered on the
-  middle of the patient image.
-- Each numeral pops in quickly, then expands and dissolves (fading and
-  softening as it grows) over about half a second.
+- RUSH final numerals 10 through 1 are white, heavy, and centered over the
+  patient image about one-third down.
+- Each numeral pops quickly and fades in place over about half a second.
 - Countdown visuals never create an opaque full-screen layer or intercept input.
 
 ## Seven-room rail
@@ -346,14 +345,8 @@ label text `clamp(9px, 3cqw, 15px)`, subtitle `clamp(5px, 1.6cqw, 9px)` with
 
 - Covers the shell with a dark translucent scrim and slight blur.
 - The clipboard occupies most of the shell with roughly 8% outer padding. It is
-  entirely CSS-drawn (no clipboard artwork): board gradient, a header row, and
+  entirely CSS-drawn (no clipboard artwork): board gradient, metal clamp, and
   ruled cream paper.
-- The board's header row (2026-08-05; replaced the metal clamp): `PATIENT
-  CHART` left-justified with a decent margin in subdued pressed-into-the-board
-  lettering, then the LIVE shift clock (TIME over value, board tones), then
-  the red ✕ at the right edge. The clock mirrors the game header's value every
-  second — the shift clock keeps running while the chart is open, so it must
-  stay readable here. (The retired clamp CSS is kept commented in styles.css.)
 - Chart content scrolls internally; body/page does not.
 - The Presentation cards render directly with NO section header: always
   visible, never collapsible.
@@ -434,7 +427,7 @@ new game.
 
 Opening Patients Seen displays the same detailed chart inside a review wrapper.
 
-- Fixed banner below the chart's header row.
+- Fixed banner below the chart clamp.
 - Previous and next circular buttons.
 - `index / total · patient name`.
 - Dedicated close box.

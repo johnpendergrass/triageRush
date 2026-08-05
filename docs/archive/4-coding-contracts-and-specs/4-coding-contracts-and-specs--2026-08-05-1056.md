@@ -397,8 +397,7 @@ incompatible stored data falls back safely to HOME and never partially recovers.
 - Room descriptions may use hover/long press as supplemental help.
 - Provide useful accessible names for number-only score fields and door artwork.
 - Feedback must not rely on color alone.
-- Blocking overlays manage focus; confirmation dialogs pause the shift, while
-  the Chart deliberately lets the clock run (John, 2026-08-05).
+- Blocking overlays manage focus and pause the shift.
 - Respect reduced motion for shake, pulse, and countdown animation.
 - Maintain minimum practical touch targets and safe-area spacing.
 

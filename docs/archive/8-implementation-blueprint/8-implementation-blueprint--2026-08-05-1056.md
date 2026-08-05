@@ -2,10 +2,10 @@
 
 **Last modified:** 2026-08-05
 
-**Latest change:** Phase 7 clock decisions (2026-08-05): the Chart no longer
-pauses (no `"chart"` pause reason), the clock starts after a 2-second
-acclimation delay, and the last two seconds beat on every quarter as a
-run-in to the dong.
+**Latest change:** Aligned the blueprint with the built game (Phases 1-6):
+actual state shape, Chart naming (`state.chart`, `openChart`, pause reason
+`"chart"`), the three-toggle sound model plus sound registry, the recall
+sound, and the unified chart builder.
 
 ## Purpose
 
@@ -89,7 +89,7 @@ implemented against it):
                                 // chart | patients-seen | confirm-quit |
                                 // confirm-stop | null
   phase: "ready",               // loading | ready | active | complete | error
-  pauseReasons: [],             // "confirmation" | "document-hidden"
+  pauseReasons: [],             // logical reasons, e.g. "chart", "confirm-quit"
 
   player: {
     title: "Doctor",
@@ -177,8 +177,8 @@ At every committed transition:
 - ledger points agree with outcome;
 - Close is impossible in Strict;
 - recall is available only for the assigned patient's open room;
-- the Chart can open only when `active != null`, and no `"chart"` pause
-  reason ever exists (the Chart stopped pausing 2026-08-05);
+- the Chart can open only when `active != null`, and the `"chart"` pause
+  reason exists only while the Chart overlay is open;
 - RUSH-only arrival state has no gameplay effect in Triage;
 - remaining time never goes below zero; and
 - view/overlay changes never alter scoring or queue content by themselves;
@@ -266,15 +266,13 @@ set selected countdown
 set RUSH base interval: 10s for 60s, 14.5s for 120s
 seed 5 patients for Triage or 2 for RUSH without doinks
 set view GAME and phase active
+anchor monotonic scheduler
 render
-after a 2-second acclimation delay: anchor monotonic scheduler and
-  play the RUSH start tick when enabled
+play RUSH start tick when enabled
 ```
 
 Initial seeding uses the insertion primitive with `announce: false`.
-The timer anchor is created only after required assets decode successfully
-AND the 2-second acclimation delay has passed; quitting during the delay
-cancels the pending anchor.
+The timer anchor is created only after required assets decode successfully.
 
 ## Queue insertion primitive
 
@@ -443,7 +441,7 @@ The patient panel click/keyboard handler dispatches `openChart` in `game.js`:
 openChart() {
   require phase active and active != null and overlay == null
   overlay = "chart"
-  // deliberately NO pause reason: reading the chart costs shift time
+  add pause reason "chart"
 }
 // rendering shows:
 //   presentation cards (always visible, no section header)
@@ -458,8 +456,8 @@ never unlocks in this context. New Shift resets Clinical to false.
 The photo zoom lightbox (document `7`) is deliberately DOM-only view state:
 it is never stored in the state tree and always starts closed on Chart open.
 
-Closing restores focus to the patient panel hit target. The clock runs the
-whole time the Chart is open (John, 2026-08-05).
+Closing removes the `"chart"` pause reason and restores focus to the patient
+panel hit target.
 
 ## Score selectors
 
@@ -489,8 +487,7 @@ processRushArrival() {
 
   if (actual >= 1) insertWaitingPatient({ announce: true, eventId })
   if (actual === 2) {
-    rush.stagedSecondArrivalAtMs = elapsedMs + BURST_BEAT_MS
-      // LOGICAL game time, not wall/monotonic time, so pauses freeze it
+    rush.stagedSecondArrivalAt = monotonicNow + BURST_BEAT_MS
   }
   if (blocked) queue one reduced-motion-aware shake for eventId
 
@@ -546,8 +543,6 @@ Final ten:
 
 - numeral and ordinary tick at each integer 10 through 1;
 - during 5 through 1, extra ticks 0.25 and 0.50 seconds after the integer;
-- the last two seconds beat on all eight quarters (2.00 down to 0.25) as a
-  run-in to the dong;
 - completion dong at zero;
 - no arrival cue at zero.
 
@@ -566,11 +561,8 @@ of its minute group, not a fourth tick.
 Use a set of pause reasons:
 
 ```text
-confirmation, document-hidden
+chart, confirmation, document-hidden
 ```
-
-The Chart overlay deliberately adds no pause reason: the clock and the RUSH
-arrival countdown keep running while the player reads (John, 2026-08-05).
 
 The scheduler advances only when the set is empty, phase is active, and view is
 GAME. Adding a second reason does not overwrite the first. Resume only after all

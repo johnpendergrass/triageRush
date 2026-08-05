@@ -24,3 +24,9 @@ SHIFT EARLY, three-toggle sound model, recall sound, door halo, flat green
 rails, no PRESENTATION header, photo zoom lightbox, empty-state hints,
 nameplate chip) are folded into docs 1-9. The loose amendment notes moved to
 `docs/archive/design-notes/`. There is no pending amendment layer.
+
+Phase 7 (2026-08-05 afternoon) folded its decisions into docs 3/4/7/8/9 as
+they were made: Chart does not pause, 2-second acclimation delay, last-two-
+seconds countdown run-in, numerals centered on the patient image with an
+expand-dissolve exit, and the clipboard header row (PATIENT CHART + live
+clock + red X, metal clamp retired but kept commented in styles.css).

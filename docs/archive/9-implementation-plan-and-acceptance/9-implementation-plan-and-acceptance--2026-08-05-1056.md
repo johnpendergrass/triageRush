@@ -2,14 +2,15 @@
 
 **Last modified:** 2026-08-05
 
-**Latest change:** Phase 7 complete (2026-08-05): scheduler, countdown,
-clock sounds, RUSH numerals, and RUSH arrivals/bursts, plus the session's
-clock decisions (2-second acclimation delay, Chart does not pause, last two
-seconds beat on every quarter).
+**Latest change:** Swept in the 2026-08-04/05 amendments (Chart naming, footer
+wording, sound model, recall sound, halo, photo zoom) and recorded build
+status.
 
-**Build status (2026-08-05):** Phases 1 through 7 are implemented in
-`triageRush/`; Phases 1-6 are visually approved by John and Phase 7 awaits
-his play-through. Phase 8 (Shift Review and Patients Seen) is next.
+**Build status (2026-08-05):** Phases 1 through 6 are implemented in
+`triageRush/` and visually approved by John. Phase 7 (scheduler) is next. The
+one Phase-6 acceptance row that waits for Phase 7 is the actual clock freeze,
+because the clock itself does not run until the scheduler exists; the pause
+reason plumbing is already in place.
 
 ## Objective
 
@@ -244,8 +245,7 @@ Implement:
 - Answer locked with shake;
 - Clinical shift-level memory;
 - the photo zoom lightbox;
-- overlay plumbing (the Chart deliberately adds no pause reason: the clock
-  keeps running while the player reads - John, 2026-08-05);
+- pause-reason plumbing (`"chart"`);
 - internal scroll hints;
 - close paths and focus restoration.
 
@@ -268,8 +268,8 @@ Acceptance:
   open, and closes via its red box, scrim tap, or Escape;
 - Escape peels the lightbox first, then the Chart; the lightbox always starts
   closed on a fresh Chart open;
-- opening and closing the Chart never touches the pause reasons: the clock
-  runs while the Chart is open;
+- opening the Chart adds the `"chart"` pause reason and closing removes it
+  (the actual clock freeze lands with the Phase-7 scheduler);
 - close restores focus to the panel hit target; open focuses the close box;
 - keyboard and touch activation both work;
 - footer center contains no disabled or hidden Chart action.
@@ -281,15 +281,12 @@ Implement one 250ms logical scheduler.
 ### Triage acceptance
 
 - 300-second and 600-second countdowns start at selected value.
-- The clock holds its starting value for a 2-second acclimation delay after
-  the GAME screen appears (both modes).
 - Display never shows elapsed `+` time.
 - One tick occurs every ten elapsed seconds.
 - At each minute boundary, ticks occur 500ms before, 250ms before, and on the
   boundary, without a duplicate ordinary ten-second tick.
 - Final ten follows RUSH whole-second audio.
-- Final five includes quarter/half beats; the last two seconds beat on every
-  quarter as a run-in to the dong.
+- Final five includes quarter/half beats.
 - Zero ends the shift once and plays completion dong once.
 - Waiting patients contribute zero penalty.
 
@@ -333,8 +330,7 @@ the second insertion.
   the ordinary boundary tick;
 - ten-second sequence begins at 10 and replaces that emphasis group;
 - numerals 10 through 1 pop/fade over the patient image;
-- final five adds quarter- and half-second ticks after each whole-second tick,
-  and the last two seconds beat on all eight quarters as a run-in to the dong;
+- final five adds quarter- and half-second ticks after each whole-second tick;
 - zero dong suppresses coincident arrival and timing cues;
 - full blocked arrivals are silent except for the visual shake.
 

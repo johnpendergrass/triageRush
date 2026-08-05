@@ -46,11 +46,12 @@
     "scoreCloseDivider", "scoreClose", "scoreWrong", "scoreTotal",
     "gameTimer", "gameSoundButton", "waitingPanel", "patientPanel",
     "patientChartMount", "patientPanelHitButton", "patientEmptyState",
-    "patientEmptyHint", "resultToast", "roomsPanel", "quitGameButton",
-    "stopGameButton",
+    "patientEmptyHint", "resultToast", "countdownNumeral", "roomsPanel",
+    "quitGameButton", "stopGameButton",
     // Chart
     "chartOverlay", "chartClipboard", "chartCloseButton", "chartScroll",
     "chartOverlayMount", "chartMoreAbove", "chartMoreBelow", "chartZoomView",
+    "chartTimer", "chartTimerValue",
     // REVIEW
     "reviewView", "reviewEyebrow", "reviewPlayerLine", "reviewScoreLine",
     "returnToLobbyButton"
@@ -272,6 +273,9 @@
     ui.scoreCloseDivider.hidden = isStrict;
 
     ui.gameTimer.textContent = formatClock(state.shift.remainingMs);
+    /* The clipboard header's clock mirrors the same value, so the time
+       stays readable while the chart is open (John, 2026-08-05). */
+    ui.chartTimerValue.textContent = formatClock(state.shift.remainingMs);
 
     ui.gameSoundButton.classList.toggle(
       "is-muted", !state.gameSoundsAudible);
@@ -814,6 +818,31 @@
     }
   }
 
+  /* A full waiting room refusing a RUSH arrival: the queue column shakes
+     once, silently (doc 3: blocked arrivals shake but make no sound).
+     Same restart idiom as the numerals; reduced motion shortens it. */
+  function showWaitingBlockedShake() {
+    ui.waitingPanel.classList.remove("is-arrival-blocked");
+    void ui.waitingPanel.offsetWidth; /* restart the animation */
+    ui.waitingPanel.classList.add("is-arrival-blocked");
+  }
+
+  /* ----------------------------------------------------------------------
+     5f. RUSH final countdown numerals (Phase 7). Each numeral 10..1 pops
+     quickly and fades in place over about half a second, one third down
+     over the patient image (doc 7). The animation runs once per call;
+     removing and re-adding the class restarts it for the next numeral.
+     CSS clears it to invisible when the animation ends, so nothing here
+     needs a timer (doc 4: rendering never starts timers).
+     ------------------------------------------------------------------- */
+
+  function showCountdownNumeral(numeralValue) {
+    ui.countdownNumeral.textContent = String(numeralValue);
+    ui.countdownNumeral.classList.remove("is-popping");
+    void ui.countdownNumeral.offsetWidth; /* restart the animation */
+    ui.countdownNumeral.classList.add("is-popping");
+  }
+
   /* ----------------------------------------------------------------------
      6. SHIFT REVIEW rendering (skeleton).
      ------------------------------------------------------------------- */
@@ -851,6 +880,8 @@
     renderRooms,
     showAssignmentFeedback,
     clearAssignmentFeedback,
+    showWaitingBlockedShake,
+    showCountdownNumeral,
     renderGameHeader,
     renderConfirmQuit,
     renderConfirmStop,
