@@ -632,9 +632,7 @@ img {
 
 .patient-panel {
   position: relative;
-  background-image:
-    linear-gradient(#ffffff05, #03101925),
-    var(--asset-patient-panel);
+  background-image: var(--asset-patient-panel);
   background-size: cover;
   background-position: center top;
   padding: 4px;
@@ -666,6 +664,383 @@ img {
   font-size: clamp(16px, 5.6cqw, 23px);
   font-weight: 900;
   letter-spacing: 0.04em;
+}
+
+.patient-empty-hint {
+  font-size: clamp(8px, 2.4cqw, 11px);
+  letter-spacing: 0.1em;
+  font-weight: 800;
+  color: #cfe4ec;
+}
+
+/* ------------------------------------------------------------------------
+   7b. Waiting queue rows.
+   The panel is a grid whose row count JS sets (5 minimum, up to 10 in
+   RUSH); each occupied row is a layered button.
+   --------------------------------------------------------------------- */
+
+.waiting-panel {
+  display: grid;
+  gap: 3px;
+  padding: 3px;
+}
+
+.queue-patient,
+.queue-slot-empty {
+  position: relative;
+  overflow: hidden;
+  border-radius: 5px;
+  border: 2px solid #778c8e;
+  background: #e9dfcd;
+  padding: 0;
+}
+
+.queue-slot-empty {
+  opacity: 0.78;
+}
+
+.queue-background {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.queue-patient-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  filter: drop-shadow(0 1px 1px #172a3199);
+}
+
+.queue-cell-frame {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px #ffffff77, inset 0 0 0 2px #00000055;
+  border-radius: 3px;
+}
+
+.queue-complaint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1px 3px;
+  background: #031019dc;
+  color: var(--cream);
+  font-size: clamp(5px, 1.7cqw, 8px);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+/* Attract state while the center panel waits for a selection. */
+.queue-patient.is-selectable {
+  box-shadow: 0 0 8px #778c8ebb;
+  animation: queue-ready 1.25s ease-in-out infinite alternate;
+}
+
+@keyframes queue-ready {
+  from { filter: brightness(1); }
+  to { filter: brightness(1.13); }
+}
+
+.queue-patient:active {
+  transform: scale(0.97);
+}
+
+/* Move/swap hint badge on the row's right edge (UI Hints on). */
+.queue-hint {
+  position: absolute;
+  right: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(12px, 4cqw, 18px);
+  height: clamp(12px, 4cqw, 18px);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgb(23 55 70 / 80%);
+  border: 1px solid #fff5d7;
+  color: #fff;
+  font-size: clamp(7px, 2.4cqw, 11px);
+  font-weight: 900;
+  font-family: "Arial Black", Impact, sans-serif;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------------
+   7c. The unified patient chart - transparent PANEL setting.
+   One content structure (built in ui.js); this wrapper gives it the
+   compact flow tuned to the narrow center column. The Coach clipboard
+   setting will restyle the identical structure.
+   --------------------------------------------------------------------- */
+
+.patient-chart-mount {
+  position: absolute;
+  inset: 4px;
+}
+
+.patient-chart {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.3%;
+}
+
+/* --- Scene: portrait against the framed clinical backdrop --- */
+
+.chart-scene {
+  /* Fully transparent: the panel's corridor artwork is the backdrop. */
+  position: relative;
+  flex: 43 1 0;
+  min-height: 0;
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.chart-nameplate {
+  /* Its own centered plate; the corridor shows on either side of it. */
+  flex: 0 0 auto;
+  align-self: center;
+  width: 86%;
+  margin-top: clamp(2px, 1cqw, 5px);
+  min-height: clamp(24px, 7.5cqw, 34px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 6px;
+  background: linear-gradient(#123b50, #041722);
+  border: 1px solid #3d6377;
+  box-shadow: 0 2px 4px #0008;
+}
+
+.chart-nameplate strong {
+  color: #fff;
+  font-size: clamp(10px, 3.4cqw, 16px);
+  font-weight: 900;
+  letter-spacing: 0.03em;
+}
+
+.chart-nameplate span {
+  color: #b9d4df;
+  font-size: clamp(8px, 2.6cqw, 12px);
+  font-weight: 700;
+}
+
+.chart-portrait {
+  position: absolute;
+  bottom: -2%;
+  left: 50%;
+  height: 94%;
+  max-width: 96%;
+  object-fit: contain;
+  object-position: center bottom;
+  transform-origin: bottom center;
+  filter: drop-shadow(0 7px 5px #00101ba8);
+}
+
+.chart-complaint {
+  /* Its own centered plate below the portrait, like the nameplate above.
+     Stack gap provides the same spacing the other cards share. */
+  flex: 0 0 auto;
+  align-self: center;
+  width: 86%;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: #f3e7d8ed;
+  border: 1px solid #c09e62;
+  color: #1d2225;
+  font-size: clamp(8px, 2.6cqw, 12px);
+  font-weight: 900;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --- Quote card --- */
+
+.chart-quote {
+  flex: 17 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 3px 6px;
+  border-radius: 6px;
+  background: #f6ecddf5;
+  border: 1px solid #b19a79;
+  overflow: hidden;
+}
+
+.chart-quote small {
+  color: #8a4c16;
+  font-size: clamp(6px, 1.9cqw, 9px);
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-align: center;
+}
+
+/* Quote body matches the triage-note body size; italic serif voice. */
+.chart-quote p {
+  color: #2a2620;
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: clamp(7px, 2.2cqw, 10px);
+  line-height: 1.3;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* --- Vitals: 3 x 2 tiles; icon art arrives later --- */
+
+.chart-vitals {
+  flex: 18 1 0;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f2f3f2f2;
+  border: 1px solid #cbd0d1;
+}
+
+.vital-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  border: 0.5px solid #cbd0d1;
+  min-width: 0;
+  min-height: 0;
+}
+
+.vital-tile small {
+  color: #47616f;
+  font-size: clamp(6px, 1.9cqw, 8px);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.vital-tile strong {
+  color: #1d2a30;
+  font-size: clamp(9px, 3cqw, 13px);
+  font-weight: 900;
+}
+
+.vital-value.is-yellow { color: #b46a00; }
+.vital-value.is-red { color: #c72d25; }
+
+/* --- Triage note clipboard card --- */
+
+.chart-note {
+  flex: 19 1 0;
+  min-height: 0;
+  border-radius: 7px;
+  background: #f2e8d8;
+  border: 3px solid #8a4c16;
+  padding: clamp(4px, 1.5cqw, 8px) 6px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.chart-note small {
+  color: #8a4c16;
+  font-size: clamp(6px, 1.9cqw, 9px);
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-align: center;
+}
+
+.chart-note p {
+  color: #243036;
+  /* Regular Arial, not the condensed app face: chart prose reads better
+     at full width and visually matches the Georgia quote body. */
+  font-family: Arial, sans-serif;
+  font-size: clamp(7px, 2.2cqw, 10px);
+  font-weight: 700;
+  line-height: 1.35;
+  overflow: hidden;
+}
+
+/* --- ANSWER / CLINICAL slim strips (compact stand-ins) --- */
+
+.chart-strip {
+  flex: 4.5 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  font-size: clamp(7px, 2.3cqw, 10px);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: #fff;
+  text-shadow: 0 1px 1px #0009;
+}
+
+.chart-strip--answer {
+  background: repeating-linear-gradient(135deg,
+    #59666b 0 8px, #4d595e 8px 16px);
+  border: 1px solid #76848a;
+}
+
+.chart-strip--clinical {
+  background: linear-gradient(#205d75, #4b8498);
+  border: 1px solid #698d9d;
+}
+
+/* ------------------------------------------------------------------------
+   7d. Seven-room door rail.
+   Equal rows; accepted door art centered at 61% width / 91% height,
+   bottom-aligned (doc 7).
+   --------------------------------------------------------------------- */
+
+.rooms-panel {
+  display: grid;
+  grid-template-rows: repeat(7, minmax(0, 1fr));
+}
+
+.room-choice {
+  position: relative;
+  min-height: 0;
+  border-bottom: 2px solid #18313c;
+  padding: 0;
+}
+
+.room-choice:last-child {
+  border-bottom: none;
+}
+
+.door-art {
+  position: absolute;
+  left: 50%;
+  bottom: 1%;
+  transform: translateX(-50%);
+  width: 61%;
+  height: 91%;
+  object-fit: fill;
+  filter: drop-shadow(0 1px 2px #0008);
+}
+
+.room-choice:active .door-art {
+  transform: translateX(-50%) scale(0.96);
+  transition: transform 160ms ease;
 }
 
 .game-footer {

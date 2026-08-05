@@ -44,7 +44,8 @@
     "gameView", "gameBrand", "gameScorecard", "scoreCorrect",
     "scoreCloseDivider", "scoreClose", "scoreWrong", "scoreTotal",
     "gameTimer", "gameSoundButton", "waitingPanel", "patientPanel",
-    "patientEmptyState", "roomsPanel", "quitGameButton", "stopGameButton",
+    "patientChartMount", "patientEmptyState", "patientEmptyHint",
+    "roomsPanel", "quitGameButton", "stopGameButton",
     // REVIEW
     "reviewView", "reviewEyebrow", "reviewPlayerLine", "reviewScoreLine",
     "returnToLobbyButton"
@@ -287,6 +288,249 @@
   }
 
   /* ----------------------------------------------------------------------
+     5b. Waiting queue rendering.
+     Rows are rebuilt on each change; clicks are handled by delegation in
+     app.js, so no listeners are attached here.
+     ------------------------------------------------------------------- */
+
+  function renderWaiting(state, portraitUrlFor) {
+    const assets = window.TRIAGE_RUSH_ASSETS;
+    const rowCount = Math.max(
+      GAME.GAME_CONSTANTS.MIN_VISIBLE_WAITING, state.waiting.length);
+    ui.waitingPanel.style.gridTemplateRows =
+      `repeat(${rowCount}, minmax(0, 1fr))`;
+
+    const canSelect = state.active === null && state.assigned === null;
+    const canSwap = state.active !== null && state.assigned === null;
+    const rows = [];
+
+    state.waiting.forEach((entry, waitingIndex) => {
+      const row = document.createElement("button");
+      row.type = "button";
+      row.className = "queue-patient" + (canSelect ? " is-selectable" : "");
+      row.dataset.waitingIndex = String(waitingIndex);
+
+      const background = document.createElement("img");
+      background.className = "queue-background";
+      background.alt = "";
+      background.src = assets.game.waitingBackgrounds[entry.waitingBackgroundKey];
+
+      const portrait = document.createElement("img");
+      portrait.className = "queue-patient-image";
+      portrait.alt = "";
+      portrait.src = portraitUrlFor(entry.patientId);
+
+      const frame = document.createElement("span");
+      frame.className = "queue-cell-frame";
+
+      const complaint = document.createElement("span");
+      complaint.className = "queue-complaint";
+      const record = window.TRIAGE_RUSH_PATIENTS_BY_ID[entry.patientId];
+      complaint.textContent = record.patient.presentation.chiefComplaint;
+
+      row.append(background, portrait, frame, complaint);
+
+      if (state.settings.hints && (canSelect || canSwap)) {
+        const hint = document.createElement("span");
+        hint.className = "queue-hint";
+        hint.textContent = canSelect ? "→" : "↔";
+        row.append(hint);
+      }
+
+      row.setAttribute("aria-label",
+        `${record.patient.presentation.personal.name}: `
+        + `${record.patient.presentation.chiefComplaint}`
+        + (canSwap ? " (swap with current patient)" : ""));
+      rows.push(row);
+    });
+
+    /* Empty rows keep wall/scene art at reduced emphasis (doc 7). */
+    for (let i = state.waiting.length; i < rowCount; i++) {
+      const emptySlot = document.createElement("div");
+      emptySlot.className = "queue-slot-empty";
+      const background = document.createElement("img");
+      background.className = "queue-background";
+      background.alt = "";
+      const backgroundKey = assets.waitingBackgroundKeys[
+        i % assets.waitingBackgroundKeys.length];
+      background.src = assets.game.waitingBackgrounds[backgroundKey];
+      const frame = document.createElement("span");
+      frame.className = "queue-cell-frame";
+      emptySlot.append(background, frame);
+      rows.push(emptySlot);
+    }
+
+    ui.waitingPanel.replaceChildren(...rows);
+  }
+
+  /* ----------------------------------------------------------------------
+     5c. The unified patient chart (design change 2026-08-04).
+     One builder maps a canonical patient record to the info cards; outer
+     setting wrappers decide the look. This phase uses the transparent
+     panel setting; the Coach clipboard setting reuses the same builder.
+     ------------------------------------------------------------------- */
+
+  const VITAL_DISPLAY_ORDER = [
+    { vitalKey: "hr", label: "HR" },
+    { vitalKey: "bp", label: "BP" },
+    { vitalKey: "rr", label: "RR" },
+    { vitalKey: "spo2", label: "SpO2" },
+    { vitalKey: "temp", label: "TEMP" },
+    { vitalKey: "pain", label: "PAIN" }
+  ];
+
+  function buildPatientChart(patientRecord, chartContext, portraitUrl) {
+    const presentation = patientRecord.patient.presentation;
+    const chart = document.createElement("div");
+    chart.className = "patient-chart";
+
+    /* Scene: nameplate, portrait, complaint chip. */
+    const scene = document.createElement("div");
+    scene.className = "chart-scene";
+
+    const nameplate = document.createElement("p");
+    nameplate.className = "chart-nameplate";
+    const nameText = document.createElement("strong");
+    nameText.textContent = presentation.personal.name.toUpperCase();
+    const ageSex = document.createElement("span");
+    ageSex.textContent =
+      `${presentation.personal.age} ${presentation.personal.sex}`;
+    nameplate.append(nameText, ageSex);
+
+    const portrait = document.createElement("img");
+    portrait.className = "chart-portrait";
+    portrait.alt = "";
+    portrait.src = portraitUrl;
+    /* Honor authored image metadata: mirroring and artist scale. This is
+       schema data, not pixel-sniffing, so it does not violate the
+       CSS-owns-geometry rule. */
+    const image = presentation.image || {};
+    const flip = image.imageFlipped ? " scaleX(-1)" : "";
+    const scaleFactor = typeof image.imageScale === "number"
+      ? image.imageScale : 1;
+    portrait.style.transform =
+      `translateX(-50%)${flip} scale(${scaleFactor})`;
+
+    const complaintChip = document.createElement("p");
+    complaintChip.className = "chart-complaint";
+    complaintChip.textContent = presentation.chiefComplaint;
+
+    /* The nameplate and complaint are their own boxes above and below the
+       scene (John's 2026-08-04 panel review), so nothing overlays the
+       portrait - an injured foot stays visible. */
+    scene.append(portrait);
+
+    /* Quote card: kicker header plus the italic quotation. */
+    const quote = document.createElement("div");
+    quote.className = "chart-quote";
+    const quoteKicker = document.createElement("small");
+    quoteKicker.textContent = "PATIENT QUOTE";
+    const quoteBody = document.createElement("p");
+    quoteBody.textContent = `“${presentation.quote}”`;
+    quote.append(quoteKicker, quoteBody);
+
+    /* Vitals: 3 x 2 tiles; authored colors only (doc 4). Icon slots are
+       ready but empty until John's generated icons arrive. */
+    const vitals = document.createElement("div");
+    vitals.className = "chart-vitals";
+    for (const { vitalKey, label } of VITAL_DISPLAY_ORDER) {
+      const vital = presentation.vitals[vitalKey];
+      const tile = document.createElement("p");
+      tile.className = "vital-tile";
+      const tileLabel = document.createElement("small");
+      tileLabel.textContent = label;
+      const tileValue = document.createElement("strong");
+      tileValue.textContent = String(vital.value);
+      tileValue.className = "vital-value is-" + vital.color;
+      tile.append(tileLabel, tileValue);
+      tile.setAttribute("aria-label", `${label} ${vital.value}`);
+      vitals.append(tile);
+    }
+
+    /* Triage note card. No clip hardware: the chart itself is the
+       clipboard, so drawing another clip here was redundant (John). */
+    const note = document.createElement("div");
+    note.className = "chart-note";
+    const noteKicker = document.createElement("small");
+    noteKicker.textContent = "TRIAGE NOTE";
+    const noteBody = document.createElement("p");
+    noteBody.textContent = presentation.triageNote;
+    note.append(noteKicker, noteBody);
+
+    chart.append(nameplate, scene, complaintChip, quote, vitals, note);
+
+    /* Slim ANSWER/CLINICAL strips: the panel setting's compact stand-ins
+       for the full chart sections. They open with Coach in a later phase. */
+    if (chartContext.showSectionStrips) {
+      const answerStrip = document.createElement("p");
+      answerStrip.className = "chart-strip chart-strip--answer";
+      answerStrip.textContent = "ANSWER — LOCKED";
+      const clinicalStrip = document.createElement("p");
+      clinicalStrip.className = "chart-strip chart-strip--clinical";
+      clinicalStrip.textContent = "CLINICAL INFORMATION";
+      chart.append(answerStrip, clinicalStrip);
+    }
+
+    return chart;
+  }
+
+  function renderPatient(state, portraitUrlFor) {
+    const hasActivePatient = state.active !== null;
+    ui.patientEmptyState.hidden = hasActivePatient;
+    ui.patientEmptyHint.hidden = !state.settings.hints;
+
+    if (!hasActivePatient) {
+      ui.patientChartMount.replaceChildren();
+      return;
+    }
+
+    const record = window.TRIAGE_RUSH_PATIENTS_BY_ID[state.active.patientId];
+    /* Panel setting shows presentation only; ANSWER and CLINICAL appear
+       in the Coach and review settings of the same chart (John, 2026-08-04). */
+    const chart = buildPatientChart(
+      record,
+      { setting: "panel", showSectionStrips: false },
+      portraitUrlFor(state.active.patientId));
+    ui.patientChartMount.replaceChildren(chart);
+  }
+
+  /* ----------------------------------------------------------------------
+     5d. Seven-room door rail. Assignment behavior arrives in the next
+     phase; this renders the accepted closed-door artwork.
+     ------------------------------------------------------------------- */
+
+  const ROOM_ACCESSIBLE_NAMES = {
+    "esi-1": "ESI 1 Resuscitation room",
+    "esi-2": "ESI 2 Emergent room",
+    "esi-3": "ESI 3 Urgent room",
+    "esi-4": "ESI 4 Less urgent room",
+    "esi-5": "ESI 5 Non-urgent room",
+    "psych": "Psych room",
+    "discharge": "Discharge"
+  };
+
+  function renderRooms(state) {
+    const assets = window.TRIAGE_RUSH_ASSETS;
+    const rows = [];
+    for (const roomKey of assets.roomKeys) {
+      const room = document.createElement("button");
+      room.type = "button";
+      room.className = "room-choice";
+      room.dataset.roomKey = roomKey;
+      room.setAttribute("aria-label", ROOM_ACCESSIBLE_NAMES[roomKey]);
+
+      const door = document.createElement("img");
+      door.className = "door-art";
+      door.alt = "";
+      door.src = assets.game.doors[roomKey].closed;
+
+      room.append(door);
+      rows.push(room);
+    }
+    ui.roomsPanel.replaceChildren(...rows);
+  }
+
+  /* ----------------------------------------------------------------------
      6. SHIFT REVIEW rendering (skeleton).
      ------------------------------------------------------------------- */
 
@@ -315,6 +559,10 @@
     readSettingsControls,
     renderModeLengthVisibility,
     showMusicStatusNote,
+    renderWaiting,
+    buildPatientChart,
+    renderPatient,
+    renderRooms,
     renderGameHeader,
     renderConfirmQuit,
     renderArrivingOverlay,

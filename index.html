@@ -181,9 +181,14 @@
       </aside>
 
       <div class="patient-panel" id="patientPanel">
+        <!-- The unified patient chart (panel setting) mounts here. -->
+        <div class="patient-chart-mount" id="patientChartMount"></div>
         <div class="patient-empty-state" id="patientEmptyState">
           <small>READY</small>
           <strong>SELECT A PATIENT</strong>
+          <span class="patient-empty-hint" id="patientEmptyHint" hidden>
+            &#9664; TAP A WAITING PATIENT
+          </span>
         </div>
       </div>
 

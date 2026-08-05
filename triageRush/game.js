@@ -271,6 +271,146 @@ function validatePatientRecord(record, expectedPatientId) {
 }
 
 /* ------------------------------------------------------------------------
+   5b. Deck, waiting queue, and patient selection (doc 8).
+   The deck is a shuffled array of patient IDs plus a cursor. Waiting
+   entries are tiny records: { patientId, waitingBackgroundKey }. Actions
+   return one-time effect flags (e.g. doink) that app.js executes once;
+   nothing here plays sounds or touches the DOM.
+   --------------------------------------------------------------------- */
+
+function shuffledCopy(sourceArray, random) {
+  const shuffled = sourceArray.slice();
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+function isPatientIdInUse(state, patientId) {
+  return (
+    state.waiting.some(entry => entry.patientId === patientId) ||
+    (state.active && state.active.patientId === patientId) ||
+    (state.assigned && state.assigned.patientId === patientId) ||
+    /* Current 160-patient shifts never repeat a seen patient (doc 8). */
+    Boolean(state.ledger.byPatientId[patientId])
+  );
+}
+
+/* Advance the cursor to the next unused ID. At exhaustion, reshuffle once;
+   if a full second pass finds nothing legal, return null (explicit error
+   beats looping forever). */
+function drawUniquePatientId(state, context) {
+  for (let pass = 0; pass < 2; pass++) {
+    while (state.deck.cursor < state.deck.ids.length) {
+      const candidateId = state.deck.ids[state.deck.cursor];
+      state.deck.cursor += 1;
+      if (!isPatientIdInUse(state, candidateId)) return candidateId;
+    }
+    state.deck.ids = shuffledCopy(state.deck.ids, context.random);
+    state.deck.cursor = 0;
+  }
+  return null;
+}
+
+/* Prefer a background no on-screen patient is using; with all 16 in use,
+   any of them is fine (doc 8 waiting backgrounds). */
+function chooseWaitingBackgroundKey(state, context) {
+  const allKeys = TRIAGE_RUSH_ASSETS.waitingBackgroundKeys;
+  const usedKeys = new Set(state.waiting.map(e => e.waitingBackgroundKey));
+  if (state.active) usedKeys.add(state.active.waitingBackgroundKey);
+  if (state.assigned) usedKeys.add(state.assigned.waitingBackgroundKey);
+
+  const unusedKeys = allKeys.filter(key => !usedKeys.has(key));
+  const pool = unusedKeys.length > 0 ? unusedKeys : allKeys;
+  return pool[Math.floor(context.random() * pool.length)];
+}
+
+/* The one queue-insertion primitive. The doink belongs here and nowhere
+   else: recall, swap, seeding (announce: false), and blocked attempts
+   never produce one (doc 4 sound contract). */
+function insertWaitingPatient(state, context, options) {
+  if (state.waiting.length >= GAME_CONSTANTS.MAX_WAITING) {
+    return { inserted: false, reason: "full", doink: false };
+  }
+  const patientId = drawUniquePatientId(state, context);
+  if (patientId === null) {
+    return { inserted: false, reason: "deck-exhausted", doink: false };
+  }
+  const entry = {
+    patientId,
+    waitingBackgroundKey: chooseWaitingBackgroundKey(state, context)
+  };
+  state.waiting.push(entry);
+  return { inserted: true, entry, doink: Boolean(options && options.announce) };
+}
+
+/* Shift start seeds silently: 5 patients for Triage, 2 for RUSH. */
+function seedInitialQueue(state, context) {
+  const seedCount = state.settings.mode === "rush" ? 2
+    : GAME_CONSTANTS.MIN_VISIBLE_WAITING;
+  for (let i = 0; i < seedCount; i++) {
+    insertWaitingPatient(state, context, { announce: false });
+  }
+}
+
+/* The IDs the next `count` draws would produce, for portrait preloading.
+   Draws skip in-use IDs, so peek must apply the same rule. */
+function peekUpcomingPatientIds(state, count) {
+  const upcoming = [];
+  for (let i = state.deck.cursor;
+       i < state.deck.ids.length && upcoming.length < count; i++) {
+    const candidateId = state.deck.ids[i];
+    if (!isPatientIdInUse(state, candidateId)) upcoming.push(candidateId);
+  }
+  return upcoming;
+}
+
+/* Tapping a waiting patient. Result includes effect flags for app.js.
+   - Empty center: patient moves in; Triage refills immediately (announced).
+   - Active unassigned center: the two swap; nothing else changes.
+   - Assigned patient behind a door: finalization arrives with evaluation
+     in a later phase; until then the tap is ignored.                      */
+function selectWaitingPatient(state, context, waitingIndex) {
+  if (state.phase !== "active") return { accepted: false, doink: false };
+  if (waitingIndex < 0 || waitingIndex >= state.waiting.length) {
+    return { accepted: false, doink: false };
+  }
+
+  if (state.active === null && state.assigned === null) {
+    const [selectedEntry] = state.waiting.splice(waitingIndex, 1);
+    state.active = {
+      patientId: selectedEntry.patientId,
+      waitingBackgroundKey: selectedEntry.waitingBackgroundKey
+    };
+    let doink = false;
+    if (state.settings.mode === "triage") {
+      const refill = insertWaitingPatient(state, context, { announce: true });
+      doink = refill.doink;
+    }
+    return { accepted: true, doink };
+  }
+
+  if (state.active !== null && state.assigned === null) {
+    /* Swap: backgrounds travel with their patients; no insert, no doink,
+       no ledger change (doc 8). A recalled marker does not survive going
+       back to the queue. */
+    const waitingEntry = state.waiting[waitingIndex];
+    state.waiting[waitingIndex] = {
+      patientId: state.active.patientId,
+      waitingBackgroundKey: state.active.waitingBackgroundKey
+    };
+    state.active = {
+      patientId: waitingEntry.patientId,
+      waitingBackgroundKey: waitingEntry.waitingBackgroundKey
+    };
+    return { accepted: true, doink: false };
+  }
+
+  return { accepted: false, doink: false };
+}
+
+/* ------------------------------------------------------------------------
    6. Score selectors.
    All totals derive from the ledger; nothing stores an independently
    mutable copy (doc 4). Header and review must both call these.
@@ -353,6 +493,13 @@ function startShift(state, context) {
   /* The in-game mute starts from the persisted preferences each shift. */
   state.gameSoundsAudible =
     state.settings.soundGlobal && state.settings.soundGame;
+
+  /* Fresh shuffled deck; seeding happens after the initial portraits
+     decode (doc 4 loading contract), via seedInitialQueue. */
+  state.deck = {
+    ids: shuffledCopy(TRIAGE_RUSH_ASSETS.patients.ids, context.random),
+    cursor: 0
+  };
 
   return true;
 }
@@ -575,6 +722,10 @@ window.TRIAGE_RUSH_GAME = {
   applySettings,
   selectedShiftLengthSeconds,
   validatePatientRecord,
+  insertWaitingPatient,
+  seedInitialQueue,
+  peekUpcomingPatientIds,
+  selectWaitingPatient,
   selectLedgerRecords,
   selectScoreTotals,
   startShift,

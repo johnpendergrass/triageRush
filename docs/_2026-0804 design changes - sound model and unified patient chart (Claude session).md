@@ -117,3 +117,26 @@ panel art or newly generated) before the vitals card can be built.
   (+ boombox.txt), the four `game-page/patient-panel/*-bubble-hires.png`
   files, and the seven `triage-rooms-panel/background-*-room.png` interiors
   (open-door art already shows the interior; demo never used them).
+
+## Addendum: patient-panel layout decisions (approved 2026-08-04, later session)
+
+Iterated live with John on the built game; these are final for the panel
+setting of the unified chart (implementation in triageRush/ui.js
+buildPatientChart + styles.css):
+
+- Card stack: nameplate (own centered plate, 86% width, small gap above),
+  transparent scene with portrait (NO tint/scrim over the corridor art),
+  complaint plate BELOW the portrait (must never cover the image), quote
+  card with PATIENT QUOTE kicker, 3x2 vitals, triage note with TRIAGE NOTE
+  kicker and NO clip hardware (the Coach clipboard wrapper supplies the
+  clipboard motif).
+- ANSWER/CLINICAL are hidden in the panel setting entirely; they appear only
+  in Coach/review settings of the same chart builder.
+- Quote and note bodies share one font size; quote stays Georgia italic,
+  note uses regular Arial (not the condensed app face) so the two look the
+  same visual size. Complaint is the largest text item.
+- Height shares: scene 43 / quote 17 / vitals 18 / note 19 (quote enlarged,
+  note reduced, because quotes run longer than notes).
+- Fonts tuned down until mobile stopped clipping; John approved and closed
+  the iteration. Future overflow is handled by auto-fit shrinking, not by
+  layout changes.

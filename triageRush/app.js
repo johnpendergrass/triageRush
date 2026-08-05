@@ -40,6 +40,17 @@
   const context = GAME.createGameContext();
   const state = GAME.createInitialState();
   const patientsById = {};
+  /* ui.js reads canonical records through this shared reference. */
+  window.TRIAGE_RUSH_PATIENTS_BY_ID = patientsById;
+
+  /* Rolling portrait reserve ahead of the deck cursor. 8 is a starting
+     estimate; the acceptance plan sizes it by throttled-network testing
+     against the fastest RUSH arrival curve. */
+  const PORTRAIT_RESERVE_COUNT = 8;
+
+  function portraitUrlFor(patientId) {
+    return ASSETS.patients.portraitPath(patientId);
+  }
 
   const loading = {
     patientsTotal: ASSETS.patients.ids.length,
@@ -116,6 +127,74 @@
     UI.renderLoadingStatus(loading);
   }
 
+  /* Fire-and-forget preload of the next portraits the deck will draw.
+     Failures here are tolerable; the blocking initial load is what
+     guarantees a shift never starts with missing art. */
+  function topUpPortraitReserve() {
+    const upcomingIds = GAME.peekUpcomingPatientIds(
+      state, PORTRAIT_RESERVE_COUNT);
+    for (const patientId of upcomingIds) {
+      loadImage(portraitUrlFor(patientId)).catch(() => {});
+    }
+  }
+
+  /* ----------------------------------------------------------------------
+     2b. Game sound effects.
+     One lazily created Web Audio context (first user gesture). Every
+     sound is an individually named recipe so later per-sound options
+     are a flag away (design change 2026-08-04). All synthesized; no
+     audio files.
+     ------------------------------------------------------------------- */
+
+  let audioContext = null;
+
+  function ensureAudioContext() {
+    if (!audioContext) {
+      try {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      } catch (audioError) {
+        console.warn("triageRush: Web Audio unavailable", audioError);
+        return null;
+      }
+    }
+    if (audioContext.state === "suspended") audioContext.resume();
+    return audioContext;
+  }
+
+  /* Two-note chime: the arrival doink. */
+  function playDoinkSound(audio) {
+    const startAt = audio.currentTime;
+    for (const [frequencyHz, peakGain] of [[1046, 0.14], [2093, 0.035]]) {
+      const oscillator = audio.createOscillator();
+      const gain = audio.createGain();
+      oscillator.type = "sine";
+      oscillator.frequency.value = frequencyHz;
+      gain.gain.setValueAtTime(0.0001, startAt);
+      gain.gain.exponentialRampToValueAtTime(peakGain, startAt + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startAt + 0.42);
+      oscillator.connect(gain).connect(audio.destination);
+      oscillator.start(startAt);
+      oscillator.stop(startAt + 0.45);
+    }
+  }
+
+  /* The registry: one named entry per game sound. The GAME SOUNDS toggle
+     governs the whole family today; `enabled` is the future hook for
+     per-sound preferences. */
+  const SOUND_REGISTRY = {
+    doink: { enabled: true, play: playDoinkSound }
+    /* tick, minuteTick, correct, close, wrong, countdownTick, endDong
+       arrive with the scheduler and evaluation phases. */
+  };
+
+  function playGameSound(soundName) {
+    if (!state.gameSoundsAudible) return;
+    const sound = SOUND_REGISTRY[soundName];
+    if (!sound || !sound.enabled) return;
+    const audio = ensureAudioContext();
+    if (audio) sound.play(audio);
+  }
+
   /* ----------------------------------------------------------------------
      3. Music: the KING-FM stream.
      Plays only when soundGlobal && soundMusic. Started only from a HOME
@@ -154,6 +233,9 @@
     UI.renderHomeBoardSummaries(state);
     UI.renderLoadingStatus(loading);
     UI.renderGameHeader(state);
+    UI.renderWaiting(state, portraitUrlFor);
+    UI.renderPatient(state, portraitUrlFor);
+    UI.renderRooms(state);
     UI.renderConfirmQuit(state);
     UI.renderReview(state);
   }
@@ -170,14 +252,33 @@
     GAME.assertStateInvariants(state, "startShift");
 
     UI.renderArrivingOverlay(true);
-    /* Phase 4 will decode the initial queue portraits here. A short beat
-       keeps the status readable instead of flashing. */
-    await new Promise(resolve => setTimeout(resolve, 700));
 
+    /* Block until the initial queue portraits (plus the near-term reserve)
+       are fetched and decoded; the shift never starts on missing art. */
+    const seedCount = state.settings.mode === "rush" ? 2
+      : GAME.GAME_CONSTANTS.MIN_VISIBLE_WAITING;
+    const requiredIds = GAME.peekUpcomingPatientIds(
+      state, seedCount + PORTRAIT_RESERVE_COUNT);
+    try {
+      await Promise.all(
+        requiredIds.map(id => loadImage(portraitUrlFor(id))));
+    } catch (portraitError) {
+      console.error("triageRush: portrait preload failed", portraitError);
+      UI.renderArrivingOverlay(false);
+      GAME.quitShift(state);
+      loading.failed = true;
+      loading.errorMessage =
+        "A patient portrait failed to load. Check the connection and retry.";
+      renderAll();
+      return;
+    }
+
+    GAME.seedInitialQueue(state, context);
     GAME.activateShift(state);
     GAME.assertStateInvariants(state, "activateShift");
     UI.renderArrivingOverlay(false);
     renderAll();
+    topUpPortraitReserve();
   }
 
   /* ----------------------------------------------------------------------
@@ -243,6 +344,22 @@
   }
 
   function wireGameEvents() {
+    /* Queue rows are rebuilt on every change, so one delegated listener
+       on the panel handles them all. */
+    ui.waitingPanel.addEventListener("click", (event) => {
+      const row = event.target.closest("[data-waiting-index]");
+      if (!row) return;
+      const result = GAME.selectWaitingPatient(
+        state, context, Number(row.dataset.waitingIndex));
+      if (!result.accepted) return;
+      GAME.assertStateInvariants(state, "selectWaitingPatient");
+      if (result.doink) playGameSound("doink");
+      UI.renderWaiting(state, portraitUrlFor);
+      UI.renderPatient(state, portraitUrlFor);
+      UI.renderGameHeader(state);
+      topUpPortraitReserve();
+    });
+
     ui.gameSoundButton.addEventListener("click", () => {
       GAME.toggleGameSoundsAudible(state);
       UI.renderGameHeader(state);
