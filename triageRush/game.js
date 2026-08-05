@@ -532,6 +532,45 @@ function recallAssignedPatient(state, roomKey) {
 }
 
 /* ------------------------------------------------------------------------
+   5d. Coach (doc 3, doc 8; Phase 6).
+   Coach is an active-patient tool: it can open only while a patient
+   occupies the center panel. Opening adds the "coach" pause reason so the
+   Phase-7 scheduler will freeze the clock and RUSH arrivals; the reason
+   list is already the single pause authority. Only the Clinical section's
+   expanded/collapsed choice is remembered (for the rest of the shift);
+   Answer never unlocks here, and Presentation resets to expanded on the
+   next open, so neither needs state.
+   --------------------------------------------------------------------- */
+
+function addPauseReason(state, reason) {
+  if (!state.pauseReasons.includes(reason)) state.pauseReasons.push(reason);
+}
+
+function removePauseReason(state, reason) {
+  state.pauseReasons = state.pauseReasons.filter(r => r !== reason);
+}
+
+function openCoach(state) {
+  if (state.phase !== "active" || state.active === null) return false;
+  if (state.overlay !== null) return false;
+  state.overlay = "coach";
+  addPauseReason(state, "coach");
+  return true;
+}
+
+function closeCoach(state) {
+  if (state.overlay !== "coach") return false;
+  state.overlay = null;
+  removePauseReason(state, "coach");
+  return true;
+}
+
+/* Called only when the player toggles the Clinical section inside Coach. */
+function setCoachClinicalExpanded(state, expanded) {
+  state.coach.clinicalExpanded = Boolean(expanded);
+}
+
+/* ------------------------------------------------------------------------
    6. Score selectors.
    All totals derive from the ledger; nothing stores an independently
    mutable copy (doc 4). Header and review must both call these.
@@ -737,6 +776,10 @@ function collectInvariantViolations(state) {
 
   check(!state.recallAvailable || !!state.assigned,
     "recall available without an assigned patient");
+  check(state.overlay !== "coach" || !!state.active,
+    "Coach open without an active patient");
+  check(state.overlay === "coach" || !state.pauseReasons.includes("coach"),
+    "coach pause reason without Coach open");
   check(state.shift.remainingMs >= 0, "remaining time below zero");
   check(state.phase !== "active" || state.view === "game",
     "active phase outside GAME view");
@@ -853,6 +896,9 @@ window.TRIAGE_RUSH_GAME = {
   classifyTriageDirection,
   assignActivePatientToRoom,
   recallAssignedPatient,
+  openCoach,
+  closeCoach,
+  setCoachClinicalExpanded,
   selectLedgerRecords,
   selectScoreTotals,
   startShift,

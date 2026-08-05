@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#071822">
   <title>triageRush</title>
-  <link rel="stylesheet" href="./triageRush/styles.css?v=2026-0804-phase5">
+  <link rel="stylesheet" href="./triageRush/styles.css?v=2026-0805-phase6n">
 </head>
 <body>
 
@@ -190,6 +190,13 @@
                plus the recall-door line when a recall is possible. -->
           <span class="patient-empty-hint" id="patientEmptyHint" hidden></span>
         </div>
+        <!-- The entire occupied panel is the one Coach hit target: a
+             transparent button layer over the chart (doc 7). Hidden while
+             the panel is empty, so Coach can never open without a patient. -->
+        <button class="patient-panel-hit" id="patientPanelHitButton"
+                type="button" hidden>
+          <span class="visually-hidden">Open the patient chart (Coach)</span>
+        </button>
         <!-- Transient assignment result: ✓ CORRECT / △ CLOSE / ✕ WRONG. -->
         <p class="result-toast" id="resultToast" role="status" hidden></p>
       </div>
@@ -203,31 +210,56 @@
       <button class="footer-button footer-button--quit" id="quitGameButton"
               type="button">
         <span class="footer-arrow footer-arrow--left" aria-hidden="true">&#9664;</span>
-        <span>LEAVE SHIFT</span>
+        <span>QUIT THIS SHIFT</span>
         <small>RETURN TO ER ENTRANCE</small>
       </button>
       <div class="footer-neutral" aria-hidden="true"></div>
       <button class="footer-button footer-button--stop" id="stopGameButton"
               type="button">
         <span class="footer-arrow footer-arrow--right" aria-hidden="true">&#9654;</span>
-        <span>STOP SHIFT EARLY</span>
+        <span>END SHIFT EARLY</span>
         <small>REVIEW THIS SHIFT</small>
       </button>
     </footer>
   </section>
 
+  <!-- ====================================================================
+       Coach overlay: the clipboard setting of the unified patient chart.
+       Opaque paper on a clipboard board with a metal clamp (CSS-drawn; no
+       clipboard artwork exists). The paper scrolls internally; MORE
+       ABOVE / MORE BELOW appear only when hidden content exists (doc 7).
+       ================================================================= -->
+  <section class="coach-overlay" id="coachOverlay" role="dialog"
+           aria-modal="true" aria-label="Patient chart" hidden>
+    <div class="coach-clipboard" id="coachClipboard">
+      <div class="coach-clamp" aria-hidden="true"></div>
+      <button class="coach-close" id="coachCloseButton" type="button"
+              aria-label="Close the patient chart">&#10005;</button>
+      <div class="coach-scroll" id="coachScroll">
+        <div class="coach-chart-mount" id="coachChartMount"></div>
+      </div>
+      <!-- Larger-photo view: covers the paper; content (name strip,
+           photo, close box) is rebuilt by renderCoachPortraitZoom. -->
+      <div class="coach-zoom" id="coachZoomView" hidden></div>
+      <button class="coach-more coach-more--above" id="coachMoreAbove"
+              type="button" hidden>&#9650;&#xFE0E; MORE ABOVE</button>
+      <button class="coach-more coach-more--below" id="coachMoreBelow"
+              type="button" hidden>&#9660;&#xFE0E; MORE BELOW</button>
+    </div>
+  </section>
+
   <!-- Quit confirmation: destructive, so it always confirms (doc 7). -->
   <section class="confirm-overlay" id="confirmQuitOverlay" role="dialog"
-           aria-modal="true" aria-label="Quit game confirmation" hidden>
+           aria-modal="true" aria-label="End shift confirmation" hidden>
     <div class="confirm-card">
-      <h2>Leave this shift?</h2>
+      <h2>Quit this shift?</h2>
       <p>The shift will be discarded. There will be no shift review.</p>
       <div class="confirm-actions">
         <button class="confirm-cancel" id="confirmQuitCancel" type="button">
           Whoops! I want to keep playing!
         </button>
         <button class="confirm-accept" id="confirmQuitAccept" type="button">
-          Yes, leave shift
+          Yes, quit this shift
         </button>
       </div>
     </div>
@@ -235,16 +267,16 @@
 
   <!-- Stop confirmation: ending early is final, so it confirms too. -->
   <section class="confirm-overlay" id="confirmStopOverlay" role="dialog"
-           aria-modal="true" aria-label="Stop shift confirmation" hidden>
+           aria-modal="true" aria-label="End shift early confirmation" hidden>
     <div class="confirm-card">
-      <h2>Stop this shift early?</h2>
+      <h2>End this shift early?</h2>
       <p>The shift will end now and be scored. You will go to shift review.</p>
       <div class="confirm-actions">
         <button class="confirm-cancel" id="confirmStopCancel" type="button">
           Whoops! I want to keep playing!
         </button>
         <button class="confirm-accept" id="confirmStopAccept" type="button">
-          Yes, stop shift
+          Yes, end shift early
         </button>
       </div>
     </div>
@@ -267,9 +299,9 @@
 
 </div>
 
-<script src="./triageRush/assets.js?v=2026-0804-phase5"></script>
-<script src="./triageRush/game.js?v=2026-0804-phase5"></script>
-<script src="./triageRush/ui.js?v=2026-0804-phase5"></script>
-<script src="./triageRush/app.js?v=2026-0804-phase5"></script>
+<script src="./triageRush/assets.js?v=2026-0805-phase6n"></script>
+<script src="./triageRush/game.js?v=2026-0805-phase6n"></script>
+<script src="./triageRush/ui.js?v=2026-0805-phase6n"></script>
+<script src="./triageRush/app.js?v=2026-0805-phase6n"></script>
 </body>
 </html>

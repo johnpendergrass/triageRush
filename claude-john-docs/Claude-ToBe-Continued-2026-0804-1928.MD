@@ -84,6 +84,14 @@ Occupied-room-shows-patient rendering is not built yet; deferred by John.
 
 ## Deferred / known items (do not lose)
 
+- **IMPORTANT (added 2026-08-05): better asset loading strategy.** Startup
+  currently fetches all 160 patient JSONs AND verifies/decodes every
+  manifest image (hundreds of MiB of hi-res art) before READY - too slow.
+  Works for testing; must be improved before the app is finished. Related
+  to but distinct from Phase 10 asset resizing (smaller files will help,
+  but the strategy itself - what blocks READY vs loads lazily - needs
+  rethinking too).
+
 - Layered room rendering (wall/interior/patient/door) — when John asks.
 - Six vital icons: GENERATE NEW art; assets/icons/ still empty.
 - Settings/about popup text is placeholder; fix before release.

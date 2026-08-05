@@ -313,6 +313,7 @@
     UI.renderGameHeader(state);
     UI.renderWaiting(state, portraitUrlFor);
     UI.renderPatient(state, portraitUrlFor);
+    UI.renderCoach(state, portraitUrlFor);
     UI.renderRooms(state);
     UI.renderConfirmQuit(state);
     UI.renderConfirmStop(state);
@@ -533,6 +534,122 @@
     });
   }
 
+  /* ----------------------------------------------------------------------
+     6b. Coach (Phase 6).
+     Open/close legality and the "coach" pause reason live in game.js;
+     here is only the wiring: the whole-panel hit target, close paths
+     (X, scrim, Escape), section toggles, and the internal scroll hints.
+     ------------------------------------------------------------------- */
+
+  /* MORE ABOVE / MORE BELOW show only while hidden content exists in
+     that direction (with a little slack so a hairline never counts). */
+  function updateCoachScrollHints() {
+    const scroller = ui.coachScroll;
+    const slackPx = 8;
+    ui.coachMoreAbove.hidden = scroller.scrollTop <= slackPx;
+    ui.coachMoreBelow.hidden =
+      scroller.scrollTop + scroller.clientHeight
+        >= scroller.scrollHeight - slackPx;
+  }
+
+  function openCoachFromPanel() {
+    if (!GAME.openCoach(state)) return;
+    GAME.assertStateInvariants(state, "openCoach");
+    UI.renderCoach(state, portraitUrlFor);
+    updateCoachScrollHints();
+    ui.coachCloseButton.focus();
+  }
+
+  function closeCoachAndRestoreFocus() {
+    if (!GAME.closeCoach(state)) return;
+    GAME.assertStateInvariants(state, "closeCoach");
+    UI.renderCoach(state, portraitUrlFor);
+    /* Focus returns to the patient panel, the element that opened it. */
+    ui.patientPanelHitButton.focus();
+  }
+
+  /* The larger-photo view. Ephemeral (never in the state tree): it
+     resets closed whenever the chart itself (re)opens. */
+  function isPortraitZoomOpen() {
+    return !ui.coachZoomView.hidden;
+  }
+
+  function openPortraitZoom() {
+    UI.renderCoachPortraitZoom(state, portraitUrlFor, true);
+    const closeButton = ui.coachZoomView.querySelector(".coach-zoom-close");
+    if (closeButton) closeButton.focus();
+  }
+
+  function closePortraitZoom() {
+    UI.renderCoachPortraitZoom(state, portraitUrlFor, false);
+    /* Back to the magnifier that opened it. */
+    const zoomButton = ui.coachChartMount.querySelector(".chart-zoom-button");
+    if (zoomButton) zoomButton.focus();
+  }
+
+  function wireCoachEvents() {
+    ui.patientPanelHitButton.addEventListener("click", openCoachFromPanel);
+    ui.coachCloseButton.addEventListener("click", closeCoachAndRestoreFocus);
+
+    /* Scrim click closes; clicks inside the clipboard never do (doc 7). */
+    ui.coachOverlay.addEventListener("click", (event) => {
+      if (event.target === ui.coachOverlay) closeCoachAndRestoreFocus();
+    });
+
+    /* Section headers are rebuilt with the chart, so one delegated
+       listener handles them. Clinical toggles and records the
+       shift-level preference; locked Answer only shakes (doc 3). The
+       presentation cards have no header - always visible (John,
+       2026-08-05). */
+    ui.coachChartMount.addEventListener("click", (event) => {
+      /* The photo's zoom hit box opens the larger view. */
+      if (event.target.closest("[data-chart-zoom]")) {
+        openPortraitZoom();
+        return;
+      }
+
+      const header = event.target.closest("[data-chart-section]");
+      if (!header) return;
+
+      if (header.dataset.chartSection === "answer") {
+        header.classList.remove("is-denied");
+        void header.offsetWidth; /* restart the shake animation */
+        header.classList.add("is-denied");
+        return;
+      }
+
+      const body = ui.coachChartMount.querySelector(".chart-clinical-body");
+      if (!body) return;
+      const nowExpanded = body.hidden; /* it was hidden, so this expands */
+      body.hidden = !nowExpanded;
+      header.setAttribute("aria-expanded", String(nowExpanded));
+      GAME.setCoachClinicalExpanded(state, nowExpanded);
+      updateCoachScrollHints();
+    });
+
+    /* The zoom view's close box is rebuilt with its content, so this is
+       delegated too. Its dark scrim also closes; the photo card itself
+       never does. */
+    ui.coachZoomView.addEventListener("click", (event) => {
+      if (event.target.closest(".coach-zoom-close") ||
+          event.target === ui.coachZoomView) {
+        closePortraitZoom();
+      }
+    });
+
+    ui.coachScroll.addEventListener("scroll", updateCoachScrollHints);
+
+    ui.coachMoreAbove.addEventListener("click", () => {
+      ui.coachScroll.scrollBy({
+        top: -ui.coachScroll.clientHeight * 0.7, behavior: "smooth" });
+    });
+
+    ui.coachMoreBelow.addEventListener("click", () => {
+      ui.coachScroll.scrollBy({
+        top: ui.coachScroll.clientHeight * 0.7, behavior: "smooth" });
+    });
+  }
+
   function wireReviewEvents() {
     ui.returnToLobbyButton.addEventListener("click", () => {
       GAME.returnToLobby(state);
@@ -547,6 +664,10 @@
       if (UI.isPopupOpen()) {
         state.overlay = null;
         UI.closePopup();
+      } else if (state.overlay === "coach") {
+        /* Escape peels one layer: the larger photo first, then the chart. */
+        if (isPortraitZoomOpen()) closePortraitZoom();
+        else closeCoachAndRestoreFocus();
       } else if (state.overlay === "confirm-quit") {
         state.overlay = null;
         UI.renderConfirmQuit(state);
@@ -578,6 +699,7 @@
     wireHomeEvents();
     wirePopupEvents();
     wireGameEvents();
+    wireCoachEvents();
     wireReviewEvents();
     wireKeyboardEvents();
 

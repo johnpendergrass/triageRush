@@ -45,8 +45,12 @@
     "gameView", "gameBrand", "gameScorecard", "scoreCorrect",
     "scoreCloseDivider", "scoreClose", "scoreWrong", "scoreTotal",
     "gameTimer", "gameSoundButton", "waitingPanel", "patientPanel",
-    "patientChartMount", "patientEmptyState", "patientEmptyHint",
-    "resultToast", "roomsPanel", "quitGameButton", "stopGameButton",
+    "patientChartMount", "patientPanelHitButton", "patientEmptyState",
+    "patientEmptyHint", "resultToast", "roomsPanel", "quitGameButton",
+    "stopGameButton",
+    // Coach
+    "coachOverlay", "coachClipboard", "coachCloseButton", "coachScroll",
+    "coachChartMount", "coachMoreAbove", "coachMoreBelow", "coachZoomView",
     // REVIEW
     "reviewView", "reviewEyebrow", "reviewPlayerLine", "reviewScoreLine",
     "returnToLobbyButton"
@@ -393,7 +397,7 @@
   function buildPatientChart(patientRecord, chartContext, portraitUrl) {
     const presentation = patientRecord.patient.presentation;
     const chart = document.createElement("div");
-    chart.className = "patient-chart";
+    chart.className = "patient-chart chart--" + chartContext.setting;
 
     /* Scene: nameplate, portrait, complaint chip. */
     const scene = document.createElement("div");
@@ -468,21 +472,130 @@
     noteBody.textContent = presentation.triageNote;
     note.append(noteKicker, noteBody);
 
+    /* The presentation cards are always visible in every setting; the
+       panel shows nothing else (John, 2026-08-04 addendum). */
     chart.append(nameplate, scene, complaintChip, quote, vitals, note);
+    if (chartContext.setting !== "coach") return chart;
 
-    /* Slim ANSWER/CLINICAL strips: the panel setting's compact stand-ins
-       for the full chart sections. They open with Coach in a later phase. */
-    if (chartContext.showSectionStrips) {
-      const answerStrip = document.createElement("p");
-      answerStrip.className = "chart-strip chart-strip--answer";
-      answerStrip.textContent = "ANSWER — LOCKED";
-      const clinicalStrip = document.createElement("p");
-      clinicalStrip.className = "chart-strip chart-strip--clinical";
-      clinicalStrip.textContent = "CLINICAL INFORMATION";
-      chart.append(answerStrip, clinicalStrip);
-    }
+    /* In the chart overlay the photo zooms. The hit box is the scene's
+       top-right quadrant (John, 2026-08-05): one transparent button
+       covering that quarter, showing the small magnifier badge in its
+       corner. app.js handles data-chart-zoom clicks. */
+    const zoomButton = document.createElement("button");
+    zoomButton.type = "button";
+    zoomButton.className = "chart-zoom-button";
+    zoomButton.dataset.chartZoom = "open";
+    zoomButton.setAttribute("aria-label", "See a larger photo");
+    const zoomBadge = document.createElement("span");
+    zoomBadge.className = "chart-zoom-badge";
+    zoomBadge.textContent = "🔍";
+    zoomBadge.setAttribute("aria-hidden", "true");
+    zoomButton.append(zoomBadge);
+    scene.append(zoomButton);
+
+    /* Coach setting adds locked ANSWER and remembered CLINICAL (doc 3).
+       No PRESENTATION header: the evidence is always shown and expanded,
+       so a header would only take space (John, 2026-08-05). Section
+       headers are real buttons with aria-expanded (doc 7); app.js
+       toggles them by delegation on data-chart-section. */
+    chart.append(
+      buildChartSectionHeader("answer", "ANSWER", { locked: true }),
+      buildChartSectionHeader("clinical", "CLINICAL",
+        { expanded: chartContext.clinicalExpanded }),
+      buildClinicalSectionBody(patientRecord.patient.clinical,
+        chartContext.clinicalExpanded));
 
     return chart;
+  }
+
+  /* One section header button. Locked (Answer during play) renders the
+     LOCKED pill and stays aria-expanded="false"; activating it only
+     shakes (handled in app.js) - it never opens (doc 3). */
+  function buildChartSectionHeader(sectionKey, labelText, options) {
+    const header = document.createElement("button");
+    header.type = "button";
+    header.className =
+      "chart-section-header chart-section-header--" + sectionKey;
+    header.dataset.chartSection = sectionKey;
+
+    const label = document.createElement("span");
+    label.textContent = labelText;
+    header.append(label);
+
+    if (options.locked) {
+      header.classList.add("is-locked");
+      header.setAttribute("aria-expanded", "false");
+      const lockBadge = document.createElement("span");
+      lockBadge.className = "chart-lock-badge";
+      lockBadge.textContent = "LOCKED";
+      header.append(lockBadge);
+      header.setAttribute("aria-label", labelText
+        + " (locked while the patient is under evaluation)");
+    } else {
+      header.setAttribute("aria-expanded",
+        String(Boolean(options.expanded)));
+      const chevron = document.createElement("span");
+      chevron.className = "chart-section-chevron";
+      /* U+25BE has no emoji variant, so phones render it as plain text. */
+      chevron.textContent = "▾";
+      chevron.setAttribute("aria-hidden", "true");
+      header.append(chevron);
+    }
+    return header;
+  }
+
+  /* The Clinical body renders schema 2.2's display-ready clinical
+     interpretation. The authored content deliberately never names the
+     correct ESI or room (doc 5), so showing all of it is safe pre-answer. */
+  function buildClinicalSectionBody(clinical, startExpanded) {
+    const body = document.createElement("div");
+    body.className = "chart-section-body chart-clinical-body";
+    body.hidden = !startExpanded;
+
+    const addTextCard = (kickerText, bodyText) => {
+      if (typeof bodyText !== "string" || bodyText.length === 0) return;
+      const card = document.createElement("div");
+      card.className = "chart-clinical-card";
+      const kicker = document.createElement("small");
+      kicker.textContent = kickerText;
+      const text = document.createElement("p");
+      text.textContent = bodyText;
+      card.append(kicker, text);
+      body.append(card);
+    };
+
+    const addListCard = (kickerText, items) => {
+      if (!Array.isArray(items) || items.length === 0) return;
+      const card = document.createElement("div");
+      card.className = "chart-clinical-card";
+      const kicker = document.createElement("small");
+      kicker.textContent = kickerText;
+      const list = document.createElement("ul");
+      for (const itemText of items) {
+        const item = document.createElement("li");
+        item.textContent = String(itemText);
+        list.append(item);
+      }
+      card.append(kicker, list);
+      body.append(card);
+    };
+
+    addTextCard("SUMMARY", clinical.summary);
+    addTextCard("WHY THIS ACUITY", clinical.acuityReason);
+    addListCard("KEY FINDINGS", clinical.keyFindings);
+    addListCard("EXPECTED RESOURCES", clinical.expectedResources);
+    if (Array.isArray(clinical.redFlags) && clinical.redFlags.length > 0) {
+      addListCard("RED FLAGS", clinical.redFlags);
+    } else {
+      addTextCard("RED FLAGS", "None identified.");
+    }
+    addListCard("TEACHING POINTS", clinical.teachingPoints);
+    const outcome = clinical.possibleClinicalOutcome;
+    if (outcome) {
+      addListCard("POSSIBLE DIAGNOSES", outcome.possibleDiagnoses);
+      addTextCard("LIKELY DISPOSITION", outcome.disposition);
+    }
+    return body;
   }
 
   /* The empty-state hint always offers the queue; when a patient waits
@@ -525,6 +638,9 @@
     const hasActivePatient = state.active !== null;
     ui.patientEmptyState.hidden = hasActivePatient;
     ui.patientEmptyHint.hidden = !state.settings.hints;
+    /* The whole occupied panel is the one Coach hit target; when the
+       panel is empty the target is absent and Coach cannot open (doc 7). */
+    ui.patientPanelHitButton.hidden = !hasActivePatient;
 
     if (!hasActivePatient) {
       ui.patientChartMount.replaceChildren();
@@ -537,9 +653,72 @@
        in the Coach and review settings of the same chart (John, 2026-08-04). */
     const chart = buildPatientChart(
       record,
-      { setting: "panel", showSectionStrips: false },
+      { setting: "panel" },
       portraitUrlFor(state.active.patientId));
     ui.patientChartMount.replaceChildren(chart);
+  }
+
+  /* ----------------------------------------------------------------------
+     5f. Coach overlay (Phase 6).
+     The clipboard setting of the SAME chart builder. Rendering only
+     mounts the chart; open/close legality, pause reasons, and focus
+     moves live in game.js and app.js.
+     ------------------------------------------------------------------- */
+
+  function renderCoach(state, portraitUrlFor) {
+    const isOpen = state.overlay === "coach" && state.active !== null;
+    ui.coachOverlay.hidden = !isOpen;
+    if (!isOpen) {
+      ui.coachChartMount.replaceChildren();
+      return;
+    }
+
+    const record = window.TRIAGE_RUSH_PATIENTS_BY_ID[state.active.patientId];
+    const chart = buildPatientChart(
+      record,
+      { setting: "coach", clinicalExpanded: state.coach.clinicalExpanded },
+      portraitUrlFor(state.active.patientId));
+    ui.coachChartMount.replaceChildren(chart);
+    /* Each open starts at the top of the paper, photo zoom closed. */
+    ui.coachScroll.scrollTop = 0;
+    renderCoachPortraitZoom(state, portraitUrlFor, false);
+  }
+
+  /* The larger-photo view: a dark scrim over the whole clipboard with
+     one square photo card on it - just the photo and its close box, no
+     name section (John, 2026-08-05). Reads unmistakably as "a zoomed
+     photo to look at, then close". Ephemeral like the section toggles -
+     it resets closed every time the chart opens. */
+  function renderCoachPortraitZoom(state, portraitUrlFor, isOpen) {
+    ui.coachZoomView.hidden = !isOpen;
+    if (!isOpen || state.active === null) {
+      ui.coachZoomView.replaceChildren();
+      return;
+    }
+
+    const record = window.TRIAGE_RUSH_PATIENTS_BY_ID[state.active.patientId];
+    const personal = record.patient.presentation.personal;
+
+    const card = document.createElement("div");
+    card.className = "coach-zoom-card";
+
+    const image = document.createElement("img");
+    image.className = "coach-zoom-image";
+    image.alt = `Large photo of ${personal.name}`;
+    image.src = portraitUrlFor(state.active.patientId);
+    /* Honor the authored mirroring so the pose matches the small view;
+       the artist scale stays off - here the photo fits the frame. */
+    const imageMeta = record.patient.presentation.image || {};
+    if (imageMeta.imageFlipped) image.classList.add("is-flipped");
+
+    const closeButton = document.createElement("button");
+    closeButton.type = "button";
+    closeButton.className = "coach-zoom-close";
+    closeButton.setAttribute("aria-label", "Close the larger photo");
+    closeButton.textContent = "✕";
+
+    card.append(image, closeButton);
+    ui.coachZoomView.replaceChildren(card);
   }
 
   /* ----------------------------------------------------------------------
@@ -667,6 +846,8 @@
     renderWaiting,
     buildPatientChart,
     renderPatient,
+    renderCoach,
+    renderCoachPortraitZoom,
     renderRooms,
     showAssignmentFeedback,
     clearAssignmentFeedback,
