@@ -39,13 +39,14 @@
     "settingHints", "musicStatusNote",
     // Overlays
     "arrivingOverlay", "confirmQuitOverlay", "confirmQuitCancel",
-    "confirmQuitAccept",
+    "confirmQuitAccept", "confirmStopOverlay", "confirmStopCancel",
+    "confirmStopAccept",
     // GAME
     "gameView", "gameBrand", "gameScorecard", "scoreCorrect",
     "scoreCloseDivider", "scoreClose", "scoreWrong", "scoreTotal",
     "gameTimer", "gameSoundButton", "waitingPanel", "patientPanel",
     "patientChartMount", "patientEmptyState", "patientEmptyHint",
-    "roomsPanel", "quitGameButton", "stopGameButton",
+    "resultToast", "roomsPanel", "quitGameButton", "stopGameButton",
     // REVIEW
     "reviewView", "reviewEyebrow", "reviewPlayerLine", "reviewScoreLine",
     "returnToLobbyButton"
@@ -283,6 +284,13 @@
     }
   }
 
+  function renderConfirmStop(state) {
+    ui.confirmStopOverlay.hidden = state.overlay !== "confirm-stop";
+    if (state.overlay === "confirm-stop") {
+      ui.confirmStopCancel.focus();
+    }
+  }
+
   function renderArrivingOverlay(isVisible) {
     ui.arrivingOverlay.hidden = !isVisible;
   }
@@ -300,8 +308,11 @@
     ui.waitingPanel.style.gridTemplateRows =
       `repeat(${rowCount}, minmax(0, 1fr))`;
 
-    const canSelect = state.active === null && state.assigned === null;
-    const canSwap = state.active !== null && state.assigned === null;
+    /* A queue tap is always legal during play: it selects into an empty
+       center (finalizing any assigned case first) or swaps with an
+       unassigned active patient (Phase 5). */
+    const canSelect = state.active === null;
+    const canSwap = state.active !== null;
     const rows = [];
 
     state.waiting.forEach((entry, waitingIndex) => {
@@ -394,7 +405,7 @@
     nameText.textContent = presentation.personal.name.toUpperCase();
     const ageSex = document.createElement("span");
     ageSex.textContent =
-      `${presentation.personal.age} ${presentation.personal.sex}`;
+      `age ${presentation.personal.age} · ${presentation.personal.sex}`;
     nameplate.append(nameText, ageSex);
 
     const portrait = document.createElement("img");
@@ -474,6 +485,42 @@
     return chart;
   }
 
+  /* The empty-state hint always offers the queue; when a patient waits
+     behind an open door it adds the recall option (John, 2026-08-04). */
+  /* "◀━━" fuses an arrowhead with heavy line-drawing shafts into one
+     solid arrow (negative letter-spacing closes the glyph gaps). */
+  function buildHintLine(arrowText, labelText, arrowFirst) {
+    const line = document.createElement("span");
+    line.className = "hint-line";
+    const arrow = document.createElement("span");
+    arrow.className = "hint-arrow "
+      + (arrowFirst ? "hint-arrow--left" : "hint-arrow--right");
+    arrow.textContent = arrowText;
+    arrow.setAttribute("aria-hidden", "true");
+    const label = document.createElement("span");
+    label.textContent = labelText;
+    line.append(...(arrowFirst ? [arrow, label] : [label, arrow]));
+    return line;
+  }
+
+  function renderEmptyStateHint(state) {
+    /* ︎ forces plain text glyphs - without it, phones render the
+       triangles as boxed emoji arrows. */
+    const lines = [
+      buildHintLine("◀︎━━", "TAP A WAITING ROOM PATIENT", true)
+    ];
+    if (state.recallAvailable) {
+      const orLine = document.createElement("span");
+      orLine.className = "patient-empty-hint-or";
+      orLine.textContent = "or";
+      lines.push(
+        orLine,
+        buildHintLine("━━▶︎",
+          "TAP THE TRIAGE ROOM DOOR TO RECALL THAT PATIENT", false));
+    }
+    ui.patientEmptyHint.replaceChildren(...lines);
+  }
+
   function renderPatient(state, portraitUrlFor) {
     const hasActivePatient = state.active !== null;
     ui.patientEmptyState.hidden = hasActivePatient;
@@ -481,6 +528,7 @@
 
     if (!hasActivePatient) {
       ui.patientChartMount.replaceChildren();
+      renderEmptyStateHint(state);
       return;
     }
 
@@ -495,8 +543,10 @@
   }
 
   /* ----------------------------------------------------------------------
-     5d. Seven-room door rail. Assignment behavior arrives in the next
-     phase; this renders the accepted closed-door artwork.
+     5d. Seven-room door rail (Phase 5).
+     Exactly one door is open: the assigned patient's. While recall is
+     legal that door also carries the orange leftward recall arrow.
+     Clicks are delegated in app.js (assign or recall).
      ------------------------------------------------------------------- */
 
   const ROOM_ACCESSIBLE_NAMES = {
@@ -513,21 +563,76 @@
     const assets = window.TRIAGE_RUSH_ASSETS;
     const rows = [];
     for (const roomKey of assets.roomKeys) {
+      const isOpen =
+        state.assigned !== null && state.assigned.roomKey === roomKey;
+
       const room = document.createElement("button");
       room.type = "button";
-      room.className = "room-choice";
+      room.className = "room-choice" + (isOpen ? " is-open" : "");
       room.dataset.roomKey = roomKey;
-      room.setAttribute("aria-label", ROOM_ACCESSIBLE_NAMES[roomKey]);
+      /* The occupied door keeps a steady halo in its outcome color until
+         the room closes again (John, 2026-08-04). The ledger always has
+         this patient's record because assignment created it. */
+      if (isOpen) {
+        const outcome =
+          state.ledger.byPatientId[state.assigned.patientId].outcome;
+        room.classList.add("is-outcome-" + outcome);
+      }
+      room.setAttribute("aria-label", isOpen
+        ? `Recall patient from ${ROOM_ACCESSIBLE_NAMES[roomKey]}`
+        : ROOM_ACCESSIBLE_NAMES[roomKey]);
 
       const door = document.createElement("img");
       door.className = "door-art";
       door.alt = "";
-      door.src = assets.game.doors[roomKey].closed;
-
+      door.src = isOpen
+        ? assets.game.doors[roomKey].open
+        : assets.game.doors[roomKey].closed;
       room.append(door);
+
+      if (isOpen && state.recallAvailable) {
+        const recallArrow = document.createElement("span");
+        recallArrow.className = "room-recall-arrow";
+        /* Variation selector forces the plain glyph, not boxed emoji. */
+        recallArrow.textContent = "◀︎"; // leftward arrow into the center
+        recallArrow.setAttribute("aria-hidden", "true");
+        room.append(recallArrow);
+      }
+
       rows.push(room);
     }
     ui.roomsPanel.replaceChildren(...rows);
+  }
+
+  /* ----------------------------------------------------------------------
+     5e. Assignment feedback: pulse on the selected door only, plus the
+     transient result toast over the center panel. app.js owns the timer
+     that clears it (rendering never starts timers - doc 4).
+     ------------------------------------------------------------------- */
+
+  const OUTCOME_FEEDBACK_TEXT = {
+    correct: "✓ CORRECT",  // ✓
+    close: "△ CLOSE",      // △
+    wrong: "✕ WRONG"       // ✕
+  };
+
+  function showAssignmentFeedback(outcome, roomKey) {
+    clearAssignmentFeedback();
+    const door = ui.roomsPanel.querySelector(
+      `[data-room-key="${roomKey}"]`);
+    if (door) door.classList.add("is-feedback-" + outcome);
+    ui.resultToast.textContent = OUTCOME_FEEDBACK_TEXT[outcome];
+    ui.resultToast.className = "result-toast is-" + outcome;
+    ui.resultToast.hidden = false;
+  }
+
+  function clearAssignmentFeedback() {
+    ui.resultToast.hidden = true;
+    for (const pulsingDoor of ui.roomsPanel.querySelectorAll(
+      ".is-feedback-correct, .is-feedback-close, .is-feedback-wrong")) {
+      pulsingDoor.classList.remove(
+        "is-feedback-correct", "is-feedback-close", "is-feedback-wrong");
+    }
   }
 
   /* ----------------------------------------------------------------------
@@ -563,8 +668,11 @@
     buildPatientChart,
     renderPatient,
     renderRooms,
+    showAssignmentFeedback,
+    clearAssignmentFeedback,
     renderGameHeader,
     renderConfirmQuit,
+    renderConfirmStop,
     renderArrivingOverlay,
     renderReview
   };

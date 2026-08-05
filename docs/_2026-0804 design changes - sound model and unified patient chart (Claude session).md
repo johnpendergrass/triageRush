@@ -118,6 +118,41 @@ panel art or newly generated) before the vitals card can be built.
   files, and the seven `triage-rooms-panel/background-*-room.png` interiors
   (open-door art already shows the interior; demo never used them).
 
+## Addendum 2: Phase-5-session decisions (approved 2026-08-04, evening)
+
+All agreed with John live on the built game; these AMEND docs 3, 7, 8:
+
+- **Recall plays a sound** (amends "recall is silent"): the first two notes
+  of the Correct arpeggio (C5, E5). Registry entry `recall`.
+- **Occupied-door halo**: the open door retains its outcome-colored ring
+  (green/amber/red) until the room closes via recall or finalization. The
+  evaluation flash pulses three times on the same ring. This deliberately
+  keeps the outcome visible; it never marks the correct room.
+- **Naming**: the opening screen is **ER ENTRANCE** (player-facing).
+  "Lobby" and "Check-In" were considered and rejected. Internal code and
+  asset names keep `home`/`lobby`.
+- **Footer wording**: `◀ LEAVE SHIFT` (return to ER Entrance) and
+  `STOP SHIFT EARLY ▶` (review this shift); wide buttons with a thin
+  decorative middle strip; edge-pinned arrows sized to the button box.
+- **Stop Shift Early confirms too** (new overlay `confirm-stop`), wording
+  on both dialogs: "Whoops! I want to keep playing!" vs "Yes, leave shift"
+  / "Yes, stop shift".
+- **Empty patient panel**: the SELECT A PATIENT box uses a 9:16 aspect
+  (matching the shell), width preserved, vertically centered. Hint lines:
+  "TAP A WAITING ROOM PATIENT" always; plus "or" +
+  "TAP THE TRIAGE ROOM DOOR TO RECALL THAT PATIENT" when recall is legal.
+  Arrows are white fused text arrows (◀︎━━ / ━━▶︎) with U+FE0E variation
+  selectors so phones do not render boxed emoji.
+- **Nameplate**: age/sex renders as a cream chip `age 45 · M` beside the
+  name; long names truncate with an ellipsis, the chip never shrinks.
+- **No wall art behind the rails**: the waiting and rooms rails sit on a
+  flat dark green (#0f3d2f, tunable). `background-wall-for-all-rooms.png`
+  is NOT screen background — it is the base layer of the triage-room
+  composition (wall → room interior → patient → door), reserved with the
+  `background-*-room.png` interiors for future layered room rendering.
+  Neither is an archive candidate (supersedes the earlier proposal above
+  for the seven room interiors).
+
 ## Addendum: patient-panel layout decisions (approved 2026-08-04, later session)
 
 Iterated live with John on the built game; these are final for the panel

@@ -78,7 +78,8 @@ function createInitialState() {
 
     view: "home",              // home | game | review
     overlay: null,             // settings-player | settings-shift | about |
-                               // coach | patients-seen | confirm-quit | null
+                               // coach | patients-seen | confirm-quit |
+                               // confirm-stop | null
     phase: "ready",            // loading | ready | active | complete | error
     pauseReasons: [],          // logical reasons, e.g. "coach", "confirm-quit"
 
@@ -369,29 +370,16 @@ function peekUpcomingPatientIds(state, count) {
 /* Tapping a waiting patient. Result includes effect flags for app.js.
    - Empty center: patient moves in; Triage refills immediately (announced).
    - Active unassigned center: the two swap; nothing else changes.
-   - Assigned patient behind a door: finalization arrives with evaluation
-     in a later phase; until then the tap is ignored.                      */
+   - Assigned patient behind a door: the tap FINALIZES that case (door
+     closes, recall opportunity ends, latest ledger result stands), then
+     proceeds exactly like an empty center (doc 8).                        */
 function selectWaitingPatient(state, context, waitingIndex) {
   if (state.phase !== "active") return { accepted: false, doink: false };
   if (waitingIndex < 0 || waitingIndex >= state.waiting.length) {
     return { accepted: false, doink: false };
   }
 
-  if (state.active === null && state.assigned === null) {
-    const [selectedEntry] = state.waiting.splice(waitingIndex, 1);
-    state.active = {
-      patientId: selectedEntry.patientId,
-      waitingBackgroundKey: selectedEntry.waitingBackgroundKey
-    };
-    let doink = false;
-    if (state.settings.mode === "triage") {
-      const refill = insertWaitingPatient(state, context, { announce: true });
-      doink = refill.doink;
-    }
-    return { accepted: true, doink };
-  }
-
-  if (state.active !== null && state.assigned === null) {
+  if (state.active !== null) {
     /* Swap: backgrounds travel with their patients; no insert, no doink,
        no ledger change (doc 8). A recalled marker does not survive going
        back to the queue. */
@@ -407,7 +395,140 @@ function selectWaitingPatient(state, context, waitingIndex) {
     return { accepted: true, doink: false };
   }
 
-  return { accepted: false, doink: false };
+  /* Finalize any assigned case: its latest ledger record is already the
+     recorded result, so only the placement state clears here. */
+  if (state.assigned !== null) {
+    state.assigned = null;
+    state.recallAvailable = false;
+  }
+
+  const [selectedEntry] = state.waiting.splice(waitingIndex, 1);
+  state.active = {
+    patientId: selectedEntry.patientId,
+    waitingBackgroundKey: selectedEntry.waitingBackgroundKey
+  };
+  let doink = false;
+  if (state.settings.mode === "triage") {
+    const refill = insertWaitingPatient(state, context, { announce: true });
+    doink = refill.doink;
+  }
+  return { accepted: true, doink };
+}
+
+/* ------------------------------------------------------------------------
+   5c. Evaluation, assignment, recall, and ledger replacement (docs 3, 8).
+   Pure rules first (testable with plain records), then the two state
+   actions. Each seen patient owns exactly one ledger record keyed by
+   patient ID; reassignment REPLACES that record in place, and because
+   every total derives from the ledger, the old points and counts vanish
+   automatically - nothing subtracts anything by hand.
+   --------------------------------------------------------------------- */
+
+/* "esi-3" -> 3; "psych" / "discharge" -> null. */
+function parseEsiRoomNumber(roomKey) {
+  const match = /^esi-([1-5])$/.exec(String(roomKey));
+  return match ? Number(match[1]) : null;
+}
+
+/* The rooms worth full credit. Ordinary patients: their ESI room only.
+   Psych/Discharge patients: BOTH the named special room and the ESI room
+   from patient.answer.correctEsi (doc 3 dual correctness). */
+function fullCreditRoomKeys(patientRecord) {
+  const answer = patientRecord.patient.answer;
+  const rooms = new Set([answer.correctRoom]);
+  if (answer.correctRoom === "psych" || answer.correctRoom === "discharge") {
+    rooms.add("esi-" + answer.correctEsi);
+  }
+  return rooms;
+}
+
+/* Required evaluation order (doc 3): full credit first, then the Strict
+   short-circuit, then non-ESI rooms are Wrong, and finally ESI adjacency
+   earns Close in Forgiving. */
+function evaluateRoomChoice(patientRecord, roomKey, difficulty) {
+  if (fullCreditRoomKeys(patientRecord).has(roomKey)) return "correct";
+  if (difficulty === "strict") return "wrong";
+  const selectedEsi = parseEsiRoomNumber(roomKey);
+  if (selectedEsi === null) return "wrong";
+  const correctEsi = patientRecord.patient.answer.correctEsi;
+  return Math.abs(selectedEsi - correctEsi) === 1 ? "close" : "wrong";
+}
+
+/* Direction is explanatory and adds no points: "over" means higher acuity
+   than required (a lower ESI number), "under" the reverse. An incorrect
+   Psych/Discharge choice is plain "wrong" and moves neither counter. */
+function classifyTriageDirection(patientRecord, roomKey, outcome) {
+  if (outcome === "correct") return "correct";
+  const selectedEsi = parseEsiRoomNumber(roomKey);
+  if (selectedEsi === null) return "wrong";
+  return selectedEsi < patientRecord.patient.answer.correctEsi
+    ? "over"
+    : "under";
+}
+
+/* Assigning the active patient to a room. The caller looks up and passes
+   the canonical patient record so this stays testable with plain data.
+   Feedback (pulse, toast, sound) is app.js's job, driven by the result. */
+function assignActivePatientToRoom(state, context, patientRecord, roomKey) {
+  if (state.phase !== "active" || state.active === null) {
+    return { accepted: false };
+  }
+  if (!TRIAGE_RUSH_ASSETS.roomKeys.includes(roomKey)) {
+    return { accepted: false };
+  }
+  if (!patientRecord || patientRecord.id !== state.active.patientId) {
+    return { accepted: false };
+  }
+
+  const outcome = evaluateRoomChoice(
+    patientRecord, roomKey, state.settings.difficulty);
+  const direction = classifyTriageDirection(patientRecord, roomKey, outcome);
+  const previousRecord = state.ledger.byPatientId[patientRecord.id];
+  const nowMs = context.wallClockNowMs();
+
+  /* One record per patient: order keeps the first-assignment position, so
+     a reassigned patient never moves in Patients Seen (doc 3). */
+  if (!previousRecord) state.ledger.order.push(patientRecord.id);
+  state.ledger.byPatientId[patientRecord.id] = {
+    patientId: patientRecord.id,
+    roomKey,
+    outcome,
+    direction,
+    points: GAME_CONSTANTS.POINTS[outcome],
+    assignmentCount: previousRecord ? previousRecord.assignmentCount + 1 : 1,
+    firstAssignedAtMs:
+      previousRecord ? previousRecord.firstAssignedAtMs : nowMs,
+    lastAssignedAtMs: nowMs
+  };
+
+  state.assigned = {
+    patientId: patientRecord.id,
+    roomKey,
+    waitingBackgroundKey: state.active.waitingBackgroundKey
+  };
+  state.active = null;
+  state.recallAvailable = true;
+
+  return { accepted: true, outcome, direction, roomKey };
+}
+
+/* Recall: activating the assigned patient's open door returns them to the
+   center for another look. The ledger record is untouched - it remains
+   the recorded result until a reassignment replaces it (doc 3). */
+function recallAssignedPatient(state, roomKey) {
+  if (state.phase !== "active") return { accepted: false };
+  if (!state.recallAvailable || state.assigned === null ||
+      state.assigned.roomKey !== roomKey) {
+    return { accepted: false };
+  }
+  state.active = {
+    patientId: state.assigned.patientId,
+    waitingBackgroundKey: state.assigned.waitingBackgroundKey,
+    recalledFromRoomKey: roomKey
+  };
+  state.assigned = null;
+  state.recallAvailable = false;
+  return { accepted: true };
 }
 
 /* ------------------------------------------------------------------------
@@ -726,6 +847,12 @@ window.TRIAGE_RUSH_GAME = {
   seedInitialQueue,
   peekUpcomingPatientIds,
   selectWaitingPatient,
+  parseEsiRoomNumber,
+  fullCreditRoomKeys,
+  evaluateRoomChoice,
+  classifyTriageDirection,
+  assignActivePatientToRoom,
+  recallAssignedPatient,
   selectLedgerRecords,
   selectScoreTotals,
   startShift,

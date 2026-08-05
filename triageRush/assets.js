@@ -13,7 +13,7 @@
 
 "use strict";
 
-const TRIAGE_RUSH_CACHE_VERSION = "2026-0804-phase1";
+const TRIAGE_RUSH_CACHE_VERSION = "2026-0804-phase5";
 
 /* All paths are relative to the site root (where index.html lives). */
 const ASSET_ROOT = "./triageRush/assets";
@@ -78,7 +78,12 @@ for (const roomKey of ROOM_KEYS) {
    Not listed on purpose (retired or unused by the approved design):
    - lobby-page/boombox.png            (boombox metaphor retired 2026-08-04)
    - game-page/patient-panel/*-bubble  (superseded by the unified chart cards)
-   - triage-rooms-panel/background-*-room.png (open-door art shows interiors)
+
+   Not listed yet (reserved for the layered room composition, per John
+   2026-08-04: wall, then room interior, then patient, then door). They
+   are NOT general screen background art; the rails use a flat color:
+   - triage-rooms-panel/background-wall-for-all-rooms.png (base wall layer)
+   - triage-rooms-panel/background-*-room.png (room interiors)
 
    Not listed yet (asset does not exist yet):
    - six vital icons (HR, BP, RR, SpO2, Temp, Pain) - added here when produced.
@@ -95,7 +100,6 @@ const TRIAGE_RUSH_ASSETS = Object.freeze({
   }),
 
   game: Object.freeze({
-    roomWall: `${ASSET_ROOT}/game-page/triage-rooms-panel/background-wall-for-all-rooms.png`,
     patientPanelBackground: `${ASSET_ROOT}/game-page/patient-panel/patient-panel-background-hires.png`,
     waitingBackgrounds: Object.freeze(waitingBackgrounds),
     doors: Object.freeze(roomDoors)
@@ -125,7 +129,6 @@ function listAllImageAssetPaths() {
     TRIAGE_RUSH_ASSETS.lobby.doorOverlayStartShift,
     TRIAGE_RUSH_ASSETS.lobby.settingsBlackboard,
     TRIAGE_RUSH_ASSETS.lobby.aboutWhiteboard,
-    TRIAGE_RUSH_ASSETS.game.roomWall,
     TRIAGE_RUSH_ASSETS.game.patientPanelBackground
   ];
   for (const key of TRIAGE_RUSH_ASSETS.waitingBackgroundKeys) {
