@@ -1,11 +1,10 @@
 # Implementation Blueprint
 
-**Last modified:** 2026-08-05
+**Last modified:** 2026-08-04
 
-**Latest change:** Aligned the blueprint with the built game (Phases 1-6):
-actual state shape, Chart naming (`state.chart`, `openChart`, pause reason
-`"chart"`), the three-toggle sound model plus sound registry, the recall
-sound, and the unified chart builder.
+**Latest change:** Replaced the large module tree with the approved compact file
+map and added schema-preserving loading, staged preloading, readable naming, and
+asset-size-independent rendering.
 
 ## Purpose
 
@@ -23,7 +22,7 @@ triageRush/
 |-- styles.css
 |-- assets.js                 validated logical asset manifest
 |-- game.js                   state, rules, queue, scoring, clock, persistence
-|-- ui.js                     shell, HOME, GAME, Chart, and review rendering
+|-- ui.js                     shell, HOME, GAME, Coach, and review rendering
 |-- app.js                    bootstrap, loading, events, and one-time effects
 `-- assets/                   paths specified in document 6
 ```
@@ -77,19 +76,14 @@ Doctor, Nurse, RN, LPN, RES, Intern, EMS, PA, MS1, MS2, MS3, MS4
 
 ## State reference shape
 
-This is the shape `createInitialState()` builds in `game.js` (Phases 1-6 are
-implemented against it):
-
 ```js
 {
   version: 1,
 
   view: "home",                 // home | game | review
-  overlay: null,                // settings-player | settings-shift | about |
-                                // chart | patients-seen | confirm-quit |
-                                // confirm-stop | null
+  overlay: null,                // settings | about | coach | patients-seen | confirm
   phase: "ready",               // loading | ready | active | complete | error
-  pauseReasons: [],             // logical reasons, e.g. "chart", "confirm-quit"
+  pauseReasons: [],             // unique logical reasons, not DOM nodes
 
   player: {
     title: "Doctor",
@@ -99,26 +93,18 @@ implemented against it):
   settings: {
     mode: "triage",             // triage | rush
     difficulty: "forgiving",    // forgiving | strict
-    triageLengthSeconds: 300,
-    rushLengthSeconds: 60,
+    triageLength: 300,
+    rushLength: 60,
     hints: true,
-    // Three-toggle sound model (boombox retired). Music plays only when
-    // soundGlobal && soundMusic, decided on HOME.
-    soundGlobal: true,
-    soundGame: true,
-    soundMusic: false
+    rushTimingSounds: true,
+    globalMute: false
   },
-
-  // Shift-runtime override: the in-game mute button flips only this flag.
-  // Re-derived from soundGlobal && soundGame at every shift start; never
-  // rewrites the persisted preferences.
-  gameSoundsAudible: true,
 
   shift: {
     id: null,
-    startedAtMs: null,
-    completedAtMs: null,
-    endReason: null,            // timer | stop | quit | null
+    startedAt: null,
+    completedAt: null,
+    endReason: null,            // timer | stop | quit
     elapsedMs: 0,
     remainingMs: 300000,
     lastLogicalQuarter: -1
@@ -129,29 +115,31 @@ implemented against it):
     cursor: 0
   },
 
-  waiting: [],                  // [{ patientId, waitingBackgroundKey }]
-  active: null,                 // { patientId, waitingBackgroundKey,
-                                //   recalledFromRoomKey? } | null
+  waiting: [
+    // { patientId, waitingBackgroundKey }
+  ],
+
+  active: null,                 // { patientId, waitingBackgroundKey, recalledFromRoomKey? }
   assigned: null,               // { patientId, roomKey, waitingBackgroundKey }
   recallAvailable: false,
 
   ledger: {
-    order: [],                  // patient IDs in stable first-assignment order
+    order: [],                  // stable first-assignment patient IDs
     byPatientId: {
       // id: { patientId, roomKey, outcome, direction, points,
-      //       assignmentCount, firstAssignedAtMs, lastAssignedAtMs }
+      //       assignmentCount, firstAssignedAt, lastAssignedAt }
     }
   },
 
   rush: {
     arrivalRemainingMs: 10000,
     nextBaseIntervalMs: 10000,
-    stagedSecondArrivalAtMs: null,
+    stagedSecondArrivalAt: null,
     currentArrivalEventId: 0
   },
 
-  chart: {
-    clinicalExpanded: false     // shift-level memory; resets at new shift
+  coach: {
+    clinicalExpanded: false     // resets at new shift
   },
 
   review: {
@@ -177,8 +165,7 @@ At every committed transition:
 - ledger points agree with outcome;
 - Close is impossible in Strict;
 - recall is available only for the assigned patient's open room;
-- the Chart can open only when `active != null`, and the `"chart"` pause
-  reason exists only while the Chart overlay is open;
+- Coach can open only when `active != null`;
 - RUSH-only arrival state has no gameplay effect in Triage;
 - remaining time never goes below zero; and
 - view/overlay changes never alter scoring or queue content by themselves;
@@ -258,8 +245,7 @@ require phase ready and view HOME
 set phase loading and show PATIENTS ARE ARRIVING
 create new shift id/timestamps
 clear ledger, queue, active, assigned, review, and pause state
-reset Chart Clinical to collapsed
-re-derive gameSoundsAudible from soundGlobal && soundGame
+reset Coach Clinical to collapsed
 shuffle deck and reset cursor
 fetch and decode initial portraits plus measured reserve
 set selected countdown
@@ -410,7 +396,6 @@ recallAssignedPatient(roomKey) {
   recallAvailable = false
 
   close roomKey
-  queue soundEffect("recall")   // first two notes of the Correct arpeggio: C5, E5
   render patient, rooms, footer
 }
 ```
@@ -419,45 +404,27 @@ Do not delete the ledger record on recall. Do not expose Answer. A later
 assignment replaces the existing record. Ending while recalled retains the last
 completed record.
 
-## Unified patient chart and the Chart overlay
+## Coach
 
-One builder, `ui.js buildPatientChart(record, context, portraitUrl)`, produces
-the chart content for every location. `context.setting` selects the wrapper:
-
-- `"panel"`: the GAME center panel — transparent, compact, presentation cards
-  only (Answer and Clinical hidden).
-- `"clipboard"`: the Chart overlay — CSS-drawn clipboard plus the locked
-  ANSWER and toggling CLINICAL sections.
-- `"review"` (future, Phase 8): the Patients Seen browser reuses the clipboard
-  wrapper with navigation chrome and unlocked sections.
-
-The chart root gets class `chart--<setting>`; clipboard-specific CSS scopes
-under `.chart-overlay-mount`. Content is written once; CSS owns all
-per-setting flow, sizing, and background.
-
-The patient panel click/keyboard handler dispatches `openChart` in `game.js`:
+The patient panel click/keyboard handler dispatches `openCoach`.
 
 ```js
-openChart() {
-  require phase active and active != null and overlay == null
-  overlay = "chart"
-  add pause reason "chart"
+openCoach() {
+  require active != null
+  overlay = "coach"
+  add pause reason "coach"
+  render chart with:
+    presentation expanded
+    answer locked
+    clinical = state.coach.clinicalExpanded
 }
-// rendering shows:
-//   presentation cards (always visible, no section header)
-//   ANSWER locked (striped header, LOCKED pill, shake on tap)
-//   CLINICAL expanded per state.chart.clinicalExpanded
 ```
 
-Only toggling Clinical updates `state.chart.clinicalExpanded`; the toggle
-writes state AND flips the DOM directly so chart scroll is preserved. Answer
-never unlocks in this context. New Shift resets Clinical to false.
+Only toggling Clinical updates `state.coach.clinicalExpanded`. Presentation
+may toggle locally while open but resets expanded on the next active Coach open.
+Answer never unlocks in this context. New Shift resets Clinical to false.
 
-The photo zoom lightbox (document `7`) is deliberately DOM-only view state:
-it is never stored in the state tree and always starts closed on Chart open.
-
-Closing removes the `"chart"` pause reason and restores focus to the patient
-panel hit target.
+Closing removes the Coach pause reason and restores focus to the patient panel.
 
 ## Score selectors
 
@@ -514,7 +481,7 @@ blocked staged insertion is silent and may share the event's one shake.
 
 Use `performance.now()` to determine elapsed active time. Treat each 250ms
 quarter as a logical boundary. Pause freezes game time by moving the scheduler
-anchor; it does not try to catch up after the Chart or a confirmation.
+anchor; it does not try to catch up after Coach/HOME.
 
 Each processed quarter:
 
@@ -561,31 +528,12 @@ of its minute group, not a fourth tick.
 Use a set of pause reasons:
 
 ```text
-chart, confirmation, document-hidden
+coach, confirmation, document-hidden
 ```
 
 The scheduler advances only when the set is empty, phase is active, and view is
 GAME. Adding a second reason does not overwrite the first. Resume only after all
 reasons are cleared.
-
-## Sound registry
-
-All game sounds are synthesized with Web Audio (no sound files) through one
-registry in `app.js`. Each sound is a named entry `{ enabled, play }` so
-per-sound preferences are a flag away:
-
-```text
-doink     arrival
-correct   C5-E5-G5 arpeggio
-close     close-result tone
-wrong     wrong-result tone
-recall    C5-E5 (first two notes of correct)
-tick, minuteTick, countdownTick, endDong   reserved for the Phase-7 scheduler
-```
-
-A sound plays only when its own flag, `state.gameSoundsAudible`, and the sound
-model in document `3` allow it. Music (the KING-FM stream) is separate from
-the registry and starts from HOME gestures only.
 
 ## Rendering boundaries
 
@@ -599,8 +547,7 @@ renderPatient
 renderRooms
 renderFooter
 renderHome
-renderChartOverlay
-renderChartPortraitZoom
+renderCoach
 renderReview
 renderPatientsSeenNavigation
 ```
@@ -656,7 +603,7 @@ quitShift()
   reset phase = ready and view = home
   do not create review results
 
-returnToHome()   // player-facing action: RETURN TO ER ENTRANCE
+returnToLobby()
   require complete SHIFT REVIEW
   clear completed runtime state
   reset phase = ready and view = home
@@ -688,7 +635,7 @@ shift atomically.
 
 If `activeShift` is valid, recover directly into phase active and view GAME.
 This is interruption recovery, not HOME navigation: never render Resume Shift.
-Quit, end-early, or completed-review Return to ER Entrance clears `activeShift`.
+Quit, stop, or completed-review Return to Lobby clears `activeShift`.
 
 ## Minimum deterministic tests
 
@@ -703,10 +650,10 @@ Inject a fake clock and random sequence to prove:
 - final score and header always use the same selector;
 - cue boundaries fire once and zero suppresses arrival;
 - pause freezes time and does not catch up;
-- Chart open/close legality and Clinical shift memory hold;
+- Coach legality and Clinical shift memory hold;
 - starting a new shift resets Clinical and all ledger state;
 - canceling Quit preserves the exact GAME state;
 - confirming Quit discards state and reaches HOME without review;
 - Stop/timer completion reaches review and cannot return to GAME;
-- Return to ER Entrance reaches HOME, where only Start Shift begins gameplay; and
+- Return to Lobby reaches HOME, where only Start Shift begins gameplay; and
 - valid interruption recovery opens GAME directly without a Resume state.

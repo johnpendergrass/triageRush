@@ -48,9 +48,9 @@
     "patientChartMount", "patientPanelHitButton", "patientEmptyState",
     "patientEmptyHint", "resultToast", "roomsPanel", "quitGameButton",
     "stopGameButton",
-    // Coach
-    "coachOverlay", "coachClipboard", "coachCloseButton", "coachScroll",
-    "coachChartMount", "coachMoreAbove", "coachMoreBelow", "coachZoomView",
+    // Chart
+    "chartOverlay", "chartClipboard", "chartCloseButton", "chartScroll",
+    "chartOverlayMount", "chartMoreAbove", "chartMoreBelow", "chartZoomView",
     // REVIEW
     "reviewView", "reviewEyebrow", "reviewPlayerLine", "reviewScoreLine",
     "returnToLobbyButton"
@@ -382,7 +382,7 @@
      5c. The unified patient chart (design change 2026-08-04).
      One builder maps a canonical patient record to the info cards; outer
      setting wrappers decide the look. This phase uses the transparent
-     panel setting; the Coach clipboard setting reuses the same builder.
+     panel setting; the Chart clipboard setting reuses the same builder.
      ------------------------------------------------------------------- */
 
   const VITAL_DISPLAY_ORDER = [
@@ -475,7 +475,7 @@
     /* The presentation cards are always visible in every setting; the
        panel shows nothing else (John, 2026-08-04 addendum). */
     chart.append(nameplate, scene, complaintChip, quote, vitals, note);
-    if (chartContext.setting !== "coach") return chart;
+    if (chartContext.setting !== "clipboard") return chart;
 
     /* In the chart overlay the photo zooms. The hit box is the scene's
        top-right quadrant (John, 2026-08-05): one transparent button
@@ -493,7 +493,7 @@
     zoomButton.append(zoomBadge);
     scene.append(zoomButton);
 
-    /* Coach setting adds locked ANSWER and remembered CLINICAL (doc 3).
+    /* Chart setting adds locked ANSWER and remembered CLINICAL (doc 3).
        No PRESENTATION header: the evidence is always shown and expanded,
        so a header would only take space (John, 2026-08-05). Section
        headers are real buttons with aria-expanded (doc 7); app.js
@@ -638,8 +638,8 @@
     const hasActivePatient = state.active !== null;
     ui.patientEmptyState.hidden = hasActivePatient;
     ui.patientEmptyHint.hidden = !state.settings.hints;
-    /* The whole occupied panel is the one Coach hit target; when the
-       panel is empty the target is absent and Coach cannot open (doc 7). */
+    /* The whole occupied panel is the one Chart hit target; when the
+       panel is empty the target is absent and Chart cannot open (doc 7). */
     ui.patientPanelHitButton.hidden = !hasActivePatient;
 
     if (!hasActivePatient) {
@@ -650,7 +650,7 @@
 
     const record = window.TRIAGE_RUSH_PATIENTS_BY_ID[state.active.patientId];
     /* Panel setting shows presentation only; ANSWER and CLINICAL appear
-       in the Coach and review settings of the same chart (John, 2026-08-04). */
+       in the Chart and review settings of the same chart (John, 2026-08-04). */
     const chart = buildPatientChart(
       record,
       { setting: "panel" },
@@ -659,29 +659,29 @@
   }
 
   /* ----------------------------------------------------------------------
-     5f. Coach overlay (Phase 6).
+     5f. Chart overlay (Phase 6).
      The clipboard setting of the SAME chart builder. Rendering only
      mounts the chart; open/close legality, pause reasons, and focus
      moves live in game.js and app.js.
      ------------------------------------------------------------------- */
 
-  function renderCoach(state, portraitUrlFor) {
-    const isOpen = state.overlay === "coach" && state.active !== null;
-    ui.coachOverlay.hidden = !isOpen;
+  function renderChartOverlay(state, portraitUrlFor) {
+    const isOpen = state.overlay === "chart" && state.active !== null;
+    ui.chartOverlay.hidden = !isOpen;
     if (!isOpen) {
-      ui.coachChartMount.replaceChildren();
+      ui.chartOverlayMount.replaceChildren();
       return;
     }
 
     const record = window.TRIAGE_RUSH_PATIENTS_BY_ID[state.active.patientId];
     const chart = buildPatientChart(
       record,
-      { setting: "coach", clinicalExpanded: state.coach.clinicalExpanded },
+      { setting: "clipboard", clinicalExpanded: state.chart.clinicalExpanded },
       portraitUrlFor(state.active.patientId));
-    ui.coachChartMount.replaceChildren(chart);
+    ui.chartOverlayMount.replaceChildren(chart);
     /* Each open starts at the top of the paper, photo zoom closed. */
-    ui.coachScroll.scrollTop = 0;
-    renderCoachPortraitZoom(state, portraitUrlFor, false);
+    ui.chartScroll.scrollTop = 0;
+    renderChartPortraitZoom(state, portraitUrlFor, false);
   }
 
   /* The larger-photo view: a dark scrim over the whole clipboard with
@@ -689,10 +689,10 @@
      name section (John, 2026-08-05). Reads unmistakably as "a zoomed
      photo to look at, then close". Ephemeral like the section toggles -
      it resets closed every time the chart opens. */
-  function renderCoachPortraitZoom(state, portraitUrlFor, isOpen) {
-    ui.coachZoomView.hidden = !isOpen;
+  function renderChartPortraitZoom(state, portraitUrlFor, isOpen) {
+    ui.chartZoomView.hidden = !isOpen;
     if (!isOpen || state.active === null) {
-      ui.coachZoomView.replaceChildren();
+      ui.chartZoomView.replaceChildren();
       return;
     }
 
@@ -700,10 +700,10 @@
     const personal = record.patient.presentation.personal;
 
     const card = document.createElement("div");
-    card.className = "coach-zoom-card";
+    card.className = "chart-zoom-card";
 
     const image = document.createElement("img");
-    image.className = "coach-zoom-image";
+    image.className = "chart-zoom-image";
     image.alt = `Large photo of ${personal.name}`;
     image.src = portraitUrlFor(state.active.patientId);
     /* Honor the authored mirroring so the pose matches the small view;
@@ -713,12 +713,12 @@
 
     const closeButton = document.createElement("button");
     closeButton.type = "button";
-    closeButton.className = "coach-zoom-close";
+    closeButton.className = "chart-zoom-close";
     closeButton.setAttribute("aria-label", "Close the larger photo");
     closeButton.textContent = "✕";
 
     card.append(image, closeButton);
-    ui.coachZoomView.replaceChildren(card);
+    ui.chartZoomView.replaceChildren(card);
   }
 
   /* ----------------------------------------------------------------------
@@ -846,8 +846,8 @@
     renderWaiting,
     buildPatientChart,
     renderPatient,
-    renderCoach,
-    renderCoachPortraitZoom,
+    renderChartOverlay,
+    renderChartPortraitZoom,
     renderRooms,
     showAssignmentFeedback,
     clearAssignmentFeedback,

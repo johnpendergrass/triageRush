@@ -1,10 +1,10 @@
 # Asset Organization and Specifications
 
-**Last modified:** 2026-08-05
+**Last modified:** 2026-08-04
 
-**Latest change:** Swept in the 2026-08-04/05 amendments: boombox retired,
-bubble layers superseded by CSS-drawn chart cards, wall/interior art reserved
-for future layered room rendering, and ER ENTRANCE naming.
+**Latest change:** Adopted the approved development-first asset lifecycle:
+current high-resolution production art during implementation, measured
+optimization after final CSS and visual approval.
 
 ## Ownership
 
@@ -26,8 +26,8 @@ triageRush/assets/
 |   `-- waiting-room-panel/
 |-- lobby-page/
 |-- audio/
-|-- icons/                      empty: six vital icons still to be produced
-|-- patient-chart-popup/        empty: the Chart clipboard is CSS-drawn
+|-- icons/
+|-- patient-chart-popup/
 |-- review-page/
 `-- _asset-audit-and-resize/    non-runtime audit and trial workspace
 ```
@@ -76,17 +76,15 @@ slot decoration is not attached to a patient until insertion.
 `game-page/patient-panel/` contains:
 
 ```text
-patient-panel-background-hires.png      (runtime: the corridor scene art)
-patient-panel-name-bubble-hires.png     (unused, see below)
-patient-panel-quote-bubble-hires.png    (unused, see below)
-patient-panel-vitals-bubble-hires.png   (unused, see below)
-patient-panel-clipboard-bubble-hires.png (unused, see below)
+patient-panel-background-hires.png
+patient-panel-name-bubble-hires.png
+patient-panel-quote-bubble-hires.png
+patient-panel-vitals-bubble-hires.png
+patient-panel-clipboard-bubble-hires.png
 ```
 
-Only the corridor background is in the runtime manifest. The four bubble
-layers were superseded by the unified chart's CSS-drawn cards; they stay on
-disk pending John's decision on archiving unused art. Patient portraits remain
-in `patient-data/patient-images/`.
+These layers define the visual system for the center panel and detailed-chart
+motif. Patient portraits remain in `patient-data/patient-images/`.
 
 Portrait rendering must honor schema image orientation and scale metadata,
 remain bottom-aligned, and not be forced to the background's magnification.
@@ -98,11 +96,6 @@ remain bottom-aligned, and not be forced to the background's magnification.
 - `background-wall-for-all-rooms.png`;
 - seven `background-*-room.png` interiors; and
 - fourteen accepted `door-*-open.png` / `door-*-closed.png` images.
-
-The wall and the seven interiors are NOT screen background art and are not in
-the runtime manifest yet: both rails render on a flat dark green (#0f3d2f).
-They are reserved layers for the future layered room composition (wall →
-room interior → patient → door) and must not be archived.
 
 Room keys are:
 
@@ -148,11 +141,10 @@ must be judged in that rendered context, not only at native resolution.
 
 ## HOME assets
 
-### ER Entrance composition
+### Lobby composition
 
-The HOME screen's player-facing name is ER ENTRANCE; the asset folder keeps
-its internal `lobby-page/` name. It contains the permanent entrance background
-and registered Start Shift overlay required by the forward application:
+`lobby-page/` contains the permanent lobby background and registered Start Shift
+overlay required by the forward application:
 
 ```text
 background-w-open-glass-doors.png       852 x 1515
@@ -175,22 +167,38 @@ distinguish them. Center a board in the HOME frame at 93.75% of frame height
 while preserving aspect ratio. Use a close target of at least 44 CSS pixels near
 the board's established top-right close position.
 
-### Music (boombox retired)
+### Boombox
 
-The boombox metaphor is retired (2026-08-04): its artwork, hotspots, and LED
-buttons are not implemented. `lobby-page/boombox.png` (and boombox.txt) stay
-on disk, unused and out of the runtime manifest, pending John's decision on
-archiving unused art. Sound options are the three toggles (GLOBAL, GAME
-SOUNDS, MUSIC) on the shift-settings blackboard.
+`boombox.png` is a 2298 x 1415 transparent PNG.
 
-The music endpoint used by the MUSIC toggle is:
+Placement on the 852 x 1515 HOME source canvas:
+
+```text
+anchor: top-left
+X: 357
+Y: 1256
+reference displayed width: 480 source pixels
+```
+
+Interactive centers relative to the asset:
+
+| Control | X | Y | Active color |
+|---|---:|---:|---|
+| Power | 18.0% | 16.4% | Red |
+| Music | 46.9% | 21.3% | Green |
+| UI | 77.3% | 28.7% | Green |
+
+Targets are at least 44 x 44 CSS pixels. Speakers, cassette, lower controls, and
+the 98.1 FM display are decorative.
+
+The optional music endpoint is:
 
 ```text
 https://classicalking.streamguys1.com/KING-FM-128KAAC
 ```
 
-Never autoplay; playback starts only from a user gesture on HOME. A stream
-error must clear false active state and leave gameplay usable.
+Never autoplay. A stream error must clear false active state and leave gameplay
+usable.
 
 ## Responsive artwork rules
 
@@ -248,8 +256,9 @@ presentation.
 - All 16 waiting backgrounds render.
 - All 14 accepted doors render in open and closed states with readable signs.
 - Door counts, manifest paths, decoding, alpha, and rendered geometry pass.
-- Patient panel corridor art aligns without clipping or text obstruction.
-- HOME Start Shift state registers to the entrance background.
+- Patient panel layers align without clipping or text obstruction.
+- HOME Start Shift state registers to the lobby background.
+- The boombox artwork and hit targets align.
 - All assets survive shell scaling, safe areas, and reduced motion settings.
 - No current runtime path names a discarded or historical asset.
 - Audit scripts, reports, trials, and archived masters are absent from the

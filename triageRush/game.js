@@ -78,10 +78,10 @@ function createInitialState() {
 
     view: "home",              // home | game | review
     overlay: null,             // settings-player | settings-shift | about |
-                               // coach | patients-seen | confirm-quit |
+                               // chart | patients-seen | confirm-quit |
                                // confirm-stop | null
     phase: "ready",            // loading | ready | active | complete | error
-    pauseReasons: [],          // logical reasons, e.g. "coach", "confirm-quit"
+    pauseReasons: [],          // logical reasons, e.g. "chart", "confirm-quit"
 
     player: {
       title: "Doctor",
@@ -142,7 +142,7 @@ function createInitialState() {
       currentArrivalEventId: 0
     },
 
-    coach: {
+    chart: {
       clinicalExpanded: false  // shift-level memory; resets at new shift
     },
 
@@ -532,9 +532,9 @@ function recallAssignedPatient(state, roomKey) {
 }
 
 /* ------------------------------------------------------------------------
-   5d. Coach (doc 3, doc 8; Phase 6).
-   Coach is an active-patient tool: it can open only while a patient
-   occupies the center panel. Opening adds the "coach" pause reason so the
+   5d. Chart (doc 3, doc 8; Phase 6).
+   Chart is an active-patient tool: it can open only while a patient
+   occupies the center panel. Opening adds the "chart" pause reason so the
    Phase-7 scheduler will freeze the clock and RUSH arrivals; the reason
    list is already the single pause authority. Only the Clinical section's
    expanded/collapsed choice is remembered (for the rest of the shift);
@@ -550,24 +550,24 @@ function removePauseReason(state, reason) {
   state.pauseReasons = state.pauseReasons.filter(r => r !== reason);
 }
 
-function openCoach(state) {
+function openChart(state) {
   if (state.phase !== "active" || state.active === null) return false;
   if (state.overlay !== null) return false;
-  state.overlay = "coach";
-  addPauseReason(state, "coach");
+  state.overlay = "chart";
+  addPauseReason(state, "chart");
   return true;
 }
 
-function closeCoach(state) {
-  if (state.overlay !== "coach") return false;
+function closeChart(state) {
+  if (state.overlay !== "chart") return false;
   state.overlay = null;
-  removePauseReason(state, "coach");
+  removePauseReason(state, "chart");
   return true;
 }
 
-/* Called only when the player toggles the Clinical section inside Coach. */
-function setCoachClinicalExpanded(state, expanded) {
-  state.coach.clinicalExpanded = Boolean(expanded);
+/* Called only when the player toggles the Clinical section inside Chart. */
+function setChartClinicalExpanded(state, expanded) {
+  state.chart.clinicalExpanded = Boolean(expanded);
 }
 
 /* ------------------------------------------------------------------------
@@ -639,7 +639,7 @@ function startShift(state, context) {
   state.ledger = { order: [], byPatientId: {} };
   state.review = { patientIndex: 0 };
   state.pauseReasons = [];
-  state.coach.clinicalExpanded = false;
+  state.chart.clinicalExpanded = false;
 
   /* RUSH base interval: 10s for a 60s shift, 14.5s for 120s (doc 8). */
   const rushBaseMs = state.settings.rushLengthSeconds === 120 ? 14500 : 10000;
@@ -776,10 +776,10 @@ function collectInvariantViolations(state) {
 
   check(!state.recallAvailable || !!state.assigned,
     "recall available without an assigned patient");
-  check(state.overlay !== "coach" || !!state.active,
-    "Coach open without an active patient");
-  check(state.overlay === "coach" || !state.pauseReasons.includes("coach"),
-    "coach pause reason without Coach open");
+  check(state.overlay !== "chart" || !!state.active,
+    "Chart open without an active patient");
+  check(state.overlay === "chart" || !state.pauseReasons.includes("chart"),
+    "chart pause reason without Chart open");
   check(state.shift.remainingMs >= 0, "remaining time below zero");
   check(state.phase !== "active" || state.view === "game",
     "active phase outside GAME view");
@@ -896,9 +896,9 @@ window.TRIAGE_RUSH_GAME = {
   classifyTriageDirection,
   assignActivePatientToRoom,
   recallAssignedPatient,
-  openCoach,
-  closeCoach,
-  setCoachClinicalExpanded,
+  openChart,
+  closeChart,
+  setChartClinicalExpanded,
   selectLedgerRecords,
   selectScoreTotals,
   startShift,

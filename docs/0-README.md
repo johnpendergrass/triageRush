@@ -1,10 +1,11 @@
 # triageRush Documentation
 
-**Last modified:** 2026-08-04
+**Last modified:** 2026-08-05
 
-**Latest change:** Approved direct production implementation, a compact and
-readable source map, schema-preserving patient access, staged loading, and
-post-implementation asset optimization.
+**Latest change:** The 2026-08-04/05 amendment layer was swept into the
+numbered set; the loose design-change notes moved to
+`archive/design-notes/`. The numbered documents are again the single current
+authority.
 
 ## Purpose
 

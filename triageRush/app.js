@@ -313,7 +313,7 @@
     UI.renderGameHeader(state);
     UI.renderWaiting(state, portraitUrlFor);
     UI.renderPatient(state, portraitUrlFor);
-    UI.renderCoach(state, portraitUrlFor);
+    UI.renderChartOverlay(state, portraitUrlFor);
     UI.renderRooms(state);
     UI.renderConfirmQuit(state);
     UI.renderConfirmStop(state);
@@ -535,35 +535,35 @@
   }
 
   /* ----------------------------------------------------------------------
-     6b. Coach (Phase 6).
-     Open/close legality and the "coach" pause reason live in game.js;
+     6b. Chart (Phase 6).
+     Open/close legality and the "chart" pause reason live in game.js;
      here is only the wiring: the whole-panel hit target, close paths
      (X, scrim, Escape), section toggles, and the internal scroll hints.
      ------------------------------------------------------------------- */
 
   /* MORE ABOVE / MORE BELOW show only while hidden content exists in
      that direction (with a little slack so a hairline never counts). */
-  function updateCoachScrollHints() {
-    const scroller = ui.coachScroll;
+  function updateChartScrollHints() {
+    const scroller = ui.chartScroll;
     const slackPx = 8;
-    ui.coachMoreAbove.hidden = scroller.scrollTop <= slackPx;
-    ui.coachMoreBelow.hidden =
+    ui.chartMoreAbove.hidden = scroller.scrollTop <= slackPx;
+    ui.chartMoreBelow.hidden =
       scroller.scrollTop + scroller.clientHeight
         >= scroller.scrollHeight - slackPx;
   }
 
-  function openCoachFromPanel() {
-    if (!GAME.openCoach(state)) return;
-    GAME.assertStateInvariants(state, "openCoach");
-    UI.renderCoach(state, portraitUrlFor);
-    updateCoachScrollHints();
-    ui.coachCloseButton.focus();
+  function openChartFromPanel() {
+    if (!GAME.openChart(state)) return;
+    GAME.assertStateInvariants(state, "openChart");
+    UI.renderChartOverlay(state, portraitUrlFor);
+    updateChartScrollHints();
+    ui.chartCloseButton.focus();
   }
 
-  function closeCoachAndRestoreFocus() {
-    if (!GAME.closeCoach(state)) return;
-    GAME.assertStateInvariants(state, "closeCoach");
-    UI.renderCoach(state, portraitUrlFor);
+  function closeChartAndRestoreFocus() {
+    if (!GAME.closeChart(state)) return;
+    GAME.assertStateInvariants(state, "closeChart");
+    UI.renderChartOverlay(state, portraitUrlFor);
     /* Focus returns to the patient panel, the element that opened it. */
     ui.patientPanelHitButton.focus();
   }
@@ -571,29 +571,29 @@
   /* The larger-photo view. Ephemeral (never in the state tree): it
      resets closed whenever the chart itself (re)opens. */
   function isPortraitZoomOpen() {
-    return !ui.coachZoomView.hidden;
+    return !ui.chartZoomView.hidden;
   }
 
   function openPortraitZoom() {
-    UI.renderCoachPortraitZoom(state, portraitUrlFor, true);
-    const closeButton = ui.coachZoomView.querySelector(".coach-zoom-close");
+    UI.renderChartPortraitZoom(state, portraitUrlFor, true);
+    const closeButton = ui.chartZoomView.querySelector(".chart-zoom-close");
     if (closeButton) closeButton.focus();
   }
 
   function closePortraitZoom() {
-    UI.renderCoachPortraitZoom(state, portraitUrlFor, false);
+    UI.renderChartPortraitZoom(state, portraitUrlFor, false);
     /* Back to the magnifier that opened it. */
-    const zoomButton = ui.coachChartMount.querySelector(".chart-zoom-button");
+    const zoomButton = ui.chartOverlayMount.querySelector(".chart-zoom-button");
     if (zoomButton) zoomButton.focus();
   }
 
-  function wireCoachEvents() {
-    ui.patientPanelHitButton.addEventListener("click", openCoachFromPanel);
-    ui.coachCloseButton.addEventListener("click", closeCoachAndRestoreFocus);
+  function wireChartEvents() {
+    ui.patientPanelHitButton.addEventListener("click", openChartFromPanel);
+    ui.chartCloseButton.addEventListener("click", closeChartAndRestoreFocus);
 
     /* Scrim click closes; clicks inside the clipboard never do (doc 7). */
-    ui.coachOverlay.addEventListener("click", (event) => {
-      if (event.target === ui.coachOverlay) closeCoachAndRestoreFocus();
+    ui.chartOverlay.addEventListener("click", (event) => {
+      if (event.target === ui.chartOverlay) closeChartAndRestoreFocus();
     });
 
     /* Section headers are rebuilt with the chart, so one delegated
@@ -601,7 +601,7 @@
        shift-level preference; locked Answer only shakes (doc 3). The
        presentation cards have no header - always visible (John,
        2026-08-05). */
-    ui.coachChartMount.addEventListener("click", (event) => {
+    ui.chartOverlayMount.addEventListener("click", (event) => {
       /* The photo's zoom hit box opens the larger view. */
       if (event.target.closest("[data-chart-zoom]")) {
         openPortraitZoom();
@@ -618,35 +618,35 @@
         return;
       }
 
-      const body = ui.coachChartMount.querySelector(".chart-clinical-body");
+      const body = ui.chartOverlayMount.querySelector(".chart-clinical-body");
       if (!body) return;
       const nowExpanded = body.hidden; /* it was hidden, so this expands */
       body.hidden = !nowExpanded;
       header.setAttribute("aria-expanded", String(nowExpanded));
-      GAME.setCoachClinicalExpanded(state, nowExpanded);
-      updateCoachScrollHints();
+      GAME.setChartClinicalExpanded(state, nowExpanded);
+      updateChartScrollHints();
     });
 
     /* The zoom view's close box is rebuilt with its content, so this is
        delegated too. Its dark scrim also closes; the photo card itself
        never does. */
-    ui.coachZoomView.addEventListener("click", (event) => {
-      if (event.target.closest(".coach-zoom-close") ||
-          event.target === ui.coachZoomView) {
+    ui.chartZoomView.addEventListener("click", (event) => {
+      if (event.target.closest(".chart-zoom-close") ||
+          event.target === ui.chartZoomView) {
         closePortraitZoom();
       }
     });
 
-    ui.coachScroll.addEventListener("scroll", updateCoachScrollHints);
+    ui.chartScroll.addEventListener("scroll", updateChartScrollHints);
 
-    ui.coachMoreAbove.addEventListener("click", () => {
-      ui.coachScroll.scrollBy({
-        top: -ui.coachScroll.clientHeight * 0.7, behavior: "smooth" });
+    ui.chartMoreAbove.addEventListener("click", () => {
+      ui.chartScroll.scrollBy({
+        top: -ui.chartScroll.clientHeight * 0.7, behavior: "smooth" });
     });
 
-    ui.coachMoreBelow.addEventListener("click", () => {
-      ui.coachScroll.scrollBy({
-        top: ui.coachScroll.clientHeight * 0.7, behavior: "smooth" });
+    ui.chartMoreBelow.addEventListener("click", () => {
+      ui.chartScroll.scrollBy({
+        top: ui.chartScroll.clientHeight * 0.7, behavior: "smooth" });
     });
   }
 
@@ -664,10 +664,10 @@
       if (UI.isPopupOpen()) {
         state.overlay = null;
         UI.closePopup();
-      } else if (state.overlay === "coach") {
+      } else if (state.overlay === "chart") {
         /* Escape peels one layer: the larger photo first, then the chart. */
         if (isPortraitZoomOpen()) closePortraitZoom();
-        else closeCoachAndRestoreFocus();
+        else closeChartAndRestoreFocus();
       } else if (state.overlay === "confirm-quit") {
         state.overlay = null;
         UI.renderConfirmQuit(state);
@@ -699,7 +699,7 @@
     wireHomeEvents();
     wirePopupEvents();
     wireGameEvents();
-    wireCoachEvents();
+    wireChartEvents();
     wireReviewEvents();
     wireKeyboardEvents();
 

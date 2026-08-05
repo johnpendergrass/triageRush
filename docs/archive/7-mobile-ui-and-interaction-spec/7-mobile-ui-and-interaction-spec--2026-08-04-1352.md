@@ -1,10 +1,9 @@
 # Mobile UI and Interaction Specification
 
-**Last modified:** 2026-08-05
+**Last modified:** 2026-08-04
 
-**Latest change:** Swept in the 2026-08-04/05 amendments: Chart naming, footer
-wording and sizing, approved patient-panel layout, empty-state hints, flat
-green rail background, Chart overlay composition, and the photo zoom lightbox.
+**Latest change:** Added 4K/iPhone rendering references and made CSS-owned image
+geometry a requirement for later transparent asset optimization.
 
 ## Scope and authority
 
@@ -97,23 +96,21 @@ paired with text, symbol, shape, or sound.
 Only one primary view is visible:
 
 ```text
-HOME -- Start Shift --> GAME -- End Shift Early --> SHIFT REVIEW
- ^                        |                              |
- |--- Quit This Shift ----+---- Return to ER Entrance --+
+HOME -- Start Shift --> GAME -- Stop Game --> SHIFT REVIEW
+ ^                       |                         |
+ |----- Quit Game -------+----- Return to Lobby --+
 ```
 
-- HOME (player-facing: ER ENTRANCE) edits settings and starts a new shift.
+- HOME edits settings and starts a new shift.
 - GAME owns live play.
 - SHIFT REVIEW owns final scoring and Patients Seen.
-- Quit This Shift confirms, discards the active shift, and opens HOME without
-  review.
-- End Shift Early confirms, then finalizes the active shift before opening
-  SHIFT REVIEW.
-- Return to ER Entrance is SHIFT REVIEW's only primary-view destination.
+- Quit Game confirms, discards the active shift, and opens HOME without review.
+- Stop Game finalizes the active shift before opening SHIFT REVIEW.
+- Return to Lobby is SHIFT REVIEW's only primary-view destination.
 - No HOME or SHIFT REVIEW action returns to the previous GAME.
 
-A blocking board, the Chart overlay, or a confirmation appears as an overlay
-within its own view and pauses live timing where required.
+A blocking board, Coach chart, or confirmation appears as an overlay within its
+own view and pauses live timing where required.
 
 ## GAME composition
 
@@ -172,20 +169,16 @@ Reference proportions are `1.02fr 1.48fr 0.72fr 24px`, with 4px gaps and
 - Always counts down in both modes.
 - No elapsed-time presentation.
 
-### Sound (in-game mute)
+### Sound
 
 - Compact semantic toggle, approximately 24 x 28 CSS pixels in the reference
   header but with an accessible hit target where possible.
-- Governs game sounds only; it never starts or stops music (document `3`
-  sound model).
-- Accessible name alternates between Mute game sounds and Unmute game sounds.
+- Accessible name alternates between Mute sounds and Unmute sounds.
 - Muted state is visible without relying only on color.
 
 ## Waiting queue
 
-- The queue rail sits on a flat dark green (#0f3d2f, tunable), not wall
-  artwork. The wall and room-interior PNGs are reserved for future layered
-  room rendering (wall → interior → patient → door), never rail backgrounds.
+- Wall artwork behind the queue rail.
 - 3px internal padding and approximately 3px row gaps.
 - Minimum five equal-height rows; RUSH expands to at most ten.
 - Each occupied row is a button containing:
@@ -205,39 +198,32 @@ Reference proportions are `1.02fr 1.48fr 0.72fr 24px`, with 4px gaps and
 
 ## Patient panel
 
-The center panel is the main evidence surface and the Chart trigger: it shows
-the panel setting of the unified patient chart (see document `8`), transparent
-so the corridor art shows through. This layout was iterated live with John and
-is final; future text overflow is handled by auto-fit shrinking, never by
-layout changes.
+The center panel is the main evidence surface and the Coach trigger.
 
-### Occupied vertical composition (approved height shares)
+### Occupied vertical composition
+
+Within the panel:
 
 ```text
-Patient scene   43
-Patient quote   17
-Vitals card     18
-Triage-note     19
+Patient scene       about 43%
+Patient quote       about 12.5%
+Vitals card         about 18%
+Triage-note card    about 23.5%
+Spacing/padding     remainder
 ```
-
-Quote is enlarged relative to note because quotes run longer than notes.
 
 #### Patient scene
 
-- Transparent scene with the portrait bottom-aligned; NO tint or scrim over
-  the corridor art.
-- Nameplate on its own centered plate near the top, about 86% panel width,
-  with a small gap above.
-- Name is uppercase and truncates with an ellipsis when long; age/sex renders
-  as a cream wristband chip beside it (`age 45 · M`) that never shrinks.
-- The chief-complaint plate sits BELOW the portrait and must never cover the
-  image. Complaint is the largest text item on the panel.
+- Framed clinical background with portrait bottom-aligned.
+- Nameplate centered near top, about 86% panel width.
+- Name is uppercase; age/sex appears beside it.
+- Chief complaint is a light readable chip across the lower scene.
 - Portrait uses contain behavior, never stretches, and honors image metadata.
 
 #### Quote
 
-- Cream rounded card with a `PATIENT QUOTE` kicker.
-- Centered bold Georgia/serif italic text.
+- Cream rounded card.
+- Centered bold italic serif text.
 - Auto-fit only down to a documented legible minimum; never clip silently.
 
 #### Vitals
@@ -250,34 +236,26 @@ Quote is enlarged relative to note because quotes run longer than notes.
 
 #### Triage note
 
-- Cream card with a `TRIAGE NOTE` kicker and bold body; NO clip hardware (the
-  clipboard motif belongs to the Chart overlay wrapper only).
-- Quote and note bodies share one font size; the note uses regular Arial (not
-  the condensed app face) so the two read as the same visual size.
+- Clipboard-style cream card with clip, `TRIAGE NOTE` kicker, and bold body.
 - Text may auto-fit to prevent clipping, with a legibility floor.
+- A visible expand/chart affordance may appear, but the entire occupied panel is
+  the actual hit target.
 
-Answer and Clinical are hidden entirely in the panel setting; they appear only
-in the Chart overlay and review settings of the same chart builder.
-
-### Chart hit target
+### Coach hit target
 
 - The entire occupied patient panel is one transparent semantic button layer.
-- Pointer/touch/click/keyboard activation opens the Chart overlay.
+- Pointer/touch/click/keyboard activation opens Coach.
 - The hit layer receives a clear focus ring.
 - It must not cover or intercept room buttons or queue buttons.
-- When empty, the hit target is absent/disabled and the Chart cannot open.
-- There is no footer Chart button.
+- When empty, the hit target is absent/disabled and Coach cannot open.
+- There is no footer Coach button.
 
 ### Empty state
 
 - Hide occupied content from sight and accessibility.
-- Show `READY / SELECT A PATIENT` in a 9:16 aspect box (matching the shell),
-  width preserved, vertically centered in the panel.
-- Hint lines below: `TAP A WAITING ROOM PATIENT` always; plus `or` and
-  `TAP THE TRIAGE ROOM DOOR TO RECALL THAT PATIENT` when recall is legal.
-- Directional arrows are white fused text arrows (◀︎━━ / ━━▶︎) carrying U+FE0E
-  variation selectors so phones do not render boxed emoji.
-- Do not offer the Chart from the empty state.
+- Show `READY / SELECT A PATIENT`.
+- When UI Hints are on, point toward the waiting queue.
+- Do not offer Coach from the empty state.
 
 ### Result toast and countdown
 
@@ -308,13 +286,9 @@ Each row is an equal-height semantic button using the accepted door asset.
 - Closed state is default.
 - Assignment opens only the selected door.
 - Open door remains until recall/finalization/view completion.
-- Assignment feedback pulses three times on an outcome-colored ring (green,
-  amber, or red) around the selected row; the ring then persists as a halo on
-  the open door until the room closes via recall or finalization.
-- When recall is legal, show a leftward orange recall arrow into the center
-  (text arrow with a U+FE0E variation selector).
-- Do not reveal the correct row after a Close or Wrong result; the halo shows
-  only the room the player chose.
+- When recall is legal, show a leftward orange recall arrow into the center.
+- Assignment feedback pulses only the selected row.
+- Do not reveal the correct row after a Close or Wrong result.
 - Accepted door wording must remain readable at smallest supported size.
 
 Supplemental room definitions may appear on mouse hover or a roughly 520ms touch
@@ -323,83 +297,53 @@ assigns or recalls.
 
 ## GAME footer
 
-Two wide buttons with a thin decorative middle strip; columns
-`1.6fr 0.08fr 1.6fr`. Arrows are edge-pinned and sized to the button box.
+Retain the three-column visual band so future approved controls can be added
+without changing the game frame.
 
-- Left: green `◀ QUIT THIS SHIFT` with a small `RETURN TO ER ENTRANCE`
-  subtitle.
-- Center: no button and no hidden gameplay action; a neutral decorative strip.
-- Right: red/orange `END SHIFT EARLY ▶` with a small `REVIEW THIS SHIFT`
-  subtitle.
-- Both actions confirm. Wording: "Quit this shift?" with `Yes, quit this
-  shift`, and "End this shift early?" with `Yes, end shift early`; the cancel
-  choice on both is `Whoops! I want to keep playing!`. Canceling returns to
-  the unchanged GAME.
-- Do not render a disabled Chart button.
+- Left: green `QUIT GAME` with a small `RETURN TO LOBBY` caption.
+- Center: no button and no hidden gameplay action; use neutral footer background.
+- Right: red/orange `STOP GAME` with a small `REVIEW SHIFT` caption.
+- Selecting Quit Game opens a destructive confirmation. Confirming discards
+  the shift and opens HOME; canceling returns to the unchanged GAME.
+- Selecting Review Shift finalizes the shift and immediately opens review.
+- Do not render a disabled Coach button.
 
-Approved mobile-safe sizing: button padding `clamp(20px, 8.4cqw, 44px)`,
-label text `clamp(9px, 3cqw, 15px)`, subtitle `clamp(5px, 1.6cqw, 9px)` with
-`margin-top clamp(1px, 0.5cqw, 4px)`.
-
-## Chart overlay
+## Coach overlay
 
 - Covers the shell with a dark translucent scrim and slight blur.
-- The clipboard occupies most of the shell with roughly 8% outer padding. It is
-  entirely CSS-drawn (no clipboard artwork): board gradient, metal clamp, and
-  ruled cream paper.
+- The chart frame occupies most of the shell with roughly 8% outer padding.
 - Chart content scrolls internally; body/page does not.
-- The Presentation cards render directly with NO section header: always
-  visible, never collapsible.
-- `ANSWER` is a locked striped header with a `LOCKED` pill; activating it
-  shakes the header briefly and never opens it.
-- `CLINICAL` is a real toggle button with a chevron and `aria-expanded`,
-  starting from the shift-level remembered preference.
-- The red ✕ close box is pinned to the board's top-right corner.
-- Conditional `MORE ABOVE` and `MORE BELOW` pills appear only when hidden
-  content exists in that direction (with a small ~8px slack) and smooth-scroll
-  roughly 70% of the visible chart per tap.
-- Close paths: the red ✕, a scrim click (clicks inside the clipboard never
-  close), and Escape on keyboard-capable devices.
-- Opening focuses the close box; closing returns focus to the panel hit
-  target.
+- Presentation, Answer, and Clinical use real section buttons with
+  `aria-expanded`.
+- Answer visibly reports `LOCKED` in active-patient context.
+- Presentation starts expanded.
+- Clinical starts from the shift-level remembered preference.
+- A prominent close control stays reachable.
+- Conditional `MORE ABOVE` and `MORE BELOW` controls appear only when more
+  scroll content exists and scroll roughly 70% of the viewport.
+- Escape closes on keyboard-capable devices.
+- Clicking the scrim may close, but clicks inside the chart never do.
 
-### Photo zoom lightbox
+## HOME view
 
-- The chart's portrait carries a magnifier (🔍) badge top-right; the hit box
-  is the whole photo, inset about 4%.
-- Opening covers the ENTIRE clipboard with a dark blurred scrim — including
-  the chart's red ✕, so only one close box is visible — and centers a 3:5
-  photo card (paper mat, overflow hidden) showing the portrait at scale(1.3).
-- The 30% zoom crops sides only, never heads; the 3:5 height absorbs it. If
-  the zoom ever exceeds about 55%, switch to top-anchored `object-fit: cover`.
-- Mirrored patients keep their flip.
-- Close: the red box on the card, a scrim tap, or Escape. Escape peels the
-  lightbox first, then the Chart.
-- The lightbox is ephemeral (not in the state tree) and starts closed on every
-  Chart open.
-
-## HOME view (ER ENTRANCE)
-
-Use the accepted 852 x 1515 entrance composition and registered overlays
-described in document `6`. The player-facing name is ER ENTRANCE; internal
-code and asset keys keep `home`/`lobby`.
+Use the accepted 852 x 1515 lobby composition and registered overlays described
+in document `6`.
 
 HOME has one gameplay state: pre-shift setup with a Start Shift overlay/action.
-There is no Resume Shift, active-entrance, or Return to Game presentation.
+There is no Resume Shift, active-lobby, or Return to Game presentation.
 
 The settings board contains:
 
-- title and initials (player board);
+- title and initials;
 - Triage/RUSH mode;
 - Strict/Forgiving;
 - mode-specific length;
-- the three sound toggles: GLOBAL, GAME SOUNDS, MUSIC;
-- UI Hints.
+- UI Hints;
+- RUSH timing/arrival sounds.
 
 Title choices include `Intern`. Settings controls use real labels, radios,
 checkboxes, and selects over the board artwork. About uses the accepted About
-board. There is no boombox: the boombox metaphor is retired, and music
-(KING-FM) starts only from HOME gestures and never autoplays.
+board. Boombox hit targets align with the accepted art and never autoplay music.
 
 ## SHIFT REVIEW view
 
@@ -415,13 +359,12 @@ Show:
 - formula rows for Correct, optional Close, Wrong, and Left Waiting;
 - separate Under-triaged and Over-triaged counts;
 - `PATIENTS SEEN (n)` action;
-- one `RETURN TO ER ENTRANCE` primary-view action.
+- one `RETURN TO LOBBY` primary-view action.
 
 Formula rows use a compact two-column grid and color accent on outcome rows.
 Do not show reassignment attempts as separate patients.
-SHIFT REVIEW has no Return to Game or direct New Shift action. Return to ER
-Entrance opens HOME, where settings may be changed and Start Shift creates a
-new game.
+SHIFT REVIEW has no Return to Game or direct New Shift action. Return to Lobby
+opens HOME, where settings may be changed and Start Shift creates a new game.
 
 ### Patients Seen browser
 

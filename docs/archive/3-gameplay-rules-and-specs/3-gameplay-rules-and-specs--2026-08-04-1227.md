@@ -1,11 +1,9 @@
 # Gameplay Rules and Specifications
 
-**Last modified:** 2026-08-05
+**Last modified:** 2026-08-04
 
-**Latest change:** Swept in all 2026-08-04/05 amendments: Coach renamed to
-Chart, ER ENTRANCE naming, QUIT THIS SHIFT / END SHIFT EARLY footer wording,
-the three-toggle sound model, the recall sound, the persistent door halo, and
-the Chart overlay details (no Presentation header, photo zoom lightbox).
+**Latest change:** Made GAME exits terminal: Quit Game discards the shift to
+HOME, Stop Game finalizes it to SHIFT REVIEW, and review returns only to HOME.
 
 ## Product definition
 
@@ -19,8 +17,7 @@ esi-1, esi-2, esi-3, esi-4, esi-5, psych, discharge
 
 The product has three full-frame views:
 
-1. HOME (player-facing name: ER ENTRANCE): identity, settings, sound, and
-   Start Shift.
+1. HOME: identity, settings, sound, and Start Shift.
 2. GAME: waiting queue, active patient, seven rooms, score, and clock.
 3. SHIFT REVIEW: final score, formulas, triage direction, and Patients Seen.
 
@@ -32,8 +29,7 @@ all three at once. The one-presentation rule is fully specified in
 
 1. Start a new shift from HOME.
 2. Select a waiting patient.
-3. Review Presentation evidence and optionally open the Chart overlay by
-   tapping the patient panel.
+3. Review Presentation evidence and optionally open Coach by tapping the patient.
 4. Assign one of the seven rooms.
 5. Receive immediate Correct, Close, or Wrong feedback on the selected room.
 6. Either select the next waiting patient, or recall the assigned patient by
@@ -135,7 +131,7 @@ patients, when recalling a patient, or for a blocked addition at capacity.
 
 ## Evidence available before assignment
 
-The patient panel and the Chart overlay may expose only Presentation and
+The patient panel and active-patient Coach may expose only Presentation and
 non-answer Clinical information:
 
 - name, age, sex, and other presentation demographics;
@@ -218,13 +214,11 @@ Activating the patient's open room recalls that same patient:
 - close the room;
 - return the patient to the center panel;
 - preserve the existing ledger entry as the current recorded result;
-- lock Answer again because the patient is under active evaluation;
-- enable the Chart overlay through the occupied patient panel; and
-- play the recall sound: the first two notes of the Correct arpeggio (C5, E5),
-  registry entry `recall`.
+- lock Answer again because the patient is under active evaluation; and
+- enable Coach through the occupied patient panel.
 
 Recall by itself does not add a patient seen, change score, add a queue patient,
-or play an arrival doink; its only sound is the recall cue above.
+or play an arrival doink.
 
 ### Reassignment
 
@@ -251,64 +245,40 @@ removes its recall opportunity. Finalization does not change its latest result.
 - The selected room uses green, amber/yellow, or red feedback plus a symbol and
   text result so color is not the only signal.
 - Wrong and Close never highlight, animate, or name the correct room.
-- The evaluation flash pulses three times on an outcome-colored ring around the
-  selected door. That ring then persists as a halo on the open door until the
-  room closes via recall or finalization, so the latest outcome stays visible.
-  The halo never marks the correct room.
-- All feedback tones are game sounds and obey the sound model below.
+- Feedback is transient; the open door is the persistent placement state.
+- Global mute suppresses all synthesized game sounds.
 
-## The Chart overlay
+## Coach and detailed chart
 
-The panel *is* the patient's chart; tapping it zooms to the full Chart overlay
-(the clipboard setting of the unified patient chart). The Chart is an
-active-patient tool, not a post-assignment answer reveal.
+Coach is an active-patient tool, not a post-assignment answer reveal.
 
 ### Availability and entry
 
-- The Chart is available if and only if a patient occupies the center panel.
+- Coach is available if and only if a patient occupies the center panel.
 - This is true for a newly selected patient and a recalled patient.
-- Tapping anywhere within the occupied patient panel opens the Chart.
-- An empty patient panel cannot open the Chart.
-- There is no dedicated Chart footer button.
-- The footer space freed by the Chart must not receive an unapproved gameplay
-  action.
+- Tapping anywhere within the occupied patient panel opens Coach.
+- An empty patient panel cannot open Coach.
+- There is no dedicated Coach footer button.
+- The footer space freed by Coach must not receive an unapproved gameplay action.
 
-### Active-patient Chart behavior
+### Active-patient Coach behavior
 
-- The Presentation cards are always visible at the top of the chart. There is
-  no PRESENTATION section header and no way to collapse them.
-- Answer is always locked and collapsed: a striped header with a LOCKED pill.
-  Activating it shakes the header briefly; it never opens.
+- Presentation starts expanded.
+- Answer is always locked and collapsed.
 - Clinical starts collapsed when a shift begins.
 - The player's Clinical expanded/collapsed choice is remembered across all
-  Chart openings and all patients for the remainder of that shift.
+  Coach openings and all patients for the remainder of that shift.
 - Starting a new shift resets Clinical to collapsed.
-- The shift clock and RUSH arrival scheduler pause while the Chart is open.
-- Closing the Chart (red close box, tap outside the clipboard, or Escape)
-  restores the previous gameplay state and focus when practical.
-
-### Photo zoom lightbox
-
-- The chart's portrait carries a magnifier badge in its top-right corner; the
-  whole photo (inset slightly) is the tap target.
-- Opening it covers the entire clipboard with a dark blurred scrim and shows a
-  centered 3:5 photo card (paper mat) with the portrait enlarged 30%. The zoom
-  crops the sides only, never heads. Mirrored patients keep their flip.
-- While the lightbox is open, the chart's own close box is hidden so exactly
-  one close control is visible: the red box on the photo card. Tapping the
-  scrim or pressing Escape also closes it.
-- Escape peels one layer at a time: first the lightbox, then the Chart.
-- The lightbox is ephemeral view state: it always starts closed on every Chart
-  open and is never remembered.
+- Activating locked Answer reports that it is locked without opening it.
+- The shift clock and RUSH arrival scheduler pause while Coach is open.
+- Closing Coach restores the previous gameplay state and focus when practical.
 
 ### Shift Review chart behavior
 
-Shift Review's Patients Seen browser uses the same complete chart component in
-a third (review) setting.
+Shift Review's Patients Seen browser uses the same complete chart component.
 
-- The Presentation cards remain always visible; Answer and Clinical are
-  unlocked.
-- Review initially expands Answer and Clinical.
+- Presentation, Answer, and Clinical are unlocked.
+- Review initially expands all three sections.
 - Previous and next navigation wraps through the shift ledger order.
 - Changing patients resets chart scroll to the top.
 - Closing returns to Shift Review and restores focus to Patients Seen.
@@ -319,8 +289,8 @@ Full content mappings are in
 ## Clock, countdown, and sound timing
 
 Use one quarter-second heartbeat and trigger every cue once at a defined
-boundary. Opening the Chart overlay or a confirmation dialog pauses both the
-clock and the RUSH arrival countdown.
+boundary. Opening HOME settings, Coach, or another blocking dialog pauses both
+the clock and RUSH arrival countdown.
 
 ### RUSH clock sequence
 
@@ -347,8 +317,8 @@ clock and the RUSH arrival countdown.
 - During the final ten seconds, use the same whole-second and final-five sound
   cadence as RUSH.
 - Triage does not add the RUSH waiting penalty or RUSH arrival scheduler.
-- Every clock and arrival cue is a game sound: it plays only while game sounds
-  are audible under the sound model below.
+- The RUSH clock/arrival-sound preference does not disable required Triage cues;
+  the global mute control does.
 
 ### RUSH arrival and completion sound
 
@@ -364,7 +334,7 @@ The GAME header contains:
 - `TRIAGE!` or `TRIAGE RUSH!`;
 - a bordered numbers-only outcome scorecard;
 - a larger unboxed countdown; and
-- the in-game mute control (game sounds only; it never affects music).
+- global sound state.
 
 The scorecard reads:
 
@@ -376,16 +346,12 @@ Strict omits Close and its adjacent separator without a gap. RUSH score equals
 assignment points minus ten times the number currently waiting. Triage score is
 assignment points only.
 
-The GAME footer exposes exactly two navigation actions and no Chart button:
+The GAME footer exposes exactly two navigation actions and no Coach button:
 
-- `◀ QUIT THIS SHIFT` (subtitle `RETURN TO ER ENTRANCE`) asks for confirmation
-  ("Quit this shift?" — "Yes, quit this shift" vs "Whoops! I want to keep
-  playing!"), discards the active shift without creating a Shift Review result,
-  clears its recovery snapshot, and opens HOME.
-- `END SHIFT EARLY ▶` (subtitle `REVIEW THIS SHIFT`) asks for confirmation
-  ("End this shift early?" — "Yes, end shift early" vs "Whoops! I want to keep
-  playing!"), finalizes the active shift, and immediately opens SHIFT REVIEW.
-  Timer expiry performs the same finalization automatically, without a dialog.
+- `QUIT GAME` asks for confirmation, discards the active shift without creating
+  a Shift Review result, clears its recovery snapshot, and opens HOME.
+- `STOP GAME` finalizes the active shift and immediately opens SHIFT REVIEW.
+  Timer expiry performs the same finalization automatically.
 
 Neither path can return to that GAME. HOME and SHIFT REVIEW are not temporary
 tabs during an active shift.
@@ -413,16 +379,15 @@ The `PATIENTS SEEN (n)` action opens the complete review chart with previous,
 next, position/name, and close controls. Long-term history and personal-best
 presentation are not part of the current build.
 
-The only primary-view action from SHIFT REVIEW is `RETURN TO ER ENTRANCE`. It
-clears the completed shift from active runtime/recovery state and opens HOME.
-Starting another shift happens from HOME; there is no direct New Shift or
-Return to Game action on SHIFT REVIEW.
+The only primary-view action from SHIFT REVIEW is `RETURN TO LOBBY`. It clears
+the completed shift from active runtime/recovery state and opens HOME. Starting
+another shift happens from HOME; there is no direct New Shift or Return to Game
+action on SHIFT REVIEW.
 
 ## HOME and settings
 
-HOME is the pre-shift ER ENTRANCE screen. It presents settings and Start Shift
-only; it has no Resume Shift or Return to Game state. (ER ENTRANCE is the
-player-facing name; internal code and asset keys keep `home`/`lobby`.)
+HOME is the pre-shift lobby. It presents settings and Start Shift only; it has
+no Resume Shift or Return to Game state.
 
 ### Player settings
 
@@ -438,36 +403,19 @@ player-facing name; internal code and asset keys keep `home`/`lobby`.)
 - Triage length: 5 or 10 minutes; default 5.
 - RUSH length: 60 or 120 seconds; default 60.
 - UI Hints on/off.
-- Sound: the three toggles below.
+- RUSH clock and arrival sounds on/off.
+- Global mute remains separate.
 
-Settings are edited on HOME before Start Shift. GAME does not open HOME
-settings without first completing the confirmed Quit This Shift flow, so there
-is no mid-shift settings/restart path. The in-GAME mute control remains
-available for game sounds.
+Settings are edited on HOME before Start Shift. GAME does not open HOME settings
+without first completing the confirmed Quit Game flow, so there is no mid-shift
+settings/restart path. The in-GAME global mute control remains available.
 
-### Sound model
-
-Three persisted on/off toggles live on the shift-settings blackboard:
-
-| Toggle | Meaning |
-|---|---|
-| **GLOBAL** | Master switch. Off silences everything (game sounds and music). |
-| **GAME SOUNDS** | Every synthesized sound: ticks, doinks, feedback tones, recall, countdown ticks, completion dong. |
-| **MUSIC** | The Classical KING-FM internet radio stream (currently the only music). |
-
-- Music plays only when GLOBAL and MUSIC are both on, and can only be started
-  from HOME gestures. The game screen can never turn music on. Music never
-  autoplays.
-- Game sounds are audible during a shift when GLOBAL and GAME SOUNDS were both
-  on at shift start and the in-game mute is off. The in-game mute flips only a
-  runtime flag; it never rewrites the persisted toggles and never affects music.
-- Every game sound has its own named registry entry with an individual enabled
-  flag, so per-sound preferences can be added later without restructuring.
-- Device/browser controls own volume.
-
-### About
+### HOME sound and About
 
 - About opens from its dedicated HOME control.
+- HOME sound controls manage radio power, music, and UI/game sound state.
+- Music never autoplays.
+- Device/browser controls own volume.
 
 ## Accessibility and safety rules
 

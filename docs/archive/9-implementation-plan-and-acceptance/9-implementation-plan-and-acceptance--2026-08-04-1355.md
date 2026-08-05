@@ -1,16 +1,10 @@
 # Implementation Plan and Acceptance
 
-**Last modified:** 2026-08-05
+**Last modified:** 2026-08-04
 
-**Latest change:** Swept in the 2026-08-04/05 amendments (Chart naming, footer
-wording, sound model, recall sound, halo, photo zoom) and recorded build
-status.
-
-**Build status (2026-08-05):** Phases 1 through 6 are implemented in
-`triageRush/` and visually approved by John. Phase 7 (scheduler) is next. The
-one Phase-6 acceptance row that waits for Phase 7 is the actual clock freeze,
-because the clock itself does not run until the scheduler exists; the pause
-reason plumbing is already in place.
+**Latest change:** Approved direct production implementation with a compact
+source map, schema-preserving data access, staged preloading, and asset
+optimization only after final functional and visual approval.
 
 ## Objective
 
@@ -35,7 +29,7 @@ The implementation is complete when:
 - all 160 patients load from the intended manifest with matched portraits;
 - all current production assets load; after Phase 10, optimized runtime copies
   remain visually equivalent to their approved high-resolution masters;
-- every gameplay, scoring, timing, sound, Chart, and review test below passes;
+- every gameplay, scoring, timing, sound, Coach, and review test below passes;
 - HOME, GAME, and SHIFT REVIEW use one 9:16 presentation on every device;
 - an active GAME can only be quit to HOME or stopped to SHIFT REVIEW, and no
   primary-view path resumes that GAME;
@@ -118,13 +112,13 @@ must not change shell geometry, hit targets, crop rules, or game behavior.
 
 Implement:
 
-- registered HOME (ER ENTRANCE) composition;
-- Start Shift with no Resume Shift or active-entrance state;
+- registered HOME lobby composition;
+- Start Shift with no Resume Shift or active-lobby state;
 - Player and Shift Settings boards;
 - About board;
-- the three sound toggles (GLOBAL, GAME SOUNDS, MUSIC) on the shift board;
+- boombox control hit targets;
 - player title/initials;
-- mode, difficulty, length, and hints preferences.
+- mode, difficulty, length, hints, and sound preferences.
 
 Acceptance:
 
@@ -176,11 +170,6 @@ Automated gate:
 Visual gate:
 
 - five through ten queue rows remain legible;
-- both rails sit on the flat dark green (#0f3d2f), not wall artwork;
-- the empty panel shows the 9:16 SELECT A PATIENT box with its hint lines and
-  fused text arrows (U+FE0E);
-- the nameplate shows the cream age/sex wristband chip; long names ellipsize
-  while the chip keeps its size;
 - all patient-panel text fits or reduces only to the documented floor;
 - all seven accepted closed doors are readable;
 - room help contains no patient-specific hint.
@@ -227,52 +216,39 @@ Reassignment gate:
 
 Feedback gate:
 
-- only selected room pulses (three beats on the outcome-colored ring);
-- the ring persists as a halo on the open door until recall or finalization;
-- recall plays the C5/E5 recall sound and never a doink;
+- only selected room pulses;
 - Close/Wrong never reveal correct room;
 - each outcome has text/symbol/color and distinct optional sound;
 - mute suppresses sound without suppressing visual feedback.
 
-## Phase 6: the Chart overlay
+## Phase 6: active-patient Coach
 
 Implement:
 
 - full patient-panel hit target;
-- no footer Chart button;
-- the clipboard setting of the unified chart builder (CSS-drawn clipboard);
-- presentation cards with no section header;
-- Answer locked with shake;
+- no footer Coach button;
+- active-patient chart mapping;
+- Answer locked;
 - Clinical shift-level memory;
-- the photo zoom lightbox;
-- pause-reason plumbing (`"chart"`);
+- pause/resume;
 - internal scroll hints;
-- close paths and focus restoration.
+- close and focus restoration.
 
 Acceptance:
 
-- new selected patient can open the Chart;
-- recalled patient can open the Chart;
-- empty patient panel cannot open the Chart;
-- assigned patient behind a door cannot open the Chart without recall;
-- Answer remains locked for both new and recalled patients, and activating it
-  shakes without opening;
-- there is no PRESENTATION header and the presentation cards cannot collapse;
+- new selected patient can open Coach;
+- recalled patient can open Coach;
+- empty patient panel cannot open Coach;
+- assigned patient behind a door cannot open Coach without recall;
+- Answer remains locked for both new and recalled patients;
 - Clinical starts collapsed at new shift;
 - expand Clinical, close, select another patient, reopen: remains expanded;
 - collapse, recall another patient, reopen: remains collapsed;
 - starting a new shift resets to collapsed;
-- MORE ABOVE / MORE BELOW appear only when hidden content exists in that
-  direction and scroll about 70% per tap;
-- the photo zoom opens from the badge/photo, hides the chart's close box while
-  open, and closes via its red box, scrim tap, or Escape;
-- Escape peels the lightbox first, then the Chart; the lightbox always starts
-  closed on a fresh Chart open;
-- opening the Chart adds the `"chart"` pause reason and closing removes it
-  (the actual clock freeze lands with the Phase-7 scheduler);
-- close restores focus to the panel hit target; open focuses the close box;
+- open Coach freezes countdown and RUSH arrival time;
+- close resumes without catch-up;
 - keyboard and touch activation both work;
-- footer center contains no disabled or hidden Chart action.
+- footer center contains no disabled or hidden Coach action.
 
 ## Phase 7: clocks, sounds, and RUSH arrivals
 
@@ -345,10 +321,10 @@ Implement:
 - formula rows;
 - separate direction counts;
 - Patients Seen from stable ledger order;
-- reusable unlocked review chart (the review setting of the chart builder);
+- reusable unlocked review chart;
 - wrapping previous/next navigation;
-- the confirmed End Shift Early transition from GAME;
-- Return to ER Entrance as review's only primary-view navigation.
+- Stop Game transition from GAME;
+- Return to Lobby as review's only primary-view navigation.
 
 Acceptance:
 
@@ -361,9 +337,9 @@ Acceptance:
 - one patient disables or safely no-ops navigation;
 - patient change resets chart scroll;
 - close restores focus to Patients Seen;
-- End Shift Early confirms, finalizes once, and opens review immediately;
+- Stop Game finalizes once and opens review immediately;
 - review exposes no Return to Game or direct New Shift action;
-- Return to ER Entrance clears completed runtime state and opens HOME.
+- Return to Lobby clears completed runtime state and opens HOME.
 
 ## Phase 9: persistence and recovery
 
@@ -373,15 +349,15 @@ Acceptance scenarios:
 - refresh during active shift restores directly to GAME without visiting HOME
   or offering Resume Shift;
 - queue backgrounds, active/assigned patient, ledger replacements, clock,
-  arrival interval, and Chart Clinical preference recover exactly;
+  arrival interval, and Coach preference recover exactly;
 - no catch-up occurs for time while the application is closed unless a later
   product requirement explicitly asks for real-time expiry;
 - incompatible storage discards active shift safely;
-- confirming Quit This Shift clears the recovery snapshot and returns to HOME
-  without a review result;
-- canceling Quit This Shift preserves exact active state;
-- End Shift Early clears active recovery after finalizing review;
-- Return to ER Entrance leaves only safe preferences and HOME settings.
+- confirming Quit clears the recovery snapshot and returns to HOME without a
+  review result;
+- canceling Quit preserves exact active state;
+- Stop Game clears active recovery after finalizing review;
+- Return to Lobby leaves only safe preferences and HOME settings.
 
 ## Phase 10: assets and visual regression
 
@@ -460,7 +436,7 @@ remain at their current resolution.
 
 - No current document points to an obsolete app or discarded asset.
 - No implementation comment claims first assignment is immutable.
-- No Chart footer control remains.
+- No Coach footer control remains.
 - No No Timer Triage option remains.
 - Intern appears in settings and persistence validation.
 - Doink originates only from successful runtime insertion.
@@ -476,8 +452,8 @@ remain at their current resolution.
 - High-resolution masters are outside the runtime manifest and the optimized
   build has a new cache version.
 - Only one 9:16 presentation exists.
-- No Resume Shift, active-entrance, Return to Game, or direct
-  review-to-New-Shift action remains.
-- Quit This Shift discards without review; End Shift Early reviews; Return to
-  ER Entrance ends at HOME and a later Start Shift creates a new game.
+- No Resume Shift, active-lobby, Return to Game, or direct review-to-New-Shift
+  action remains.
+- Quit Game discards without review; Stop Game reviews; Return to Lobby ends at
+  HOME and a later Start Shift creates a new game.
 - John approves the visual and gameplay result.

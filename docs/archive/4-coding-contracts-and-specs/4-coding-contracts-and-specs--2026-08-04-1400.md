@@ -1,10 +1,10 @@
 # Coding Contracts and Specifications
 
-**Last modified:** 2026-08-05
+**Last modified:** 2026-08-04
 
-**Latest change:** Swept in the 2026-08-04/05 amendments: Chart naming, the
-three-toggle sound model and sound registry, the recall sound, and the unified
-chart-builder contract with panel/clipboard/review settings.
+**Latest change:** Added the approved compact source layout, meaning-oriented
+naming, schema-preserving patient access, staged preloading, and post-build
+asset-optimization contracts.
 
 ## Production scope
 
@@ -102,8 +102,7 @@ The state must cover:
 - clock heartbeat, remaining time, and pause state;
 - RUSH arrival countdown and current base interval;
 - active two-patient burst staging;
-- the runtime game-sound audibility flag (in-game mute);
-- Chart Clinical expanded/collapsed preference for this shift; and
+- Coach Clinical expanded/collapsed preference for this shift; and
 - Patients Seen review index.
 
 The concrete reference shape is in
@@ -138,24 +137,24 @@ At minimum, expose testable domain actions equivalent to:
 startShift(settings)
 + quitShift()
 + stopShift(reason)
-+ returnToHome()               // player-facing: RETURN TO ER ENTRANCE
++ returnToLobby()
 + selectWaitingPatient(index)
 + assignRoom(roomKey)
 + recallAssignedPatient(roomKey)
-+ openChart()
-+ setChartClinicalExpanded(value)
-+ closeChart()
++ openCoach()
++ setCoachClinicalExpanded(value)
++ closeCoach()
 + processHeartbeat()
 + processRushArrival()
 + openPatientsSeen()
 + navigatePatientsSeen(direction)
 + applySettings(settings)
-+ toggleGameSoundsMute()       // flips only the runtime audibility flag
++ toggleGlobalMute()
 +```
 
 Each action must reject illegal state without partial mutation. Examples:
 
-- `openChart` is legal only with an active patient and no other open overlay.
+- `openCoach` is legal only with an active patient.
 - `assignRoom` is legal only with an active patient and no unresolved action.
 - `recallAssignedPatient` is legal only for the currently open assigned room.
 - `selectWaitingPatient` may swap only before assignment.
@@ -164,7 +163,7 @@ Each action must reject illegal state without partial mutation. Examples:
 - `quitShift` is legal only during an active GAME and destroys the active shift
   after confirmation without producing review results.
 - `stopShift` finalizes an active GAME and opens SHIFT REVIEW.
-- `returnToHome` is legal from SHIFT REVIEW and cannot restore GAME.
+- `returnToLobby` is legal from SHIFT REVIEW and cannot restore GAME.
 
 ## Result-ledger contract
 
@@ -239,23 +238,16 @@ Required effect families:
 
 - Correct, Close, and Wrong feedback;
 - queue insertion `doink`;
-- recall (C5, E5 — the first two notes of the Correct arpeggio);
 - ordinary clock tick;
 - ten-second/minute emphasis tick;
 - zero completion dong; and
-- the optional HOME music stream (KING-FM).
+- optional HOME stream.
 
-Track every game sound individually in one registry, each entry with its own
-enabled flag, so per-sound preferences can be added later without new
-structure. A game sound plays only when the persisted GLOBAL and GAME SOUNDS
-toggles were on at shift start and the in-game mute is off; the in-game mute
-flips only the runtime audibility flag and never touches music or the
-persisted toggles. Music plays only when GLOBAL and MUSIC are on and is
-started exclusively from HOME gestures.
-
-Doink is emitted only by the successful `insertWaitingPatient` effect, never
-by swap, initial seed, or a blocked capacity attempt; recall plays the
-dedicated recall sound instead.
+The global mute suppresses synthesized game/UI sounds. The RUSH clock/arrival
+preference suppresses RUSH timing and arrival cues but not feedback; Triage cues
+remain governed by global mute. Doink is emitted only by the successful
+`insertWaitingPatient` effect, never by recall, swap, initial seed, or a blocked
+capacity attempt.
 
 ## Single responsive UI contract
 
@@ -282,30 +274,24 @@ The application has one 9:16 shell on all device classes.
 
 Exact geometry and component behavior are in document `7`.
 
-## Unified chart component contract
+## Coach component contract
 
-Build one chart builder (`buildPatientChart`) whose content is written once
-and shown in per-setting wrappers. The Presentation cards are always visible
-in every setting; there is no PRESENTATION section header.
+Build one reusable detailed-chart renderer with two current contexts:
 
 ```text
-PANEL (GAME center)
-  presentation cards only; Answer and Clinical are absent
-  transparent wrapper; corridor art shows through
+ACTIVE PATIENT / COACH
+  presentation: unlocked, expanded
+  answer:       locked, collapsed
+  clinical:     unlocked, shift-memory value (initially collapsed)
 
-CLIPBOARD (Chart overlay, active patient)
-  presentation: always visible
-  answer:       locked (striped header, LOCKED pill, shake on activation)
-  clinical:     toggling, shift-memory value (initially collapsed)
-
-REVIEW (Patients Seen, future)
-  presentation: always visible
+PATIENT REVIEW
+  presentation: unlocked, expanded
   answer:       unlocked, expanded
   clinical:     unlocked, expanded
 ```
 
-The occupied patient panel is a semantic button/hit target for the Chart.
-There is no footer Chart control. Clinical expansion memory belongs to current
+The occupied patient panel is a semantic button/hit target for active Coach.
+There is no footer Coach control. Clinical expansion memory belongs to current
 shift UI state, not patient JSON or local storage. Starting a new shift resets
 it.
 
@@ -380,17 +366,17 @@ Persist:
 
 A recovery snapshot must include ledger order and records, queue entries
 with backgrounds, active/assigned patient state, deck/cursor, clock and arrival
-state, Chart Clinical preference, and settings. Do not persist live timer IDs,
+state, Coach Clinical preference, and settings. Do not persist live timer IDs,
 DOM state, audio contexts, or focus nodes.
 
 On load, a valid active snapshot restores directly into GAME; it must never
-create a HOME Resume Shift state. Confirmed quit, end-early, and Return to ER Entrance
+create a HOME Resume Shift state. Confirmed quit, stop, and Return to Lobby
 clear the active recovery snapshot at the appropriate transition. Invalid or
 incompatible stored data falls back safely to HOME and never partially recovers.
 
 ## Accessibility and interaction
 
-- Use semantic buttons for queue patients, rooms, the patient-panel Chart target, navigation,
+- Use semantic buttons for queue patients, rooms, patient-panel Coach, navigation,
   and overlay controls.
 - Preserve keyboard activation and visible focus.
 - Required behavior cannot depend on hover or long press.
@@ -420,7 +406,7 @@ Implementation is not complete until it passes document `9`, including:
 - queue, burst, cap, and doink tests;
 - both mode timers and all cue boundaries;
 - pause/resume and zero-priority behavior;
-- Chart availability and section memory;
+- Coach availability and section memory;
 - single-presentation viewport checks;
 - keyboard/touch/accessibility checks; and
 - current door readability in all 14 states.

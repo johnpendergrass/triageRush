@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#071822">
   <title>triageRush</title>
-  <link rel="stylesheet" href="./triageRush/styles.css?v=2026-0805-phase6n">
+  <link rel="stylesheet" href="./triageRush/styles.css?v=2026-0805-phase6o">
 </head>
 <body>
 
@@ -190,12 +190,12 @@
                plus the recall-door line when a recall is possible. -->
           <span class="patient-empty-hint" id="patientEmptyHint" hidden></span>
         </div>
-        <!-- The entire occupied panel is the one Coach hit target: a
+        <!-- The entire occupied panel is the one Chart hit target: a
              transparent button layer over the chart (doc 7). Hidden while
-             the panel is empty, so Coach can never open without a patient. -->
+             the panel is empty, so Chart can never open without a patient. -->
         <button class="patient-panel-hit" id="patientPanelHitButton"
                 type="button" hidden>
-          <span class="visually-hidden">Open the patient chart (Coach)</span>
+          <span class="visually-hidden">Open the patient chart</span>
         </button>
         <!-- Transient assignment result: ✓ CORRECT / △ CLOSE / ✕ WRONG. -->
         <p class="result-toast" id="resultToast" role="status" hidden></p>
@@ -224,26 +224,26 @@
   </section>
 
   <!-- ====================================================================
-       Coach overlay: the clipboard setting of the unified patient chart.
+       Chart overlay: the clipboard setting of the unified patient chart.
        Opaque paper on a clipboard board with a metal clamp (CSS-drawn; no
        clipboard artwork exists). The paper scrolls internally; MORE
        ABOVE / MORE BELOW appear only when hidden content exists (doc 7).
        ================================================================= -->
-  <section class="coach-overlay" id="coachOverlay" role="dialog"
+  <section class="chart-overlay" id="chartOverlay" role="dialog"
            aria-modal="true" aria-label="Patient chart" hidden>
-    <div class="coach-clipboard" id="coachClipboard">
-      <div class="coach-clamp" aria-hidden="true"></div>
-      <button class="coach-close" id="coachCloseButton" type="button"
+    <div class="chart-clipboard" id="chartClipboard">
+      <div class="chart-clamp" aria-hidden="true"></div>
+      <button class="chart-close" id="chartCloseButton" type="button"
               aria-label="Close the patient chart">&#10005;</button>
-      <div class="coach-scroll" id="coachScroll">
-        <div class="coach-chart-mount" id="coachChartMount"></div>
+      <div class="chart-scroll" id="chartScroll">
+        <div class="chart-overlay-mount" id="chartOverlayMount"></div>
       </div>
       <!-- Larger-photo view: covers the paper; content (name strip,
-           photo, close box) is rebuilt by renderCoachPortraitZoom. -->
-      <div class="coach-zoom" id="coachZoomView" hidden></div>
-      <button class="coach-more coach-more--above" id="coachMoreAbove"
+           photo, close box) is rebuilt by renderChartPortraitZoom. -->
+      <div class="chart-zoom" id="chartZoomView" hidden></div>
+      <button class="chart-more chart-more--above" id="chartMoreAbove"
               type="button" hidden>&#9650;&#xFE0E; MORE ABOVE</button>
-      <button class="coach-more coach-more--below" id="coachMoreBelow"
+      <button class="chart-more chart-more--below" id="chartMoreBelow"
               type="button" hidden>&#9660;&#xFE0E; MORE BELOW</button>
     </div>
   </section>
@@ -299,9 +299,9 @@
 
 </div>
 
-<script src="./triageRush/assets.js?v=2026-0805-phase6n"></script>
-<script src="./triageRush/game.js?v=2026-0805-phase6n"></script>
-<script src="./triageRush/ui.js?v=2026-0805-phase6n"></script>
-<script src="./triageRush/app.js?v=2026-0805-phase6n"></script>
+<script src="./triageRush/assets.js?v=2026-0805-phase6o"></script>
+<script src="./triageRush/game.js?v=2026-0805-phase6o"></script>
+<script src="./triageRush/ui.js?v=2026-0805-phase6o"></script>
+<script src="./triageRush/app.js?v=2026-0805-phase6o"></script>
 </body>
 </html>

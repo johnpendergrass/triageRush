@@ -1,10 +1,9 @@
 # Patient Data Information
 
-**Last modified:** 2026-08-05
+**Last modified:** 2026-08-04
 
-**Latest change:** Aligned the chart contexts with the built unified chart
-(Chart naming, always-visible presentation cards, shake-on-locked-Answer,
-"None identified." red-flags card).
+**Latest change:** Required schema-preserving runtime records, ID-based game
+references, and staged portrait preloading without duplicating patient data.
 
 ## Ownership and status
 
@@ -109,28 +108,23 @@ vital-band updates may be scripted only when clinical meaning is preserved.
 
 ## Detailed-chart contexts
 
-One chart builder renders the same content in per-setting wrappers. The
-Presentation cards are always visible in every setting (no PRESENTATION
-header):
+One chart component renders two current profiles:
 
 ```text
-PANEL (GAME center)
-  presentation cards only; Answer and Clinical absent
-
-CLIPBOARD (Chart overlay, active patient)
-  presentation: always visible
+ACTIVE PATIENT / COACH
+  presentation: unlocked, expanded
   answer:       locked, collapsed
-  clinical:     toggling, current shift preference
+  clinical:     unlocked, current shift preference
                 (collapsed when the shift starts)
 
-REVIEW (Patients Seen, future)
-  presentation: always visible
+PATIENT REVIEW
+  presentation: unlocked, expanded
   answer:       unlocked, expanded
   clinical:     unlocked, expanded
 ```
 
-Locked always implies collapsed. Activating locked Answer shakes the striped
-LOCKED header briefly and never opens it.
+Locked always implies collapsed. Activating locked Answer reports
+`This section is locked until the patient is assigned.`
 
 The active-patient Clinical state is one in-memory preference shared across
 patients and recalls for the current shift. It resets to collapsed when a new
@@ -153,12 +147,16 @@ shift starts. Review expansion is separate and does not alter that preference.
 
 ### Clinical
 
-Eight cards, in order: SUMMARY, WHY THIS ACUITY, KEY FINDINGS, EXPECTED
-RESOURCES, RED FLAGS, TEACHING POINTS, POSSIBLE DIAGNOSES, and LIKELY
-DISPOSITION.
+- summary and acuity reason;
+- expected resources;
+- key findings;
+- red flags when present;
+- teaching points;
+- possible diagnoses; and
+- possible disposition.
 
-The application must tolerate an empty red-flags array by rendering the RED
-FLAGS card with "None identified.", not by treating the record as invalid.
+The application must tolerate an empty red-flags array by hiding that subsection,
+not by treating the record as invalid.
 
 ## Runtime integration
 
@@ -175,7 +173,7 @@ FLAGS card with "None identified.", not by treating the record as invalid.
   result. They never copy the complete canonical patient record.
 - Derived display values and shift/session fields remain separate from the
   canonical record so they cannot accidentally be written back as patient data.
-- The shuffled deck, queue backgrounds, active patient, ledger, and Chart state
+- The shuffled deck, queue backgrounds, active patient, ledger, and Coach state
   belong to application state.
 - Patients Seen order is the ledger's stable first-seen order.
 - A recalled/reassigned patient is still one Patients Seen record.

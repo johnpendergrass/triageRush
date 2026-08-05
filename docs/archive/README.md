@@ -1,14 +1,15 @@
 # triageRush Documentation Archive
 
-**Last modified:** 2026-08-03
+**Last modified:** 2026-08-05
 
-**Changes from the previous version:** Added archived snapshots of the outgoing
-project map, development history, gameplay specification, and coding contract
-before the 2026-08-03 mobile-reference update.
+**Changes from the previous version:** Added `design-notes/` for loose
+session design records (the 2026-08-04 sound-model/unified-chart notes and
+John's design-thoughts text), plus pre-sweep snapshots of every numbered
+document revised by the 2026-08-05 amendment sweep.
 
 Everything in this folder is historical. Current rules live one level above in
-`docs/0-README.md` through `docs/6-asset-organization-and-specs.md` and the
-current `docs/99-ai-handoff--*.md`.
+`docs/0-README.md` through `docs/9-implementation-plan-and-acceptance.md` and
+the current `docs/99-ai-handoff--*.md`.
 
 ## Organization
 
@@ -20,7 +21,11 @@ current `docs/99-ai-handoff--*.md`.
 4-coding-contracts-and-specs/    superseded UI, implementation, and technical contracts
 5-patient-data-info/             superseded patient summaries and review copy
 6-asset-organization-and-specs/  HOME specs, asset proposal, and artwork history
+7-mobile-ui-and-interaction-spec/ superseded mobile UI specifications
+8-implementation-blueprint/      superseded implementation blueprints
+9-implementation-plan-and-acceptance/ superseded plans and acceptance matrices
 99-ai-handoffs/                  outgoing tactical handoffs
+design-notes/                    loose session design records, swept into the numbered set
 ```
 
 Old tables of contents remain under `0-documentation-system/`; timestamped

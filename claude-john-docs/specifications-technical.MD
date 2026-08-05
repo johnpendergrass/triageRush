@@ -1,6 +1,6 @@
 # triageRush — technical notes (pointer file)
 
-**Last modified:** 2026-08-05
+**Last modified:** 2026-08-05 (post doc sweep + Chart rename)
 
 Full technical contracts: `docs/4`, `docs/8`. This file records only
 practical build knowledge that lives nowhere else.
@@ -12,7 +12,7 @@ practical build knowledge that lives nowhere else.
   file:// does not work (fetch).
 - Cache busting: one version string in TWO places — index.html query
   params (5 refs) and `TRIAGE_RUSH_CACHE_VERSION` in assets.js. Bump BOTH
-  on every asset/CSS/JS change (currently "2026-0805-phase6n"; the
+  on every asset/CSS/JS change (currently "2026-0805-phase6o"; the
   trailing letter increments per tweak).
 
 ## Architecture in one breath
@@ -28,14 +28,18 @@ queue/ledger reference by ID only).
 ## Unified patient chart
 
 One builder `ui.js buildPatientChart(record, context, portraitUrl)`;
-`context.setting` = "panel" (transparent, presentation only) or "coach"
-(clipboard overlay; + locked ANSWER + CLINICAL sections). A future
+`context.setting` = "panel" (transparent, presentation only) or "clipboard"
+(Chart overlay; + locked ANSWER + CLINICAL sections). A future
 "review" setting reuses it for Patients Seen. Chart root gets class
-`chart--<setting>`; coach-specific CSS scopes under `.coach-chart-mount`.
+`chart--<setting>`; overlay-specific CSS scopes under `.chart-overlay-mount`.
+The Coach→Chart rename (2026-08-05) covered code too: overlay value "chart",
+pause reason "chart", `state.chart`, openChart/closeChart/
+setChartClinicalExpanded, renderChartOverlay/renderChartPortraitZoom,
+`chart*` element IDs, `.chart-*` CSS classes.
 
 ## Ephemeral vs state-tree UI
 
-In the state tree: overlay value, `state.coach.clinicalExpanded`,
+In the state tree: overlay value, `state.chart.clinicalExpanded`,
 pauseReasons. Deliberately DOM-only (reset on rebuild): photo-zoom
 open/closed, scroll position, shake animation class. Section toggles
 update BOTH (direct DOM toggle + state write) to preserve scroll.
