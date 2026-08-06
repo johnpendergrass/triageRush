@@ -297,12 +297,16 @@ Implement one 250ms logical scheduler.
 ### Triage acceptance
 
 - 300-second and 600-second countdowns start at selected value.
-- The clock holds its starting value for a 2-second acclimation delay after
-  the GAME screen appears (both modes).
+- The clock holds its starting value, frozen with no ticks and no arrivals,
+  until the player selects their FIRST patient (both modes; 2026-08-06 —
+  this replaced the 2-second acclimation delay).
 - Display never shows elapsed `+` time.
-- One tick occurs every ten elapsed seconds.
-- At each minute boundary, ticks occur 500ms before, 250ms before, and on the
-  boundary, without a duplicate ordinary ten-second tick.
+- Every ten-second elapsed boundary carries the three-beat emphasis
+  (2026-08-06): minuteTick lead-ins 500ms and 250ms before, then the
+  boundary beat — an ordinary tick, or the minuteDong on a completed
+  minute. Never a fourth beat.
+- Lead-ins whose boundary falls inside the final-ten countdown are
+  suppressed (verified at 289.5s/289.75s of a 300s shift).
 - Final ten follows RUSH whole-second audio.
 - Final five includes quarter/half beats; the last two seconds beat on every
   quarter as a run-in to the dong.
@@ -340,6 +344,22 @@ Use injected random values:
 The second member of a successful burst arrives exactly 250ms after the first.
 It does not reset or delay the base arrival schedule. Capacity is rechecked at
 the second insertion.
+
+### RUSH empty-room refill acceptance (2026-08-06)
+
+- An assignment that empties the waiting room books a refill exactly one
+  second of LOGICAL time later (a pause during the beat freezes it).
+- The refill inserts one patient, or (refill draw < 0.50) two patients one
+  250ms beat apart, with one doink per inserted patient.
+- `arrivalRemainingMs` and `nextBaseIntervalMs` are unchanged by booking or
+  firing a refill; the scheduled arrival curve continues on schedule.
+- An assignment that leaves patients waiting books nothing; Triage mode
+  never books a refill.
+- Recall-and-reassign while a refill is pending keeps the original beat.
+- The refill fires even if a scheduled arrival landed during the beat; a
+  full room at fire time skips silently with no doink and no shake.
+- Verified 2026-08-06 by a 24-check Node harness (rebuild from this table)
+  plus live browser playthroughs observing both refill sizes.
 
 ### RUSH cue acceptance
 

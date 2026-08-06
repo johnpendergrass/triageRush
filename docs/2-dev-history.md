@@ -135,7 +135,8 @@ not inventory superseded code or assets. Historical detail remains in
   `document-hidden` only — the Chart deliberately does NOT pause (reading a
   patient costs shift time), reversing the earlier chart-pause plan.
 - The clock starts after a 2-second acclimation delay so the player can take
-  in the game screen.
+  in the game screen. (Superseded 2026-08-06: the clock now waits for the
+  first patient selection instead.)
 - Four clock sounds joined the Web Audio registry (tick, minuteTick,
   countdownTick, endDong), with the doc 3 cue schedule verified quarter by
   quarter under Node. John tuned the ending: the last TWO seconds beat on
@@ -148,6 +149,21 @@ not inventory superseded code or assets. Historical detail remains in
 - The clipboard lost its metal clamp: the header row is now PATIENT CHART
   (left), the LIVE shift clock, and the red X. The clamp CSS is kept
   commented in styles.css in case the look returns.
+
+### 2026-08-06 Pacing revision: the player sets the pace
+
+- The shift clock now starts on the FIRST patient selection, replacing the
+  2-second acclimation delay: the player may study the waiting room for as
+  long as they like, and nothing — ticks, arrivals, elapsed time — runs
+  until they commit to a patient.
+- RUSH gained the empty-room courtesy refill: an assignment that empties
+  the waiting room brings one or two patients (a coin flip) through the
+  door one second later, doinks included, WITHOUT disturbing the scheduled
+  arrival curve. The player is never left with nobody to see.
+- Triage's clock found its voice: every ten-second boundary now carries the
+  RUSH-style "dink dink donk" three-beat, and each completed minute lands a
+  new minuteDong bell ("dink dink dooooonk") — endDong's family, higher and
+  much shorter, so a minute is unmistakable without sounding like the end.
 
 ## Historical lookup
 

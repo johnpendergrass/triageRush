@@ -149,6 +149,8 @@
   let audioContext = null;
 
   function ensureAudioContext() {
+    /* A closed context can never produce sound again; start over. */
+    if (audioContext && audioContext.state === "closed") audioContext = null;
     if (!audioContext) {
       try {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -157,9 +159,26 @@
         return null;
       }
     }
-    if (audioContext.state === "suspended") audioContext.resume();
+    /* iOS reports "interrupted" (not "suspended") after a phone call,
+       Siri, or an app switch, and a context stuck there is silent until
+       resumed - so nudge ANY non-running state, not just "suspended"
+       (TODO 9, John's iPhone 2026-08-06). */
+    if (audioContext.state !== "running") {
+      audioContext.resume().catch(() => {});
+    }
     return audioContext;
   }
+
+  /* iOS allows only a handful of Web Audio contexts per tab lineage and a
+     page REFRESH can strand the old page's context, eventually leaving new
+     pages silent until the tab is force-closed. Closing ours on the way
+     out keeps refreshes sound-safe (TODO 9). */
+  window.addEventListener("pagehide", () => {
+    if (audioContext) {
+      audioContext.close().catch(() => {});
+      audioContext = null;
+    }
+  });
 
   /* Two-note chime: the arrival doink. */
   function playDoinkSound(audio) {
@@ -285,6 +304,25 @@
     playTickBlip(audio, 2000, 0.1);
   }
 
+  /* The Triage minute donk: same bell family as the completion dong but
+     higher and much shorter, so a completed minute is unmistakable
+     without sounding like the end of the shift (John, 2026-08-06). */
+  function playMinuteDongSound(audio) {
+    const startAt = audio.currentTime;
+    for (const [frequencyHz, peakGain] of [[330, 0.16], [660, 0.04]]) {
+      const oscillator = audio.createOscillator();
+      const gain = audio.createGain();
+      oscillator.type = "sine";
+      oscillator.frequency.value = frequencyHz;
+      gain.gain.setValueAtTime(0.0001, startAt);
+      gain.gain.exponentialRampToValueAtTime(peakGain, startAt + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startAt + 0.7);
+      oscillator.connect(gain).connect(audio.destination);
+      oscillator.start(startAt);
+      oscillator.stop(startAt + 0.8);
+    }
+  }
+
   /* The lower completion dong at zero: fundamental plus a quiet octave,
      ringing out much longer than any tick (doc 3). */
   function playEndDongSound(audio) {
@@ -314,6 +352,7 @@
     wrong: { enabled: true, play: playWrongSound },
     tick: { enabled: true, play: playTickSound },
     minuteTick: { enabled: true, play: playMinuteTickSound },
+    minuteDong: { enabled: true, play: playMinuteDongSound },
     countdownTick: { enabled: true, play: playCountdownTickSound },
     endDong: { enabled: true, play: playEndDongSound }
   };
@@ -385,6 +424,7 @@
     if (!loading.ready) return;
     if (!GAME.startShift(state, context)) return;
     GAME.assertStateInvariants(state, "startShift");
+    stopShiftScheduler(); /* never two schedulers, however fast a restart */
 
     UI.renderArrivingOverlay(true);
 
@@ -413,47 +453,42 @@
     GAME.assertStateInvariants(state, "activateShift");
     UI.renderArrivingOverlay(false);
     renderAll();
-    startShiftSchedulerAfterDelay();
+    /* The clock does NOT start here: it waits, frozen at full time, for
+       the first waiting-patient tap (startShiftClockIfNeeded). */
     topUpPortraitReserve();
   }
 
   /* ----------------------------------------------------------------------
-     5b. Shift scheduler (Phase 7).
+     5b. Shift scheduler (Phase 7; start trigger revised 2026-08-06).
      One 250ms interval per shift. The anchor is the monotonic moment the
      shift's ACTIVE time started; while paused (a confirm dialog or a
      hidden tab - the Chart deliberately does NOT pause) each callback
      moves the anchor forward instead of advancing the clock, so game
-     time simply freezes (doc 8 pause model). The clock starts only after
-     the required assets decode PLUS a 2-second acclimation delay so the
-     player can take in the game screen (John, 2026-08-05); the interval
-     removes itself when the shift stops being active for any reason
-     (timer, END SHIFT EARLY, QUIT).
+     time simply freezes (doc 8 pause model). The clock starts when the
+     player selects their FIRST patient - until that tap they may study
+     the waiting room for as long as they like, with no ticks, no
+     arrivals, and no elapsed time (John, 2026-08-06; this replaced the
+     old 2-second acclimation delay). The interval removes itself when
+     the shift stops being active for any reason (timer, END SHIFT
+     EARLY, QUIT).
      ------------------------------------------------------------------- */
 
-  const SCHEDULER_START_DELAY_MS = 2000;
-
   const scheduler = {
-    startDelayId: null,
     intervalId: null,
     anchorMs: null
   };
 
-  function startShiftSchedulerAfterDelay() {
-    stopShiftScheduler(); /* never two schedulers, however fast a restart */
-    scheduler.startDelayId = setTimeout(() => {
-      scheduler.startDelayId = null;
-      if (state.phase !== "active") return; /* quit during the delay */
-      scheduler.anchorMs = context.monotonicNowMs();
-      scheduler.intervalId = setInterval(runSchedulerCallback, 250);
-      /* RUSH plays one clock tick the moment its clock starts (doc 3). */
-      if (state.settings.mode === "rush") playGameSound("tick");
-    }, SCHEDULER_START_DELAY_MS);
+  function startShiftClockIfNeeded() {
+    if (scheduler.intervalId !== null) return; /* already running */
+    if (state.phase !== "active") return;
+    scheduler.anchorMs = context.monotonicNowMs();
+    scheduler.intervalId = setInterval(runSchedulerCallback, 250);
+    /* RUSH plays one clock tick the moment its clock starts (doc 3). */
+    if (state.settings.mode === "rush") playGameSound("tick");
   }
 
   function stopShiftScheduler() {
-    if (scheduler.startDelayId !== null) clearTimeout(scheduler.startDelayId);
     if (scheduler.intervalId !== null) clearInterval(scheduler.intervalId);
-    scheduler.startDelayId = null;
     scheduler.intervalId = null;
     scheduler.anchorMs = null;
   }
@@ -588,6 +623,8 @@
         state, context, Number(row.dataset.waitingIndex));
       if (!result.accepted) return;
       GAME.assertStateInvariants(state, "selectWaitingPatient");
+      /* The first selection of the shift is what starts the clock. */
+      startShiftClockIfNeeded();
       if (result.doink) playGameSound("doink");
       UI.renderWaiting(state, portraitUrlFor);
       UI.renderPatient(state, portraitUrlFor);
@@ -681,6 +718,12 @@
        coming back resumes it, without trying to catch up missed time. */
     document.addEventListener("visibilitychange", () => {
       GAME.setDocumentHidden(state, document.hidden);
+      /* Returning from an app switch can leave iOS audio "interrupted";
+         nudge it back so the next cue is not silently dropped (TODO 9). */
+      if (!document.hidden && audioContext &&
+          audioContext.state !== "running") {
+        audioContext.resume().catch(() => {});
+      }
     });
   }
 

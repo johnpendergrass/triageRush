@@ -2,6 +2,30 @@
 
 **Last modified:** 2026-08-06
 
+## Pacing + sound revision (2026-08-06, second session): BUILT
+
+Timing changes, folded into docs 2/3/8/9: the shift clock starts on the
+player's FIRST patient selection (replacing the 2-second acclimation delay —
+until that tap nothing runs and the player may study the board freely, both
+modes), and RUSH gained an empty-room courtesy refill (an assignment that
+empties the waiting room brings in one or two patients — a coin flip — one
+second later, doinks included, without disturbing the scheduled arrival
+curve). This retires the "RUSH must never leave an empty waiting room"
+backlog item.
+
+Sound changes, same session: Triage's clock now plays the RUSH-style
+three-beat ("dink dink donk") at EVERY ten-second boundary, and each
+completed minute lands the new minuteDong bell ("dink dink dooooonk") —
+John approved the sound by ear. The iOS silent-sounds glitch was hardened
+against (interrupted-state resume, pagehide context close, visibility
+nudge); TODO.md item 9 stays open for observation.
+
+A standing TODO list now lives in `claude-john-docs/TODO.md` (11 items,
+John's words + Claude notes). Item 1 (50-patient per-game queue) and item
+11 (shift history queue) are the big ones; item 1 legitimately revives a
+NARROW slice of the abandoned patient-limit redesign — loading policy and
+graceful exhaustion only, still no win state / ceiling / grade.
+
 ## Doc 10 is BUILT (2026-08-06)
 
 All seven approved changes in `docs/10-approved-pending-changes.md` were

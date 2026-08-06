@@ -1,11 +1,15 @@
 # Implementation Blueprint
 
-**Last modified:** 2026-08-05
+**Last modified:** 2026-08-06
 
-**Latest change:** Phase 7 clock decisions (2026-08-05): the Chart no longer
-pauses (no `"chart"` pause reason), the clock starts after a 2-second
-acclimation delay, and the last two seconds beat on every quarter as a
-run-in to the dong.
+**Latest change:** Pacing revision (2026-08-06): the clock starts on the
+FIRST patient selection (replacing the 2-second acclimation delay), and an
+assignment that empties the RUSH waiting room books a one-second courtesy
+refill of one or two patients (`state.rush.emptyRefillAtMs` /
+`emptyRefillSecondAtMs`) without touching the scheduled-arrival countdown.
+Earlier: Phase 7 clock decisions (2026-08-05): the Chart no longer pauses
+(no `"chart"` pause reason), and the last two seconds beat on every quarter
+as a run-in to the dong.
 
 ## Purpose
 
@@ -147,7 +151,10 @@ implemented against it):
     arrivalRemainingMs: 10000,
     nextBaseIntervalMs: 10000,
     stagedSecondArrivalAtMs: null,
-    currentArrivalEventId: 0
+    currentArrivalEventId: 0,
+    emptyRefillAtMs: null,        // logical elapsedMs of a pending
+                                  // empty-room courtesy refill (doc 3)
+    emptyRefillSecondAtMs: null   // the refill pair's staged second member
   },
 
   chart: {
@@ -270,14 +277,16 @@ set RUSH base interval: 10s for 60s, 14.5s for 120s
 seed 5 patients for Triage or 2 for RUSH without doinks
 set view GAME and phase active
 render
-after a 2-second acclimation delay: anchor monotonic scheduler and
-  play the RUSH start tick when enabled
+wait, clock frozen at full time, for the FIRST waiting-patient tap:
+  anchor monotonic scheduler and play the RUSH start tick when enabled
 ```
 
 Initial seeding uses the insertion primitive with `announce: false`.
-The timer anchor is created only after required assets decode successfully
-AND the 2-second acclimation delay has passed; quitting during the delay
-cancels the pending anchor.
+The timer anchor is created only when the player selects their first
+patient (2026-08-06; this replaced the 2-second acclimation delay). Until
+that tap nothing runs — no ticks, no arrivals, no elapsed time — and
+quitting simply never creates the anchor. Shift start defensively stops any
+scheduler a previous shift left running.
 
 ## Queue insertion primitive
 
@@ -394,6 +403,14 @@ assignRoom(roomKey) {
   }
   active = null
   recallAvailable = true
+
+  // RUSH courtesy refill (doc 3, 2026-08-06): emptying the room books
+  // one-or-two arrivals a second from now. Only the first emptying books
+  // one; the scheduled-arrival countdown is untouched.
+  if (mode === "rush" && waiting.length === 0 &&
+      rush.emptyRefillAtMs === null) {
+    rush.emptyRefillAtMs = elapsedMs + EMPTY_REFILL_DELAY_MS  // 1000
+  }
 
   queue visualEffect("assignment-feedback", outcome, roomKey)
   queue soundEffect("assignment-feedback", outcome)
@@ -564,6 +581,21 @@ ordinary one-second arrival interval.
 If capacity changes before the staged second insertion, recheck capacity. A
 blocked staged insertion is silent and may share the event's one shake.
 
+```js
+processEmptyRefill() {   // fires when elapsedMs >= rush.emptyRefillAtMs
+  clear rush.emptyRefillAtMs
+  pair = random() < 0.50
+  insertWaitingPatient({ announce: true })   // full room skips silently
+  if (pair) rush.emptyRefillSecondAtMs = elapsedMs + BURST_BEAT_MS
+}
+// The pair's second member is processed exactly like a burst's staged
+// second arrival, from rush.emptyRefillSecondAtMs.
+```
+
+The refill fires even when a scheduled arrival landed during its one-second
+beat, and it never plays the blocked-event shake: a refill is a gift. It
+never touches `arrivalRemainingMs` or `nextBaseIntervalMs`.
+
 ## Logical scheduler
 
 Use `performance.now()` to determine elapsed active time. Treat each 250ms
@@ -602,15 +634,25 @@ Final ten:
 - completion dong at zero;
 - no arrival cue at zero.
 
-### Triage cue boundaries
+### Triage cue boundaries (revised 2026-08-06)
 
-- single tick at every ten elapsed seconds;
-- at each elapsed minute, ticks at minute-0.50, minute-0.25, and minute;
+For an elapsed ten-second boundary `B`:
+
+```text
+B - 0.50  lead-in tick (minuteTick)
+B - 0.25  lead-in tick (minuteTick)
+B         boundary beat: ordinary tick — or minuteDong when B is a
+          completed minute (B % 60s == 0)
+```
+
+- lead-ins are suppressed when `B` falls inside the final-ten countdown
+  (mirror of RUSH's transition-to-10 rule: fire only while
+  `remainingMs - leadOffset > 10000`);
 - final ten uses the RUSH whole-second/final-five audio sequence;
 - no RUSH arrival state or penalty.
 
-Deduplicate coincident events: a minute-boundary Triage tick is the third beat
-of its minute group, not a fourth tick.
+Deduplicate coincident events: the boundary beat is the third beat of its
+group, never a fourth tick.
 
 ## Pause model
 
@@ -639,7 +681,9 @@ correct   C5-E5-G5 arpeggio
 close     close-result tone
 wrong     wrong-result tone
 recall    C5-E5 (first two notes of correct)
-tick, minuteTick, countdownTick, endDong   reserved for the Phase-7 scheduler
+tick, minuteTick, countdownTick, endDong   the Phase-7 scheduler family
+minuteDong   Triage completed-minute bell (330Hz+octave, ~0.7s ring):
+             endDong's family, higher and much shorter (2026-08-06)
 ```
 
 A sound plays only when its own flag, `state.gameSoundsAudible`, and the sound

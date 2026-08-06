@@ -1,6 +1,6 @@
 # triageRush — technical notes (pointer file)
 
-**Last modified:** 2026-08-06 (doc 10 review changes built)
+**Last modified:** 2026-08-06 (pacing revision, Triage cues, iOS audio hardening)
 
 Full technical contracts: `docs/4`, `docs/8`. This file records only
 practical build knowledge that lives nowhere else.
@@ -21,7 +21,7 @@ overwrite the first rather than create a new record. Nothing today does that.
   file:// does not work (fetch).
 - Cache busting: one version string in TWO places — index.html query
   params (5 refs) and `TRIAGE_RUSH_CACHE_VERSION` in assets.js. Bump BOTH
-  on every asset/CSS/JS change (currently "2026-0806-review9k"; the
+  on every asset/CSS/JS change (currently "2026-0806-pacing1c"; the
   trailing letter increments per tweak).
 
 ## Architecture in one breath
@@ -50,12 +50,20 @@ setChartClinicalExpanded, renderChartOverlay/renderChartPortraitZoom,
 
 One 250ms `setInterval` per shift in app.js; game.js `advanceShiftTime`
 is pure and quantizes to 250ms logical quarters (`shift.lastLogicalQuarter`
-dedups late callbacks). The anchor starts 2 seconds AFTER activation
-(acclimation delay; quitting during it cancels cleanly). Pause = app.js
+dedups late callbacks). The anchor is created by the FIRST waiting-patient
+tap of the shift (`startShiftClockIfNeeded`, 2026-08-06; this replaced the
+2-second acclimation delay) — before that tap the clock sits frozen at full
+time with no ticks and no arrivals, and handleStartShift defensively stops
+any scheduler a previous shift left running. Pause = app.js
 drags the anchor while `schedulerCanRun` is false. Pause reasons are ONLY
 "confirmation" and "document-hidden" — the Chart deliberately does not
 pause. RUSH arrivals/bursts run inside the same quarter loop; the staged
-burst second-member time is LOGICAL elapsed ms, so pauses freeze it.
+burst second-member time is LOGICAL elapsed ms, so pauses freeze it. The
+RUSH empty-room courtesy refill (2026-08-06) also lives in that loop:
+`assignActivePatientToRoom` books `rush.emptyRefillAtMs` (elapsed + 1000ms)
+when the room empties, the loop inserts one-or-two (coin flip) patients at
+the beat, and the scheduled-arrival countdown is never touched (doc 3 has
+the full rules, doc 9 the acceptance table).
 Effects flow back as the advance result (soundCues, countdownNumeral,
 doinks, queueChanged, blockedShake); app.js plays/renders them.
 
@@ -94,11 +102,23 @@ write) to preserve scroll.
 Web Audio only, no files. `SOUND_REGISTRY` in app.js: doink, correct
 (C5-E5-G5), recall (C5-E5), close, wrong, tick (1200Hz blip),
 minuteTick (1600Hz), countdownTick (2000Hz), endDong (220Hz+octave,
-~1.4s ring) — each `{enabled, play}` so per-sound preferences are a
-flag away. Cue schedule computed in game.js (clockCueForQuarter), one
+~1.4s ring), minuteDong (330Hz+octave, ~0.7s ring — Triage's
+completed-minute bell, 2026-08-06) — each `{enabled, play}` so per-sound
+preferences are a flag away. Triage now uses the RUSH-style three-beat at
+EVERY ten-second boundary, with minuteDong as the minute's boundary beat. Cue schedule computed in game.js (clockCueForQuarter), one
 cue max per quarter. `state.gameSoundsAudible` = runtime mute
 (re-derived each shift start from soundGlobal && soundGame); music
 (KING-FM stream) starts from HOME gestures only.
+
+iOS audio hardening (2026-08-06, TODO 9): `ensureAudioContext` resumes
+from ANY non-running state (iOS reports "interrupted" after a call/Siri/
+app switch, which the old suspended-only check missed), a `pagehide`
+listener closes the context so page refreshes cannot strand iOS's small
+per-tab context pool (the likely cause of John's refreshed-page silence),
+visibilitychange nudges a non-running context on return, and a "closed"
+context is discarded and rebuilt. Web Audio obeys the iPhone ring/silent
+switch (volume buttons are separate) — if silence ever persists across
+reloads, check the switch before the code.
 
 ## Testing conventions
 

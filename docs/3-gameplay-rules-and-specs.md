@@ -103,6 +103,25 @@ At every scheduled RUSH arrival event:
 A two-patient event with one free slot adds one patient and suppresses the
 second. It never exceeds ten and never delays the next scheduled event.
 
+### RUSH empty-room courtesy refill (John, 2026-08-06)
+
+If an assignment leaves the RUSH waiting room EMPTY, the game refills it so
+the player is never stuck with nobody to see:
+
+1. One second (of logical game time, so a pause freezes it) after the
+   emptying assignment, add one or two patients — a 50/50 coin flip.
+2. A two-patient refill lands its second member one 250 ms beat after the
+   first, exactly the burst rhythm; each inserted patient plays its doink.
+3. The refill NEVER touches the scheduled-arrival countdown or the shrinking
+   base interval: normal pacing continues on schedule alongside it.
+4. The refill fires even if a scheduled arrival happened to land during the
+   one-second beat (capacity-capped as always); a full room skips silently —
+   a refill is a gift, never a blocked-event shake.
+5. Only the FIRST emptying books a refill: recalling and reassigning the
+   same patient while one is pending does not push the beat back.
+
+Triage mode never needs this — it refills to five on every selection.
+
 ## Queue rules
 
 - Triage renders five occupied queue rows and refills to five.
@@ -380,13 +399,17 @@ boundary. A confirmation dialog (or the browser tab being hidden) pauses both
 the clock and the RUSH arrival countdown. The Chart overlay deliberately does
 NOT pause: studying a patient costs shift time (John, 2026-08-05).
 
-The clock starts only after a 2-second acclimation delay once the GAME screen
-appears, so the player can take in the board before time moves.
+The clock starts only when the player selects their FIRST patient of the
+shift (John, 2026-08-06; this replaced the earlier 2-second acclimation
+delay). Until that first tap the clock sits frozen at full time and NOTHING
+runs: no ticks, no RUSH arrivals, no elapsed time. The player may study the
+waiting room for as long as they like; the game begins when they commit to a
+patient. This applies to both modes.
 
 ### RUSH clock sequence
 
-- Play one clock tick the moment the clock starts (after the acclimation
-  delay).
+- Play one clock tick the moment the clock starts (the first patient
+  selection).
 - Play the ordinary clock tick on every whole-second boundary while time remains.
 - Before the final ten seconds, emphasize every ten-second boundary with three
   beats: additional ticks at 0.50 and 0.25 seconds before the boundary, followed
@@ -406,9 +429,15 @@ appears, so the player can take in the board before time moves.
 ### Triage clock sequence
 
 - Display only remaining time.
-- Play one tick at every ten-second elapsed boundary.
-- At each completed minute, replace the single boundary tick with a three-beat
-  emphasis at 0.50 and 0.25 seconds before the minute and on the minute.
+- EVERY ten-second elapsed boundary gets the RUSH-style three-beat emphasis
+  (John, 2026-08-06): lead-in ticks at 0.50 and 0.25 seconds before the
+  boundary, then the boundary beat itself.
+- The boundary beat is the ordinary tick — except each completed MINUTE,
+  which lands the longer, deeper minute dong instead ("dink dink dooooonk"),
+  so a passing minute is unmistakable without sounding like the end of the
+  shift.
+- A boundary that falls inside the final-ten countdown gets no lead-ins,
+  exactly like RUSH's transition to 10.
 - During the final ten seconds, use the same whole-second and final-five sound
   cadence as RUSH.
 - Triage does not add the RUSH waiting penalty or RUSH arrival scheduler.

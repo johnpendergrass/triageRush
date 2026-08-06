@@ -29,6 +29,11 @@ const GAME_CONSTANTS = Object.freeze({
   MAX_WAITING: 10,
   MIN_VISIBLE_WAITING: 5,
   RUSH_DOUBLE_PROBABILITY: 0.20,
+  /* Emptying the RUSH waiting room earns a courtesy refill: after a
+     one-second beat, one or two patients (a coin flip) walk in so the
+     player is never stuck with nobody to see (John, 2026-08-06). */
+  EMPTY_REFILL_DELAY_MS: 1000,
+  EMPTY_REFILL_DOUBLE_PROBABILITY: 0.50,
   HEARTBEAT_MS: 250,
   BURST_BEAT_MS: 250,
 
@@ -139,7 +144,9 @@ function createInitialState() {
       arrivalRemainingMs: 10000,
       nextBaseIntervalMs: 10000,
       stagedSecondArrivalAtMs: null,
-      currentArrivalEventId: 0
+      currentArrivalEventId: 0,
+      emptyRefillAtMs: null,        // logical elapsedMs of a pending refill
+      emptyRefillSecondAtMs: null   // the refill pair's staged second member
     },
 
     chart: {
@@ -520,6 +527,18 @@ function assignActivePatientToRoom(state, context, patientRecord, roomKey) {
   state.active = null;
   state.recallAvailable = true;
 
+  /* RUSH courtesy refill (doc 3): assigning the LAST waiting patient
+     books one-or-two arrivals a one-second beat from now, so the player
+     never sits with nobody to see. The scheduled-arrival countdown is
+     deliberately untouched - normal pacing continues on schedule. Only
+     the first emptying books a refill (a recall-and-reassign while one
+     is pending must not push the beat back). */
+  if (state.settings.mode === "rush" && state.waiting.length === 0 &&
+      state.rush.emptyRefillAtMs === null) {
+    state.rush.emptyRefillAtMs =
+      state.shift.elapsedMs + GAME_CONSTANTS.EMPTY_REFILL_DELAY_MS;
+  }
+
   return { accepted: true, outcome, direction, roomKey };
 }
 
@@ -684,14 +703,24 @@ function clockCueForQuarter(state) {
     return null;
   }
 
-  /* Triage counts cues in ELAPSED time: a tick every ten seconds, and a
-     three-beat emphasis around each completed minute (lead-ins at
-     minute-0.50 and minute-0.25; the on-minute beat is the ordinary
-     ten-second tick itself, never a fourth beat - doc 8). */
-  if ((elapsedMs + 500) % 60000 === 0) return { sound: "minuteTick", numeral: null };
-  if ((elapsedMs + 250) % 60000 === 0) return { sound: "minuteTick", numeral: null };
+  /* Triage counts cues in ELAPSED time (John, 2026-08-06): EVERY
+     ten-second boundary gets the RUSH-style three-beat emphasis -
+     lead-ins at B-0.50 and B-0.25, then the boundary beat itself. The
+     boundary beat is the ordinary tick, except a completed MINUTE lands
+     the longer, deeper minuteDong instead. Lead-ins whose boundary falls
+     inside the final-ten countdown are suppressed, exactly like RUSH's
+     transition to 10. */
+  if ((elapsedMs + 500) % 10000 === 0 && remainingMs - 500 > 10000) {
+    return { sound: "minuteTick", numeral: null };
+  }
+  if ((elapsedMs + 250) % 10000 === 0 && remainingMs - 250 > 10000) {
+    return { sound: "minuteTick", numeral: null };
+  }
   if (elapsedMs % 10000 === 0 && elapsedMs > 0) {
-    return { sound: "tick", numeral: null };
+    return {
+      sound: elapsedMs % 60000 === 0 ? "minuteDong" : "tick",
+      numeral: null
+    };
   }
   return null;
 }
@@ -778,6 +807,36 @@ function advanceShiftTime(state, elapsedActiveMs, context) {
         if (staged.inserted) {
           effects.doinks += 1;
           effects.queueChanged = true;
+        }
+      }
+
+      /* Courtesy refill, one second after the room was emptied (doc 3).
+         It fires even if a scheduled arrival landed during the beat -
+         simple and predictable - and a full room just skips silently
+         (a refill is a gift, never a blocked-event shake). The pair's
+         second member uses the burst rhythm: one beat later. */
+      if (state.rush.emptyRefillSecondAtMs !== null &&
+          state.shift.elapsedMs >= state.rush.emptyRefillSecondAtMs) {
+        state.rush.emptyRefillSecondAtMs = null;
+        const second = insertWaitingPatient(state, context, { announce: true });
+        if (second.inserted) {
+          effects.doinks += 1;
+          effects.queueChanged = true;
+        }
+      }
+      if (state.rush.emptyRefillAtMs !== null &&
+          state.shift.elapsedMs >= state.rush.emptyRefillAtMs) {
+        state.rush.emptyRefillAtMs = null;
+        const pair = context.random() <
+          GAME_CONSTANTS.EMPTY_REFILL_DOUBLE_PROBABILITY;
+        const first = insertWaitingPatient(state, context, { announce: true });
+        if (first.inserted) {
+          effects.doinks += 1;
+          effects.queueChanged = true;
+        }
+        if (pair) {
+          state.rush.emptyRefillSecondAtMs =
+            state.shift.elapsedMs + GAME_CONSTANTS.BURST_BEAT_MS;
         }
       }
     }
@@ -879,7 +938,9 @@ function startShift(state, context) {
     arrivalRemainingMs: rushBaseMs,
     nextBaseIntervalMs: rushBaseMs,
     stagedSecondArrivalAtMs: null,
-    currentArrivalEventId: 0
+    currentArrivalEventId: 0,
+    emptyRefillAtMs: null,
+    emptyRefillSecondAtMs: null
   };
 
   /* The in-game mute starts from the persisted preferences each shift. */
