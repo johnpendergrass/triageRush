@@ -2,6 +2,17 @@
 
 **Last modified:** 2026-08-05
 
+## THE NEXT CHANGE IS NOT IN DOCS 1-9
+
+`docs/10-finite-patient-pool-design.md` is APPROVED BUT NOT BUILT. It gives
+every timed shift a finite pool of patients, which gives the game a win state
+and the score a ceiling. It changes shift-length choices (TRIAGE 600s is
+replaced by an untimed sandbox), arrivals, the scoring basis, and the Shift
+Review. Docs 1-9 stay authoritative for the SHIPPED game until it is built;
+doc 10 section 7 lists every line it will contradict.
+
+Decision log and rejected options: `brainstorm-finite-patient-roster.MD`.
+
 ## Where the real specifications live
 
 This project keeps its full design/gameplay specification in the numbered
@@ -42,3 +53,14 @@ mark plus photo badge, no photo zoom), and the correction that
 ONE THING IS DELIBERATELY NOT WRITTEN DOWN AS FINAL: the Shift Review's
 printed-discharge-summary LOOK. Doc 7 marks it provisional because John has
 an open backlog item to reshape it as a supervisor's evaluation form.
+
+2026-08-05 (late): that reshaping was explored as MOCKUPS ONLY, in
+`_mockups/shift-review-mockups.html` — six variants, nothing in `triageRush/`
+touched. John prefers variant A2 ("FORM ED-7", lite) pending a look on his
+iPhone. Two rulings from that session are permanent: the review must make NO
+claim about performance "for level of training" (we are not medically
+qualified to set that bar, so the grade prints its own basis instead), and it
+must NEVER fault the player for patients left in the waiting room. The form
+work is now BLOCKED ON doc 10, which gives the score the ceiling the grade
+needs, and which additionally requires a second, grade-free review shape for
+sandbox shifts.

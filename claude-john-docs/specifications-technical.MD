@@ -1,9 +1,29 @@
 # triageRush — technical notes (pointer file)
 
-**Last modified:** 2026-08-05 (Phase 8 complete)
+**Last modified:** 2026-08-05 (Phase 8 complete; doc 10 designed, not built)
 
 Full technical contracts: `docs/4`, `docs/8`. This file records only
 practical build knowledge that lives nowhere else.
+
+## Before writing gameplay code, read docs/10
+
+`docs/10-finite-patient-pool-design.md` is approved and unbuilt. Three
+technical traps it identifies, all easy to get wrong:
+
+- **The pool must decrement on ACTUAL INSERTION, never on a scheduled or
+  blocked arrival.** `insertWaitingPatient` already returns early on
+  `reason: "full"` BEFORE calling `drawUniquePatientId`, so the deck is not
+  consumed today. Preserve that ordering when the pool counter lands beside
+  it, or a shift can end with patients who were never shown.
+- **The end condition is a CONJUNCTION**: waiting empty AND pool empty AND
+  `state.active === null`. "Waiting room empty" alone is not it — a quick
+  player legitimately empties a RUSH room seconds in.
+- **`state.ledger.byPatientId` cannot survive a reshuffled deck.** A patient
+  seen twice OVERWRITES the first record instead of creating a second, so the
+  Patients Seen browser undercounts and the score counts one encounter where
+  there were two. Only sandbox can reach this (every other profile deals at
+  most 30 of 160 patients), so capping sandbox is a real alternative to
+  making the ledger encounter-keyed.
 
 ## Running and cache
 
@@ -102,6 +122,25 @@ cue max per quarter. `state.gameSoundsAudible` = runtime mute
 - Glyph gotcha: triangle characters need U+FE0E variation selectors or
   iPhones render boxed emoji (empty-state arrows, door recall arrow,
   MORE ABOVE/BELOW). U+25BE (chart chevron) is safe as-is.
+- CONFIRMED ON IPHONE (John, 2026-08-05): the three outcome glyphs used by
+  the result toast, the review Answer mark, and the photo badge - check
+  U+2713, triangle U+25B3 with U+FE0E, cross U+2715 - all render as plain
+  characters, not emoji. Reuse this exact set for any new outcome marking
+  rather than picking fresh glyphs that would need retesting.
+
+## Mockups
+
+`_mockups/shift-review-mockups.html` is a standalone comparison harness for
+the Shift Review's appearance. It COPIES (never links) the palette and the
+9:16 shell rules from styles.css so each variant's CSS stays self-contained
+and can be lifted into styles.css section 9 wholesale. It has no fetch, so it
+opens from disk as well as over the server. Deleting `_mockups/` reverts
+everything — no game file was touched to build it.
+
+Two legibility findings from it, worth applying to any cream-paper surface:
+the old secondary ink `#6d7b81` is too light on the cream stock (use
+`#4b585e`), and **0.22em letter-spacing on small-caps labels hurt
+readability more than the font size did** — around 0.10em reads far better.
 
 ## Known technical debt
 
