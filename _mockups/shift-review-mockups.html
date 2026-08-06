@@ -317,7 +317,10 @@ const SCENARIOS = {
     mode: "triage", difficulty: "forgiving",
     title: "RES", initials: "JMP",
     date: "Aug 5, 2026 · 2:14 PM",
-    duration: "5:00", seen: 11,
+    /* duration = time actually RUN; lengthLabel = the CONFIGURED setting.
+       They differ whenever a shift ends early, which is why the mode line
+       and the meta cell must not both claim to be "shift length". */
+    duration: "5:00", lengthLabel: "5 minutes", seen: 11,
     correct: 6, close: 3, wrong: 2, waiting: 4,
     under: 1, over: 4
   },
@@ -325,7 +328,7 @@ const SCENARIOS = {
     mode: "rush", difficulty: "strict",
     title: "Intern", initials: "KLR",
     date: "Aug 5, 2026 · 9:48 PM",
-    duration: "2:00", seen: 5,
+    duration: "2:00", lengthLabel: "120 seconds", seen: 5,
     correct: 2, close: 0, wrong: 3, waiting: 7,
     under: 2, over: 1
   }
@@ -420,10 +423,11 @@ function formulaRowCurrent(mod, label, count, mult) {
    PANE B - the target design
    ====================================================================== */
 
-/* The two direction explanations, taken from game.js
-   classifyTriageDirection: "over" means higher acuity than required (a
-   LOWER ESI number), "under" the reverse. An incorrect Psych/Discharge
-   choice is plain wrong and moves neither counter.
+/* The two direction explanations. Since 2026-08-06 game.js
+   classifyTriageDirection uses one acuity ladder (esi-1..5 = 1-5,
+   psych = 6, discharge = 7): "over" means higher acuity than required (a
+   LOWER rank), "under" the reverse, so Psych/Discharge misses move a
+   counter too.
 
    NOTE the counters are populated in EVERY mode and difficulty (John,
    2026-08-05). Difficulty changes SCORING, not counting: direction is
@@ -456,12 +460,12 @@ function renderClean(s) {
     <div class="paper">
       <header class="clean-head">
         <p class="clean-title">${s.mode === "rush" ? "TriageRUSH COMPLETE" : "TRIAGE SHIFT COMPLETE"}</p>
-        <p class="clean-mode">Mode: ${modeName(s)} Mode, ${difficultyName(s)} Mode</p>
+        <p class="clean-mode">MODE: ${modeName(s)}, ${difficultyName(s)}, ${s.lengthLabel}</p>
       </header>
 
       <div class="clean-meta">
         ${cleanMeta("PROVIDER", s.title + " " + s.initials)}
-        ${cleanMeta("SHIFT LENGTH", s.duration)}
+        ${cleanMeta("DURATION", s.duration)}
         ${cleanMeta("PATIENTS SEEN", s.seen)}
         ${cleanMeta("DATE", s.date)}
       </div>

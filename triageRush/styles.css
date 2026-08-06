@@ -1454,14 +1454,19 @@ img {
 */
 
 /* Prominent close control, pinned to the board's top-right corner so it
-   stays reachable no matter how far the paper scrolls (doc 7). */
+   stays reachable no matter how far the paper scrolls (doc 7).
+   z-index 5, deliberately ABOVE the sticky nameplate's 4: the X dips a
+   few pixels into the paper region, and at an equal z-index the
+   nameplate's solid paper-colored shadow slab (later in the DOM) painted
+   over the X's corner (John, 2026-08-06). The photo-zoom scrim is also
+   5 but sits later in the DOM, so it still covers the X by design. */
 .chart-close {
   position: absolute;
   top: clamp(5px, 1.8cqw, 10px);
   right: clamp(5px, 1.8cqw, 10px);
   width: clamp(28px, 9cqw, 40px);
   height: clamp(28px, 9cqw, 40px);
-  z-index: 4;
+  z-index: 5;
   border-radius: 7px;
   border: 2px solid #fff;
   background: linear-gradient(#f4574c, #a20e08);
@@ -1598,7 +1603,7 @@ img {
   font-size: clamp(11px, 3.6cqw, 16px);
 }
 
-/* --- Photo zoom (chart overlay only) --- */
+/* --- Photo zoom (Chart overlay AND the Patients Seen browser) --- */
 
 /* The hit box is the whole photo minus a small pad just inside its
    edges; the visible magnifier badge sits in the top-right corner
@@ -1848,9 +1853,10 @@ img {
   line-height: 1;
 }
 
-/* The same mark stamped on the photo, bottom-right, at twice the Answer
-   mark's size (John, 2026-08-05). A pale disc carries it so the glyph
-   stays readable over any portrait, light or dark. */
+/* The same mark stamped on the photo, bottom-right. A pale disc carries
+   it so the glyph stays readable over any portrait, light or dark.
+   Sized about 1.4x the Answer mark - down from the original 2x (John,
+   2026-08-06: unobtrusive, the photo is the point). */
 .chart-outcome-badge {
   position: absolute;
   right: clamp(6px, 2.2cqw, 12px);
@@ -1858,15 +1864,15 @@ img {
   z-index: 2;
   display: grid;
   place-items: center;
-  width: clamp(38px, 12.6cqw, 60px);
-  height: clamp(38px, 12.6cqw, 60px);
+  width: clamp(27px, 9cqw, 43px);
+  height: clamp(27px, 9cqw, 43px);
   border-radius: 50%;
-  border: 3px solid currentColor;
+  border: 2px solid currentColor;
   background: #f7f0e1ee;
-  font-size: clamp(28px, 9.2cqw, 44px);
+  font-size: clamp(19px, 6.4cqw, 31px);
   font-weight: 900;
   line-height: 1;
-  box-shadow: 0 2px 8px #0006;
+  box-shadow: 0 2px 6px #0005;
 }
 
 .chart-outcome-badge.is-outcome-correct { color: #17703f; }
@@ -2006,7 +2012,8 @@ img {
 }
 
 /* ------------------------------------------------------------------------
-   9. SHIFT REVIEW - printed discharge summary (John, 2026-08-05)
+   9. SHIFT REVIEW - printed summary, variant B "LEGIBLE" (John, 2026-08-05;
+      built 2026-08-06 from _mockups/shift-review-mockups.html)
 
    The whole summary fits one screen with NO scrolling, so every size here
    is a container-width clamp. The shell is a fixed 9:16 box, so its height
@@ -2014,6 +2021,12 @@ img {
    budget proportional at every device size. The paper stretches to the
    full shell and spreads its blocks, so small leftovers become breathing
    room instead of a short page.
+
+   The variant's legibility rules, which are the point of it:
+     - secondary ink is #4b585e - the old #6d7b81 was too light on cream;
+     - no clamp minimum sits below 10px;
+     - letter-spacing on small-caps labels stays near 0.06em - the old
+       0.22em hurt readability more than the font size did.
    --------------------------------------------------------------------- */
 
 .review-view {
@@ -2021,90 +2034,111 @@ img {
   inset: 0;
   display: grid;
   place-items: stretch;
-  padding: clamp(8px, 3cqw, 18px);
+  padding: clamp(6px, 2.5cqw, 14px);
   background: linear-gradient(180deg, #0b2d3e, #031019 70%);
 }
 
-/* Paper: warm stock, hairline rule border, faint ruled tint at the top so
-   it reads as a printed form rather than a plain white card. */
+/* Paper: warm stock, hairline rule border, square-ish printed corners. */
 .review-paper {
-  --paper-ink: #1b2a31;
-  --paper-faint: #6d7b81;
-  --paper-rule: #b9b2a0;
+  --paper-ink: #16232a;
+  --paper-faint: #4b585e;
+  --paper-rule: #a9a191;
   /* Outcome accents darkened for ink-on-paper legibility; the bright
      --score-* variants are tuned for the dark GAME screen. */
-  --paper-correct: #17703f;
-  --paper-close: #8a6100;
-  --paper-wrong: #b3271c;
+  --paper-correct: #14663a;
+  --paper-close: #7a5600;
+  --paper-wrong: #a52219;
 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: clamp(10px, 4cqw, 22px) clamp(12px, 4.5cqw, 26px);
+  padding: clamp(10px, 3.6cqw, 20px) clamp(11px, 4cqw, 22px);
   border: 1px solid #8d8676;
-  border-radius: 3px; /* printed forms have square corners, not app corners */
-  background:
-    linear-gradient(180deg, rgb(0 0 0 / 4%), rgb(0 0 0 / 0%) 12%),
-    #f6f1e4;
+  border-radius: 2px;
+  background: #f7f3e7;
   color: var(--paper-ink);
   box-shadow: 0 18px 50px #000c;
   text-align: left;
   overflow: hidden;
 }
 
-/* --- Head: double rule above and below, like a form banner --- */
+/* --- Head: title over one strong rule, mode line beneath --- */
 
 .review-head {
-  border-top: 3px double var(--paper-rule);
-  border-bottom: 3px double var(--paper-rule);
-  padding: clamp(4px, 1.6cqw, 9px) 0;
+  border-bottom: 2px solid var(--paper-ink);
+  padding-bottom: clamp(5px, 1.8cqw, 9px);
   text-align: center;
 }
 
+/* Mixed case is deliberate: "TriageRUSH", not "TRIAGERUSH" (John,
+   2026-08-05), so text-transform must NEVER be applied here. */
 .review-title {
-  font-size: clamp(13px, 5.4cqw, 26px);
+  font-size: clamp(16px, 5.6cqw, 27px);
   font-weight: 900;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.01em;
+  line-height: 1.05;
 }
 
-.review-mode {
-  margin-top: 0.2em;
-  font-size: clamp(8px, 3cqw, 14px);
+/* "Shift Report" as a printed-report masthead: serif small-caps (John,
+   2026-08-06). small-caps renders the lowercase letters as capitals, so
+   the one text "Shift Report" serves both titles. */
+.review-title-report {
+  font-family: Georgia, "Times New Roman", serif;
+  font-variant: small-caps;
   font-weight: 700;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.05em;
+}
+
+/* The mode line earns some prominence (John, 2026-08-06): a blank-line
+   gap below the title and a size up from the meta text. */
+.review-mode {
+  margin-top: clamp(7px, 2.4cqw, 13px);
+  font-size: clamp(12px, 3.6cqw, 17px);
+  font-weight: 700;
+  letter-spacing: 0.02em;
   color: var(--paper-faint);
 }
 
-/* --- Meta rows with dotted leaders --- */
+/* --- Meta: 2 x 2 cells with left rules, key over value --- */
 
+/* Uneven columns on purpose: the right column starts about three
+   characters left of center so DATE ("Aug 6, 2026 · 10:02 AM") fits on
+   one line; the left column's values (initials, a count) never need the
+   width (John, 2026-08-06). */
 .review-meta {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(2px, 1cqw, 6px);
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: clamp(4px, 1.6cqw, 9px) clamp(8px, 3cqw, 16px);
+  margin-top: clamp(7px, 2.4cqw, 13px);
 }
 
-.review-meta-row {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5em;
-  font-size: clamp(9px, 3.2cqw, 15px);
+.review-meta-cell {
+  border-left: 3px solid var(--paper-rule);
+  padding-left: clamp(5px, 1.8cqw, 9px);
 }
 
 .review-meta-key {
+  display: block;
+  font-size: clamp(10px, 2.6cqw, 12px);
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.06em;
   color: var(--paper-faint);
 }
 
-/* The leader fills whatever space the label and value leave over. */
-.review-leader {
-  flex: 1 1 auto;
-  border-bottom: 1px dotted var(--paper-rule);
-  transform: translateY(-0.25em);
+.review-meta-value {
+  display: block;
+  font-size: clamp(13px, 3.7cqw, 17px);
+  font-weight: 800;
 }
 
-.review-meta-value {
-  font-weight: 800;
+/* The ended-early note rides the DURATION value line at the key's size,
+   so it reads as an annotation on the number, not part of it. It exists
+   because the mode line above prints the CONFIGURED length; the asterisk
+   reconciles the two when the player stopped the shift early (doc 7). */
+.review-meta-note {
+  font-size: clamp(10px, 2.6cqw, 12px);
+  font-weight: 700;
+  color: var(--paper-faint);
   white-space: nowrap;
 }
 
@@ -2112,14 +2146,17 @@ img {
 
 .review-score-block {
   text-align: center;
-  padding: clamp(2px, 1cqw, 6px) 0;
+  margin: clamp(6px, 2cqw, 11px) 0;
 }
 
+/* A step smaller than variant B's clamp(46px, 19cqw, 92px): the vertical
+   budget it gave up went to the direction buttons, whose reserved height
+   must fit label + explanation (John, 2026-08-06). */
 .review-score-value {
-  font-size: clamp(34px, 17cqw, 84px);
+  font-size: clamp(40px, 16.5cqw, 80px);
   font-weight: 900;
-  line-height: 0.95;
-  letter-spacing: -0.02em;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
 }
 
@@ -2130,36 +2167,53 @@ img {
 }
 
 .review-score-label {
-  font-size: clamp(8px, 3cqw, 14px);
+  font-size: clamp(11px, 3cqw, 13px);
   font-weight: 700;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.12em;
   color: var(--paper-faint);
 }
 
-/* --- Formula rows: label | count | multiplier | subtotal --- */
+/* --- Scoring table: ALWAYS three rows, CORRECT / CLOSE / WRONG.
+       Cells: label | count | multiplier | subtotal. --- */
 
 .review-formulas {
   display: grid;
   grid-template-columns: 1fr auto auto auto;
   align-items: baseline;
-  column-gap: clamp(4px, 2cqw, 12px);
-  row-gap: clamp(2px, 1cqw, 6px);
-  border-top: 1px solid var(--paper-rule);
-  border-bottom: 1px solid var(--paper-rule);
-  padding: clamp(4px, 2cqw, 10px) 0;
-  font-size: clamp(9px, 3.4cqw, 16px);
+  column-gap: clamp(6px, 2.2cqw, 13px);
+  row-gap: clamp(4px, 1.5cqw, 8px);
+  border-top: 2px solid var(--paper-ink);
+  border-bottom: 2px solid var(--paper-ink);
+  padding: clamp(6px, 2.2cqw, 12px) 0;
+  font-size: clamp(12px, 3.5cqw, 17px);
   font-variant-numeric: tabular-nums;
 }
 
 .review-formula-label {
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.04em;
 }
+
+/* The outcome glyph opening each label (John, 2026-08-06): the same
+   marks as the toast and photo badge, in the outcome's accent color -
+   the word beside it stays in label ink. */
+.review-formula-glyph {
+  margin-right: 0.4em;
+  font-weight: 900;
+}
+
+.review-formula-glyph.is-outcome-correct { color: var(--paper-correct); }
+.review-formula-glyph.is-outcome-close   { color: var(--paper-close); }
+.review-formula-glyph.is-outcome-wrong   { color: var(--paper-wrong); }
+
+/* Under Strict the whole CLOSE row recedes, glyph included. */
+.review-formula-label.is-na .review-formula-glyph { color: inherit; }
 
 .review-formula-count,
 .review-formula-multiplier {
   color: var(--paper-faint);
   font-weight: 700;
+  text-align: right;
 }
 
 .review-formula-subtotal {
@@ -2176,31 +2230,124 @@ img {
 .review-formula-subtotal.review-formula--close   { color: var(--paper-close); }
 .review-formula-subtotal.review-formula--wrong   { color: var(--paper-wrong); }
 
-/* --- Direction counters: explanatory, never scored (doc 3) --- */
+/* A row that does not apply in this difficulty (CLOSE under Strict).
+   It keeps its place so the table shape never changes, but recedes. */
+.review-formula-label.is-na,
+.review-formula-subtotal.is-na {
+  color: var(--paper-faint);
+  font-weight: 700;
+}
+
+.review-formula-subtotal.is-na {
+  letter-spacing: 0.06em;
+}
+
+/* --- Direction counters: explanatory, never scored (doc 3).
+       One boxed section: two counter buttons plus the always-visible
+       disclaimer. Hovering or pinning a button swaps its OWN content
+       for its explanation, in place. --- */
+
+.review-directions-box {
+  margin-top: clamp(6px, 2.2cqw, 12px);
+  border: 1px solid var(--paper-rule);
+  border-radius: 2px;
+  padding: clamp(5px, 1.8cqw, 10px);
+}
 
 .review-directions {
-  display: flex;
-  justify-content: space-between;
-  gap: clamp(6px, 3cqw, 16px);
-  font-size: clamp(8px, 3cqw, 14px);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(6px, 2.4cqw, 14px);
 }
 
+/* The min-height is RESERVED space: it must fit the label plus the
+   wrapped explanation, so the number->explanation swap never changes the
+   button's size and nothing shifts under the pointer or finger. */
 .review-direction {
+  min-height: clamp(56px, 17.5cqw, 74px); /* >= 44px touch floor (doc 7) */
   display: flex;
-  align-items: baseline;
-  gap: 0.5em;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 1px solid var(--paper-rule);
+  padding: clamp(4px, 1.5cqw, 8px) clamp(3px, 1.2cqw, 7px);
+  background: transparent;
+  color: inherit;
+  border-radius: 2px;
 }
 
-.review-direction-label {
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  color: var(--paper-faint);
+.review-direction:focus-visible,
+.review-direction.is-active {
+  background: rgb(0 0 0 / 5%);
+  border-color: var(--paper-ink);
+  outline: none;
 }
 
 .review-direction-count {
+  display: block;
+  font-size: clamp(19px, 6cqw, 30px);
   font-weight: 900;
-  font-size: 1.25em;
+  line-height: 1;
   font-variant-numeric: tabular-nums;
+}
+
+.review-direction-label {
+  display: block;
+  margin-top: 2px;
+  font-size: clamp(10px, 2.6cqw, 12px);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--paper-faint);
+}
+
+/* The in-place swap. Hover covers desktop; the is-active pin covers
+   touch, set by app.js on tap (iOS has no hover) and released by its
+   own 5-second timeout. The explanation keeps the counter's label as
+   its first line, so the reader never loses which box they are in. */
+.review-direction-explain {
+  display: none;
+  font-size: clamp(10px, 2.8cqw, 13px);
+  line-height: 1.3;
+  font-weight: 700;
+  color: var(--paper-ink);
+}
+
+.review-direction-explain .review-direction-label {
+  margin-top: 0;
+  margin-bottom: 2px;
+}
+
+.review-direction:focus-visible .review-direction-figures,
+.review-direction.is-active .review-direction-figures {
+  display: none;
+}
+
+.review-direction:focus-visible .review-direction-explain,
+.review-direction.is-active .review-direction-explain {
+  display: block;
+}
+
+/* Hover participates ONLY where hover truly exists. iOS "sticks" the
+   :hover state after a tap until the next tap elsewhere, which kept the
+   explanation on screen after the pin's timeout had released it (John,
+   2026-08-06) - so on touch devices the is-active pin is the only driver
+   and the timeout visibly works. */
+@media (hover: hover) {
+  .review-direction:hover {
+    background: rgb(0 0 0 / 5%);
+    border-color: var(--paper-ink);
+  }
+
+  .review-direction:hover .review-direction-figures { display: none; }
+  .review-direction:hover .review-direction-explain { display: block; }
+}
+
+.review-directions-note {
+  margin-top: clamp(4px, 1.6cqw, 8px);
+  font-size: clamp(10px, 2.6cqw, 12px);
+  line-height: 1.3;
+  color: var(--paper-faint);
+  text-align: center;
 }
 
 /* --- Actions --- */
@@ -2208,7 +2355,8 @@ img {
 .review-actions {
   display: flex;
   flex-direction: column;
-  gap: clamp(6px, 2.4cqw, 12px);
+  gap: clamp(6px, 2cqw, 10px);
+  padding-top: clamp(8px, 2.5cqw, 14px);
 }
 
 .review-seen,
@@ -2216,8 +2364,8 @@ img {
   min-height: 44px; /* touch target floor (doc 7) */
   border-radius: 4px;
   font-weight: 900;
-  font-size: clamp(11px, 3.6cqw, 16px);
-  letter-spacing: 0.08em;
+  font-size: clamp(12px, 3.6cqw, 16px);
+  letter-spacing: 0.06em;
   color: #fff;
   border: 1px solid rgb(255 255 255 / 35%);
   box-shadow: inset 0 1px #ffffff55, 0 2px 4px #0007;

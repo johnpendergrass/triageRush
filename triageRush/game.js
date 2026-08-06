@@ -26,7 +26,6 @@
 
 const GAME_CONSTANTS = Object.freeze({
   POINTS: Object.freeze({ correct: 100, close: 50, wrong: -50 }),
-  RUSH_WAITING_PENALTY_PER_PATIENT: -10,
   MAX_WAITING: 10,
   MIN_VISIBLE_WAITING: 5,
   RUSH_DOUBLE_PROBABILITY: 0.20,
@@ -455,16 +454,27 @@ function evaluateRoomChoice(patientRecord, roomKey, difficulty) {
   return Math.abs(selectedEsi - correctEsi) === 1 ? "close" : "wrong";
 }
 
-/* Direction is explanatory and adds no points: "over" means higher acuity
-   than required (a lower ESI number), "under" the reverse. An incorrect
-   Psych/Discharge choice is plain "wrong" and moves neither counter. */
+/* Every room sits on ONE acuity ladder, most urgent first (doc 3):
+   the five ESI rooms rank 1-5, then Psych (6) and Discharge (7). */
+const ROOM_ACUITY_RANK = Object.freeze({
+  "esi-1": 1, "esi-2": 2, "esi-3": 3, "esi-4": 4, "esi-5": 5,
+  "psych": 6, "discharge": 7
+});
+
+/* Direction is explanatory and adds no points. It compares ladder RANKS:
+   a lower rank than the correct room means "over" (higher acuity than
+   required), a higher rank means "under". The correct side uses the
+   ROOM's rank, never answer.correctEsi - deliberate, so the rule cannot
+   break if a Psych or Discharge patient is ever authored at a different
+   ESI. Ties are impossible: the same rank means the same room, which is
+   full credit and returns at the first line. Every miss therefore moves
+   exactly one counter, in every mode and difficulty (doc 3). */
 function classifyTriageDirection(patientRecord, roomKey, outcome) {
   if (outcome === "correct") return "correct";
-  const selectedEsi = parseEsiRoomNumber(roomKey);
-  if (selectedEsi === null) return "wrong";
-  return selectedEsi < patientRecord.patient.answer.correctEsi
-    ? "over"
-    : "under";
+  const selectedRank = ROOM_ACUITY_RANK[roomKey];
+  const correctRank =
+    ROOM_ACUITY_RANK[patientRecord.patient.answer.correctRoom];
+  return selectedRank < correctRank ? "over" : "under";
 }
 
 /* Assigning the active patient to a room. The caller looks up and passes
@@ -813,7 +823,6 @@ function selectScoreTotals(state) {
     over: 0,
     under: 0,
     patientsSeen: records.length,
-    waitingPenalty: 0,
     score: 0
   };
   for (const record of records) {
@@ -824,11 +833,11 @@ function selectScoreTotals(state) {
     if (record.direction === "over") totals.over += 1;
     if (record.direction === "under") totals.under += 1;
   }
-  if (state.settings.mode === "rush") {
-    totals.waitingPenalty =
-      state.waiting.length * GAME_CONSTANTS.RUSH_WAITING_PENALTY_PER_PATIENT;
-  }
-  totals.score = totals.assignmentPoints + totals.waitingPenalty;
+  /* Assignments are the WHOLE score. Patients left waiting cost nothing
+     in any mode: the waiting room can never be emptied, so charging for
+     it would penalise the game's premise, not the play (John,
+     2026-08-05). */
+  totals.score = totals.assignmentPoints;
   return totals;
 }
 
@@ -1187,6 +1196,7 @@ window.TRIAGE_RUSH_GAME = {
   peekUpcomingPatientIds,
   selectWaitingPatient,
   parseEsiRoomNumber,
+  ROOM_ACUITY_RANK,
   fullCreditRoomKeys,
   evaluateRoomChoice,
   classifyTriageDirection,

@@ -1,16 +1,21 @@
 # triageRush — specifications (pointer file)
 
-**Last modified:** 2026-08-05
+**Last modified:** 2026-08-06
 
-## The next work is doc 10 (approved, not built)
+## Doc 10 is BUILT (2026-08-06)
 
-`docs/10-approved-pending-changes.md` holds six DECIDED but UNBUILT changes,
-all landing in the Shift Review and its scoring: drop the left-waiting penalty
-from every mode; always show CLOSE (NA under Strict); new header wording and
-case; one acuity ladder for triage direction so Psych and Discharge misses
-count; adopt mockup variant B for the review; and make the direction counters
-explain themselves on hover AND tap. Docs 3-9 carry `PENDING CHANGE` markers
-pointing there.
+All seven approved changes in `docs/10-approved-pending-changes.md` were
+built together on 2026-08-06: the left-waiting penalty is gone from every
+mode (and from the display); the review table always shows CLOSE (NA under
+Strict); the new header (`TRIAGE Shift Report` / `TriageRUSH Shift Report`
+with "Shift Report" in serif small-caps, and a prominent `MODE:` line with
+the configured length — RUSH in seconds, Triage in minutes); one acuity
+ladder for direction (psych=6, discharge=7) so every miss moves a counter;
+the review is variant B "LEGIBLE"; the direction counters sit in one boxed
+section with the disclaimer and swap their own text for an explanation on
+hover or tap; and a stopped-early shift marks its DURATION
+`0:42 * ended shift early`. Docs 3, 7, 8 and 9 are authoritative again; doc 10
+remains as the decision record. Next work: Phase 9 (persistence/recovery).
 
 Doc 5 also gained an AUTHORING RULE for when Psych or Discharge may be the
 correct room — recovered from the archive, where it had been sitting
@@ -60,24 +65,17 @@ Phase 8 (2026-08-05 evening) is folded into docs 1/3/5/7/8/9: the shift-over
 acknowledgement (TIME'S UP / SHIFT ENDED, waits for a tap), the Patients Seen
 browser (position in the header slot, no name banner, fixed arrows beside the
 photo, scrolled fraction carried between patients, pinned nameplate, outcome
-mark plus photo badge, no photo zoom), and the correction that
+mark plus photo badge, no photo zoom - zoom later ADDED 2026-08-06), and
+the correction that
 `answer.otherAcceptableRooms` is dead data - full credit is derived by
 `fullCreditRoomKeys`.
 
-ONE THING IS DELIBERATELY NOT WRITTEN DOWN AS FINAL: the Shift Review's
-printed-discharge-summary LOOK. Doc 7 marks it provisional because John has
-an open backlog item to reshape it as a supervisor's evaluation form.
-
-2026-08-05 (late): that reshaping was explored as MOCKUPS ONLY, in
-`_mockups/shift-review-mockups.html` — six variants, nothing in `triageRush/`
-touched. John prefers variant A2 ("FORM ED-7", lite) pending a look on his
-iPhone. Two rulings from that session are permanent: the review must make NO
-claim about performance "for level of training" (we are not medically
-qualified to set that bar, so the grade prints its own basis instead), and it
-must NEVER fault the player for patients left in the waiting room. Those two
-rulings are about the game and survive the abandonment of the pool redesign.
-
-NOTE the consequence of that abandonment for this work: the score still has
-NO ceiling, so a BELOW/MEETS/EXCEEDS grade cannot be a percentage of anything
-achievable. Any grade must therefore rest on a plain, self-explaining number
-(the mockups use "% correct placement") rather than an invented threshold.
+The Shift Review's look is now FINAL (2026-08-06): variant B "LEGIBLE" from
+`_mockups/shift-review-mockups.html`, lifted into styles.css section 9. The
+supervisor-evaluation motif (FORM ED-7) was explored across four variants and
+NOT adopted. Two rulings from that exploration are permanent: the review must
+make NO claim about performance "for level of training" (we are not medically
+qualified to set that bar), and it must NEVER fault the player for patients
+left in the waiting room. The review carries no grade at all — with the pool
+redesign abandoned the score has NO ceiling, so a percentage-based grade has
+nothing to rest on; do not reintroduce one without solving that first.

@@ -39,11 +39,9 @@ asset optimization (10) remain.
 7. [Asset organization and specifications](6-asset-organization-and-specs.md)
    inventories accepted production artwork and placement rules.
 8. [Development history](2-dev-history.md) explains the present direction.
-9. [Approved pending changes](10-approved-pending-changes.md) — DECIDED BUT
-   NOT BUILT. Six items, all landing in the Shift Review and its scoring.
-   Read before touching scoring, direction, or the review screen; docs 3-9
-   still describe the shipped behaviour and carry PENDING CHANGE markers
-   pointing here.
+9. [Approved changes of 2026-08-05](10-approved-pending-changes.md) — ALL
+   BUILT 2026-08-06 and folded into docs 3, 7, 8 and 9. Kept as the decision
+   record (the "why" behind the Shift Review scoring and presentation).
 10. The current `99-ai-handoff--*.md` records tactical continuation details.
 
 ## Forward repository map

@@ -13,7 +13,7 @@
 
 "use strict";
 
-const TRIAGE_RUSH_CACHE_VERSION = "2026-0805-phase8h";
+const TRIAGE_RUSH_CACHE_VERSION = "2026-0806-review9k";
 
 /* All paths are relative to the site root (where index.html lives). */
 const ASSET_ROOT = "./triageRush/assets";

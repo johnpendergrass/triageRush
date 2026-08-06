@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#071822">
   <title>triageRush</title>
-  <link rel="stylesheet" href="./triageRush/styles.css?v=2026-0805-phase8h">
+  <link rel="stylesheet" href="./triageRush/styles.css?v=2026-0806-review9k">
 </head>
 <body>
 
@@ -284,6 +284,11 @@
         <div class="chart-overlay-mount" id="seenMount"></div>
       </div>
 
+      <!-- Larger-photo view (2026-08-06): the Chart's zoom treatment over
+           this clipboard - photo and close box only, deliberately WITHOUT
+           the outcome badge. Content rebuilt by renderSeenPortraitZoom. -->
+      <div class="chart-zoom" id="seenZoomView" hidden></div>
+
       <!-- Navigation rails (John, 2026-08-05): tall arrows down both
            edges of the paper, beside the patient photo, replacing the
            old name banner - the chart's own nameplate already shows the
@@ -342,43 +347,52 @@
   </section>
 
   <!-- ====================================================================
-       SHIFT REVIEW view (Phase 8). Printed discharge-summary treatment
-       (John, 2026-08-05): paper, rule lines, dotted leaders, small caps.
+       SHIFT REVIEW view (Phase 8; variant B "LEGIBLE" adopted 2026-08-06).
+       Printed-summary treatment: paper, rule lines, small caps.
 
        Everything fits one screen with no scrolling, so every box below
        sizes from container-relative clamps rather than fixed pixels.
-       The formula rows are built in ui.js because which rows exist
-       depends on mode and difficulty (Strict has no Close row at all).
+       The formula rows are built in ui.js; the table is ALWAYS the same
+       three rows (CORRECT / CLOSE / WRONG) - under Strict the CLOSE row
+       holds its place and reads NA (doc 3).
        ================================================================= -->
   <section class="review-view" id="reviewView" hidden>
     <div class="review-paper">
 
       <header class="review-head">
-        <p class="review-title" id="reviewTitleLine">TRIAGE SHIFT COMPLETE</p>
-        <p class="review-mode" id="reviewModeLine">TRIAGE &middot; FORGIVING</p>
+        <!-- Two spans: the mode name keeps the game's heavy sans; "Shift
+             Report" renders as serif small-caps, like a printed report
+             masthead. ui.js writes only the mode span. The TriageRUSH
+             mixed case is deliberate - never text-transform here. -->
+        <p class="review-title" id="reviewTitleLine">
+          <span id="reviewTitleMode">TRIAGE</span>
+          <span class="review-title-report">Shift Report</span>
+        </p>
+        <p class="review-mode" id="reviewModeLine">MODE: Triage, Forgiving, 5 minutes</p>
       </header>
 
-      <!-- Dotted-leader meta rows: label, leader rule, value. -->
+      <!-- Meta: a 2 x 2 grid of left-ruled cells, key over value. The
+           DURATION note appears only when the shift was ended early, so
+           the configured length in the mode line and a shorter time here
+           never sit unexplained next to each other (doc 7). -->
       <div class="review-meta">
-        <div class="review-meta-row">
+        <div class="review-meta-cell">
           <span class="review-meta-key">PROVIDER</span>
-          <span class="review-leader" aria-hidden="true"></span>
           <span class="review-meta-value" id="reviewProvider">Doctor AAA</span>
         </div>
-        <div class="review-meta-row">
-          <span class="review-meta-key">DATE</span>
-          <span class="review-leader" aria-hidden="true"></span>
-          <span class="review-meta-value" id="reviewDate">&mdash;</span>
-        </div>
-        <div class="review-meta-row">
+        <div class="review-meta-cell">
           <span class="review-meta-key">DURATION</span>
-          <span class="review-leader" aria-hidden="true"></span>
-          <span class="review-meta-value" id="reviewDuration">0:00</span>
+          <span class="review-meta-value">
+            <span id="reviewDuration">0:00</span><span class="review-meta-note" id="reviewDurationNote" hidden> * ended shift early</span>
+          </span>
         </div>
-        <div class="review-meta-row">
+        <div class="review-meta-cell">
           <span class="review-meta-key">PATIENTS SEEN</span>
-          <span class="review-leader" aria-hidden="true"></span>
           <span class="review-meta-value" id="reviewSeen">0</span>
+        </div>
+        <div class="review-meta-cell">
+          <span class="review-meta-key">DATE</span>
+          <span class="review-meta-value" id="reviewDate">&mdash;</span>
         </div>
       </div>
 
@@ -392,21 +406,43 @@
       <div class="review-formulas" id="reviewFormulas"></div>
 
       <!-- Direction counters explain wrong placement without scoring it
-           (doc 3), so they sit apart from the formula grid. -->
-      <div class="review-directions">
-        <p class="review-direction">
-          <span class="review-direction-label">UNDER-TRIAGED</span>
-          <span class="review-direction-count" id="reviewUnder">0</span>
-        </p>
-        <p class="review-direction">
-          <span class="review-direction-label">OVER-TRIAGED</span>
-          <span class="review-direction-count" id="reviewOver">0</span>
-        </p>
+           (doc 3). One boxed section: two counter buttons plus the
+           always-visible scoring disclaimer. Hover or tap swaps a
+           counter's OWN text for its explanation, in place - the button
+           height is RESERVED so the swap never shifts the page, and tap
+           works because iOS has no hover (doc 7). -->
+      <div class="review-directions-box">
+        <div class="review-directions">
+          <button class="review-direction" id="reviewUnderButton"
+                  type="button" aria-pressed="false">
+            <span class="review-direction-figures">
+              <span class="review-direction-count" id="reviewUnder">0</span>
+              <span class="review-direction-label">UNDER-TRIAGED</span>
+            </span>
+            <span class="review-direction-explain">
+              <span class="review-direction-label">UNDER-TRIAGED</span>
+              Sent to a room less urgent than the patient
+              needed.</span>
+          </button>
+          <button class="review-direction" id="reviewOverButton"
+                  type="button" aria-pressed="false">
+            <span class="review-direction-figures">
+              <span class="review-direction-count" id="reviewOver">0</span>
+              <span class="review-direction-label">OVER-TRIAGED</span>
+            </span>
+            <span class="review-direction-explain">
+              <span class="review-direction-label">OVER-TRIAGED</span>
+              Sent to a room more urgent than the patient
+              needed.</span>
+          </button>
+        </div>
+        <p class="review-directions-note">* not used in scoring.
+          These count which way you missed.</p>
       </div>
 
       <div class="review-actions">
         <button class="review-seen" id="patientsSeenButton" type="button">
-          PATIENTS SEEN (0)
+          Review the Patients Seen (0)
         </button>
         <button class="review-return" id="returnToLobbyButton" type="button">
           RETURN TO ER ENTRANCE
@@ -433,9 +469,9 @@
 
 </div>
 
-<script src="./triageRush/assets.js?v=2026-0805-phase8h"></script>
-<script src="./triageRush/game.js?v=2026-0805-phase8h"></script>
-<script src="./triageRush/ui.js?v=2026-0805-phase8h"></script>
-<script src="./triageRush/app.js?v=2026-0805-phase8h"></script>
+<script src="./triageRush/assets.js?v=2026-0806-review9k"></script>
+<script src="./triageRush/game.js?v=2026-0806-review9k"></script>
+<script src="./triageRush/ui.js?v=2026-0806-review9k"></script>
+<script src="./triageRush/app.js?v=2026-0806-review9k"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 # triageRush — technical notes (pointer file)
 
-**Last modified:** 2026-08-05 (Phase 8 complete)
+**Last modified:** 2026-08-06 (doc 10 review changes built)
 
 Full technical contracts: `docs/4`, `docs/8`. This file records only
 practical build knowledge that lives nowhere else.
@@ -21,7 +21,7 @@ overwrite the first rather than create a new record. Nothing today does that.
   file:// does not work (fetch).
 - Cache busting: one version string in TWO places — index.html query
   params (5 refs) and `TRIAGE_RUSH_CACHE_VERSION` in assets.js. Bump BOTH
-  on every asset/CSS/JS change (currently "2026-0805-phase8h"; the
+  on every asset/CSS/JS change (currently "2026-0806-review9k"; the
   trailing letter increments per tweak).
 
 ## Architecture in one breath
@@ -111,29 +111,43 @@ cue max per quarter. `state.gameSoundsAudible` = runtime mute
 - Glyph gotcha: triangle characters need U+FE0E variation selectors or
   iPhones render boxed emoji (empty-state arrows, door recall arrow,
   MORE ABOVE/BELOW). U+25BE (chart chevron) is safe as-is.
-- CONFIRMED ON IPHONE (John, 2026-08-05): the three outcome glyphs used by
-  the result toast, the review Answer mark, and the photo badge - check
-  U+2713, triangle U+25B3 with U+FE0E, cross U+2715 - all render as plain
-  characters, not emoji. Reuse this exact set for any new outcome marking
-  rather than picking fresh glyphs that would need retesting.
+- CONFIRMED ON IPHONE (John, 2026-08-05): check U+2713 and triangle U+25B3
+  with U+FE0E render as plain characters, not emoji. The third outcome
+  glyph changed 2026-08-06: wrong is now MINUS U+2212 (which has no emoji
+  form at all, so it needed no retesting) - the old cross U+2715 was too
+  easily confused with the red close box once the review photo became a
+  tap target. U+2715 remains in use as the close-box glyph only. Reuse
+  this exact set (U+2713 / U+25B3+FE0E / U+2212) for any new outcome
+  marking rather than picking fresh glyphs that would need retesting.
+  All three uses draw from ui.js OUTCOME_MARK_GLYPHS plus the toast's
+  OUTCOME_FEEDBACK_TEXT.
 
 ## Hover is not available on John's main device
 
 iOS has no hover at all, so any player-facing affordance that only appears on
-hover is INVISIBLE on the phone. Doc 10 item 6 (the direction counters)
-handles this by making them real buttons that respond to hover AND tap, with
-the help line's height reserved so revealing text never shifts the layout
-under the user's finger. The same constraint applies to the backlogged
+hover is INVISIBLE on the phone. The review's direction counters (built
+2026-08-06) handle this by being real buttons whose own text swaps to the
+explanation (label kept as its first line), in place: the hover swap is
+CSS scoped under `@media (hover: hover)`, and tap pins the same swap via an
+`is-active` class set in app.js. The media scoping matters: iOS "sticks"
+`:hover` after a tap until the next tap elsewhere, which kept the
+explanation visible after the timeout had already released the pin — on
+touch devices the class must be the only driver. A pin releases on re-tap,
+on pinning the other counter, or via a 5-second setTimeout in app.js
+(`DIRECTION_PIN_TIMEOUT_MS`). The buttons' min-height is reserved space
+sized to label + wrapped explanation, so the swap never shifts the layout
+(the FINAL SCORE clamp gave up a step to fund it). The class is DOM-only
+ephemera; renderReview resets it, and the timer firing after a reset is
+harmless. The same constraint applies to the backlogged
 scorecard-magnification idea.
 
 ## Mockups
 
 `_mockups/shift-review-mockups.html` is a standalone comparison harness for
-the Shift Review's appearance. It COPIES (never links) the palette and the
-9:16 shell rules from styles.css so each variant's CSS stays self-contained
-and can be lifted into styles.css section 9 wholesale. It has no fetch, so it
-opens from disk as well as over the server. Deleting `_mockups/` reverts
-everything — no game file was touched to build it.
+the Shift Review's appearance. Variant B ("LEGIBLE") was lifted into
+styles.css section 9 on 2026-08-06, renamed from `clean-*` to `review-*`
+classes; the mockup remains as the before/after record. It COPIES (never
+links) the palette and shell rules, has no fetch, and opens from disk.
 
 Two legibility findings from it, worth applying to any cream-paper surface:
 the old secondary ink `#6d7b81` is too light on the cream stock (use

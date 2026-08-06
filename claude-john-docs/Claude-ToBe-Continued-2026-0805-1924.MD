@@ -16,15 +16,20 @@ the game.
 
 ## What was decided (all six are in doc 10)
 
-1. **LEFT WAITING is dropped from scoring entirely, in every mode.** John:
-   "since there is no way to empty the waiting room, it is just an undeserved
-   penalty." Score becomes `correct x100 + close x50 + wrong x-50`.
+1. **LEFT WAITING is dropped from scoring AND from the display, in every
+   mode.** John: "since there is no way to empty the waiting room, it is just
+   an undeserved penalty." Score becomes `correct x100 + close x50 +
+   wrong x-50`, and the count appears nowhere on the review — no row, no
+   stat, no neutral mention.
 2. **CLOSE always appears in the review table**, reading **NA** under Strict
    with empty count/multiplier cells — so the table is always the same three
    rows and never changes shape.
 3. **Header wording and case**: `TRIAGE SHIFT COMPLETE` / `TriageRUSH
    COMPLETE` (the mixed case is deliberate — never `text-transform`), with
-   `Mode: <Mode> Mode, <Difficulty> Mode` beneath.
+   `MODE: TriageRUSH, Strict, 60 seconds` beneath — mode, difficulty, and the
+   CONFIGURED shift length. Because the mode line now carries the length, the
+   meta cell reverts to **DURATION** (time actually run); labelling both
+   "shift length" would contradict itself on a shift ended early.
 4. **Direction becomes one acuity ladder** — esi-1..5 = 1-5, psych = 6,
    discharge = 7. Lower rank than correct = OVER, higher = UNDER, no ties.
    Psych and Discharge misses now move a counter, so under + over finally
@@ -33,6 +38,12 @@ the game.
    content with the legibility fixes, NOT the FORM ED-7 evaluation motif.
 6. **The direction counters explain themselves** on hover AND tap, with the
    help line's height reserved so nothing shifts under the user's finger.
+7. **A shift stopped short gets its time marked** — an asterisk plus a short
+   note inline next to DURATION (e.g. `0:42 * ended early`). Needed because
+   item 3 now prints the configured length just above it, so an unexplained
+   gap between "60 seconds" and "0:42" would read as a bug.
+   `state.shift.endReason` already carries `timer | stop | quit`, so no new
+   state is required; `quit` never reaches the review.
 
 ## What was decided AGAINST
 
@@ -90,10 +101,18 @@ fragile and was replaced by the room-rank ladder, which never reads
 
 ## Open questions for John
 
-1. The mode line reads `Mode: TriageRUSH Mode, Strict Mode` — three "Mode"s.
-   Built literally as specified; dropping the leading label reads cleaner.
-2. Once left-waiting stops being scored, should the count still be DISPLAYED
-   as a neutral fact? It must never be worded as a fault.
+Both earlier questions were ANSWERED at the end of the session and are folded
+into the items above: the mode line is `MODE: TriageRUSH, Strict, 60 seconds`,
+and left-waiting is dropped from the display as well as the scoring.
+
+Two small things left to confirm when building:
+
+1. The shift-length UNITS in the mode line. The mockup uses seconds for RUSH
+   ("120 seconds") and minutes for Triage ("5 minutes"), because "300
+   seconds" reads badly — but John only specified the RUSH form, so he may
+   want one unit throughout.
+2. The exact wording of the ended-early note in item 7, and whether the
+   marker is a plain `*` (anything fancier needs U+FE0E for iPhone).
 
 ## Longer-term ToDo (unchanged)
 

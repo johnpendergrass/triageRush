@@ -215,6 +215,20 @@ Required unit cases:
 | Discharge, ESI 5 | ESI 5 | Correct | Correct |
 | Discharge, ESI 5 | Psych | Wrong | Wrong |
 
+Direction unit cases (the acuity ladder, 2026-08-06 — rank compares the
+CORRECT ROOM, never the underlying ESI; any non-correct outcome gets a
+direction):
+
+| Correct room | Choice | Direction |
+|---|---|---|
+| esi-3 | psych | under |
+| esi-3 | discharge | under |
+| discharge | psych | over |
+| psych | discharge | under |
+| esi-5 | psych | under |
+| esi-3 | esi-1 | over |
+| esi-3 | esi-2 (Forgiving Close) | over |
+
 Reassignment gate:
 
 1. Assign a patient Wrong: ledger size 1, score -50.
@@ -360,10 +374,26 @@ Implement:
 Acceptance:
 
 - formulas sum exactly to displayed score;
-- Strict omits Close without a gap;
-- Triage Left Waiting uses x 0;
-- RUSH Left Waiting uses x -10;
+- the scoring table is ALWAYS three rows (CORRECT/CLOSE/WRONG); Strict shows
+  CLOSE as NA with EMPTY count and multiplier cells (2026-08-06);
+- LEFT WAITING appears nowhere on the review — no row, no stat (2026-08-06);
+- no waiting penalty in any mode: score is assignment points only;
+- the title reads `TRIAGE Shift Report` / `TriageRUSH Shift Report` (mixed
+  case preserved; "Shift Report" in serif small-caps), with the mode line
+  `MODE: <Mode>, <Difficulty>, <configured length>` — RUSH lengths in
+  seconds, Triage lengths in minutes;
 - duration reports time actually run, not the selected shift length;
+- a shift the player stopped early marks DURATION inline: `0:42 * ended
+  early`; timer expiry shows no note; a quit shift never reaches review;
+- every miss moves exactly one direction counter (the acuity ladder
+  esi-1..5 = 1-5, psych = 6, discharge = 7), in every difficulty; a
+  Forgiving CLOSE call also moves one;
+- the direction counters are buttons in one boxed section with the
+  always-visible disclaimer: hover or tap swaps the counter's own text for
+  its explanation in place (label retained as the first line), tap pins,
+  tapping the pinned one restores the number, pinning one releases the
+  other, a pin times out after 5 seconds on its own, and the reserved
+  button height means the swap never shifts the layout;
 - zero patients seen disables Patients Seen rather than opening it empty;
 - reassigned patient appears once with latest result and room;
 - previous/next wraps;
@@ -373,6 +403,12 @@ Acceptance:
   review browser and the Chart overlay alike;
 - the outcome shows as a mark beside the chosen room and as a badge on the
   patient photo, using the in-game glyphs;
+- the review photo zooms like the Chart's (2026-08-06): opens from the
+  photo, no outcome badge on the zoomed card, closes by box / scrim tap /
+  Escape (which peels the zoom before the browser), and navigating to
+  another patient closes it;
+- the review close box is never painted over by the pinned nameplate or
+  the paper (2026-08-06);
 - the review chart's full-credit set comes from `fullCreditRoomKeys`, never
   from `answer.otherAcceptableRooms`;
 - review section toggles never change `state.chart.clinicalExpanded`;

@@ -284,7 +284,7 @@ in the Chart overlay and review settings of the same chart builder.
 ### Result toast and countdown
 
 - Assignment result appears transiently over the center panel:
-  `✓ CORRECT`, `△ CLOSE`, or `✕ WRONG`.
+  `✓ CORRECT`, `△ CLOSE`, or `− WRONG` (minus, not a cross — 2026-08-06).
 - The result includes matching color but remains readable in monochrome.
 - RUSH final numerals 10 through 1 are white, heavy, and centered on the
   middle of the patient image.
@@ -412,36 +412,96 @@ board. There is no boombox: the boombox metaphor is retired, and music
 
 ## SHIFT REVIEW view
 
-The review is its own full-frame view, visually based on a light clipboard or
-clinical summary within the 9:16 shell.
+The review is its own full-frame view: a printed summary on warm paper stock
+within the 9:16 shell. The look is variant B "LEGIBLE" from the 2026-08-05
+mockups, built 2026-08-06 — the supervisor-evaluation motif (FORM ED-7) was
+explored and NOT adopted.
 
 Show:
 
-- `Triage shift complete` or `TriageRUSH complete`;
-- title, initials, difficulty, actual duration, and date/time;
+- the title — `TRIAGE Shift Report` or `TriageRUSH Shift Report`
+  (2026-08-06). The mode word keeps the game's heavy sans; "Shift Report"
+  renders as serif small-caps (Georgia stack), like a printed report
+  masthead — the one text "Shift Report" serves both modes because
+  small-caps capitalizes it visually. The mixed case on `TriageRUSH` is
+  deliberate and must be preserved: NEVER apply `text-transform: uppercase`
+  to this element;
+- the mode line beneath, deliberately prominent (2026-08-06): a blank-line
+  gap under the title and a font size above the meta text. It reads
+  `MODE: <Mode>, <Difficulty>, <configured length>`, e.g.
+  `MODE: TriageRUSH, Strict, 60 seconds`. The length is the CONFIGURED
+  shift length, worded exactly as its Settings radio (RUSH in seconds,
+  Triage in minutes) — labels use words, running time uses m:ss;
+- meta as a 2 x 2 grid of left-ruled cells, key over value: PROVIDER,
+  DURATION, PATIENTS SEEN, DATE. The columns are deliberately uneven
+  (~0.82fr / 1.18fr): the right column starts about three characters left
+  of center so DATE fits on one line (2026-08-06);
 - prominent final score;
-- Patients Seen;
-- formula rows for Correct, optional Close, Wrong, and Left Waiting;
-- separate Under-triaged and Over-triaged counts;
-- `PATIENTS SEEN (n)` action;
+- the scoring table — ALWAYS three rows, CORRECT / CLOSE / WRONG, so the
+  table never changes shape. Under Strict the CLOSE row reads NA with empty
+  count/multiplier cells. LEFT WAITING appears nowhere on the review;
+- the two direction counters as boxed buttons (below);
+- `Review the Patients Seen (n)` action (mixed case as written);
 - one `RETURN TO ER ENTRANCE` primary-view action.
 
-Formula rows use a compact two-column grid and color accent on outcome rows.
-Strict omits the Close row entirely rather than leaving a gap; Triage still
-shows Left Waiting at x 0 rather than hiding it. Duration is time actually
-run, so a shift ended early at 3:12 of 5:00 reads 3:12. The whole summary
-fits one screen with no scrolling.
+The table uses a four-column grid (label, count, multiplier, subtotal).
+Each label opens with its outcome glyph in the outcome's accent color —
+✓ CORRECT, △ CLOSE, − WRONG, the same marks as the toast and photo badge
+(2026-08-06) — while the word stays in label ink; the subtotal carries the
+row's other color accent. Under Strict the NA CLOSE row recedes whole,
+glyph included. DURATION is time actually run, so a shift
+ended early at 3:12 of 5:00 reads 3:12 — and because the mode line prints the
+configured length just above, a shift the player stopped early carries an
+inline note on the value line: `0:42 * ended shift early` (plain `*`; anything
+fancier needs the U+FE0E treatment). Timer expiry needs no note; a quit shift
+never reaches the review. The whole summary fits one screen with no
+scrolling.
 Do not show reassignment attempts as separate patients.
 SHIFT REVIEW has no Return to Game or direct New Shift action. Return to ER
 Entrance opens HOME, where settings may be changed and Start Shift creates a
 new game.
 
-The built treatment (2026-08-05) is a printed discharge summary: warm paper,
-double rule under the heading, dotted-leader meta rows, one large score, a
-four-column formula grid. TREAT THE LOOK AS PROVISIONAL - John has an open
-backlog item to reshape it as a supervisor's evaluation form (Mini-CEX /
-end-of-rotation / Milestones conventions), which would replace this styling
-rather than extend it. The CONTENT list above is settled either way.
+Legibility rules this variant exists for (apply to any cream-paper surface):
+secondary ink is `#4b585e`, never the too-light `#6d7b81`; no clamp minimum
+below 10px; letter-spacing on small-caps labels near 0.06em, never 0.22em.
+
+### Direction counters explain themselves
+
+One boxed section (2026-08-06): the UNDER-TRIAGED and OVER-TRIAGED counters
+as real `<button>` elements, with the scoring disclaimer always visible
+inside the same box beneath them. Hovering or tapping a counter swaps that
+counter's OWN content for its explanation, in place — the explanation KEEPS
+the counter's label as its first line, so the reader never loses which box
+they are in; there is no separate help line. The buttons' min-height is
+RESERVED space sized to fit label plus wrapped explanation, so the swap
+never shifts the page under the user's finger, and it stays at or above the
+44px touch floor. (The FINAL SCORE number gave up one size step to fund
+this height.)
+
+Hover explains on desktop; tap pins on touch, because iOS has no hover. A
+pin releases three ways: tapping the pinned counter again, pinning the
+other counter, or a 5-second timeout — so a phone reader is returned to the
+numbers without a second tap. The hover swap is scoped under
+`@media (hover: hover)`: iOS "sticks" `:hover` after a tap until the next
+tap elsewhere, which kept the explanation up after the timeout had released
+the pin, so on touch devices the pin class is the ONLY driver (2026-08-06).
+
+Wording (says "misses" — the counters move on CLOSE calls too, in every
+mode and difficulty; the safer/more-dangerous guidance was cut 2026-08-06):
+
+- disclaimer (always visible; MUST fit one line — measure the text against
+  the NOTE BOX's width, not the viewport, and leave ~30% headroom because
+  iOS system fonts run wider than Windows fonts at the same size):
+  "* not used in scoring. These count which way you missed."
+- under: "UNDER-TRIAGED / Sent to a room less urgent than the patient
+  needed."
+- over: "OVER-TRIAGED / Sent to a room more urgent than the patient
+  needed."
+
+The review makes NO claim about performance "for level of training" and
+carries no grade — we are not qualified to set that bar, and with no score
+ceiling a percentage grade has nothing to rest on. It never faults the
+player for patients left waiting.
 
 ### Shift-over acknowledgement
 
@@ -467,7 +527,14 @@ that patient did during play.
   side of the patient photo, clear of the image. They are fixed to the
   clipboard rather than the scrolling paper, so they stay reachable at any
   scroll position, and they claim no layout width.
-- Dedicated close box.
+- Dedicated close box. It sits one z-index step ABOVE the sticky
+  nameplate: the X dips a few pixels into the paper region, and at an
+  equal z-index the nameplate's paper-colored shadow slab painted over
+  the X's corner (fixed 2026-08-06).
+- The patient photo zooms (2026-08-06): the Chart overlay's lightbox
+  treatment, identical specs - magnifier badge, dark scrim, 3:5 card,
+  close box / scrim tap / Escape to dismiss - and deliberately WITHOUT
+  the outcome badge on the zoomed photo.
 - Navigation wraps when at least two patients exist; with one patient it
   safely lands back on that patient.
 - Patient change carries the reading position as a proportion of scrollable

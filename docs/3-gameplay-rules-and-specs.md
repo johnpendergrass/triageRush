@@ -1,11 +1,11 @@
 # Gameplay Rules and Specifications
 
-**Last modified:** 2026-08-05
+**Last modified:** 2026-08-06
 
-**Latest change:** Phase 8 (2026-08-05): the shift-over acknowledgement
-before Shift Review, and the review chart's behavior - scroll position
-carried between patients, pinned nameplate, outcome mark and photo badge,
-no photo zoom.
+**Latest change:** 2026-08-06: doc 10's Shift Review changes built (new
+scoring, header, direction ladder, variant B presentation), and the review
+chart gained the photo zoom lightbox (reversing the Phase 8 "no photo zoom"
+decision).
 
 ## Product definition
 
@@ -71,11 +71,10 @@ TriageRUSH is the timed pressure mode.
 - Grow the visible queue from five through ten rows as necessary.
 - Never hold or display more than ten waiting patients.
 - Correct is +100, Close is +50, and Wrong is -50.
-- Every patient currently waiting contributes -10 to the live and final score.
-- The starting live score is therefore -20.
-- PENDING CHANGE (doc 10 item 1): this penalty is REMOVED from all modes,
-  because the waiting room can never be emptied. Score becomes assignment
-  points only, and the starting live score becomes 0.
+- Waiting patients do not reduce the score, in RUSH as in Triage (John,
+  2026-08-05, built 2026-08-06): the waiting room can never be emptied, so a
+  penalty would charge the player for the game's premise. The score is
+  assignment points only, and the starting live score is 0.
 
 The base scheduled-arrival intervals are:
 
@@ -174,9 +173,11 @@ Psych).
 
 - Full-credit room: Correct, +100.
 - Every other room: Wrong, -50.
-- Strict has no Close count or Close field in the header or review scorecard.
-  (PENDING CHANGE, doc 10 item 2: the REVIEW scorecard will always show a
-  CLOSE row, reading NA under Strict. The in-game header is unaffected.)
+- Strict has no Close count or Close field in the in-game header.
+- The REVIEW scorecard is different (built 2026-08-06): it always shows the
+  same three rows — CORRECT, CLOSE, WRONG — so the table never changes shape.
+  Under Strict the CLOSE row holds its place and reads NA in the total
+  column, with the count and multiplier cells EMPTY (no "0", no "x 50").
 
 ### Forgiving
 
@@ -198,18 +199,34 @@ Psych).
 
 ### Triage direction
 
-Direction is explanatory and does not add points:
+Direction is explanatory and does not add points. Every room sits on ONE
+acuity ladder, most urgent first (built 2026-08-06):
 
-- Correct assignment: direction `correct`.
-- Selected ESI lower than correct ESI: `over` (higher acuity than required).
-- Selected ESI higher than correct ESI: `under` (lower acuity than required).
-- An incorrect Psych or Discharge selection: `wrong` with neither direction
-  counter incremented.
+| Room | Rank |
+|---|---|
+| esi-1 | 1 |
+| esi-2 | 2 |
+| esi-3 | 3 |
+| esi-4 | 4 |
+| esi-5 | 5 |
+| psych | 6 |
+| discharge | 7 |
 
-PENDING CHANGE (doc 10 item 4): the last bullet is replaced by a single
-acuity ladder — esi-1..esi-5 = ranks 1-5, psych = 6, discharge = 7 — so Psych
-and Discharge misses DO move a counter. Direction counters fill in every
-difficulty, including Strict; difficulty changes scoring, not counting.
+- Correct assignment: direction `correct`, no counter moves.
+- Selected rank LOWER than the correct room's rank: `over` (higher acuity
+  than required).
+- Selected rank HIGHER than the correct room's rank: `under` (lower acuity
+  than required).
+
+There are no ties: the same rank means the same room, which is full credit.
+The correct side uses the ROOM's rank, never `answer.correctEsi` — deliberate,
+so the rule cannot break if a Psych or Discharge patient is ever authored at
+a different ESI.
+
+Because Psych and Discharge misses now move a counter, UNDER + OVER account
+for EVERY miss. The counters fill in every difficulty, including Strict;
+difficulty changes scoring, not counting — a Forgiving CLOSE call also moves
+a counter. Player-facing wording therefore says "misses", not "wrong calls".
 
 ## Assignment, recall, reassignment, and scoring replacement
 
@@ -339,10 +356,18 @@ a third (review) setting.
 - The outcome appears twice: as a mark beside the room the player chose in
   the Answer section, and as a larger badge in the bottom-right corner of
   the patient photo. Both use the same glyphs as the in-game feedback -
-  a green check for Correct, an amber triangle for Close, a red cross for
-  Wrong.
-- The review chart has no photo-zoom lightbox; that belongs to play, where
-  the player is still reading evidence (John, 2026-08-05).
+  a green check for Correct, an amber triangle for Close, a red MINUS for
+  Wrong (U+2212; changed from a cross 2026-08-06 — a red ✕ was too easily
+  confused with the red close box once the review photo became a tap
+  target; the minus also reads as the -50 deduction). The photo badge is
+  sized to be unobtrusive: about 1.4x the Answer mark, down from 2x.
+- The review chart HAS the photo-zoom lightbox (John, 2026-08-06, reversing
+  the earlier no-zoom decision): the same treatment as the Chart's -
+  magnifier badge, dark scrim over the clipboard, 3:5 photo card, close box
+  or a tap on the scrim to dismiss, Escape peels the zoom before the
+  browser. The zoomed photo deliberately carries NO outcome badge - it is
+  for looking at the patient, not the result. Navigating to another patient
+  closes it.
 - Closing returns to Shift Review and restores focus to Patients Seen.
 
 Full content mappings are in
@@ -412,13 +437,10 @@ The scorecard reads:
 Correct / Close / Wrong = live score
 ```
 
-Strict omits Close and its adjacent separator without a gap. RUSH score equals
-assignment points minus ten times the number currently waiting. Triage score is
-assignment points only.
-
-PENDING CHANGE (doc 10 item 1): the RUSH waiting deduction is removed, so BOTH
-modes score assignment points only. This paragraph describes the live GAME
-header; doc 10 item 2 separately changes how the REVIEW scorecard shows Close.
+Strict omits Close and its adjacent separator without a gap. BOTH modes score
+assignment points only (built 2026-08-06): there is no waiting deduction
+anywhere. This paragraph describes the live GAME header; the REVIEW scorecard
+always shows a CLOSE row (NA under Strict) — see Evaluation above.
 
 The GAME footer exposes exactly two navigation actions and no Chart button:
 
@@ -451,24 +473,36 @@ tabs during an active shift.
 
 ## Shift Review
 
-Shift Review shows:
+Shift Review shows (variant B "LEGIBLE", built 2026-08-06):
 
-- mode and completion title;
-- player title and initials;
-- shift date/time and actual duration;
+- the title — `TRIAGE Shift Report` or `TriageRUSH Shift Report`, where
+  "Shift Report" renders as serif small-caps like a printed report masthead
+  (the mixed case on TriageRUSH is deliberate; never uppercase it with CSS);
+- a mode line beneath, given its own prominence (a blank-line gap and a size
+  above the meta text): `MODE: <Mode>, <Difficulty>, <configured length>`,
+  e.g. `MODE: TriageRUSH, Strict, 60 seconds`. The length is the CONFIGURED
+  setting worded exactly as its Settings radio — RUSH in seconds, Triage in
+  minutes;
+- meta cells: PROVIDER (title + initials), DURATION (time actually run, with
+  an inline `* ended shift early` note when the player stopped the shift
+  short),
+  PATIENTS SEEN, and DATE;
 - prominent final score;
-- Patients Seen count;
-- Correct count x 100 and subtotal;
-- Close count x 50 and subtotal in Forgiving;
-- Wrong count x -50 and subtotal;
-- Left Waiting count x -10 in RUSH or x 0 in Triage; and
-- separate Under-triaged and Over-triaged counts.
+- a scoring table of ALWAYS three rows — Correct count x 100, Close count
+  x 50 (NA with empty cells under Strict), Wrong count x -50 — each row
+  label opening with its outcome glyph (✓ / △ / −) in the outcome's accent
+  color (2026-08-06); LEFT WAITING appears nowhere — no row, no stat, no
+  neutral mention; and
+- one boxed direction section: the Under-triaged and Over-triaged counter
+  buttons plus the always-visible scoring disclaimer. Hover or tap swaps a
+  counter's own text for its explanation, in place (doc 7).
 
 Wrong is every latest ledger outcome that is neither Correct nor Close. Direction
-counters explain wrong placement but do not alter scoring. Reassigned patients
+counters explain misplacement but do not alter scoring. Reassigned patients
 appear once with only their latest result.
 
-The `PATIENTS SEEN (n)` action opens the complete review chart with previous,
+The `Review the Patients Seen (n)` action (wording John, 2026-08-06) opens
+the complete review chart with previous,
 next, position/name, and close controls. Long-term history and personal-best
 presentation are not part of the current build.
 

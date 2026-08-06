@@ -737,6 +737,27 @@
     if (zoomButton) zoomButton.focus();
   }
 
+  /* The review browser's twin (John, 2026-08-06): the same ephemeral
+     larger-photo view over the Patients Seen clipboard.
+     renderPatientsSeen resets it closed on every rebuild, so patient
+     navigation never carries an open zoom across. */
+  function isSeenZoomOpen() {
+    return !ui.seenZoomView.hidden;
+  }
+
+  function openSeenZoom() {
+    UI.renderSeenPortraitZoom(state, portraitUrlFor, true);
+    const closeButton = ui.seenZoomView.querySelector(".chart-zoom-close");
+    if (closeButton) closeButton.focus();
+  }
+
+  function closeSeenZoom() {
+    UI.renderSeenPortraitZoom(state, portraitUrlFor, false);
+    /* Back to the magnifier that opened it. */
+    const zoomButton = ui.seenMount.querySelector(".chart-zoom-button");
+    if (zoomButton) zoomButton.focus();
+  }
+
   function wireChartEvents() {
     ui.patientPanelHitButton.addEventListener("click", openChartFromPanel);
     ui.chartCloseButton.addEventListener("click", closeChartAndRestoreFocus);
@@ -815,6 +836,37 @@
       nextFocus.focus();
     });
 
+    /* --- Direction counters: hover explains, tap pins (doc 7) ---
+       The hover swap is pure CSS (:hover on the button). Tap needs this
+       class because iOS has no hover: it pins the same swap, and tapping
+       the pinned counter again restores its number. A pin also times out
+       on its own (John, 2026-08-06), so a phone reader is returned to the
+       numbers without a second tap. DOM-only ephemera - no state action,
+       no re-render; renderReview resets the classes, and a timer firing
+       after that reset is harmless. */
+    const DIRECTION_PIN_TIMEOUT_MS = 5000;
+    const directionButtons = [ui.reviewUnderButton, ui.reviewOverButton];
+    let directionPinTimer = null;
+    const setDirectionPin = (pinnedButton) => {
+      clearTimeout(directionPinTimer);
+      for (const button of directionButtons) {
+        const pinned = button === pinnedButton;
+        button.classList.toggle("is-active", pinned);
+        button.setAttribute("aria-pressed", String(pinned));
+      }
+      if (pinnedButton) {
+        directionPinTimer =
+          setTimeout(() => setDirectionPin(null), DIRECTION_PIN_TIMEOUT_MS);
+      }
+    };
+    for (const button of directionButtons) {
+      button.addEventListener("click", () => {
+        setDirectionPin(button.classList.contains("is-active")
+          ? null
+          : button);
+      });
+    }
+
     /* --- Patients Seen browser --- */
 
     ui.patientsSeenButton.addEventListener("click", () => {
@@ -862,10 +914,24 @@
         top: ui.seenScroll.clientHeight * 0.7, behavior: "smooth" });
     });
 
+    /* The zoom view's close box is rebuilt with its content, so this is
+       delegated. A tap on the scrim itself also closes (doc 7). */
+    ui.seenZoomView.addEventListener("click", (event) => {
+      if (event.target.closest(".chart-zoom-close") ||
+          event.target === ui.seenZoomView) {
+        closeSeenZoom();
+      }
+    });
+
     /* Answer and Clinical are unlocked here, and toggling them is
        deliberately DOM-only: review expansion must not disturb the
        shift's Clinical preference (doc 5). */
     ui.seenMount.addEventListener("click", (event) => {
+      /* The photo's zoom hit box opens the larger view. */
+      if (event.target.closest("[data-chart-zoom]")) {
+        openSeenZoom();
+        return;
+      }
       const header = event.target.closest("[data-chart-section]");
       if (!header) return;
       const bodyClass = header.dataset.chartSection === "answer"
@@ -905,6 +971,11 @@
         UI.renderConfirmStop(state);
         ui.stopGameButton.focus();
       } else if (state.overlay === "patients-seen") {
+        /* Escape peels one layer here too: the larger photo first. */
+        if (isSeenZoomOpen()) {
+          closeSeenZoom();
+          return;
+        }
         GAME.closePatientsSeen(state);
         GAME.assertStateInvariants(state, "closePatientsSeen");
         renderAll();

@@ -1,14 +1,24 @@
-# Approved Changes — NOT YET BUILT
+# Approved Changes — ALL BUILT 2026-08-06
 
-**Last modified:** 2026-08-05
+**Last modified:** 2026-08-06
 
-**Status: APPROVED BY JOHN, NOT IMPLEMENTED.** Every item here is decided and
-ready to build. None of it is in the code yet, so documents `3`, `4`, `7`, `8`
-and `9` still describe the SHIPPED behaviour and remain authoritative until
-each item is built. Each entry lists exactly what it contradicts.
+**Status: IMPLEMENTED.** All seven items below were built together on
+2026-08-06 (cache version `2026-0806-review9a`) and folded into documents
+`3`, `7`, `8` and `9`, which are again authoritative. This file is kept as
+the decision record — the "why" behind each item — not as a spec.
 
-Build these together — they all land in the Shift Review and its scoring, and
-splitting them would mean touching the same code and docs twice.
+Decisions settled at build time: the mode line uses mixed units (RUSH in
+seconds, Triage in minutes, echoing each Settings radio verbatim); the
+ended-early note is a plain `*` plus the words `ended shift early` inline on
+the DURATION value line (wording finalized later on 2026-08-06).
+
+Refined the same day after John saw it (2026-08-06, superseding details of
+items 3 and 6 below — docs 3 and 7 carry the current wording): the title
+became `TRIAGE Shift Report` / `TriageRUSH Shift Report` with "Shift Report"
+in serif small-caps; the mode line gained prominence (gap + larger font);
+and the two counters merged into ONE boxed section with the disclaimer
+always visible inside it — hover/tap swaps a counter's own text for its
+explanation in place, replacing the separate help line.
 
 ---
 
@@ -37,9 +47,10 @@ redesign. It stands on its own.
 - **Doc 3** — the RUSH scoring section and any mention of a waiting penalty.
 - **Doc 9** — the acceptance rows "RUSH x -10 Left Waiting" and "Triage x 0".
 
-**Note:** "patients left waiting" may still be DISPLAYED as a neutral fact if
-ever wanted, but must never be scored and must never be worded as a fault.
-See the standing rule in doc 3 / the memory note on this.
+**The count is also NOT DISPLAYED** (John, 2026-08-05, closing the open
+question): left-waiting is dropped from the scoring AND from the review
+screen entirely. No row, no stat, no neutral mention. There is nothing to
+word carefully because there is nothing to show.
 
 ---
 
@@ -80,16 +91,30 @@ implied by an absent row.
 apply `text-transform: uppercase` to that element — it destroys the intended
 casing. Leave a comment in the CSS saying so.
 
-Beneath the title, the mode line reads:
+Beneath the title, the mode line reads (FINAL, John 2026-08-05):
 
-    Mode: <Mode> Mode, <Difficulty> Mode
+    MODE: <Mode>, <Difficulty>, <configured shift length>
 
-e.g. `Mode: TriageRUSH Mode, Strict Mode` or `Mode: Triage Mode, Forgiving
-Mode`. This replaces the current `TRIAGERUSH · FORGIVING`.
+e.g. `MODE: TriageRUSH, Strict, 60 seconds` or
+`MODE: Triage, Forgiving, 5 minutes`. This replaces the current
+`TRIAGERUSH · FORGIVING`.
 
-**OPEN, John's call:** the line repeats the word "Mode" three times. Dropping
-the leading label — `TriageRUSH Mode, Strict Mode` — reads cleaner. Built
-literally as specified; one line to change either way.
+Three changes from the first draft: the repeated word "Mode" after each item
+is gone, the leading label is uppercase `MODE:`, and **the configured shift
+length is added**.
+
+**Length is the CONFIGURED setting, not time elapsed** — a RUSH 60s shift
+ended at 0:42 still reads "60 seconds". Suggested wording: RUSH uses seconds
+("60 seconds" / "120 seconds"), Triage uses minutes ("5 minutes" /
+"10 minutes"), since "300 seconds" reads badly. Confirm with John if he wants
+one unit throughout.
+
+**CONSEQUENCE — the meta grid must not also claim a shift length.** Variant B
+labelled a meta cell "SHIFT LENGTH", but it is fed by `state.shift.elapsedMs`
+(time actually RUN), so a shift ended early would print
+`MODE: ... 60 seconds` beside `SHIFT LENGTH 0:42` — two contradictory
+labels. That cell reverts to **DURATION**, which is what the shipped build
+calls it and what the value actually is.
 
 **Touches:** `ui.js renderReview`, `styles.css` section 9, doc 7.
 
@@ -215,6 +240,45 @@ Wording used in the mockup:
 
 **Touches:** `index.html` (the counters become buttons), `ui.js`,
 `styles.css` section 9, doc 7.
+
+---
+
+## 7. Mark the DURATION when the shift was stopped short
+
+**Decision (John, 2026-08-05):** if the player ended the shift early, the time
+on the review card is marked with an asterisk and a short note sits NEXT TO
+the time — inline, not a footnote at the bottom of the card.
+
+    DURATION
+    0:42 * ended early
+
+**Why this is needed now:** item 3 puts the CONFIGURED shift length in the
+mode line, so the card can show `MODE: TriageRUSH, Strict, 60 seconds`
+directly above `DURATION 0:42`. Without a marker that gap looks like a bug or
+an unexplained discrepancy. The asterisk is what reconciles the two numbers.
+
+**The state already exists — no new plumbing.** `state.shift.endReason` is
+`"timer" | "stop" | "quit" | null` (game.js line ~115), and `ui.js`
+`renderShiftOverAcknowledgement` already branches on it for
+`TIME'S UP` vs `SHIFT ENDED`. The review just reads the same field:
+
+- `endReason === "timer"` → no mark; the shift ran its full length.
+- `endReason === "stop"` → mark it; the player ended early.
+- `endReason === "quit"` → unreachable here. A quit shift is never scored and
+  never reaches the review at all.
+
+**Still to settle when building:**
+- the exact note wording (`ended early` / `shift ended early` / `stopped
+  early`);
+- whether the asterisk is a literal `*` or a typographic marker — if anything
+  other than a plain `*` is used, it needs the U+FE0E treatment, since
+  iPhones render some symbol glyphs as boxed emoji;
+- how it sits in variant B's meta cell, which is a two-line block (small
+  key above, bold value below). The note likely rides on the value line at
+  the smaller key size, so it reads as an annotation rather than part of the
+  number.
+
+**Touches:** `ui.js renderReview`, `styles.css` section 9, doc 7.
 
 ---
 

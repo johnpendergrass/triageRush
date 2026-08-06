@@ -53,15 +53,17 @@
     "chartOverlayMount", "chartMoreAbove", "chartMoreBelow", "chartZoomView",
     "chartTimer", "chartTimerValue",
     // REVIEW
-    "reviewView", "reviewTitleLine", "reviewModeLine", "reviewProvider",
-    "reviewDate", "reviewDuration", "reviewSeen", "reviewScoreValue",
-    "reviewFormulas", "reviewUnder", "reviewOver",
+    "reviewView", "reviewTitleMode", "reviewModeLine", "reviewProvider",
+    "reviewDate", "reviewDuration", "reviewDurationNote", "reviewSeen",
+    "reviewScoreValue", "reviewFormulas", "reviewUnder", "reviewOver",
+    "reviewUnderButton", "reviewOverButton",
     "patientsSeenButton", "returnToLobbyButton",
     "shiftOverOverlay", "shiftOverHeadline", "shiftOverCount",
     // Patients Seen browser
     "patientsSeenOverlay", "seenPositionValue",
     "seenPreviousButton", "seenNextButton", "seenCloseButton",
-    "seenScroll", "seenMount", "seenMoreAbove", "seenMoreBelow"
+    "seenScroll", "seenMount", "seenZoomView",
+    "seenMoreAbove", "seenMoreBelow"
   ];
 
   const ui = {};
@@ -417,11 +419,15 @@
 
   /* The same three glyphs the in-game result toast uses (5e), so a mark
      on the review chart means what it meant during play. U+FE0E keeps
-     the triangle a plain character instead of a boxed emoji on iPhones. */
+     the triangle a plain character instead of a boxed emoji on iPhones.
+     Wrong is a MINUS (U+2212, no emoji form), not a cross (John,
+     2026-08-06): it reads as the -50 deduction, and a red ✕ was too
+     easily confused with the red close box now that the review photo
+     is also a tap target. */
   const OUTCOME_MARK_GLYPHS = {
     correct: "✓",
     close: "△︎",
-    wrong: "✕"
+    wrong: "−"
   };
 
   const VITAL_DISPLAY_ORDER = [
@@ -523,8 +529,9 @@
     if (chartContext.setting === "review") {
       /* The outcome stamped on the photo itself (John, 2026-08-05): the
          player sees how the case went before reading a word. Same three
-         glyphs as the Answer mark and the in-game toast, at twice the
-         size, in the photo's bottom-right corner. */
+         glyphs as the Answer mark and the in-game toast, modestly larger
+         (about 1.4x - kept unobtrusive, John 2026-08-06), in the photo's
+         bottom-right corner. */
       if (chartContext.ledgerRecord) {
         const outcome = chartContext.ledgerRecord.outcome;
         const badge = document.createElement("span");
@@ -533,6 +540,10 @@
         badge.setAttribute("aria-hidden", "true");
         scene.append(badge);
       }
+      /* The photo zooms here too (John, 2026-08-06) - appended AFTER the
+         badge so the transparent hit box sits on top and a tap anywhere
+         on the photo, badge included, opens the larger view. */
+      appendPortraitZoomButton(scene);
 
       chart.append(
         buildChartSectionHeader("answer", "ANSWER", { expanded: true }),
@@ -542,21 +553,8 @@
       return chart;
     }
 
-    /* In the chart overlay the photo zooms. The hit box is the scene's
-       top-right quadrant (John, 2026-08-05): one transparent button
-       covering that quarter, showing the small magnifier badge in its
-       corner. app.js handles data-chart-zoom clicks. */
-    const zoomButton = document.createElement("button");
-    zoomButton.type = "button";
-    zoomButton.className = "chart-zoom-button";
-    zoomButton.dataset.chartZoom = "open";
-    zoomButton.setAttribute("aria-label", "See a larger photo");
-    const zoomBadge = document.createElement("span");
-    zoomBadge.className = "chart-zoom-badge";
-    zoomBadge.textContent = "🔍";
-    zoomBadge.setAttribute("aria-hidden", "true");
-    zoomButton.append(zoomBadge);
-    scene.append(zoomButton);
+    /* In the chart overlay the photo zooms too. */
+    appendPortraitZoomButton(scene);
 
     /* Chart setting adds locked ANSWER and remembered CLINICAL (doc 3).
        No PRESENTATION header: the evidence is always shown and expanded,
@@ -571,6 +569,25 @@
         chartContext.clinicalExpanded));
 
     return chart;
+  }
+
+  /* The photo's zoom hit box: one transparent button covering the photo
+     minus a small pad, showing the small magnifier badge in its top-right
+     corner (John, 2026-08-05). Used by BOTH scrolling settings - the
+     Chart overlay and the Patients Seen review browser (2026-08-06).
+     app.js handles data-chart-zoom clicks per overlay. */
+  function appendPortraitZoomButton(scene) {
+    const zoomButton = document.createElement("button");
+    zoomButton.type = "button";
+    zoomButton.className = "chart-zoom-button";
+    zoomButton.dataset.chartZoom = "open";
+    zoomButton.setAttribute("aria-label", "See a larger photo");
+    const zoomBadge = document.createElement("span");
+    zoomBadge.className = "chart-zoom-badge";
+    zoomBadge.textContent = "🔍";
+    zoomBadge.setAttribute("aria-hidden", "true");
+    zoomButton.append(zoomBadge);
+    scene.append(zoomButton);
   }
 
   /* One section header button. Locked (Answer during play) renders the
@@ -845,19 +862,13 @@
     renderChartPortraitZoom(state, portraitUrlFor, false);
   }
 
-  /* The larger-photo view: a dark scrim over the whole clipboard with
-     one square photo card on it - just the photo and its close box, no
-     name section (John, 2026-08-05). Reads unmistakably as "a zoomed
-     photo to look at, then close". Ephemeral like the section toggles -
-     it resets closed every time the chart opens. */
-  function renderChartPortraitZoom(state, portraitUrlFor, isOpen) {
-    ui.chartZoomView.hidden = !isOpen;
-    if (!isOpen || state.active === null) {
-      ui.chartZoomView.replaceChildren();
-      return;
-    }
-
-    const record = window.TRIAGE_RUSH_PATIENTS_BY_ID[state.active.patientId];
+  /* The larger-photo card: just the photo and its close box, no name
+     section (John, 2026-08-05) - and deliberately NO outcome badge in
+     the review browser either (John, 2026-08-06): the zoomed photo is
+     for looking at the patient, not the result. Shared by both zoom
+     views. */
+  function buildPortraitZoomCard(patientId, portraitUrlFor) {
+    const record = window.TRIAGE_RUSH_PATIENTS_BY_ID[patientId];
     const personal = record.patient.presentation.personal;
 
     const card = document.createElement("div");
@@ -866,7 +877,7 @@
     const image = document.createElement("img");
     image.className = "chart-zoom-image";
     image.alt = `Large photo of ${personal.name}`;
-    image.src = portraitUrlFor(state.active.patientId);
+    image.src = portraitUrlFor(patientId);
     /* Honor the authored mirroring so the pose matches the small view;
        the artist scale stays off - here the photo fits the frame. */
     const imageMeta = record.patient.presentation.image || {};
@@ -879,7 +890,40 @@
     closeButton.textContent = "✕";
 
     card.append(image, closeButton);
-    ui.chartZoomView.replaceChildren(card);
+    return card;
+  }
+
+  /* The larger-photo view: a dark scrim over the whole clipboard with
+     one photo card on it. Reads unmistakably as "a zoomed photo to look
+     at, then close". Ephemeral like the section toggles - it resets
+     closed every time the chart opens. */
+  function renderChartPortraitZoom(state, portraitUrlFor, isOpen) {
+    ui.chartZoomView.hidden = !isOpen;
+    if (!isOpen || state.active === null) {
+      ui.chartZoomView.replaceChildren();
+      return;
+    }
+    ui.chartZoomView.replaceChildren(
+      buildPortraitZoomCard(state.active.patientId, portraitUrlFor));
+  }
+
+  /* The review browser's twin (John, 2026-08-06): same treatment over
+     the Patients Seen clipboard, keyed by the patient being reviewed
+     rather than the active patient. */
+  function renderSeenPortraitZoom(state, portraitUrlFor, isOpen) {
+    ui.seenZoomView.hidden = !isOpen;
+    if (!isOpen) {
+      ui.seenZoomView.replaceChildren();
+      return;
+    }
+    const ledgerRecord = GAME.selectPatientSeenRecord(state);
+    if (!ledgerRecord) {
+      ui.seenZoomView.hidden = true;
+      ui.seenZoomView.replaceChildren();
+      return;
+    }
+    ui.seenZoomView.replaceChildren(
+      buildPortraitZoomCard(ledgerRecord.patientId, portraitUrlFor));
   }
 
   /* ----------------------------------------------------------------------
@@ -951,9 +995,9 @@
      ------------------------------------------------------------------- */
 
   const OUTCOME_FEEDBACK_TEXT = {
-    correct: "✓ CORRECT",  // ✓
-    close: "△ CLOSE",      // △
-    wrong: "✕ WRONG"       // ✕
+    correct: "✓ CORRECT",
+    close: "△ CLOSE",
+    wrong: "− WRONG"       // minus, not a cross - see OUTCOME_MARK_GLYPHS
   };
 
   function showAssignmentFeedback(outcome, roomKey) {
@@ -1019,24 +1063,78 @@
     return `${datePart} · ${timePart}`;
   }
 
+  /* The label cell opens with the outcome's glyph (John, 2026-08-06), so
+     the table rows carry the same marks as the toast, the Answer verdict,
+     and the photo badge. The glyph takes the outcome's accent color; the
+     word stays in label ink. */
+  function buildFormulaLabelCell(className, outcomeKey, label) {
+    const cell = document.createElement("span");
+    cell.className = className;
+    const glyph = document.createElement("span");
+    glyph.className = "review-formula-glyph is-outcome-" + outcomeKey;
+    glyph.textContent = OUTCOME_MARK_GLYPHS[outcomeKey] || "";
+    glyph.setAttribute("aria-hidden", "true");
+    cell.append(glyph, label);
+    return cell;
+  }
+
   /* One formula line. The four cells are appended straight into the grid
      (not wrapped in a row element) so columns align down the whole page. */
   function appendFormulaRow(mount, outcomeModifier, label, count, multiplier) {
+    mount.append(buildFormulaLabelCell(
+      `review-formula-label review-formula--${outcomeModifier}`,
+      outcomeModifier, label));
     const cells = [
-      ["review-formula-label", label],
       ["review-formula-count", String(count)],
       ["review-formula-multiplier", `× ${multiplier}`],
       ["review-formula-subtotal", String(count * multiplier)]
     ];
     for (const [className, text] of cells) {
       const cell = document.createElement("span");
-      cell.className = outcomeModifier
-        ? `${className} review-formula--${outcomeModifier}`
-        : className;
+      cell.className = `${className} review-formula--${outcomeModifier}`;
       cell.textContent = text;
       mount.append(cell);
     }
   }
+
+  /* A row that does not apply in this difficulty (CLOSE under Strict).
+     It keeps its place so the table never changes shape, but the count
+     and multiplier cells stay EMPTY - no "0", no "x 50" - and the total
+     reads NA (doc 3). The glyph rides along, faint like the rest of the
+     row (CSS overrides its accent under .is-na). */
+  function appendFormulaNaRow(mount, outcomeKey, label) {
+    mount.append(buildFormulaLabelCell(
+      "review-formula-label is-na", outcomeKey, label));
+    const cells = [
+      ["review-formula-count", ""],
+      ["review-formula-multiplier", ""],
+      ["review-formula-subtotal is-na", "NA"]
+    ];
+    for (const [className, text] of cells) {
+      const cell = document.createElement("span");
+      cell.className = className;
+      cell.textContent = text;
+      mount.append(cell);
+    }
+  }
+
+  /* The CONFIGURED shift length, worded exactly as the Settings radios
+     word it: RUSH lengths in seconds ("60 seconds"), Triage lengths in
+     minutes ("5 minutes"). Mixed units are deliberate - "300 seconds"
+     reads badly and neither matches its Settings label (John,
+     2026-08-06). Labels use words; running/elapsed time uses m:ss. */
+  function configuredShiftLengthLabel(state) {
+    const seconds = GAME.selectedShiftLengthSeconds(state);
+    return state.settings.mode === "rush"
+      ? `${seconds} seconds`
+      : `${seconds / 60} minutes`;
+  }
+
+  /* The direction counters' explanations and disclaimer live as static
+     text in index.html; showing an explanation is a pure CSS/class swap
+     inside each button. Wording there says "misses", not "wrong calls":
+     the counters move on CLOSE calls too, in every mode and difficulty
+     (doc 3). */
 
   function renderReview(state) {
     /* HOME and GAME renders call this too; an unstarted shift has no
@@ -1046,26 +1144,37 @@
     const isRush = state.settings.mode === "rush";
     const totals = GAME.selectScoreTotals(state);
 
-    ui.reviewTitleLine.textContent = isRush
-      ? "TRIAGERUSH COMPLETE"
-      : "TRIAGE SHIFT COMPLETE";
-    ui.reviewModeLine.textContent = isRush
-      ? `TRIAGERUSH · ${state.settings.difficulty.toUpperCase()}`
-      : `TRIAGE · ${state.settings.difficulty.toUpperCase()}`;
+    /* Only the mode word changes; "Shift Report" is static markup with
+       its serif masthead styling. The mixed case on "TriageRUSH" is
+       deliberate (John, 2026-08-05); the CSS must never uppercase it. */
+    ui.reviewTitleMode.textContent = isRush ? "TriageRUSH" : "TRIAGE";
+    const difficultyName =
+      state.settings.difficulty === "strict" ? "Strict" : "Forgiving";
+    ui.reviewModeLine.textContent =
+      `MODE: ${isRush ? "TriageRUSH" : "Triage"}, ${difficultyName}, ` +
+      configuredShiftLengthLabel(state);
 
     ui.reviewProvider.textContent =
       `${state.player.title} ${state.player.initials}`;
     ui.reviewDate.textContent = formatShiftDate(state.shift.startedAtMs);
     /* Duration is time actually RUN, so ending early at 3:12 of a 5:00
-       shift prints 3:12 (John, 2026-08-05). */
+       shift prints 3:12 (John, 2026-08-05). Because the mode line above
+       prints the CONFIGURED length, a shift the player stopped early
+       gets its note - otherwise the gap between the two numbers would
+       read as a bug. "timer" needs no note, and "quit" never reaches
+       the review at all. */
     ui.reviewDuration.textContent = formatClock(state.shift.elapsedMs);
+    ui.reviewDurationNote.hidden = state.shift.endReason !== "stop";
     ui.reviewSeen.textContent = String(totals.patientsSeen);
 
     ui.reviewScoreValue.textContent = String(totals.score);
     ui.reviewScoreValue.classList.toggle("is-negative", totals.score < 0);
 
-    /* Rows are rebuilt rather than toggled: Strict must omit Close
-       entirely, with no empty gap where it would have been (doc 9). */
+    /* ALWAYS the same three rows in the same order, so the table never
+       changes shape between modes or difficulties (doc 3). Under Strict
+       the CLOSE row holds its place and reads NA. LEFT WAITING is gone
+       from every mode - a full waiting room is the game's premise, not
+       the player's failure (John, 2026-08-05). */
     const formulas = ui.reviewFormulas;
     formulas.replaceChildren();
     appendFormulaRow(formulas, "correct", "CORRECT",
@@ -1073,20 +1182,25 @@
     if (state.settings.difficulty === "forgiving") {
       appendFormulaRow(formulas, "close", "CLOSE",
         totals.close, GAME.GAME_CONSTANTS.POINTS.close);
+    } else {
+      appendFormulaNaRow(formulas, "close", "CLOSE");
     }
     appendFormulaRow(formulas, "wrong", "WRONG",
       totals.wrong, GAME.GAME_CONSTANTS.POINTS.wrong);
-    /* Triage still shows the row at x 0 rather than hiding it, so the
-       player learns that waiting patients cost nothing there (doc 9). */
-    appendFormulaRow(formulas, null, "LEFT WAITING",
-      state.waiting.length,
-      isRush ? GAME.GAME_CONSTANTS.RUSH_WAITING_PENALTY_PER_PATIENT : 0);
 
     ui.reviewUnder.textContent = String(totals.under);
     ui.reviewOver.textContent = String(totals.over);
 
+    /* Each render restores the counters to their numbers and clears any
+       pinned button - the same reset-on-render rule as the other
+       DOM-only ephemera (photo zoom, scroll position). */
+    for (const button of [ui.reviewUnderButton, ui.reviewOverButton]) {
+      button.classList.remove("is-active");
+      button.setAttribute("aria-pressed", "false");
+    }
+
     ui.patientsSeenButton.textContent =
-      `PATIENTS SEEN (${totals.patientsSeen})`;
+      `Review the Patients Seen (${totals.patientsSeen})`;
     ui.patientsSeenButton.disabled = totals.patientsSeen === 0;
   }
 
@@ -1100,6 +1214,7 @@
     ui.patientsSeenOverlay.hidden = !isShowing;
     if (!isShowing) {
       ui.seenMount.replaceChildren();
+      renderSeenPortraitZoom(state, null, false);
       return;
     }
 
@@ -1133,6 +1248,9 @@
       { setting: "review", ledgerRecord },
       portraitUrlFor(ledgerRecord.patientId));
     ui.seenMount.replaceChildren(chart);
+    /* A rebuild is a new patient (or a fresh open): the photo zoom
+       starts closed, same as the Chart overlay. */
+    renderSeenPortraitZoom(state, portraitUrlFor, false);
 
     /* Reading scrollHeight here forces the new layout, so the fraction
        applies to the chart that is actually on screen now. */
@@ -1188,6 +1306,7 @@
     renderPatient,
     renderChartOverlay,
     renderChartPortraitZoom,
+    renderSeenPortraitZoom,
     renderRooms,
     showAssignmentFeedback,
     clearAssignmentFeedback,

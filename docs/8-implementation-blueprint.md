@@ -54,7 +54,7 @@ ROOM_KEYS = [
 ]
 
 POINTS = { correct: 100, close: 50, wrong: -50 }
-RUSH_WAITING_PENALTY = -10
+ROOM_ACUITY_RANK = { "esi-1": 1, ..., "esi-5": 5, psych: 6, discharge: 7 }
 MAX_WAITING = 10
 MIN_VISIBLE_WAITING = 5
 RUSH_DOUBLE_PROBABILITY = 0.20
@@ -347,13 +347,18 @@ function evaluate(patientRecord, roomKey, difficulty) {
 }
 ```
 
-Direction:
+Direction (the acuity ladder, 2026-08-06 — compares ROOM ranks, never
+`answer.correctEsi`, so authoring a special patient at a different ESI can
+never break it; ties are impossible because the same rank is the same room,
+which is full credit):
 
 ```js
 if (outcome === "correct") direction = "correct"
-else if (!isEsiRoom(roomKey)) direction = "wrong"
-else if (selectedEsi < correctEsi) direction = "over"
-else direction = "under"
+else {
+  const selectedRank = ROOM_ACUITY_RANK[roomKey]
+  const correctRank = ROOM_ACUITY_RANK[answer.correctRoom]
+  direction = selectedRank < correctRank ? "over" : "under"
+}
 ```
 
 ## Assignment and ledger replacement
@@ -516,8 +521,9 @@ close = count(records, "close")
 wrong = count(records, "wrong")
 over = countDirection(records, "over")
 under = countDirection(records, "under")
-score = assignmentPoints +
-        (mode === "rush" ? waiting.length * -10 : 0)
+score = assignmentPoints
+// No waiting penalty in ANY mode (2026-08-06): the waiting room can never
+// be emptied, so it never charges the player.
 ```
 
 All header and review rendering calls the same selectors.
