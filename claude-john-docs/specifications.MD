@@ -2,16 +2,30 @@
 
 **Last modified:** 2026-08-05
 
-## THE NEXT CHANGE IS NOT IN DOCS 1-9
+## The next work is doc 10 (approved, not built)
 
-`docs/10-finite-patient-pool-design.md` is APPROVED BUT NOT BUILT. It gives
-every timed shift a finite pool of patients, which gives the game a win state
-and the score a ceiling. It changes shift-length choices (TRIAGE 600s is
-replaced by an untimed sandbox), arrivals, the scoring basis, and the Shift
-Review. Docs 1-9 stay authoritative for the SHIPPED game until it is built;
-doc 10 section 7 lists every line it will contradict.
+`docs/10-approved-pending-changes.md` holds six DECIDED but UNBUILT changes,
+all landing in the Shift Review and its scoring: drop the left-waiting penalty
+from every mode; always show CLOSE (NA under Strict); new header wording and
+case; one acuity ladder for triage direction so Psych and Discharge misses
+count; adopt mockup variant B for the review; and make the direction counters
+explain themselves on hover AND tap. Docs 3-9 carry `PENDING CHANGE` markers
+pointing there.
 
-Decision log and rejected options: `brainstorm-finite-patient-roster.MD`.
+Doc 5 also gained an AUTHORING RULE for when Psych or Discharge may be the
+correct room — recovered from the archive, where it had been sitting
+unreferenced since July and had been misremembered twice as a result.
+
+## A redesign was explored and ABANDONED (2026-08-05)
+
+A finite patient pool per shift — patient limits, a win state, a score
+ceiling — was designed in full and then abandoned the same day. John chose to
+continue with the game as originally conceived, WITHOUT patient limits: the
+game as it now stands. Nothing was built; docs 1-9 were never in question.
+
+Both files are in `docs/archive/design-notes/` marked ABANDONED. They are
+kept only so the idea is not rediscovered and re-pitched. Do not build from
+them.
 
 ## Where the real specifications live
 
@@ -60,7 +74,10 @@ touched. John prefers variant A2 ("FORM ED-7", lite) pending a look on his
 iPhone. Two rulings from that session are permanent: the review must make NO
 claim about performance "for level of training" (we are not medically
 qualified to set that bar, so the grade prints its own basis instead), and it
-must NEVER fault the player for patients left in the waiting room. The form
-work is now BLOCKED ON doc 10, which gives the score the ceiling the grade
-needs, and which additionally requires a second, grade-free review shape for
-sandbox shifts.
+must NEVER fault the player for patients left in the waiting room. Those two
+rulings are about the game and survive the abandonment of the pool redesign.
+
+NOTE the consequence of that abandonment for this work: the score still has
+NO ceiling, so a BELOW/MEETS/EXCEEDS grade cannot be a percentage of anything
+achievable. Any grade must therefore rest on a plain, self-explaining number
+(the mockups use "% correct placement") rather than an invented threshold.

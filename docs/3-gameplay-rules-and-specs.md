@@ -73,6 +73,9 @@ TriageRUSH is the timed pressure mode.
 - Correct is +100, Close is +50, and Wrong is -50.
 - Every patient currently waiting contributes -10 to the live and final score.
 - The starting live score is therefore -20.
+- PENDING CHANGE (doc 10 item 1): this penalty is REMOVED from all modes,
+  because the waiting room can never be emptied. Score becomes assignment
+  points only, and the starting live score becomes 0.
 
 The base scheduled-arrival intervals are:
 
@@ -161,11 +164,19 @@ Evaluation configuration belongs to application state, not patient JSON.
   room derived from `patient.answer.correctEsi`.
 - `otherAcceptableRooms` remains `null` and has no current scoring effect.
 
+Note the dual credit is ONE-WAY: a Psych patient also accepts its underlying
+`esi-N`, but an ordinary `esi-N` patient never accepts Psych or Discharge.
+For WHEN a patient may be authored as Psych or Discharge at all, see doc 5's
+authoring rule (dangerous psychiatric presentations are ESI 1-2 medical, never
+Psych).
+
 ### Strict
 
 - Full-credit room: Correct, +100.
 - Every other room: Wrong, -50.
 - Strict has no Close count or Close field in the header or review scorecard.
+  (PENDING CHANGE, doc 10 item 2: the REVIEW scorecard will always show a
+  CLOSE row, reading NA under Strict. The in-game header is unaffected.)
 
 ### Forgiving
 
@@ -194,6 +205,11 @@ Direction is explanatory and does not add points:
 - Selected ESI higher than correct ESI: `under` (lower acuity than required).
 - An incorrect Psych or Discharge selection: `wrong` with neither direction
   counter incremented.
+
+PENDING CHANGE (doc 10 item 4): the last bullet is replaced by a single
+acuity ladder — esi-1..esi-5 = ranks 1-5, psych = 6, discharge = 7 — so Psych
+and Discharge misses DO move a counter. Direction counters fill in every
+difficulty, including Strict; difficulty changes scoring, not counting.
 
 ## Assignment, recall, reassignment, and scoring replacement
 
@@ -399,6 +415,10 @@ Correct / Close / Wrong = live score
 Strict omits Close and its adjacent separator without a gap. RUSH score equals
 assignment points minus ten times the number currently waiting. Triage score is
 assignment points only.
+
+PENDING CHANGE (doc 10 item 1): the RUSH waiting deduction is removed, so BOTH
+modes score assignment points only. This paragraph describes the live GAME
+header; doc 10 item 2 separately changes how the REVIEW scorecard shows Close.
 
 The GAME footer exposes exactly two navigation actions and no Chart button:
 

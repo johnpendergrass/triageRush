@@ -72,6 +72,46 @@ patient.answer.destinationReason
 `psych`, or `discharge`. Ordinary room suffixes match `correctEsi`; Psych
 and Discharge retain a clinically valid underlying ESI.
 
+### AUTHORING RULE: when Psych or Discharge may be the correct room
+
+Recovered from `docs/archive/` and promoted here on 2026-08-05 because it had
+never reached the numbered set, which caused it to be misremembered twice.
+The original decisions were "Psych appears only for ESI 4-5"
+(`archive/2-dev-history/triageRush-timeline/2026 0725 1434 session summary and
+restart guide.md`) and "Dangerous psychiatric emergencies are medical 1-2
+(Resus), NOT [psych]"
+(`archive/0-documentation-system/.../collaboration-notes/specifications.MD`).
+
+- **A psychiatric presentation that is dangerous is NEVER a Psych patient.**
+  Active suicidal or homicidal ideation, acute agitation with risk, or any
+  need for immediate intervention is ESI 1-2 and belongs in a MEDICAL room.
+  The medical acuity always takes precedence over the behavioural label.
+- **Psych is correct only for medically stable behavioural-health
+  presentations at ESI 4-5** — in practice ESI 4, because a psychiatric
+  evaluation IS one resource, and ESI 5 means no resources are needed at all.
+  An ESI-5 Psych patient is very nearly self-contradictory.
+- **Discharge is correct only at ESI 5** (no resources required).
+- ESI 3 is excluded from both for a different reason than danger: it means
+  multiple resources, i.e. a real medical workup, which must happen before a
+  psych disposition.
+
+Why the ESI number alone cannot express "danger": ESI 1-2 are DANGER levels
+(immediate life-saving intervention; high-risk situation), while ESI 3-4-5 are
+RESOURCE-COUNT levels (many / one / none). They share one numeric scale but
+measure different things, which is what makes "ESI 4 and above is dangerous"
+an easy and wrong intuition.
+
+Current data agrees with this rule: all 24 Discharge patients are ESI 5, and
+all 5 Psych patients are ESI 4, each with a `destinationReason` citing "one
+specialty evaluation resource". (Historical note: `patient-105` was once
+authored as an ESI-5 Psych patient; it is ESI 4 today and the change is not
+recorded in the 2026-08-01 revision review.)
+
+Two things in the archive that DO NOT apply today: it calls Psych "room 6"
+from the six-room era, and offers "Fast Track acceptable" as an alternate
+destination. Today's equivalent of that alternate is the dual credit for the
+underlying `esi-N` described below.
+
 `otherAcceptableRooms` is required by the schema but is `null` for all 160
 patients, and NO application code reads it. It is an authoring hook held in
 reserve. The full-credit set is DERIVED at runtime by

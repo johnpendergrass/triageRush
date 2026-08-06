@@ -1,29 +1,18 @@
 # triageRush — technical notes (pointer file)
 
-**Last modified:** 2026-08-05 (Phase 8 complete; doc 10 designed, not built)
+**Last modified:** 2026-08-05 (Phase 8 complete)
 
 Full technical contracts: `docs/4`, `docs/8`. This file records only
 practical build knowledge that lives nowhere else.
 
-## Before writing gameplay code, read docs/10
+## One structural fact worth keeping
 
-`docs/10-finite-patient-pool-design.md` is approved and unbuilt. Three
-technical traps it identifies, all easy to get wrong:
-
-- **The pool must decrement on ACTUAL INSERTION, never on a scheduled or
-  blocked arrival.** `insertWaitingPatient` already returns early on
-  `reason: "full"` BEFORE calling `drawUniquePatientId`, so the deck is not
-  consumed today. Preserve that ordering when the pool counter lands beside
-  it, or a shift can end with patients who were never shown.
-- **The end condition is a CONJUNCTION**: waiting empty AND pool empty AND
-  `state.active === null`. "Waiting room empty" alone is not it — a quick
-  player legitimately empties a RUSH room seconds in.
-- **`state.ledger.byPatientId` cannot survive a reshuffled deck.** A patient
-  seen twice OVERWRITES the first record instead of creating a second, so the
-  Patients Seen browser undercounts and the score counts one encounter where
-  there were two. Only sandbox can reach this (every other profile deals at
-  most 30 of 160 patients), so capping sandbox is a real alternative to
-  making the ledger encounter-keyed.
+`state.ledger.byPatientId` is keyed by PATIENT ID, with `ledger.order`
+holding IDs and `assignmentCount` tracking reassignment. That is correct for
+the game as it stands — a patient can appear at most once per shift, and a
+recalled case stays one record. It would NOT survive any future feature that
+let one patient be seen twice in a shift; the second encounter would
+overwrite the first rather than create a new record. Nothing today does that.
 
 ## Running and cache
 
@@ -127,6 +116,15 @@ cue max per quarter. `state.gameSoundsAudible` = runtime mute
   U+2713, triangle U+25B3 with U+FE0E, cross U+2715 - all render as plain
   characters, not emoji. Reuse this exact set for any new outcome marking
   rather than picking fresh glyphs that would need retesting.
+
+## Hover is not available on John's main device
+
+iOS has no hover at all, so any player-facing affordance that only appears on
+hover is INVISIBLE on the phone. Doc 10 item 6 (the direction counters)
+handles this by making them real buttons that respond to hover AND tap, with
+the help line's height reserved so revealing text never shifts the layout
+under the user's finger. The same constraint applies to the backlogged
+scorecard-magnification idea.
 
 ## Mockups
 

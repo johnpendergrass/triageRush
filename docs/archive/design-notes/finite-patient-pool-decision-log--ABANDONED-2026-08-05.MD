@@ -1,6 +1,14 @@
-# BRAINSTORM / DECISION LOG — a finite patient pool per shift
+# BRAINSTORM / DECISION LOG — a finite patient pool per shift (ABANDONED)
 
-> **THE DESIGN NOW LIVES IN `docs/10-finite-patient-pool-design.md`.**
+> # ABANDONED 2026-08-05 — DO NOT BUILD, DO NOT RE-PROPOSE
+>
+> John abandoned this direction the same day, choosing to continue with the
+> game as originally conceived and as it stands today — no patient limits.
+> Nothing was implemented. This log survives only to prevent the idea being
+> rediscovered and re-pitched. The design it fed is archived beside it as
+> `finite-patient-pool-design--ABANDONED-2026-08-05.md`.
+
+> **Original pointer, now stale:** the design lived in `docs/10-...`.
 > That document is authoritative for WHAT TO BUILD. This file is kept as the
 > DECISION LOG: how each rule was arrived at, which options were rejected and
 > why, and the traps found along the way. Read doc 10 first; come here only

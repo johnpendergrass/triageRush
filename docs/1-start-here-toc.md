@@ -3,15 +3,14 @@
 **Last modified:** 2026-08-05
 
 **Latest change:** Phase 8 folded in (2026-08-05): Shift Review, the
-shift-over acknowledgement, and the Patients Seen browser. Documents 1-9
+shift-over acknowledgement, and the Patients Seen browser. The numbered docs
 describe the game as designed and built, with no separate amendment layer.
 
-**NEW — document `10` is different in kind.** It describes an APPROVED but
-UNBUILT change (a finite patient pool per shift, a win state, and a score
-ceiling). Documents 1-9 remain authoritative for the SHIPPED game; doc 10
-lists exactly which of their lines it will contradict on the day it is built.
-Read it before starting any new gameplay work, because it changes shift
-length choices, arrivals, scoring basis, and the Shift Review.
+**A finite-patient-pool redesign was explored and ABANDONED on 2026-08-05.**
+John chose to continue with the game as originally conceived — no patient
+limits. Nothing was built and these documents were never in question. The
+explored design and its decision log are in `archive/design-notes/` marked
+ABANDONED, kept only so the idea is not rediscovered and re-pitched.
 
 ## Current milestone
 
@@ -40,9 +39,11 @@ asset optimization (10) remain.
 7. [Asset organization and specifications](6-asset-organization-and-specs.md)
    inventories accepted production artwork and placement rules.
 8. [Development history](2-dev-history.md) explains the present direction.
-9. [Finite patient pool design](10-finite-patient-pool-design.md) — APPROVED
-   BUT NOT BUILT. The next gameplay change, and it touches rules, arrivals,
-   scoring and the Shift Review.
+9. [Approved pending changes](10-approved-pending-changes.md) — DECIDED BUT
+   NOT BUILT. Six items, all landing in the Shift Review and its scoring.
+   Read before touching scoring, direction, or the review screen; docs 3-9
+   still describe the shipped behaviour and carry PENDING CHANGE markers
+   pointing here.
 10. The current `99-ai-handoff--*.md` records tactical continuation details.
 
 ## Forward repository map
@@ -68,8 +69,6 @@ triageRush/
 - The Chart keeps Answer locked during active evaluation and remembers the
   Clinical section's expanded/collapsed state for the rest of the shift.
 - Triage offers five- and ten-minute countdowns, defaulting to five minutes.
-  (SUPERSEDED WHEN DOC 10 IS BUILT: ten minutes is removed in favour of an
-  untimed sandbox.)
 - Successful runtime patient additions play the arrival `doink`; recall plays
   its own C5/E5 recall sound, never a doink.
 - Sound is three settings toggles (GLOBAL, GAME SOUNDS, MUSIC) plus an in-game
@@ -101,13 +100,13 @@ triageRush/
 ## Immediate priorities
 
 1. Phases 7 and 8 PASSED John's play-through (2026-08-05): "acceptable".
-2. Calibrate the doc `10` pool sizes against real play data, then build the
-   finite patient pool. It is ahead of Phase 9 because it blocks the Shift
-   Review's final form.
-3. At Phase 10 planning, also rework the asset-loading strategy: stage-2
+2. Build the six approved items in doc `10` — the Shift Review's presentation
+   (variant B) plus the scoring and direction changes decided with it.
+3. Then Phase 9 (persistence and recovery).
+4. At Phase 10 planning, also rework the asset-loading strategy: stage-2
    startup currently blocks READY on 160 JSON fetches plus decoding every
    manifest image; decide what blocks READY versus loads lazily.
-4. After visual approval, rerun the asset audit against final CSS, approve
+5. After visual approval, rerun the asset audit against final CSS, approve
    representative optimized samples, then replace only the runtime copies.
 
 ## Current cautions

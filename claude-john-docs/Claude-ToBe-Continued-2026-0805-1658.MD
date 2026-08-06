@@ -1,14 +1,21 @@
 # triageRush — To Be Continued (2026-08-05 16:58 PDT)
 
+> ## AMENDED — THE PATIENT-LIMIT REDESIGN WAS ABANDONED
+>
+> Later the same day John decided to abandon that direction entirely and
+> continue with the game as originally conceived, WITHOUT patient limits —
+> the game exactly as it stands. Nothing was built, so there is nothing to
+> undo in code. Both design files now live in `docs/archive/design-notes/`
+> marked ABANDONED. **Do not build from them; do not re-propose the idea.**
+>
+> The active work is the SHIFT REVIEW's presentation.
+
 ## Read these next session, in this order
 
-1. `docs/10-finite-patient-pool-design.md` — the next piece of work. APPROVED
-   BUT NOT BUILT. Read before touching gameplay code.
-2. `docs/99-ai-handoff--2026-08-05-1658.md` — this session in full.
-3. `claude-john-docs/brainstorm-finite-patient-roster.MD` — the decision log
-   behind doc 10: rejected options and the reasoning. Consult before
-   re-proposing anything.
-4. Docs 1-9 remain current for the SHIPPED game (Phases 1-8).
+1. `docs/99-ai-handoff--2026-08-05-1658.md` — this session in full,
+   including the abandonment amendment.
+2. Docs 1-9 — current and fully authoritative for the game (Phases 1-8).
+3. `_mockups/shift-review-mockups.html` — the six Shift Review treatments.
 
 ## NO CODE CHANGED THIS SESSION
 
@@ -62,55 +69,39 @@ exist to bracket that, and he could not judge it from the desktop preview.
   demoting for patients left waiting; John pointed out the game is premised
   on a full room the player cannot empty. Removed everywhere.
 
-  That objection is what generated the whole of doc 10.
+  That objection led to a redesign proposal, which John then abandoned. THE
+  RULING SURVIVES the abandonment and applies to any screen or wording.
 
-### 4. The finite patient pool design
+### 4. A patient-limit redesign — explored in full, then ABANDONED
 
-Designed with John over the rest of the session, rule by rule, and written up
-as doc 10. In one line: every timed shift gets a finite pool of patients, so
-the game gains a WIN STATE and the score gains a CEILING — which is exactly
-what the Shift Review grade needed, since a percentage of the achievable
-score requires no invented threshold.
+Most of the session went into designing a finite patient pool per shift (a
+win state, a score ceiling, an untimed sandbox replacing TRIAGE 600s). John
+then decided against it: the game continues as originally conceived, without
+patient limits.
 
-| | RUSH 60s | RUSH 120s | TRIAGE 300s | SANDBOX |
-|---|---|---|---|---|
-| Pool | 12 | 20 | 30 | unlimited |
-| Slots | 5 → 10 | 5 → 10 | 5 held | 5 held |
-| Not-seen penalty | -10 each | -10 each | none | none |
-| Ceiling | 1200 | 2000 | 3000 | none |
-
-TRIAGE 600s is REMOVED, replaced by the untimed sandbox.
+Nothing was built. Both files are archived in `docs/archive/design-notes/`
+marked ABANDONED, kept only so the idea is not rediscovered and re-pitched.
 
 ## Immediate next work
 
-1. **John plays three shifts and reports patients placed** in a 60s RUSH, a
-   120s RUSH and a 300s TRIAGE. The pool sizes 12 / 20 / 30 are guesses, and
-   this is the only thing that can confirm them. Nothing an AI has produced
-   counts as evidence — the mockup figures were invented for layout.
+1. **The Shift Review's presentation** — John's words: "the first thing i
+   want to do is figure out the correct chart presentation in the review
+   screen."
 2. **John views the form mockups on his iPhone** and picks between A / A2 /
-   A3.
-3. Then build doc 10, together with the RUSH arrival pacing revision (the two
-   determine each other).
-4. Then the Shift Review form, which doc 10 unblocks.
+   A3. His concern is that the full form is too dense for a phone.
+3. Then Phase 9 (persistence and recovery).
 
-Phase 9 (persistence) moves BEHIND doc 10, because doc 10 changes what would
-have to be persisted and blocks the review's final form.
+## The constraint the abandonment leaves behind
 
-## Open decisions carried forward
+The score has **no ceiling**, so a BELOW / MEETS / EXCEEDS band cannot be "a
+percentage of what was achievable" — that was the whole appeal of the pool
+design. If the review carries a grade at all, it must rest on a plain,
+self-explaining number (the mockups use `% correct placement`, printed
+beneath the grade). Otherwise any threshold is invented, which is exactly
+what John objected to.
 
-All are listed in doc 10 section 6. The two with teeth:
-
-- **The last-patient recall window.** Assignment is not final in this game —
-  a patient behind a door can be recalled and the ledger result replaced. But
-  doc 10 ends the shift the instant the final patient is assigned, making
-  that one patient uniquely unfixable purely because they were last. Needs a
-  ruling.
-- **Sandbox ledger keying.** The deck reshuffles when exhausted, but
-  `state.ledger.byPatientId` would MERGE a repeated patient into one record —
-  the browser would show one patient where two were seen, and the score would
-  count one. Provably sandbox-only (no other profile can exceed 30 patients
-  against a 160-patient deck), so capping sandbox at 160 is a serious
-  alternative to reworking the ledger to be encounter-keyed.
+Reminder: the mockups' patient counts (11 seen in 5:00, 5 in 2:00) were
+INVENTED for layout and are not evidence about real play.
 
 ## Longer-term ToDo (unchanged)
 

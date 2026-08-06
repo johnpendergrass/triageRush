@@ -1,8 +1,26 @@
-# Finite Patient Pool, Shift-End, and Scoring Ceiling — DESIGN
+# Finite Patient Pool, Shift-End, and Scoring Ceiling — ABANDONED
 
-**Last modified:** 2026-08-05
+> # ABANDONED 2026-08-05 — DO NOT BUILD, DO NOT RE-PROPOSE
+>
+> John decided the same day this was written to **abandon this direction
+> entirely** and continue developing the game as originally conceived, with
+> NO patient limits — that is, the game exactly as it stands today.
+>
+> Nothing here was ever implemented. `triageRush/` never changed.
+> Documents 1-9 were, and remain, fully authoritative.
+>
+> This file is kept ONLY so that a future session can see the idea was
+> explored thoroughly and dropped deliberately, rather than rediscovering it
+> and pitching it again. If it ever does come back, the companion decision
+> log (`finite-patient-pool-decision-log--ABANDONED-2026-08-05.MD`) holds the
+> reasoning, the traps, and the options that were rejected along the way.
+>
+> **One thing below outlived the design and is still binding:** the review
+> must never fault the player for patients left in the waiting room, and must
+> make no claim about performance "for level of training". Those were John's
+> rulings about the game, not about this mechanic.
 
-**Status: DESIGNED, NOT BUILT.** Nothing in this document is implemented.
+**Original status line, for the record:** DESIGNED, NOT BUILT. Nothing in this document is implemented.
 Documents `3`, `4`, `7`, `8` and `9` describe the game as it is designed AND
 as it is built through Phase 8, and they remain authoritative for the SHIPPED
 game. This document describes an approved change that has not yet been made.

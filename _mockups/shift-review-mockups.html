@@ -3,26 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>triageRush - Shift Review mockups</title>
+<title>triageRush - Shift Review (variant B)</title>
 <!--
   ==========================================================================
-  SHIFT REVIEW MOCKUPS (2026-08-05)
+  SHIFT REVIEW MOCKUP (2026-08-05)
 
   A THROWAWAY comparison harness. It touches NOTHING in triageRush/.
-  Delete the _mockups folder to revert completely.
+  Delete the _mockups folder (and mock.html) to revert completely.
 
-  It copies (does not link) the palette and the 9:16 shell rules from
-  styles.css so each variant's CSS stays self-contained and can be lifted
-  into styles.css section 9 wholesale once a direction is chosen.
+  John chose variant B ("LEGIBLE") on 2026-08-05, so the exploratory
+  variants A / A2 / A3 / C were removed to keep this file maintainable
+  while B is iterated on. They remain in git history if ever wanted.
 
-  Open it directly (file:// works - there is no fetch) or at
-  http://localhost:8090/_mockups/shift-review-mockups.html
+  Two panes now:
+    0 CURRENT  - the SHIPPED build, verbatim. Deliberately NOT updated with
+                 the new scoring rules, because its whole job is to show
+                 what the game does today for before/after comparison.
+    B LEGIBLE  - the target design, carrying John's 2026-08-05 changes.
 
-  Controls at the top:
-    VARIANT  - which treatment to look at
-    SHIFT    - sample data: a decent Triage shift or a rough RUSH one
-    SIZE     - desktop shell vs a small-iPhone-width shell, because
-               legibility is worst at the narrow end
+  Open at http://localhost:8090/mock.html (or /_mockups/...) - or from disk,
+  since there is no fetch.
   ==========================================================================
 -->
 <style>
@@ -43,44 +43,24 @@ body {
   min-height: 100dvh;
   padding: 10px;
 }
-button { font: inherit; color: inherit; cursor: pointer; border: none; background: none; }
+button { font: inherit; color: inherit; cursor: pointer; border: none; background: none; -webkit-tap-highlight-color: transparent; }
 
 /* ---- harness chrome (never ships) ---- */
 .harness {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  justify-content: center;
-  align-items: flex-start;
-  margin-bottom: 10px;
-  font-size: 12px;
+  display: flex; flex-wrap: wrap; gap: 14px;
+  justify-content: center; align-items: flex-start;
+  margin-bottom: 10px; font-size: 12px;
 }
 .harness-group { display: flex; align-items: center; gap: 4px; }
-.harness-group > b {
-  letter-spacing: 0.14em;
-  color: #8fa6b1;
-  margin-right: 2px;
-  font-size: 10px;
-}
+.harness-group > b { letter-spacing: 0.14em; color: #8fa6b1; margin-right: 2px; font-size: 10px; }
 .harness button {
-  padding: 5px 9px;
-  border: 1px solid #46606b;
-  border-radius: 3px;
-  background: #0b2d3e;
-  letter-spacing: 0.06em;
+  padding: 5px 9px; border: 1px solid #46606b; border-radius: 3px;
+  background: #0b2d3e; letter-spacing: 0.06em;
 }
 .harness button[aria-pressed="true"] {
-  background: var(--green);
-  color: #04210f;
-  font-weight: 800;
-  border-color: #9ff0c4;
+  background: var(--green); color: #04210f; font-weight: 800; border-color: #9ff0c4;
 }
-.harness-note {
-  width: 100%;
-  text-align: center;
-  color: #8fa6b1;
-  font-size: 11px;
-}
+.harness-note { width: 100%; text-align: center; color: #8fa6b1; font-size: 11px; }
 
 /* ---- copied from styles.css section 2: the 9:16 shell ---- */
 .stage { display: grid; place-items: center; }
@@ -96,16 +76,11 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; backgroun
   container-type: inline-size;
   isolation: isolate;
 }
-/* SIZE = phone: pin the shell to a small-iPhone shell width so the cqw
-   clamps resolve at their smallest realistic value. */
-.app-shell.is-phone {
-  width: 320px;
-  height: 569px; /* 320 * 1.7778 */
-}
+.app-shell.is-phone { width: 320px; height: 569px; }
 
 /* ======================================================================
-   VARIANT 0 - CURRENT BUILD (verbatim from styles.css section 9)
-   Here only as the thing to beat.
+   PANE 0 - CURRENT BUILD (verbatim from styles.css section 9)
+   NOT updated with the new rules on purpose - it is the "before".
    ================================================================== */
 .review-view {
   position: absolute; inset: 0;
@@ -178,15 +153,14 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; backgroun
 .review-return { background: linear-gradient(#15935b, #07572f); }
 
 /* ======================================================================
-   SHARED BY THE NEW VARIANTS (A / B / C)
+   PANE B - THE TARGET DESIGN
 
-   Legibility changes applied to all three, since that was the complaint:
+   Legibility changes vs the current build:
      - the faint label ink goes from #6d7b81 to #4b585e (real contrast on
-       the cream stock, still clearly secondary)
-     - every clamp's MINIMUM rises; nothing is allowed below 10px
-     - letter-spacing on small caps labels drops from 0.22em to ~0.10em,
-       which is what actually made the old subheads hard to read
-     - a real type scale instead of every block inventing its own size
+       cream, still clearly secondary)
+     - every clamp minimum rises; nothing sits below 10px
+     - letter-spacing on small-caps labels drops from 0.22em to ~0.10em,
+       which was hurting the subheads more than the font size was
    ================================================================== */
 .mock-view {
   position: absolute; inset: 0;
@@ -203,7 +177,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; backgroun
   --bad: #a52219;
   --stock: #f7f3e7;
 
-  display: flex; flex-direction: column;
+  display: flex; flex-direction: column; justify-content: space-between;
   padding: clamp(10px, 3.6cqw, 20px) clamp(11px, 4cqw, 22px);
   color: var(--ink);
   background: var(--stock);
@@ -211,248 +185,20 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; backgroun
   border-radius: 2px;
   box-shadow: 0 18px 50px #000c;
   overflow: hidden;
-  position: relative;
   text-align: left;
 }
-/* Shared button pair at the foot of every new variant. */
-/* No margin-top:auto here: it would eat all the free space and defeat the
-   paper's own space-between distribution. Variants that want the buttons
-   pinned low grow a block above instead (see .form-comments). */
-.mock-actions { display: flex; flex-direction: column; gap: clamp(6px, 2cqw, 10px); padding-top: clamp(8px, 2.5cqw, 14px); }
-/* The card variant has no growable block, so it pins. */
-.paper--card .mock-actions { margin-top: auto; }
-.mock-btn {
-  min-height: 44px; border-radius: 4px; font-weight: 900;
-  font-size: clamp(12px, 3.6cqw, 16px); letter-spacing: 0.06em; color: #fff;
-  border: 1px solid rgb(255 255 255 / 35%);
-  box-shadow: inset 0 1px #ffffff55, 0 2px 4px #0007;
-}
-.mock-btn--seen { background: linear-gradient(#2a6f92, #123f57); }
-.mock-btn--return { background: linear-gradient(#15935b, #07572f); }
 
-/* ======================================================================
-   VARIANT A - "FORM ED-7": the attending's evaluation of a resident.
-
-   Borrows the end-of-rotation evaluation form: a form number and revision
-   in the corner, EVALUATOR / LEVEL OF TRAINING fields, a global rating
-   scale with one box marked, a narrative COMMENTS box, and a signature
-   line. Grunge is CSS-only (coffee ring + a rubber stamp).
-   ================================================================== */
-.paper--form { background: var(--stock); }
-
-/* Coffee ring: a stained annulus, multiplied into the stock. Cheap and
-   it sells the "this form sat on a desk" idea more than anything else. */
-.paper--form::before {
-  content: "";
-  position: absolute;
-  right: -6%; top: 26%;
-  width: 42%; aspect-ratio: 1;
-  border-radius: 50%;
-  border: clamp(3px, 1.4cqw, 7px) solid rgb(120 78 30 / 16%);
-  background: radial-gradient(circle, rgb(120 78 30 / 5%) 60%, rgb(120 78 30 / 0%) 62%);
-  mix-blend-mode: multiply;
-  pointer-events: none;
-}
-/* Toner streaks: faint vertical banding, like a tired laser printer. */
-.paper--form::after {
-  content: "";
-  position: absolute; inset: 0;
-  background: repeating-linear-gradient(90deg,
-    rgb(0 0 0 / 0%) 0 11px, rgb(0 0 0 / 3.5%) 11px 13px, rgb(0 0 0 / 0%) 13px 26px);
-  mix-blend-mode: multiply;
-  pointer-events: none;
-}
-.form-body { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; }
-
-.form-topline {
-  display: flex; justify-content: space-between; align-items: baseline;
-  font-size: clamp(10px, 2.5cqw, 12px); font-weight: 700;
-  letter-spacing: 0.08em; color: var(--faint);
-}
-.form-head {
-  margin-top: clamp(3px, 1cqw, 6px);
-  border-top: 2px solid var(--ink); border-bottom: 1px solid var(--ink);
-  padding: clamp(3px, 1.4cqw, 10px) 0; text-align: center;
-}
-.form-org { font-size: clamp(10px, 2.7cqw, 13px); font-weight: 700; letter-spacing: 0.1em; color: var(--faint); }
-.form-title { font-size: clamp(15px, 5cqw, 25px); font-weight: 900; letter-spacing: 0.04em; line-height: 1.05; }
-
-/* Field rows: underlined blanks, the way a real form prints them. */
-.form-fields {
-  display: grid; grid-template-columns: auto 1fr;
-  column-gap: clamp(5px, 2cqw, 10px); row-gap: clamp(3px, 1.3cqw, 7px);
-  margin-top: clamp(4px, 1.5cqw, 11px);
-  font-size: clamp(11px, 3.1cqw, 14px);
-}
-.form-field-key { font-weight: 700; letter-spacing: 0.06em; color: var(--faint); white-space: nowrap; }
-.form-field-value {
-  font-weight: 800; border-bottom: 1px solid var(--rule);
-  padding-bottom: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-
-.form-section-label {
-  margin-top: clamp(4px, 1.6cqw, 12px);
-  font-size: clamp(10px, 2.7cqw, 12px); font-weight: 900;
-  letter-spacing: 0.1em; color: var(--faint);
-  border-bottom: 1px solid var(--rule); padding-bottom: 2px;
-}
-
-/* The performance table doubles as the score arithmetic: the player still
-   gets the exact formula, but it is presented as a scored rubric. */
-.form-table {
-  display: grid; grid-template-columns: 1fr auto auto auto;
-  align-items: baseline;
-  column-gap: clamp(5px, 2cqw, 12px); row-gap: clamp(2px, 1cqw, 6px);
-  margin-top: clamp(4px, 1.4cqw, 8px);
-  font-size: clamp(11px, 3.2cqw, 15px); font-variant-numeric: tabular-nums;
-}
-.form-th { font-size: clamp(9px, 2.3cqw, 11px); font-weight: 700; letter-spacing: 0.06em; color: var(--faint); }
-.form-th--r { text-align: right; }
-.form-cell-label { font-weight: 700; }
-.form-cell-num { color: var(--faint); font-weight: 700; text-align: right; }
-.form-cell-total { font-weight: 900; text-align: right; min-width: 3.2em; }
-.form-cell-total.is-ok { color: var(--ok); }
-.form-cell-total.is-mid { color: var(--mid); }
-.form-cell-total.is-bad { color: var(--bad); }
-.form-total-rule { grid-column: 1 / -1; border-top: 1px solid var(--ink); height: 0; margin-top: 2px; }
-.form-cell-label--total { font-weight: 900; letter-spacing: 0.06em; }
-.form-cell-total--grand { font-size: 1.35em; }
-.form-cell-total--grand.is-negative { color: var(--bad); }
-
-/* Global rating: three boxes, one marked with a hand X. */
-.form-rating {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: clamp(4px, 1.5cqw, 8px); margin-top: clamp(5px, 1.8cqw, 9px);
-}
-.form-rating-box {
-  border: 1px solid var(--ink); padding: clamp(3px, 1.2cqw, 6px) 2px;
-  text-align: center; font-size: clamp(9px, 2.5cqw, 11px);
-  font-weight: 700; letter-spacing: 0.04em; line-height: 1.15;
-}
-.form-rating-box.is-marked {
-  background: rgb(20 102 58 / 12%); border-width: 2px; font-weight: 900;
-}
-.form-rating-mark {
-  display: block; font-size: clamp(14px, 4cqw, 19px); font-weight: 900;
-  color: var(--bad); line-height: 1; transform: rotate(-7deg);
-}
-.form-rating-slot { display: block; font-size: clamp(14px, 4cqw, 19px); line-height: 1; color: transparent; }
-
-/* The grade always shows its work, so it never reads as a clinical claim. */
-.form-basis {
-  margin-top: clamp(2px, 1cqw, 5px); text-align: center;
-  font-size: clamp(10px, 2.6cqw, 12px); font-weight: 700; color: var(--faint);
-}
-
-.form-comments {
-  /* Grows into whatever blank paper the page has left over, so the form
-     never ends with a dead band above the buttons. */
-  flex: 1 1 auto;
-  position: relative;
-  margin-top: clamp(5px, 1.8cqw, 9px);
-  border: 1px solid var(--rule);
-  padding: clamp(5px, 1.8cqw, 9px);
-  font-size: clamp(11px, 3cqw, 14px); line-height: 1.32;
-  min-height: clamp(30px, 11cqw, 78px);
-}
-.form-comments em { font-style: italic; }
-
-.form-sign {
-  display: flex; align-items: flex-end; gap: clamp(6px, 2cqw, 12px);
-  margin-top: clamp(4px, 1.6cqw, 11px);
-}
-.form-sign-line { flex: 1 1 auto; border-bottom: 1px solid var(--ink); }
-.form-sign-name {
-  font-family: "Segoe Script", "Brush Script MT", cursive;
-  font-size: clamp(13px, 3.8cqw, 18px); transform: rotate(-2deg) translateY(3px);
-  white-space: nowrap;
-}
-.form-sign-key { font-size: clamp(9px, 2.4cqw, 11px); font-weight: 700; letter-spacing: 0.06em; color: var(--faint); }
-
-/* Rubber stamp, angled across the corner of the comments box. Anchored to
-   the comments box rather than the page so it can never land on a button. */
-.form-stamp {
-  position: absolute; z-index: 2;
-  right: 3%; bottom: 6%;
-  transform: rotate(-13deg);
-  border: clamp(2px, 0.8cqw, 4px) solid rgb(165 34 25 / 55%);
-  border-radius: 4px;
-  padding: clamp(2px, 1cqw, 5px) clamp(5px, 2cqw, 10px);
-  color: rgb(165 34 25 / 62%);
-  font-size: clamp(11px, 3.4cqw, 16px); font-weight: 900; letter-spacing: 0.1em;
-  pointer-events: none; mix-blend-mode: multiply;
-}
-
-/* ======================================================================
-   VARIANTS A2 / A3 - the SAME form, carrying less.
-
-   A2 keeps every idea of A but states each one in a single line instead
-   of a block: identity collapses to one line, the four-row scoring table
-   collapses to a tally line under the score, and the three rating boxes
-   collapse to one stamped grade band.
-   A3 goes further: score, grade, one sentence, signature. Nothing else.
-   ================================================================== */
-.lite-ident {
-  margin-top: clamp(5px, 1.8cqw, 9px);
-  font-size: clamp(12px, 3.3cqw, 15px); font-weight: 800; letter-spacing: 0.02em;
-}
-.lite-ident--dim { margin-top: 1px; font-size: clamp(11px, 2.9cqw, 13px); font-weight: 700; color: var(--faint); }
-
-.lite-score {
-  display: flex; align-items: baseline; justify-content: space-between;
-  margin-top: clamp(7px, 2.4cqw, 12px);
-  border-top: 2px solid var(--ink); border-bottom: 1px solid var(--ink);
-  padding: clamp(3px, 1.2cqw, 7px) 0;
-}
-.lite-score-key { font-size: clamp(11px, 3cqw, 14px); font-weight: 900; letter-spacing: 0.08em; color: var(--faint); }
-.lite-score-value {
-  font-size: clamp(34px, 13cqw, 62px); font-weight: 900; line-height: 1;
-  letter-spacing: -0.02em; font-variant-numeric: tabular-nums;
-}
-.lite-score-value.is-negative { color: var(--bad); }
-
-.lite-tally {
-  margin-top: clamp(3px, 1.2cqw, 6px);
-  font-size: clamp(11px, 3cqw, 14px); font-weight: 700; color: var(--faint);
-  font-variant-numeric: tabular-nums;
-}
-.lite-tally b { color: var(--ink); }
-
-/* One grade band instead of three boxes: same information, a third of
-   the height, and the basis is right there so it explains itself. */
-.lite-grade {
-  margin-top: clamp(7px, 2.4cqw, 12px);
-  border: 2px solid var(--ink); padding: clamp(5px, 1.8cqw, 10px) 6px;
-  text-align: center;
-}
-.lite-grade-key { display: block; font-size: clamp(10px, 2.5cqw, 12px); font-weight: 700; letter-spacing: 0.08em; color: var(--faint); }
-.lite-grade-value { display: block; font-size: clamp(15px, 4.8cqw, 24px); font-weight: 900; line-height: 1.05; }
-.lite-grade-value.is-bad { color: var(--bad); }
-.lite-grade-value.is-ok { color: var(--ok); }
-.lite-grade-basis { display: block; margin-top: 2px; font-size: clamp(10px, 2.7cqw, 12px); font-weight: 700; color: var(--faint); }
-
-/* A3: the comment is a plain paragraph, not a boxed field. */
-.lite-note {
-  flex: 1 1 auto; position: relative;
-  margin-top: clamp(8px, 2.6cqw, 13px);
-  font-size: clamp(12px, 3.2cqw, 15px); line-height: 1.4;
-}
-
-/* ======================================================================
-   VARIANT B - LEGIBILITY-FIRST discharge summary.
-
-   Same content and same printed-form idea as today, changed only where
-   reading was hard: bigger minimum type, darker secondary ink, tighter
-   tracking on the labels, and the four blocks separated by real space
-   instead of by hairlines alone.
-   ================================================================== */
-.paper--clean { justify-content: space-between; }
+/* --- Head --- */
 .clean-head { text-align: center; border-bottom: 2px solid var(--ink); padding-bottom: clamp(5px, 1.8cqw, 9px); }
-.clean-title { font-size: clamp(16px, 5.6cqw, 27px); font-weight: 900; letter-spacing: 0.02em; line-height: 1.05; }
+/* Mixed case is deliberate: "TriageRUSH", not "TRIAGERUSH" (John,
+   2026-08-05), so text-transform must never be applied here. */
+.clean-title { font-size: clamp(16px, 5.6cqw, 27px); font-weight: 900; letter-spacing: 0.01em; line-height: 1.05; }
 .clean-mode {
-  margin-top: 0.25em; font-size: clamp(11px, 3cqw, 14px);
-  font-weight: 700; letter-spacing: 0.1em; color: var(--faint);
+  margin-top: 0.3em; font-size: clamp(11px, 3.1cqw, 15px);
+  font-weight: 700; letter-spacing: 0.02em; color: var(--faint);
 }
+
+/* --- Meta: 2 x 2 cells with left rules --- */
 .clean-meta {
   display: grid; grid-template-columns: repeat(2, 1fr);
   gap: clamp(4px, 1.6cqw, 9px) clamp(8px, 3cqw, 16px);
@@ -461,6 +207,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; backgroun
 .clean-meta-cell { border-left: 3px solid var(--rule); padding-left: clamp(5px, 1.8cqw, 9px); }
 .clean-meta-key { display: block; font-size: clamp(10px, 2.6cqw, 12px); font-weight: 700; letter-spacing: 0.06em; color: var(--faint); }
 .clean-meta-value { display: block; font-size: clamp(13px, 3.7cqw, 17px); font-weight: 800; }
+
+/* --- Score --- */
 .clean-score { text-align: center; margin: clamp(6px, 2cqw, 11px) 0; }
 .clean-score-label { font-size: clamp(11px, 3cqw, 13px); font-weight: 700; letter-spacing: 0.12em; color: var(--faint); }
 .clean-score-value {
@@ -468,6 +216,9 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; backgroun
   letter-spacing: -0.03em; font-variant-numeric: tabular-nums;
 }
 .clean-score-value.is-negative { color: var(--bad); }
+
+/* --- Scoring table: ALWAYS three rows, CORRECT / CLOSE / WRONG.
+       LEFT WAITING is gone entirely (John, 2026-08-05). --- */
 .clean-table {
   display: grid; grid-template-columns: 1fr auto auto auto;
   align-items: baseline; column-gap: clamp(6px, 2.2cqw, 13px); row-gap: clamp(4px, 1.5cqw, 8px);
@@ -481,84 +232,55 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; backgroun
 .clean-cell-total.is-ok { color: var(--ok); }
 .clean-cell-total.is-mid { color: var(--mid); }
 .clean-cell-total.is-bad { color: var(--bad); }
+
+/* A row that does not apply in this difficulty (CLOSE under Strict).
+   It keeps its place so the table shape never changes, but recedes. */
+.clean-cell-label.is-na { color: var(--faint); font-weight: 700; }
+.clean-cell-total.is-na { color: var(--faint); font-weight: 700; letter-spacing: 0.06em; }
+
+/* --- Direction counters: now buttons that explain themselves --- */
 .clean-directions {
   display: grid; grid-template-columns: repeat(2, 1fr);
   gap: clamp(6px, 2.4cqw, 14px); margin-top: clamp(6px, 2.2cqw, 12px);
 }
-.clean-direction { text-align: center; border: 1px solid var(--rule); padding: clamp(4px, 1.5cqw, 8px) 2px; }
+.clean-direction {
+  min-height: 44px; /* touch target floor (doc 7) */
+  text-align: center; border: 1px solid var(--rule);
+  padding: clamp(4px, 1.5cqw, 8px) 2px;
+  background: transparent; color: inherit;
+  border-radius: 2px;
+}
+.clean-direction:hover,
+.clean-direction:focus-visible,
+.clean-direction.is-active {
+  background: rgb(0 0 0 / 5%);
+  border-color: var(--ink);
+  outline: none;
+}
 .clean-direction-count { display: block; font-size: clamp(19px, 6cqw, 30px); font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; }
 .clean-direction-label { display: block; margin-top: 2px; font-size: clamp(10px, 2.6cqw, 12px); font-weight: 700; letter-spacing: 0.06em; color: var(--faint); }
 
-/* ======================================================================
-   VARIANT C - COMPETENCY CARD (ACGME milestones flavour).
-
-   Rates the shift on three competencies with a filled bar each, and
-   states the supervision level the performance implies. The arithmetic
-   moves to one compact line so the ratings can be large and readable.
-   ================================================================== */
-.paper--card { background: var(--stock); }
-.card-head {
-  display: flex; justify-content: space-between; align-items: baseline;
-  border-bottom: 2px solid var(--ink); padding-bottom: clamp(4px, 1.6cqw, 8px);
-}
-.card-title { font-size: clamp(14px, 4.6cqw, 22px); font-weight: 900; letter-spacing: 0.02em; }
-.card-form-no { font-size: clamp(9px, 2.4cqw, 11px); font-weight: 700; letter-spacing: 0.06em; color: var(--faint); }
-.card-sub {
+/* The shared help line. Its height is RESERVED so revealing an
+   explanation never shifts the page - a hover that reflows the layout
+   under the pointer is horrible on desktop and impossible on a phone. */
+.clean-help {
   margin-top: clamp(4px, 1.4cqw, 7px);
-  font-size: clamp(11px, 3cqw, 14px); font-weight: 700; color: var(--faint);
+  min-height: clamp(30px, 9cqw, 42px);
+  font-size: clamp(10px, 2.8cqw, 13px); line-height: 1.3;
+  color: var(--faint); text-align: center;
 }
-.card-verdict {
-  margin-top: clamp(7px, 2.4cqw, 12px);
-  border: 2px solid var(--ink); padding: clamp(6px, 2.2cqw, 12px);
-  text-align: center;
-}
-.card-verdict-key { font-size: clamp(10px, 2.6cqw, 12px); font-weight: 700; letter-spacing: 0.08em; color: var(--faint); }
-.card-verdict-value { font-size: clamp(17px, 5.4cqw, 27px); font-weight: 900; line-height: 1.05; }
-.card-verdict-value.is-bad { color: var(--bad); }
-.card-verdict-value.is-ok { color: var(--ok); }
-.card-verdict-note { margin-top: 2px; font-size: clamp(10px, 2.8cqw, 13px); font-weight: 700; color: var(--faint); }
+.clean-help.is-specific { color: var(--ink); font-weight: 700; }
 
-.card-meters { margin-top: clamp(7px, 2.4cqw, 12px); display: flex; flex-direction: column; gap: clamp(6px, 2cqw, 11px); }
-.card-meter-top { display: flex; justify-content: space-between; align-items: baseline; font-size: clamp(11px, 3cqw, 14px); }
-.card-meter-name { font-weight: 800; letter-spacing: 0.03em; }
-.card-meter-value { font-weight: 900; font-variant-numeric: tabular-nums; }
-.card-meter-track {
-  margin-top: 3px; height: clamp(9px, 2.8cqw, 14px);
-  border: 1px solid var(--ink); background: rgb(0 0 0 / 5%);
-  position: relative; overflow: hidden;
+/* --- Actions --- */
+.mock-actions { display: flex; flex-direction: column; gap: clamp(6px, 2cqw, 10px); padding-top: clamp(8px, 2.5cqw, 14px); }
+.mock-btn {
+  min-height: 44px; border-radius: 4px; font-weight: 900;
+  font-size: clamp(12px, 3.6cqw, 16px); letter-spacing: 0.06em; color: #fff;
+  border: 1px solid rgb(255 255 255 / 35%);
+  box-shadow: inset 0 1px #ffffff55, 0 2px 4px #0007;
 }
-.card-meter-fill { position: absolute; inset: 0 auto 0 0; background: var(--ok); }
-.card-meter-fill.is-mid { background: #c99400; }
-.card-meter-fill.is-bad { background: var(--bad); }
-/* The expectation notch: where an evaluator's "meets expectations" sits. */
-.card-meter-mark { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--ink); }
-.card-meter-legend { margin-top: 3px; font-size: clamp(9px, 2.5cqw, 11px); color: var(--faint); font-weight: 700; }
-
-.card-line {
-  margin-top: clamp(7px, 2.4cqw, 12px);
-  border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
-  padding: clamp(5px, 1.8cqw, 9px) 0;
-  display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap;
-  gap: 0.4em;
-  font-size: clamp(11px, 3cqw, 14px); font-variant-numeric: tabular-nums;
-}
-.card-line-math { color: var(--faint); font-weight: 700; }
-.card-line-score { font-weight: 900; font-size: clamp(17px, 5cqw, 24px); }
-.card-line-score.is-negative { color: var(--bad); }
-/* Direction counts still earn their place: the narrative names the bias,
-   this gives the actual numbers behind it. */
-.card-counts {
-  display: flex; justify-content: space-between;
-  margin-top: clamp(5px, 1.8cqw, 9px);
-  font-size: clamp(11px, 3cqw, 14px); font-weight: 700; color: var(--faint);
-}
-.card-counts b { color: var(--ink); font-size: 1.25em; font-variant-numeric: tabular-nums; }
-.card-comment {
-  flex: 1 1 auto;
-  margin-top: clamp(6px, 2.2cqw, 11px);
-  font-size: clamp(11px, 3cqw, 14px); line-height: 1.35;
-}
-.card-comment-key { font-weight: 900; letter-spacing: 0.06em; color: var(--faint); font-size: clamp(10px, 2.6cqw, 12px); display: block; margin-bottom: 2px; }
+.mock-btn--seen { background: linear-gradient(#2a6f92, #123f57); }
+.mock-btn--return { background: linear-gradient(#15935b, #07572f); }
 </style>
 </head>
 <body>
@@ -566,17 +288,13 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; backgroun
 <div class="harness">
   <div class="harness-group">
     <b>VARIANT</b>
-    <button type="button" data-variant="current" aria-pressed="true">0 CURRENT</button>
-    <button type="button" data-variant="form" aria-pressed="false">A FULL</button>
-    <button type="button" data-variant="lite" aria-pressed="false">A2 LITE</button>
-    <button type="button" data-variant="minimal" aria-pressed="false">A3 MINIMAL</button>
-    <button type="button" data-variant="clean" aria-pressed="false">B LEGIBLE</button>
-    <button type="button" data-variant="card" aria-pressed="false">C COMPETENCY</button>
+    <button type="button" data-variant="clean" aria-pressed="true">B LEGIBLE</button>
+    <button type="button" data-variant="current" aria-pressed="false">0 CURRENT</button>
   </div>
   <div class="harness-group">
     <b>SHIFT</b>
-    <button type="button" data-scenario="good" aria-pressed="true">TRIAGE / OK</button>
-    <button type="button" data-scenario="rough" aria-pressed="false">RUSH / ROUGH</button>
+    <button type="button" data-scenario="good" aria-pressed="true">TRIAGE / FORGIVING</button>
+    <button type="button" data-scenario="rough" aria-pressed="false">RUSH / STRICT</button>
   </div>
   <div class="harness-group">
     <b>SIZE</b>
@@ -592,13 +310,12 @@ button { font: inherit; color: inherit; cursor: pointer; border: none; backgroun
 
 <script>
 /* ==========================================================================
-   Sample shifts. The numbers obey the real constants:
-     correct +100, close +50, wrong -50, RUSH left-waiting -10 each.
+   Sample shifts. Point values are the real constants: +100 / +50 / -50.
    ====================================================================== */
 const SCENARIOS = {
   good: {
     mode: "triage", difficulty: "forgiving",
-    title: "RES", initials: "JMP", level: "PGY-2 RESIDENT",
+    title: "RES", initials: "JMP",
     date: "Aug 5, 2026 · 2:14 PM",
     duration: "5:00", seen: 11,
     correct: 6, close: 3, wrong: 2, waiting: 4,
@@ -606,7 +323,7 @@ const SCENARIOS = {
   },
   rough: {
     mode: "rush", difficulty: "strict",
-    title: "Intern", initials: "KLR", level: "PGY-1 INTERN",
+    title: "Intern", initials: "KLR",
     date: "Aug 5, 2026 · 9:48 PM",
     duration: "2:00", seen: 5,
     correct: 2, close: 0, wrong: 3, waiting: 7,
@@ -614,79 +331,23 @@ const SCENARIOS = {
   }
 };
 
-/* --- derived numbers, mirroring selectScoreTotals --- */
+/* Two scores on purpose:
+     scoreLegacy - what the SHIPPED game computes, including the RUSH
+                   left-waiting penalty. Pane 0 uses it.
+     score       - the NEW rule (John, 2026-08-05): left-waiting is dropped
+                   entirely, from all modes. Pane B uses it. */
 function totalsFor(s) {
-  const waitingMultiplier = s.mode === "rush" ? -10 : 0;
+  const legacyWaitingMultiplier = s.mode === "rush" ? -10 : 0;
   const correctPts = s.correct * 100;
   const closePts = s.difficulty === "forgiving" ? s.close * 50 : 0;
   const wrongPts = s.wrong * -50;
-  const waitingPts = s.waiting * waitingMultiplier;
+  const waitingPts = s.waiting * legacyWaitingMultiplier;
+  const score = correctPts + closePts + wrongPts;
   return {
-    waitingMultiplier, correctPts, closePts, wrongPts, waitingPts,
-    score: correctPts + closePts + wrongPts + waitingPts
+    legacyWaitingMultiplier, correctPts, closePts, wrongPts, waitingPts,
+    score,
+    scoreLegacy: score + waitingPts
   };
-}
-
-/* The grade.
-   DELIBERATELY NOT a clinical judgement, and it makes no claim about what
-   a real intern should achieve - we are in no position to say. It grades
-   the player against the GAME's own scoring, using the plainest number
-   the game has: what fraction of patients went to the right room.
-   The form prints that number beside the grade, so the player can always
-   see exactly what earned it and it can never look like a medical claim.
-
-   THE WAITING ROOM IS NOT THE PLAYER'S FAULT (John, 2026-08-05). The
-   game is premised on a full waiting room and the player cannot empty
-   it - arrivals keep coming and MAX_WAITING is 10. So the grade rests on
-   placement accuracy ALONE, and no narrative anywhere scolds the player
-   for patients still waiting.
-
-   THRESHOLDS ARE PLACEHOLDERS - they should be tuned against real play
-   data (John's own shifts) rather than invented at a desk. */
-const RATING_THRESHOLDS = { exceeds: 80, meets: 55 };
-
-function ratingFor(s) {
-  const accuracy = s.seen > 0 ? Math.round((s.correct / s.seen) * 100) : 0;
-  const key = accuracy >= RATING_THRESHOLDS.exceeds ? "exceeds"
-            : accuracy >= RATING_THRESHOLDS.meets ? "meets" : "below";
-  const labels = {
-    below: "BELOW EXPECTATIONS",
-    meets: "MEETS EXPECTATIONS",
-    exceeds: "EXCEEDS EXPECTATIONS"
-  };
-  return { key, label: labels[key], accuracy, basis: `${accuracy}% correct placement` };
-}
-
-/* Patients per minute. A NEUTRAL pace observation, never a criticism:
-   working fast is a credit, working steadily is not a fault. */
-function paceFor(s) {
-  const [minutes, seconds] = s.duration.split(":").map(Number);
-  const totalMinutes = minutes + seconds / 60;
-  return totalMinutes > 0 ? s.seen / totalMinutes : 0;
-}
-
-/* A narrative line built from the player's actual pattern - the single
-   thing that would make this read like a person wrote it. */
-function commentFor(s, t, rating) {
-  const parts = [];
-  const accuracy = s.seen > 0 ? Math.round((s.correct / s.seen) * 100) : 0;
-  parts.push(`Placed ${s.correct} of ${s.seen} patients correctly (${accuracy}%).`);
-  if (s.over > s.under * 2 && s.over > 1) {
-    parts.push("Consistent pattern of OVER-triage: acuity is being called one level high, which will burn resuscitation resources.");
-  } else if (s.under > s.over && s.under > 1) {
-    parts.push("Pattern of UNDER-triage noted. Under-calling acuity is the more dangerous error - review the red-flag vitals.");
-  } else {
-    parts.push("Errors are scattered rather than directional; no systematic bias in acuity calls.");
-  }
-  /* Deliberately NO remark about patients left waiting: the room is
-     always full by design, so faulting the player for it would be
-     unfair and would read as a bug (John, 2026-08-05). Pace is
-     mentioned only when it is a CREDIT. */
-  const pace = paceFor(s);
-  if (pace >= 2.5) {
-    parts.push(`Worked at ${pace.toFixed(1)} patients per minute - strong pace under load.`);
-  }
-  return parts.join(" ");
 }
 
 function outcomeClass(points) {
@@ -695,8 +356,13 @@ function outcomeClass(points) {
   return "";
 }
 
+/* Player-facing mode names. Mixed case on TriageRUSH is deliberate. */
+function modeName(s) { return s.mode === "rush" ? "TriageRUSH" : "Triage"; }
+function difficultyName(s) { return s.difficulty === "strict" ? "Strict" : "Forgiving"; }
+
 /* ==========================================================================
-   VARIANT 0 - current build
+   PANE 0 - the shipped build, verbatim. Deliberately still shows LEFT
+   WAITING and the old header, because it is the "before" picture.
    ====================================================================== */
 function renderCurrent(s) {
   const t = totalsFor(s);
@@ -704,7 +370,7 @@ function renderCurrent(s) {
   rows.push(formulaRowCurrent("correct", "CORRECT", s.correct, 100));
   if (s.difficulty === "forgiving") rows.push(formulaRowCurrent("close", "CLOSE", s.close, 50));
   rows.push(formulaRowCurrent("wrong", "WRONG", s.wrong, -50));
-  rows.push(formulaRowCurrent(null, "LEFT WAITING", s.waiting, t.waitingMultiplier));
+  rows.push(formulaRowCurrent(null, "LEFT WAITING", s.waiting, t.legacyWaitingMultiplier));
 
   return `
   <section class="review-view">
@@ -720,7 +386,7 @@ function renderCurrent(s) {
         ${metaRowCurrent("PATIENTS SEEN", s.seen)}
       </div>
       <div class="review-score-block">
-        <p class="review-score-value${t.score < 0 ? " is-negative" : ""}">${t.score}</p>
+        <p class="review-score-value${t.scoreLegacy < 0 ? " is-negative" : ""}">${t.scoreLegacy}</p>
         <p class="review-score-label">FINAL SCORE</p>
       </div>
       <div class="review-formulas">${rows.join("")}</div>
@@ -751,224 +417,46 @@ function formulaRowCurrent(mod, label, count, mult) {
 }
 
 /* ==========================================================================
-   VARIANT A - FORM ED-7
-   ====================================================================== */
-function renderForm(s) {
-  const t = totalsFor(s);
-  const rating = ratingFor(s);
-
-  const lines = [];
-  lines.push(formRow("CORRECT PLACEMENT", s.correct, 100, t.correctPts));
-  if (s.difficulty === "forgiving") lines.push(formRow("ACCEPTABLE (CLOSE)", s.close, 50, t.closePts));
-  lines.push(formRow("INCORRECT PLACEMENT", s.wrong, -50, t.wrongPts));
-  lines.push(formRow("LEFT IN WAITING ROOM", s.waiting, t.waitingMultiplier, t.waitingPts));
-
-  const box = (key, label) => `
-    <div class="form-rating-box${rating.key === key ? " is-marked" : ""}">
-      ${rating.key === key
-        ? '<span class="form-rating-mark">&#10005;</span>'
-        : '<span class="form-rating-slot">&#10005;</span>'}
-      ${label}
-    </div>`;
-
-  return `
-  <section class="mock-view">
-    <div class="paper paper--form">
-      <div class="form-body">
-
-        <div class="form-topline">
-          <span>FORM ED-7</span>
-          <span>REV 08/26</span>
-        </div>
-
-        <header class="form-head">
-          <p class="form-org">DEPARTMENT OF EMERGENCY MEDICINE</p>
-          <p class="form-title">SHIFT EVALUATION</p>
-        </header>
-
-        <div class="form-fields">
-          <span class="form-field-key">TRAINEE</span>
-          <span class="form-field-value">${s.title} ${s.initials}</span>
-          <span class="form-field-key">LEVEL</span>
-          <span class="form-field-value">${s.level}</span>
-          <span class="form-field-key">SHIFT</span>
-          <span class="form-field-value">${s.date} &nbsp;&middot;&nbsp; ${s.duration} &nbsp;&middot;&nbsp; ${s.mode === "rush" ? "RUSH" : "TRIAGE"} / ${s.difficulty.toUpperCase()}</span>
-        </div>
-
-        <p class="form-section-label">1. DISPOSITION ACCURACY</p>
-        <div class="form-table">
-          <span class="form-th">ITEM</span>
-          <span class="form-th form-th--r">N</span>
-          <span class="form-th form-th--r">PTS</span>
-          <span class="form-th form-th--r">TOTAL</span>
-          ${lines.join("")}
-          <span class="form-total-rule"></span>
-          <span class="form-cell-label form-cell-label--total">SHIFT SCORE</span>
-          <span class="form-cell-num">${s.seen} seen</span>
-          <span class="form-cell-num"></span>
-          <span class="form-cell-total form-cell-total--grand${t.score < 0 ? " is-negative" : ""}">${t.score}</span>
-        </div>
-
-        <p class="form-section-label">2. OVERALL PERFORMANCE</p>
-        <div class="form-rating">
-          ${box("below", "BELOW<br>EXPECTATIONS")}
-          ${box("meets", "MEETS<br>EXPECTATIONS")}
-          ${box("exceeds", "EXCEEDS<br>EXPECTATIONS")}
-        </div>
-        <p class="form-basis">Based on ${rating.basis}</p>
-
-        <p class="form-section-label">3. COMMENTS</p>
-        <div class="form-comments">
-          ${commentFor(s, t, rating)}
-          <div class="form-stamp">${s.mode === "rush" ? "RUSH" : "REVIEWED"}</div>
-        </div>
-
-        <div class="form-sign">
-          <div class="form-sign-line"><span class="form-sign-name">R. Okonkwo, MD</span></div>
-          <span class="form-sign-key">ATTENDING</span>
-        </div>
-
-        <div class="mock-actions">
-          <button class="mock-btn mock-btn--seen" type="button">PATIENTS SEEN (${s.seen})</button>
-          <button class="mock-btn mock-btn--return" type="button">RETURN TO ER ENTRANCE</button>
-        </div>
-      </div>
-    </div>
-  </section>`;
-}
-function formRow(label, count, mult, total) {
-  return `<span class="form-cell-label">${label}</span>
-    <span class="form-cell-num">${count}</span>
-    <span class="form-cell-num">${mult >= 0 ? "+" : ""}${mult}</span>
-    <span class="form-cell-total ${outcomeClass(total)}">${total}</span>`;
-}
-
-/* ==========================================================================
-   VARIANTS A2 / A3 - the same form carrying less.
+   PANE B - the target design
    ====================================================================== */
 
-/* The tally line that replaces A's four-row table. Left-waiting is stated
-   as a plain fact with no verdict attached, and is omitted entirely in
-   TRIAGE where it is worth nothing anyway. */
-function tallyLine(s) {
-  const bits = [`<b>${s.correct}</b> correct`];
-  if (s.difficulty === "forgiving") bits.push(`<b>${s.close}</b> close`);
-  bits.push(`<b>${s.wrong}</b> wrong`);
-  if (s.mode === "rush") bits.push(`<b>${s.waiting}</b> still waiting`);
-  return bits.join(" &middot; ");
-}
+/* The two direction explanations, taken from game.js
+   classifyTriageDirection: "over" means higher acuity than required (a
+   LOWER ESI number), "under" the reverse. An incorrect Psych/Discharge
+   choice is plain wrong and moves neither counter.
 
-/* One sentence, chosen by what actually stands out about the shift.
-   Never mentions the waiting room as a criticism. */
-function shortCommentFor(s, rating) {
-  if (s.over > s.under * 2 && s.over > 1) {
-    return "Acuity is being called one level high - a consistent over-triage pattern.";
-  }
-  if (s.under > s.over && s.under > 1) {
-    return "Under-triage noted on several patients - the more dangerous error. Review the red-flag vitals.";
-  }
-  if (rating.key === "exceeds") {
-    return "Placements accurate and consistent across the shift. Excellent work.";
-  }
-  return "Errors are scattered rather than directional - no systematic bias in acuity calls.";
-}
+   NOTE the counters are populated in EVERY mode and difficulty (John,
+   2026-08-05). Difficulty changes SCORING, not counting: direction is
+   assigned to anything that is not "correct", so under Forgiving a CLOSE
+   call also moves a counter, and under Strict — where close does not
+   score — the counters still fill normally. Hence "misses", not "wrong
+   calls", in the wording below. */
+const DIRECTION_HELP = {
+  none: "Neither is scored — they show which way your misses went. Counted in every mode, including Strict.",
+  under: "UNDER-TRIAGED: sent to a room less urgent than the patient needed. The more dangerous error.",
+  over: "OVER-TRIAGED: sent to a room more urgent than the patient needed. Safer, but it ties up the wrong resources."
+};
 
-function gradeClass(rating) {
-  return rating.key === "below" ? "is-bad" : rating.key === "exceeds" ? "is-ok" : "";
-}
-
-function formShell(s, inner) {
-  return `
-  <section class="mock-view">
-    <div class="paper paper--form">
-      <div class="form-body">
-        <div class="form-topline">
-          <span>FORM ED-7</span>
-          <span>REV 08/26</span>
-        </div>
-        <header class="form-head">
-          <p class="form-org">DEPARTMENT OF EMERGENCY MEDICINE</p>
-          <p class="form-title">SHIFT EVALUATION</p>
-        </header>
-        ${inner}
-        <div class="form-sign">
-          <div class="form-sign-line"><span class="form-sign-name">R. Okonkwo, MD</span></div>
-          <span class="form-sign-key">ATTENDING</span>
-        </div>
-        <div class="mock-actions">
-          <button class="mock-btn mock-btn--seen" type="button">PATIENTS SEEN (${s.seen})</button>
-          <button class="mock-btn mock-btn--return" type="button">RETURN TO ER ENTRANCE</button>
-        </div>
-      </div>
-    </div>
-  </section>`;
-}
-
-function renderFormLite(s) {
-  const t = totalsFor(s);
-  const rating = ratingFor(s);
-  return formShell(s, `
-    <p class="lite-ident">${s.title} ${s.initials} &middot; ${s.duration} &middot; ${s.mode === "rush" ? "RUSH" : "TRIAGE"} / ${s.difficulty.toUpperCase()}</p>
-    <p class="lite-ident lite-ident--dim">${s.date}</p>
-
-    <div class="lite-score">
-      <span class="lite-score-key">SHIFT SCORE</span>
-      <span class="lite-score-value${t.score < 0 ? " is-negative" : ""}">${t.score}</span>
-    </div>
-    <p class="lite-tally">${s.seen} seen &nbsp;&middot;&nbsp; ${tallyLine(s)}</p>
-
-    <div class="lite-grade">
-      <span class="lite-grade-key">OVERALL PERFORMANCE</span>
-      <span class="lite-grade-value ${gradeClass(rating)}">${rating.label}</span>
-      <span class="lite-grade-basis">${rating.basis}</span>
-    </div>
-
-    <div class="form-comments">
-      ${shortCommentFor(s, rating)}
-      <div class="form-stamp">${s.mode === "rush" ? "RUSH" : "REVIEWED"}</div>
-    </div>`);
-}
-
-function renderFormMinimal(s) {
-  const t = totalsFor(s);
-  const rating = ratingFor(s);
-  return formShell(s, `
-    <p class="lite-ident">${s.title} ${s.initials} &middot; ${s.duration} &middot; ${s.mode === "rush" ? "RUSH" : "TRIAGE"} / ${s.difficulty.toUpperCase()}</p>
-
-    <div class="lite-score">
-      <span class="lite-score-key">SHIFT SCORE</span>
-      <span class="lite-score-value${t.score < 0 ? " is-negative" : ""}">${t.score}</span>
-    </div>
-
-    <div class="lite-grade">
-      <span class="lite-grade-key">OVERALL PERFORMANCE</span>
-      <span class="lite-grade-value ${gradeClass(rating)}">${rating.label}</span>
-      <span class="lite-grade-basis">${rating.basis}</span>
-    </div>
-
-    <p class="lite-note">
-      ${shortCommentFor(s, rating)}
-      <span class="form-stamp">${s.mode === "rush" ? "RUSH" : "REVIEWED"}</span>
-    </p>`);
-}
-
-/* ==========================================================================
-   VARIANT B - legibility-first summary
-   ====================================================================== */
 function renderClean(s) {
   const t = totalsFor(s);
-  const rows = [];
-  rows.push(cleanRow("CORRECT", s.correct, 100, t.correctPts));
-  if (s.difficulty === "forgiving") rows.push(cleanRow("CLOSE", s.close, 50, t.closePts));
-  rows.push(cleanRow("WRONG", s.wrong, -50, t.wrongPts));
-  rows.push(cleanRow("LEFT WAITING", s.waiting, t.waitingMultiplier, t.waitingPts));
+  const isStrict = s.difficulty === "strict";
+
+  /* ALWAYS three rows, in the same order, so the table never changes
+     shape between modes or difficulties (John, 2026-08-05). Under Strict
+     the CLOSE row keeps its place and reads NA, with no count and no
+     multiplier. LEFT WAITING is gone from every mode. */
+  const rows = [
+    cleanRow("CORRECT", s.correct, 100, t.correctPts),
+    isStrict ? cleanRowNA("CLOSE") : cleanRow("CLOSE", s.close, 50, t.closePts),
+    cleanRow("WRONG", s.wrong, -50, t.wrongPts)
+  ];
 
   return `
   <section class="mock-view">
-    <div class="paper paper--clean">
+    <div class="paper">
       <header class="clean-head">
-        <p class="clean-title">${s.mode === "rush" ? "TRIAGERUSH COMPLETE" : "TRIAGE SHIFT COMPLETE"}</p>
-        <p class="clean-mode">${s.mode === "rush" ? "TRIAGERUSH" : "TRIAGE"} &middot; ${s.difficulty.toUpperCase()}</p>
+        <p class="clean-title">${s.mode === "rush" ? "TriageRUSH COMPLETE" : "TRIAGE SHIFT COMPLETE"}</p>
+        <p class="clean-mode">Mode: ${modeName(s)} Mode, ${difficultyName(s)} Mode</p>
       </header>
 
       <div class="clean-meta">
@@ -986,15 +474,16 @@ function renderClean(s) {
       <div class="clean-table">${rows.join("")}</div>
 
       <div class="clean-directions">
-        <p class="clean-direction">
+        <button class="clean-direction" type="button" data-help="under">
           <span class="clean-direction-count">${s.under}</span>
           <span class="clean-direction-label">UNDER-TRIAGED</span>
-        </p>
-        <p class="clean-direction">
+        </button>
+        <button class="clean-direction" type="button" data-help="over">
           <span class="clean-direction-count">${s.over}</span>
           <span class="clean-direction-label">OVER-TRIAGED</span>
-        </p>
+        </button>
       </div>
+      <p class="clean-help" id="cleanHelp">${DIRECTION_HELP.none}</p>
 
       <div class="mock-actions">
         <button class="mock-btn mock-btn--seen" type="button">PATIENTS SEEN (${s.seen})</button>
@@ -1015,105 +504,25 @@ function cleanRow(label, count, mult, total) {
     <span class="clean-cell-num">&times; ${mult}</span>
     <span class="clean-cell-total ${outcomeClass(total)}">${total}</span>`;
 }
-
-/* ==========================================================================
-   VARIANT C - competency card
-   ====================================================================== */
-function renderCard(s) {
-  const t = totalsFor(s);
-  const rating = ratingFor(s);
-
-  /* Three competencies, each 0-100, each derived from numbers the game
-     already has. Formulas are placeholders for discussion. */
-  const accuracy = s.seen > 0 ? Math.round((s.correct / s.seen) * 100) : 0;
-  const safety = s.seen > 0 ? Math.max(0, 100 - Math.round((s.under / s.seen) * 100) * 3) : 0;
-  /* Pace, NOT "did you empty the waiting room" - the room never empties,
-     so measuring against it would punish the player for the premise
-     (John, 2026-08-05). Target pace is a placeholder to be tuned. */
-  const targetPace = s.mode === "rush" ? 3.5 : 2.5;
-  const pace = Math.max(0, Math.min(100, Math.round((paceFor(s) / targetPace) * 100)));
-
-  const verdictClass = rating.key === "below" ? "is-bad" : rating.key === "exceeds" ? "is-ok" : "";
-
-  return `
-  <section class="mock-view">
-    <div class="paper paper--card">
-      <header class="card-head">
-        <span class="card-title">SHIFT EVALUATION</span>
-        <span class="card-form-no">ED-7</span>
-      </header>
-      <p class="card-sub">${s.title} ${s.initials} &middot; ${s.level} &middot; ${s.duration} &middot; ${s.mode === "rush" ? "RUSH" : "TRIAGE"}/${s.difficulty.toUpperCase()}</p>
-
-      <div class="card-verdict">
-        <p class="card-verdict-key">OVERALL PERFORMANCE</p>
-        <p class="card-verdict-value ${verdictClass}">${rating.label}</p>
-        <p class="card-verdict-note">${rating.basis}</p>
-      </div>
-
-      <div class="card-meters">
-        ${meter("DISPOSITION ACCURACY", accuracy, 60)}
-        ${meter("PATIENT SAFETY (under-triage)", safety, 75)}
-        ${meter("PACE (patients / minute)", pace, 65)}
-      </div>
-      <p class="card-meter-legend">| marks the expected mark for each measure</p>
-
-      <div class="card-counts">
-        <span>UNDER-TRIAGED <b>${s.under}</b></span>
-        <span>OVER-TRIAGED <b>${s.over}</b></span>
-      </div>
-
-      <div class="card-line">
-        <span class="card-line-math">${s.correct}&times;100${s.difficulty === "forgiving" ? " + " + s.close + "×50" : ""} + ${s.wrong}&times;(-50)${s.mode === "rush" ? " + " + s.waiting + "×(-10)" : ""}</span>
-        <span class="card-line-score${t.score < 0 ? " is-negative" : ""}">${t.score}</span>
-      </div>
-
-      <div class="card-comment">
-        <span class="card-comment-key">ATTENDING COMMENTS</span>
-        ${commentFor(s, t, rating)}
-      </div>
-
-      <div class="mock-actions">
-        <button class="mock-btn mock-btn--seen" type="button">PATIENTS SEEN (${s.seen})</button>
-        <button class="mock-btn mock-btn--return" type="button">RETURN TO ER ENTRANCE</button>
-      </div>
-    </div>
-  </section>`;
-}
-function meter(name, value, expected) {
-  const fillClass = value >= expected ? "" : value >= expected - 20 ? " is-mid" : " is-bad";
-  return `<div class="card-meter">
-    <div class="card-meter-top">
-      <span class="card-meter-name">${name}</span>
-      <span class="card-meter-value">${value}</span>
-    </div>
-    <div class="card-meter-track">
-      <span class="card-meter-fill${fillClass}" style="width:${value}%"></span>
-      <span class="card-meter-mark" style="left:${expected}%"></span>
-    </div>
-  </div>`;
+/* Not applicable in this difficulty: the row holds its place, the count
+   and multiplier cells are empty, and the total reads NA. */
+function cleanRowNA(label) {
+  return `<span class="clean-cell-label is-na">${label}</span>
+    <span class="clean-cell-num"></span>
+    <span class="clean-cell-num"></span>
+    <span class="clean-cell-total is-na">NA</span>`;
 }
 
 /* ==========================================================================
    Harness wiring
    ====================================================================== */
-const RENDERERS = {
-  current: renderCurrent,
-  form: renderForm,
-  lite: renderFormLite,
-  minimal: renderFormMinimal,
-  clean: renderClean,
-  card: renderCard
-};
+const RENDERERS = { current: renderCurrent, clean: renderClean };
 const NOTES = {
-  current: "Today's build, unchanged - the thing to beat.",
-  form: "A: the full form. Everything on it - scoring table, three rating boxes, comments field, signature. This is the DENSE one.",
-  lite: "A2: the same form, each idea on one line. Table becomes a tally, three rating boxes become one grade band. About half the ink.",
-  minimal: "A3: score, grade, one sentence, signature. The form motif with almost nothing on it.",
-  clean: "B: today's content, just made readable - bigger minimum type, darker secondary ink, less letter-spacing on labels, boxed direction counts.",
-  card: "C: milestone/competency card. Three rated bars, pace instead of throughput, arithmetic reduced to one line."
+  clean: "B: the chosen direction, with the 2026-08-05 changes - LEFT WAITING dropped from scoring entirely, CLOSE always shown (NA under Strict), new header wording and case, and the direction counters explain themselves on hover or tap.",
+  current: "0: the SHIPPED build, unchanged - still scores LEFT WAITING and uses the old header. This is the 'before'."
 };
 
-let variant = "current";
+let variant = "clean";
 let scenario = "good";
 let size = "desktop";
 
@@ -1124,12 +533,46 @@ function draw() {
   shell.classList.toggle("is-phone", size === "phone");
   shell.innerHTML = RENDERERS[variant](SCENARIOS[scenario]);
   note.textContent = NOTES[variant];
+  wireDirectionHelp();
+}
+
+/* Hover for a mouse, tap for a phone. iOS has no hover at all, so a
+   hover-only affordance would be invisible on John's main device; the
+   same buttons therefore toggle on click, and tapping the open one
+   again closes it. */
+function wireDirectionHelp() {
+  const help = shell.querySelector("#cleanHelp");
+  if (!help) return;
+  const buttons = Array.from(shell.querySelectorAll(".clean-direction"));
+
+  function show(key) {
+    help.textContent = DIRECTION_HELP[key] || DIRECTION_HELP.none;
+    help.classList.toggle("is-specific", Boolean(key));
+  }
+  function setPinned(button) {
+    for (const other of buttons) other.classList.toggle("is-active", other === button);
+    show(button ? button.dataset.help : null);
+  }
+  function pinnedButton() {
+    return buttons.find(b => b.classList.contains("is-active")) || null;
+  }
+
+  for (const button of buttons) {
+    button.addEventListener("mouseenter", () => show(button.dataset.help));
+    button.addEventListener("mouseleave", () => {
+      const pinned = pinnedButton();
+      show(pinned ? pinned.dataset.help : null);
+    });
+    button.addEventListener("click", () => {
+      setPinned(button.classList.contains("is-active") ? null : button);
+    });
+  }
 }
 
 document.querySelector(".harness").addEventListener("click", (event) => {
   const button = event.target.closest("button");
   if (!button) return;
-  const groups = [["variant", (v) => variant = v], ["scenario", (v) => scenario = v], ["size", (v) => size = v]];
+  const groups = [["variant", v => variant = v], ["scenario", v => scenario = v], ["size", v => size = v]];
   for (const [key, set] of groups) {
     const value = button.dataset[key];
     if (!value) continue;
