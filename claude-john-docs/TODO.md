@@ -70,27 +70,6 @@ Notes (Claude):
 Change the sound icon in the game screen: a note icon when sound is on, and
 the note icon with the stop overlay when off.
 
-## 7. Proper layered overlays for the triage room doors (added 2026-08-06)
-
-The triage room doors still need proper overlays. Layering, back to front:
-background color, then walls, then room background, then patient, then
-door. (The reserved wall/interior PNGs from the room-art plan are for this.)
-
-BUILT 2026-08-06 (cache 2026-0806-rooms1a) — open only for John's
-fine-tuning pass on the patient figure:
-
-- Each cell stacks wall art (fills the cell) → room interior (same box as
-  the door art, 61%/91% bottom-aligned) → assigned patient (open room
-  only) → door art. Stacking is DOM order; an open door's transparent
-  doorway reveals the interior and patient. Recall, halo, and pulse all
-  still work; console clean.
-- The wall and interior PNGs joined the asset manifest and startup
-  verification (+8 images — noted against the asset-loading-strategy
-  todo).
-- Patient first pass in styles.css `.room-patient`: bottom 3%, height
-  62% of the cell, max-width 52%, object-fit contain. Fine-tune scale
-  and position by adjusting those three numbers.
-
 ## 8. Waiting backgrounds need NOT travel with the patient (added 2026-08-06)
 
 Not sure if we are still tracking this: it is NOT required that the waiting
@@ -150,9 +129,11 @@ already written, and patient info is drawn directly from the patient store.
 
 Notes (Claude):
 
-- This generalizes (and would supersede) the existing backlog item "review
-  the last shift from ER ENTRANCE (lastCompletedShift snapshot)" — the
-  last shift is just the newest entry in the queue.
+- This generalizes the existing backlog item "review the last shift from
+  ER ENTRANCE (lastCompletedShift snapshot)" — the last shift is just the
+  newest entry in the queue. (Revised 2026-08-06: it does NOT supersede
+  it — item 13's 'REVIEW LAST SHIFT?' button coexists with 'REVIEW PAST
+  SHIFTS', both in the sidewalk area of the ER ENTRANCE art.)
 - Per-shift storage is small: settings snapshot + shift metadata + the
   ledger (order + one record per patient, IDs only) ≈ 2–12 KB of JSON.
   Even 100 stored shifts ≈ 1 MB, well inside the ~5 MB localStorage quota.
@@ -182,7 +163,107 @@ Notes (Claude):
 - Related old backlog item: "six missing vital icons" — worth resolving
   what icon assets exist vs are missing when this is picked up.
 
+## 13. ER ENTRANCE: "REVIEW LAST SHIFT?" button (added 2026-08-06)
+
+When the player returns to the ER ENTRANCE screen, having completed or
+stopped short of a shift, they are given the opportunity to return to the
+Shift Review screen. Why? John accidentally tapped 'Return to ER ENTRANCE'
+instead of 'Review the Patients Seen' and was sent back to the ER
+ENTRANCE, and then could not review his shift. So, in the bottom right
+corner of the ER ENTRANCE screen, IF the last shift is still available,
+make it available for a review by a 'REVIEW LAST SHIFT?' button. If it
+was the first game, or a player quit the shift, then it is not available.
+
+Availability rule (John, clarified same day): the test is whether the
+SHIFT ENDED transition screen appeared. If it did — shift ran to
+completion OR was ended early — a shift occurred and the button appears.
+If it did not (the player QUIT the shift), no button. First game ever:
+no button (no shift exists yet).
+
+Placement (John): bottom right portion of the ER ENTRANCE image,
+superimposed on the sidewalk. The 'REVIEW LAST SHIFT?' button appears
+regardless of the availability of the 'REVIEW PAST SHIFTS' option (item
+11); when both exist, BOTH buttons appear together in that sidewalk
+area, with the last shift also showing as the newest entry in the
+past-shifts list. OR maybe erase the Emergency sign from the art and put
+those options there instead — TBD, decide at build time.
+
+Notes (Claude):
+
+- This makes the old backlog item "review the last shift from ER
+  ENTRANCE (lastCompletedShift snapshot)" concrete, and revises item
+  11's supersede note: the two coexist as separate buttons rather than
+  one absorbing the other.
+- If this lands before Phase 9, an in-memory lastCompletedShift snapshot
+  is enough — the button only has to survive within the session until
+  persistence exists.
+
 ## DONE
+
+## 14. Preload the open-door art (RESOLVED 2026-08-06)
+
+We need to preload those open doors: there is a noticeable delay between
+assigning the patient to the room — the patient appears immediately, but
+the door is GONE for 1/4 second or so before the open-door art appears.
+
+Resolved 2026-08-06 by item 15 (the art resize), same day it was added:
+with the open-door PNGs down from ~1.4 MB to ~90 KB, the src-swap
+decodes fast enough that John confirmed the bare-doorway gap is gone. No
+preloading code was written. If the gap ever returns (e.g. future art
+changes), the candidate fixes were: stack BOTH door states as two imgs
+and toggle visibility instead of swapping src, or pre-decode open
+variants via img.decode() at shift start.
+
+## 15. Resize the room/waiting art down from hi-res (DONE 2026-08-06)
+
+Raised and built the same day, so it never got a numbered slot while open.
+The waiting-room backgrounds, walls, room interiors, and open/closed doors
+were all hi-res multi-MB PNGs but render tiny; they were batch-resized for
+the worst display case (iPhone 3x shell ≈ 1296×2304 physical, which beats
+a 4K desktop window) with ~15% headroom:
+
+- doors ×14 → height 400; interiors ×7 → height 448; shared wall → height
+  320; waiting backgrounds ×16 → height 448. Aspect preserved, LANCZOS,
+  still PNG (doors keep their alpha doorway). Same paths/filenames, so
+  assets.js needed no path edits — cache bumped to 2026-0806-art1a.
+- **169.7 MB → 5.5 MB.** Patient portraits deliberately untouched (they
+  magnify; they stay hi-res).
+- Hi-res originals: John's manual full-assets copy at
+  `assets/HIRES-ORIGINAL-ART/` (not used by the game; restore from there
+  if any art ever looks soft).
+- Script kept at `assets/_asset-audit-and-resize/resize_game_art.py`;
+  targets follow that folder's 2026-08-04 audit, now validated against
+  the final CSS.
+- Smoke-tested in Chrome: READY reached, assignment shows patient +
+  interior through the open door, console clean (favicon 404 only).
+  John's desktop + iPhone visual pass still pending.
+- CONFIRMED by John same day: this fixed item 14 (the ¼-second
+  door-swap gap) outright — no preload code needed. John also visually
+  approved the resized art in the game.
+
+## 7. Proper layered overlays for the triage room doors (DONE 2026-08-06)
+
+The triage room doors still need proper overlays. Layering, back to front:
+background color, then walls, then room background, then patient, then
+door. (The reserved wall/interior PNGs from the room-art plan are for this.)
+
+Built 2026-08-06 (cache 2026-0806-rooms1a), patient figure fine-tuned and
+APPROVED by John same day (cache 2026-0806-rooms1h):
+
+- Each cell stacks wall art (fills the cell) → room interior (same box as
+  the door art, 61%/91% bottom-aligned) → assigned patient (open room
+  only) → door art. Stacking is DOM order; an open door's transparent
+  doorway reveals the interior and patient. Recall, halo, and pulse all
+  still work; console clean.
+- The wall and interior PNGs joined the asset manifest and startup
+  verification (+8 images — noted against the asset-loading-strategy
+  todo).
+- FINAL patient numbers in styles.css `.room-patient`: left 45% (image
+  center at 45% of cell width), bottom 9%, height 80%, max-width 66%,
+  object-fit contain. Adjust only these four numbers if it ever needs
+  re-tuning.
+- Follow-up spun off as item 14: the open-door art paints ~1/4s late on
+  assignment.
 
 ## 4. Make 'ABOUT' more prominent in the ER ENTRANCE art (RESOLVED 2026-08-06)
 

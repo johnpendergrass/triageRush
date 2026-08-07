@@ -1135,17 +1135,17 @@ img {
   object-fit: fill;
 }
 
-/* First-pass patient scale (John: get it fitting, fine-tune after):
-   centered in the doorway, feet near the door's bottom edge. The
-   portraits are square 1024 cut-outs with transparency, so contain
-   keeps the figure whole. */
+/* Patient scale/placement — John-approved 2026-08-06: center at 45% of
+   the cell width, raised 9% off the bottom. The portraits are square
+   1024 cut-outs with transparency, so contain keeps the figure whole.
+   Re-tune only by adjusting left/bottom/height/max-width. */
 .room-patient {
   position: absolute;
-  left: 50%;
-  bottom: 3%;
+  left: 45%;
+  bottom: 9%;
   transform: translateX(-50%);
-  height: 62%;
-  max-width: 52%;
+  height: 80%;
+  max-width: 66%;
   object-fit: contain;
   object-position: bottom center;
 }

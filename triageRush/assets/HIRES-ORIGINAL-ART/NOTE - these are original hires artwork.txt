@@ -1,0 +1,10 @@
+NOTE - these are original hires artwork.
+
+The versions used in the actual game are often scaled
+down considerably to save space - why use 1000x1000 pixels, 
+when only 100x100 will ever be displayed?
+
+KEEP THESE
+
+In case I ever need the hires versions again.
+
