@@ -832,26 +832,6 @@ img {
   transform: scale(0.97);
 }
 
-/* Move/swap hint badge on the row's right edge (UI Hints on). */
-.queue-hint {
-  position: absolute;
-  right: 2px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: clamp(12px, 4cqw, 18px);
-  height: clamp(12px, 4cqw, 18px);
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: rgb(23 55 70 / 80%);
-  border: 1px solid #fff5d7;
-  color: #fff;
-  font-size: clamp(7px, 2.4cqw, 11px);
-  font-weight: 900;
-  font-family: "Arial Black", Impact, sans-serif;
-  pointer-events: none;
-}
-
 /* ------------------------------------------------------------------------
    7c. The unified patient chart - transparent PANEL setting.
    One content structure (built in ui.js); this wrapper gives it the

@@ -41,8 +41,8 @@ const GAME_CONSTANTS = Object.freeze({
   RUSH_LENGTH_CHOICES_SECONDS: Object.freeze([60, 120]),
 
   PLAYER_TITLES: Object.freeze([
-    "Doctor", "Nurse", "RN", "LPN", "RES", "Intern",
-    "EMS", "PA", "MS1", "MS2", "MS3", "MS4"
+    "Doctor", "Nurse", "RN", "RES", "Intern", "EMS",
+    "MS1", "MS2", "MS3", "MS4", "MR", "MRS", "M", "MS"
   ]),
 
   MODES: Object.freeze(["triage", "rush"]),
@@ -98,7 +98,6 @@ function createInitialState() {
       difficulty: "forgiving", // forgiving | strict
       triageLengthSeconds: 300,
       rushLengthSeconds: 60,
-      hints: true,
       /* Sound preferences (design change 2026-08-04, boombox retired):
          GLOBAL master switch, GAME SOUNDS family, MUSIC (KING-FM stream).
          Music plays only when soundGlobal && soundMusic, decided on HOME. */
@@ -181,7 +180,6 @@ function isValidSettingsShape(candidate) {
     GAME_CONSTANTS.DIFFICULTIES.includes(candidate.difficulty) &&
     GAME_CONSTANTS.TRIAGE_LENGTH_CHOICES_SECONDS.includes(candidate.triageLengthSeconds) &&
     GAME_CONSTANTS.RUSH_LENGTH_CHOICES_SECONDS.includes(candidate.rushLengthSeconds) &&
-    typeof candidate.hints === "boolean" &&
     typeof candidate.soundGlobal === "boolean" &&
     typeof candidate.soundGame === "boolean" &&
     typeof candidate.soundMusic === "boolean"
@@ -210,7 +208,6 @@ function applySettings(state, newPlayer, newSettings) {
     difficulty: newSettings.difficulty,
     triageLengthSeconds: newSettings.triageLengthSeconds,
     rushLengthSeconds: newSettings.rushLengthSeconds,
-    hints: newSettings.hints,
     soundGlobal: newSettings.soundGlobal,
     soundGame: newSettings.soundGame,
     soundMusic: newSettings.soundMusic
@@ -1202,6 +1199,22 @@ function loadPreferences(state) {
   }
 
   const stored = envelope.preferences;
+
+  /* Titles removed 2026-08-06 (LPN, PA) map to the default rather than
+     invalidating the whole envelope - a stored title should never cost
+     the player their other settings. */
+  if (stored.player &&
+      (stored.player.title === "LPN" || stored.player.title === "PA")) {
+    stored.player.title = "Doctor";
+  }
+
+  /* The hints setting was removed 2026-08-07 (empty-state arrows became
+     permanent; queue badges deleted). Strip the stale key from older
+     saves so it never re-enters the state tree via the spread below. */
+  if (stored.settings && "hints" in stored.settings) {
+    delete stored.settings.hints;
+  }
+
   if (!isValidPlayerShape(stored.player) ||
       !isValidSettingsShape(stored.settings)) {
     return false;

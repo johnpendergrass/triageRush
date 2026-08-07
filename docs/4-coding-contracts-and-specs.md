@@ -91,11 +91,11 @@ The state must cover:
 - application view: HOME, GAME, or SHIFT REVIEW;
 - blocking overlay and focus-return information;
 - player identity and persisted preferences;
-- mode, difficulty, shift length, hints, and sound settings;
+- mode, difficulty, shift length, and sound settings;
 - shift phase and timestamps;
 - shuffled patient deck and cursor;
 - waiting entries, each with patient ID and attached background;
-- active patient and its attached background;
+- active patient (patient ID only; backgrounds belong to waiting rows);
 - assigned/open room and recall availability;
 - one ordered result ledger keyed by patient ID;
 - derived scoring and direction counts;

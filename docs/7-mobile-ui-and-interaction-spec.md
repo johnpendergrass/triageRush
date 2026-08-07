@@ -416,8 +416,10 @@ The settings board contains:
 - Triage/RUSH mode;
 - Strict/Forgiving;
 - mode-specific length;
-- the three sound toggles: GLOBAL, GAME SOUNDS, MUSIC;
-- UI Hints.
+- the three sound toggles: GLOBAL, GAME SOUNDS, MUSIC.
+
+There is no UI Hints control (setting removed 2026-08-07); the patient
+panel's empty-state arrows are permanent.
 
 Title choices include `Intern`. Settings controls use real labels, radios,
 checkboxes, and selects over the board artwork. About uses the accepted About

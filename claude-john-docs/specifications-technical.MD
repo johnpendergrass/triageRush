@@ -1,7 +1,50 @@
 # triageRush — technical notes (pointer file)
 
-**Last modified:** 2026-08-06 (fourth session: art resize, row-owned
-backgrounds, vitals SVG icons)
+**Last modified:** 2026-08-07 (hints removal mechanics; blackboard
+mockup conventions + build-phase plan)
+
+## Hints removal mechanics (2026-08-07, built)
+
+`state.settings.hints` no longer exists: removed from the defaults,
+isValidSettingsShape, and applySettings. loadPreferences DELETES a
+stale `hints` key from stored envelopes before the validate-and-spread
+(the spread would otherwise reimport it). The empty-state arrows render
+unconditionally (renderEmptyStateHint; the span's `hidden` attr is gone
+from index.html). `.queue-hint` CSS and the settingHints element-id
+entry in ui.js are deleted — restoring any hint UI means re-adding the
+id to ui.js's REQUIRED_ELEMENT list or lookups fail at boot.
+
+## Settings blackboard mockups (2026-08-07, design locked, NOT built)
+
+`_mockups/settings-letterboard-mockup-{PLAYER,GAME}.html` are
+PHONE-TRUE: they copy the shell + popup-card rules from styles.css
+verbatim, and put `container-type: inline-size` on .popup-card so ALL
+sizes are in cqw of the card — open them at any size and the board is
+exactly game-scale. Conventions that matter for the build:
+
+- `.setting-group` / `--headline` two-line pattern (left header,
+  centered options row) is the vocabulary the real build should use.
+- CSS gotcha found live: `.setting-group { margin: 0 0 X; }` beats an
+  earlier single-class `--headline` margin (same specificity, later
+  order) — the mockups use a doubled-class selector to win.
+- Odometer drums: 3 stacked cells (prev/current/next), rebuilt per
+  step; cylinder look = one ::after gradient overlay + scaleY(0.62)
+  dimmed peek cells; roll = 150ms translateY animation restarted via
+  the anim-none/offsetWidth/anim-"" trick. The tap-value picker is an
+  invisible <select> (opacity 0, inset 0, font-size 16px — that size
+  stops iOS's focus zoom) kept in sync with the chevrons.
+- Initials symbols MUST be stored as an array of whole strings — some
+  emoji are two JS code units; never .split("") an emoji alphabet.
+  Build-time: normalizeInitials/isValidPlayerShape move from
+  /^[A-Z]{1,3}$/ to symbol-list membership, counting symbols.
+- Build-time sound schema: soundGlobal stays boolean; soundGame /
+  soundMusic become gameLoudness / musicLoudness ("off"/"lo"/"hi") —
+  migrate old saves with the friendly strip/map pattern. Loudness maps
+  to a gain multiplier in app.js's Web Audio registry and .volume on
+  the KING-FM stream element. The sound icon becomes a WRITER of
+  soundGlobal (persisted via savePreferences), retiring the
+  gameSoundsAudible per-shift override (game.js 112/933/1064,
+  app.js 361, ui.js renderSoundButton).
 
 ## Brand lettering (2026-08-06)
 

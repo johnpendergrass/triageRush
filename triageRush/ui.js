@@ -36,7 +36,7 @@
     "aboutBoardContent", "playerTitleSelect", "playerInitialsInput",
     "triageLengthFieldset", "rushLengthFieldset",
     "settingSoundGlobal", "settingSoundGame", "settingSoundMusic",
-    "settingHints", "musicStatusNote",
+    "musicStatusNote",
     // Overlays
     "arrivingOverlay", "confirmQuitOverlay", "confirmQuitCancel",
     "confirmQuitAccept", "confirmStopOverlay", "confirmStopCancel",
@@ -196,7 +196,6 @@
     ui.settingSoundGlobal.checked = state.settings.soundGlobal;
     ui.settingSoundGame.checked = state.settings.soundGame;
     ui.settingSoundMusic.checked = state.settings.soundMusic;
-    ui.settingHints.checked = state.settings.hints;
 
     renderModeLengthVisibility();
   }
@@ -235,7 +234,6 @@
         difficulty: getRadioGroup("settingDifficulty"),
         triageLengthSeconds: Number(getRadioGroup("settingTriageLength")),
         rushLengthSeconds: Number(getRadioGroup("settingRushLength")),
-        hints: ui.settingHints.checked,
         soundGlobal: ui.settingSoundGlobal.checked,
         soundGame: ui.settingSoundGame.checked,
         soundMusic: ui.settingSoundMusic.checked
@@ -351,13 +349,6 @@
       complaint.textContent = record.patient.presentation.chiefComplaint;
 
       row.append(background, portrait, frame, complaint);
-
-      if (state.settings.hints && (canSelect || canSwap)) {
-        const hint = document.createElement("span");
-        hint.className = "queue-hint";
-        hint.textContent = canSelect ? "→" : "↔";
-        row.append(hint);
-      }
 
       row.setAttribute("aria-label",
         `${record.patient.presentation.personal.name}: `
@@ -824,7 +815,6 @@
   function renderPatient(state, portraitUrlFor) {
     const hasActivePatient = state.active !== null;
     ui.patientEmptyState.hidden = hasActivePatient;
-    ui.patientEmptyHint.hidden = !state.settings.hints;
     /* The whole occupied panel is the one Chart hit target; when the
        panel is empty the target is absent and Chart cannot open (doc 7). */
     ui.patientPanelHitButton.hidden = !hasActivePatient;

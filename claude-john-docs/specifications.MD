@@ -1,7 +1,30 @@
 # triageRush — specifications (pointer file)
 
-**Last modified:** 2026-08-06 (fourth session: art resize, row-owned
-backgrounds, vitals icons, full docs sweep)
+**Last modified:** 2026-08-07 (hints removed; settings blackboards
+redesign LOCKED at mockup stage)
+
+## 2026-08-07: hints removed + blackboard redesign locked
+
+- **UI hints REMOVED from the game** (TODO 5 resolved, cache
+  2026-0807-hints1a): queue badges and the Show UI hints setting are
+  gone; the patient-panel empty-state arrows are PERMANENT. Rationale:
+  finish the game, play test, and only design hints (the glow idea)
+  from where testers actually get stuck. Scroll indicators and the
+  shift-over tap line are navigation affordances, not hints — kept.
+  Docs 3/4/7/8/9 already swept.
+- **Settings blackboards (TODO 3): both boards' looks LOCKED as
+  phone-true mockups** — nothing in the game yet. Authoritative record:
+  TODO.md item 3 "Design state". Boards: **PLAYER NAME** (Vegas-odometer
+  drums for title + initials; dual input, chevrons or native picker, no
+  keyboard; initials A-Z + "-" + 7 emoji; titles gain "Hey you!") and
+  **GAME OPTIONS / SOUND OPTIONS** (two-line setting-groups, headline
+  GAME MODE with enlarged brand words + headline GLOBAL SOUND;
+  GAME SOUNDS and KING-FM are off/lo/hi rows — OFF replaces per-family
+  toggles). The game-screen sound icon will BE the global sound setting
+  (one persisted value). No ambiance option until ambient assets exist.
+  Mockups: `_mockups/settings-letterboard-mockup-{PLAYER,GAME}.html`.
+- Player titles change (built earlier, committed with this session):
+  LPN + PA removed, MR/MRS/M/MS added; stored LPN/PA maps to Doctor.
 
 ## Fourth session (2026-08-06 evening): BUILT + docs swept
 

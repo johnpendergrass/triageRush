@@ -566,8 +566,11 @@ player-facing name; internal code and asset keys keep `home`/`lobby`.)
 - Difficulty: Strict or Forgiving.
 - Triage length: 5 or 10 minutes; default 5.
 - RUSH length: 60 or 120 seconds; default 60.
-- UI Hints on/off.
 - Sound: the three toggles below.
+
+There is no UI Hints setting (removed 2026-08-07): the patient panel's
+empty-state arrows are always shown, and no other hint UI exists. Any
+future hint system waits on play-testing evidence (TODO.md item 5).
 
 Settings are edited on HOME before Start Shift. GAME does not open HOME
 settings without first completing the confirmed Quit This Shift flow, so there

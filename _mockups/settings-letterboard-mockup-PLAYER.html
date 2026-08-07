@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PLAYER SETTINGS letter-board — in-shell mockup</title>
+<!--
+  In-shell mockup for the PLAYER SETTINGS letter board (TODO 3).
+  Companion file: settings-letterboard-mockup-GAME.html — see its
+  header comment for the shell-faithfulness notes.
+
+  Revision 2 (John, 2026-08-07): TITLE/INITIALS headers removed (the
+  controls are obvious); wheels restyled as automobile / Vegas odometer
+  drums — the previous and next values peek above and below the current
+  one through a curved metal-bezeled window — and everything is bigger:
+  arrow buttons are ~16x11cqw, past Apple's 44px tap-target floor. The
+  player id is the ONLY content on this board, so it spreads out.
+
+  Revision 3 (John, 2026-08-07): (1) tapping a drum VALUE opens the
+  native picker (an invisible <select> over the window — iOS shows its
+  wheel, no keyboard ever), so both input styles work; (2) the initials
+  alphabet gained "-" plus a medical-forward emoji set (stored exactly
+  like letters — a string is a string; only the length validation cares
+  that some emoji are two JS code units); (3) title and initials drums
+  share one value size.
+-->
+<style>
+  :root {
+    --navy-950: #031019;
+    --green: #27c978;
+    --chalk: #e8e4da;
+    --letter: #f2ede1;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: "Arial Narrow", "Roboto Condensed", Arial, sans-serif;
+    background: radial-gradient(circle at 50% 20%,
+      #244454 0%, #0d2532 40%, #02090e 100%);
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    padding:
+      max(5dvh, env(safe-area-inset-top))
+      max(4px, env(safe-area-inset-right))
+      max(5dvh, env(safe-area-inset-bottom))
+      max(4px, env(safe-area-inset-left));
+  }
+  [hidden] { display: none !important; }
+  button {
+    font: inherit; color: inherit; cursor: pointer;
+    border: none; background: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  img { user-select: none; -webkit-user-drag: none; }
+
+  /* ---- the 9:16 shell (copied from styles.css section 2) ---- */
+  .app-shell {
+    position: relative;
+    width: min(calc(100vw - 8px), calc(90dvh * 0.5625));
+    height: min(90dvh, calc((100vw - 8px) * 1.7778));
+    overflow: hidden;
+    background: var(--navy-950);
+    border: 2px solid #46606b;
+    box-shadow: 0 24px 80px #000c, inset 0 0 0 2px #0b1014;
+  }
+
+  /* ---- popup layer + card (copied from styles.css section 5) ---- */
+  .popup-layer {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgb(2 7 10 / 68%);
+    backdrop-filter: blur(2px);
+  }
+  .popup-card {
+    position: relative;
+    height: 93.75%;
+    aspect-ratio: 941 / 1672;
+    max-width: 96%;
+    container-type: inline-size;
+  }
+  .board-art {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+  }
+  .popup-close {
+    position: absolute;
+    top: 8.5%; right: 10.5%;
+    width: 10cqw; height: 10cqw;
+    z-index: 3;
+    border-radius: 7px;
+    border: 2px solid #fff;
+    background: linear-gradient(#f4574c, #a20e08);
+    color: #fff; font-weight: 900;
+    font-size: 5cqw; line-height: 1;
+  }
+  .popup-apply {
+    position: absolute;
+    bottom: 8.5%; right: 10.5%;
+    width: 11cqw; height: 11cqw;
+    z-index: 3;
+    border-radius: 7px;
+    border: 2px solid #fff;
+    background: linear-gradient(#2fbd7c, #0a6b3e);
+    color: #fff; font-weight: 900;
+    font-size: 5.5cqw; line-height: 1;
+  }
+
+  /* ---- the board face ---- */
+  .board-face {
+    position: absolute;
+    left: 13%; right: 13%;
+    top: 14%; bottom: 15%;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* Top padding clears the absolutely-positioned board title. */
+    padding-top: 10cqw;
+    gap: 8cqw;
+    color: var(--letter);
+    text-transform: uppercase;
+    overflow: hidden;
+  }
+
+  .lettering-a .board-face,
+  .lettering-a .board-title {
+    font-family: "Arial Black", "Arial Bold", Arial, sans-serif;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+  }
+  .lettering-b .board-face,
+  .lettering-b .board-title {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+
+  .board-title {
+    position: absolute;
+    top: 2cqw;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 5.3cqw;
+    letter-spacing: 0.09em;
+  }
+  .lettering-b .board-title { letter-spacing: 0.15em; }
+
+  /* ================= odometer wheels =================
+     Each wheel: big chevron button, then a metal-bezeled window
+     showing a drum — previous value peeking (squashed + dim) above,
+     the current value centered, next value peeking below — then the
+     other chevron. The bezel and cylinder shading sell the machine. */
+
+  .wheel-block {
+    display: flex;
+    justify-content: center;
+    gap: 4.5cqw;
+  }
+
+  .wheel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5cqw;
+  }
+
+  .wheel-step {
+    width: 16cqw;
+    height: 11cqw;
+    color: var(--letter);
+    display: grid;
+    place-items: center;
+    border-radius: 2.5cqw;
+    background: rgb(255 255 255 / 6%);
+  }
+  .wheel-step:active { background: rgb(255 255 255 / 18%); }
+  .wheel-step svg { width: 9cqw; height: 5.5cqw; display: block; }
+  .wheel-step svg path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 3.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Brushed-metal bezel around the drum window. */
+  .wheel-bezel {
+    padding: 1.2cqw;
+    border-radius: 3cqw;
+    background: linear-gradient(180deg,
+      #9aa2a8 0%, #5a6167 18%, #2e3338 50%, #565d63 84%, #8d959b 100%);
+    box-shadow:
+      0 1cqw 2.5cqw rgb(0 0 0 / 60%),
+      inset 0 0.3cqw 0.6cqw rgb(255 255 255 / 35%);
+  }
+
+  /* The drum window: fixed height, three stacked value rows inside. */
+  .wheel-window {
+    position: relative;
+    width: 17cqw;
+    height: 24cqw;
+    border-radius: 2cqw;
+    background: #0a0c0e;
+    overflow: hidden;
+  }
+  .wheel--title .wheel-window { width: 56cqw; }
+
+  .wheel-drum {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+  }
+
+  .drum-cell {
+    height: 33.34%;
+    display: grid;
+    place-items: center;
+    font-size: 8.5cqw;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  /* Neighbors: squashed and dim, as if curving away on the cylinder. */
+  .drum-cell--peek {
+    transform: scaleY(0.62);
+    opacity: 0.38;
+    color: #cfc9bb;
+  }
+
+  /* Cylinder shading + the center "read line" highlight. */
+  .wheel-window::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg,
+        rgb(0 0 0 / 88%) 0%,
+        rgb(0 0 0 / 30%) 22%,
+        rgb(255 255 255 / 7%) 38%,
+        rgb(255 255 255 / 7%) 62%,
+        rgb(0 0 0 / 30%) 78%,
+        rgb(0 0 0 / 88%) 100%);
+  }
+  /* Thin separator ridges between the drum rows, like real odometers. */
+  .wheel-window::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    top: 33.34%;
+    height: 33.33%;
+    pointer-events: none;
+    z-index: 1;
+    border-top: 1px solid rgb(255 255 255 / 14%);
+    border-bottom: 1px solid rgb(255 255 255 / 14%);
+  }
+
+  /* Invisible native-picker trigger over the drum window: tapping the
+     value opens the platform picker (iOS wheel). 16px+ font prevents
+     iOS from zooming the page on focus. */
+  .wheel-select {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    font-size: 16px;
+    cursor: pointer;
+    appearance: none;
+    border: 0;
+  }
+
+  /* Roll animation: the whole drum slides one cell, then snaps back
+     with fresh values (JS rebuilds the cells). */
+  .wheel-drum.roll-up   { animation: drum-up 150ms ease-out; }
+  .wheel-drum.roll-down { animation: drum-down 150ms ease-out; }
+  @keyframes drum-up   { from { transform: translateY(-33.34%); } }
+  @keyframes drum-down { from { transform: translateY(33.34%); } }
+
+  /* ---- floating lettering toggle (mockup chrome, not game UI) ---- */
+  .variant-bar {
+    position: fixed;
+    top: max(6px, env(safe-area-inset-top));
+    left: 6px;
+    z-index: 20;
+    display: flex;
+    gap: 6px;
+  }
+  .variant-bar button {
+    font-weight: 700;
+    font-size: 13px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid rgb(232 228 218 / 45%);
+    background: rgb(7 28 41 / 85%);
+    color: var(--chalk);
+  }
+  .variant-bar button.is-active {
+    background: var(--green);
+    border-color: var(--green);
+    color: #06231a;
+  }
+</style>
+</head>
+<body>
+
+<div class="variant-bar">
+  <button id="btnA" class="is-active">A</button>
+  <button id="btnB">B</button>
+</div>
+
+<div class="app-shell lettering-a" id="shell">
+  <div class="popup-layer">
+    <div class="popup-card">
+      <img class="board-art" src="../triageRush/assets/lobby-page/settings-blackboard.png" alt="">
+      <button class="popup-close" type="button" aria-label="close">&#x2715;</button>
+      <button class="popup-apply" type="button" aria-label="apply">&#x2713;</button>
+
+      <div class="board-face">
+        <div class="board-title">Player Name</div>
+
+        <div class="wheel-block">
+          <div class="wheel wheel--title" data-wheel="title"></div>
+        </div>
+
+        <div class="wheel-block">
+          <div class="wheel" data-wheel="letter" data-start="J"></div>
+          <div class="wheel" data-wheel="letter" data-start="P"></div>
+          <div class="wheel" data-wheel="letter" data-start="X"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+const shell = document.getElementById("shell");
+const btnA = document.getElementById("btnA");
+const btnB = document.getElementById("btnB");
+btnA.addEventListener("click", () => {
+  shell.className = "app-shell lettering-a";
+  btnA.classList.add("is-active"); btnB.classList.remove("is-active");
+});
+btnB.addEventListener("click", () => {
+  shell.className = "app-shell lettering-b";
+  btnB.classList.add("is-active"); btnA.classList.remove("is-active");
+});
+
+const PLAYER_TITLES = [
+  "Doctor", "Nurse", "RN", "RES", "Intern", "EMS",
+  "MS1", "MS2", "MS3", "MS4", "MR", "MRS", "M", "MS",
+  "Hey you!"
+];
+
+/* Initials alphabet: A-Z, a "-" spacer, then the approved emoji set
+   (John, 2026-08-07). Emoji store exactly like letters (a string is a
+   string); they are listed as whole strings here because some are two
+   JS code units and can never be split with .split(""). */
+const INITIAL_SYMBOLS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").concat([
+  "-",
+  "⚕️",  /* staff of aesculapius (medical insignia) */
+  "\u{1F691}",     /* ambulance */
+  "\u{1F480}",     /* skull */
+  "\u{1F637}",     /* face with medical mask */
+  "❤️",  /* red heart */
+  "➕",        /* heavy plus */
+  "⭐"         /* star */
+]);
+
+const CHEVRON_UP =
+  '<svg viewBox="0 0 22 14" aria-hidden="true"><path d="M3 11 L11 3 L19 11"/></svg>';
+const CHEVRON_DOWN =
+  '<svg viewBox="0 0 22 14" aria-hidden="true"><path d="M3 3 L11 11 L19 3"/></svg>';
+
+function buildWheel(mount, values, startValue) {
+  let index = Math.max(0, values.indexOf(startValue));
+  const count = values.length;
+  const at = (offset) => values[(index + offset + count) % count];
+
+  const up = document.createElement("button");
+  up.type = "button";
+  up.className = "wheel-step";
+  up.innerHTML = CHEVRON_UP;
+  up.setAttribute("aria-label", "previous value");
+
+  const bezel = document.createElement("div");
+  bezel.className = "wheel-bezel";
+  const windowEl = document.createElement("div");
+  windowEl.className = "wheel-window";
+  const drum = document.createElement("div");
+  drum.className = "wheel-drum";
+  windowEl.append(drum);
+  bezel.append(windowEl);
+
+  /* Tapping the value opens the native picker (iOS wheel; no typing —
+     a select never raises the keyboard). */
+  const select = document.createElement("select");
+  select.className = "wheel-select";
+  select.setAttribute("aria-label", "pick a value");
+  for (const value of values) {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = value;
+    select.append(option);
+  }
+  select.value = values[index];
+  select.addEventListener("change", () => {
+    index = Math.max(0, values.indexOf(select.value));
+    renderDrum();
+  });
+  windowEl.append(select);
+
+  const down = document.createElement("button");
+  down.type = "button";
+  down.className = "wheel-step";
+  down.innerHTML = CHEVRON_DOWN;
+  down.setAttribute("aria-label", "next value");
+
+  function renderDrum() {
+    drum.replaceChildren();
+    for (const offset of [-1, 0, 1]) {
+      const cell = document.createElement("div");
+      cell.className = "drum-cell" + (offset === 0 ? "" : " drum-cell--peek");
+      cell.textContent = at(offset);
+      drum.append(cell);
+    }
+  }
+
+  function step(direction) {
+    index = (index + direction + count) % count;
+    select.value = values[index];
+    renderDrum();
+    drum.className = "wheel-drum " + (direction > 0 ? "roll-down" : "roll-up");
+    /* restart the animation even on rapid taps */
+    drum.style.animation = "none";
+    void drum.offsetWidth;
+    drum.style.animation = "";
+  }
+  up.addEventListener("click", () => step(-1));
+  down.addEventListener("click", () => step(1));
+
+  renderDrum();
+  mount.append(up, bezel, down);
+}
+
+for (const mount of document.querySelectorAll('[data-wheel="title"]')) {
+  buildWheel(mount, PLAYER_TITLES, "Doctor");
+}
+for (const mount of document.querySelectorAll('[data-wheel="letter"]')) {
+  buildWheel(mount, INITIAL_SYMBOLS, mount.dataset.start || "A");
+}
+</script>
+
+</body>
+</html>

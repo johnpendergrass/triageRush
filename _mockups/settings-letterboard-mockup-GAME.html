@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GAME OPTIONS letter-board — in-shell mockup</title>
+<!--
+  In-shell mockup for the GAME OPTIONS letter board (TODO 3).
+  Companion file: settings-letterboard-mockup-PLAYER.html.
+
+  The board renders inside a faithful copy of the game's 9:16 shell and
+  popup layer (93.75%-height card, 941/1672 aspect, 13/14/15% face
+  insets, scrim, X + APPLY buttons), so on an iPhone this IS the size
+  the real board will be. Shell + palette rules are COPIED from
+  styles.css per the _mockups convention; the board art is the live
+  asset by relative path. Opens from disk on desktop; on the iPhone use
+  John's bat server: http://<pc-ip>:8090/_mockups/<this file>.
+
+  Decisions carried in (John, 2026-08-07): letter-board white lettering,
+  brand words are the only orange, current green radio/checkbox style,
+  "Game sounds" naming, no ambiance row. Lettering A/B toggle top-left.
+-->
+<style>
+  :root {
+    --navy-950: #031019;
+    --green: #27c978;
+    --chalk: #e8e4da;
+    --brand-face: #ec543d;
+    --brand-brick: #a03426;
+    --brand-cast: rgba(60, 30, 15, 0.55);
+    --letter: #f2ede1;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: "Arial Narrow", "Roboto Condensed", Arial, sans-serif;
+    background: radial-gradient(circle at 50% 20%,
+      #244454 0%, #0d2532 40%, #02090e 100%);
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    padding:
+      max(5dvh, env(safe-area-inset-top))
+      max(4px, env(safe-area-inset-right))
+      max(5dvh, env(safe-area-inset-bottom))
+      max(4px, env(safe-area-inset-left));
+  }
+  [hidden] { display: none !important; }
+  button {
+    font: inherit; color: inherit; cursor: pointer;
+    border: none; background: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  img { user-select: none; -webkit-user-drag: none; }
+
+  /* ---- the 9:16 shell (copied from styles.css section 2) ---- */
+  .app-shell {
+    position: relative;
+    width: min(calc(100vw - 8px), calc(90dvh * 0.5625));
+    height: min(90dvh, calc((100vw - 8px) * 1.7778));
+    overflow: hidden;
+    background: var(--navy-950);
+    border: 2px solid #46606b;
+    box-shadow: 0 24px 80px #000c, inset 0 0 0 2px #0b1014;
+  }
+
+  /* ---- popup layer + card (copied from styles.css section 5) ---- */
+  .popup-layer {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgb(2 7 10 / 68%);
+    backdrop-filter: blur(2px);
+  }
+  .popup-card {
+    position: relative;
+    height: 93.75%;
+    aspect-ratio: 941 / 1672;
+    max-width: 96%;
+    /* cqw units below track THIS card's width. */
+    container-type: inline-size;
+  }
+  .board-art {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+  }
+  .popup-close {
+    position: absolute;
+    top: 8.5%; right: 10.5%;
+    width: 10cqw; height: 10cqw;
+    z-index: 3;
+    border-radius: 7px;
+    border: 2px solid #fff;
+    background: linear-gradient(#f4574c, #a20e08);
+    color: #fff; font-weight: 900;
+    font-size: 5cqw; line-height: 1;
+  }
+  .popup-apply {
+    position: absolute;
+    bottom: 8.5%; right: 10.5%;
+    width: 11cqw; height: 11cqw;
+    z-index: 3;
+    border-radius: 7px;
+    border: 2px solid #fff;
+    background: linear-gradient(#2fbd7c, #0a6b3e);
+    color: #fff; font-weight: 900;
+    font-size: 5.5cqw; line-height: 1;
+  }
+
+  /* ---- the board face: usable area inside the frame ---- */
+  .board-face {
+    position: absolute;
+    left: 13%; right: 13%;
+    top: 14%; bottom: 15%;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    color: var(--letter);
+    text-transform: uppercase;
+    overflow: hidden;
+  }
+
+  /* ---- lettering variants (A default) ---- */
+  .lettering-a .board-face {
+    font-family: "Arial Black", "Arial Bold", Arial, sans-serif;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+  }
+  .lettering-b .board-face {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+
+  .board-title {
+    text-align: center;
+    font-size: 4.8cqw;
+    margin: 1.5cqw 0 4cqw;
+    letter-spacing: 0.09em;
+  }
+  .lettering-b .board-title { letter-spacing: 0.15em; }
+
+  /* The sub-title gets the same visual padding above it (below the
+     divider) that the main title gets from the board's top frame. */
+  .board-title--sub { font-size: 4.4cqw; margin: 5cqw 0 2cqw; }
+
+  .option-row {
+    display: flex;
+    align-items: center;
+    gap: 2.8cqw;
+    margin: 1.2cqw 0;
+  }
+  .option-row label {
+    display: flex;
+    align-items: center;
+    gap: 1.3cqw;
+    font-size: 3.1cqw;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  /* Every setting on the board is a two-line group: a left-justified
+     header, then a CENTERED options row with wide gaps so each radio
+     is an easy independent tap. The --headline variant (GAME MODE and
+     GLOBAL SOUND) is a step larger and brighter, with breathing room. */
+  .setting-group { margin: 0 0 4.5cqw; }
+  /* The last group's bottom margin is invisible slack — reclaim it to
+     fund the sub-title's new top padding. */
+  .setting-group:last-child { margin-bottom: 0; }
+  .setting-group-label {
+    font-size: 2.9cqw;
+    opacity: 0.72;
+    padding-left: 5.5cqw;
+    margin-bottom: 1cqw;
+  }
+  .setting-group .option-row {
+    justify-content: center;
+    margin: 0;
+    gap: 8cqw;
+  }
+  .setting-group .option-row label {
+    font-size: 2.9cqw;
+    opacity: 0.85;
+  }
+  .setting-group .option-row input[type="radio"] {
+    width: 3.4cqw;
+    height: 3.4cqw;
+  }
+
+  /* Doubled class beats the .setting-group margin shorthand. */
+  .setting-group.setting-group--headline { margin: 3cqw 0 7cqw; }
+  .setting-group--headline .setting-group-label {
+    font-size: 3.7cqw;
+    opacity: 1;
+  }
+  .setting-group--headline .option-row { gap: 6cqw; }
+  .setting-group--headline .option-row label {
+    font-size: 3.4cqw;
+    opacity: 1;
+  }
+  .setting-group--headline .option-row input[type="radio"] {
+    width: 4.6cqw;
+    height: 4.6cqw;
+  }
+
+  /* The brand words are the stars of the board — a step larger than
+     their radio row's lettering (John, 2026-08-07). */
+  .setting-group--headline .option-row .brand-sign { font-size: 3.9cqw; }
+
+  .option-row input[type="radio"],
+  .option-row input[type="checkbox"] {
+    accent-color: var(--green);
+    width: 3.8cqw;
+    height: 3.8cqw;
+    cursor: pointer;
+    margin: 0;
+  }
+
+  /* Inset from both sides so the rule reads as ON the board, not
+     touching the frame. */
+  .board-divider {
+    border: 0;
+    border-top: 0.5cqw solid rgb(242 237 225 / 85%);
+    margin: 3.5cqw 7cqw 0;
+    width: auto;
+    align-self: stretch;
+  }
+
+  /* ---- brand words (copied brand rules) ---- */
+  .brand-sign {
+    font-family: "Arial Black", "Arial Bold", Arial, sans-serif;
+    font-weight: 900;
+    text-transform: none;
+    letter-spacing: 0.01em;
+    color: var(--brand-face);
+    text-shadow:
+      0.012em 0.012em 0 var(--brand-brick),
+      0.024em 0.024em 0 var(--brand-brick),
+      0.036em 0.036em 0 var(--brand-brick),
+      0.048em 0.048em 0 var(--brand-brick),
+      0.09em 0.11em 0.1em var(--brand-cast);
+  }
+  .brand-sign .brand-rush { font-size: 1.18em; }
+
+  /* ---- floating lettering toggle (mockup chrome, not game UI) ---- */
+  .variant-bar {
+    position: fixed;
+    top: max(6px, env(safe-area-inset-top));
+    left: 6px;
+    z-index: 20;
+    display: flex;
+    gap: 6px;
+  }
+  .variant-bar button {
+    font-weight: 700;
+    font-size: 13px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid rgb(232 228 218 / 45%);
+    background: rgb(7 28 41 / 85%);
+    color: var(--chalk);
+  }
+  .variant-bar button.is-active {
+    background: var(--green);
+    border-color: var(--green);
+    color: #06231a;
+  }
+</style>
+</head>
+<body>
+
+<div class="variant-bar">
+  <button id="btnA" class="is-active">A</button>
+  <button id="btnB">B</button>
+</div>
+
+<div class="app-shell lettering-a" id="shell">
+  <div class="popup-layer">
+    <div class="popup-card">
+      <img class="board-art" src="../triageRush/assets/lobby-page/settings-blackboard.png" alt="">
+      <button class="popup-close" type="button" aria-label="close">&#x2715;</button>
+      <button class="popup-apply" type="button" aria-label="apply">&#x2713;</button>
+
+      <div class="board-face">
+        <div class="board-title">Game Options</div>
+
+        <div class="setting-group setting-group--headline">
+          <div class="setting-group-label">Game Mode</div>
+          <div class="option-row">
+            <label><input type="radio" name="mode" checked>
+              <span class="brand-sign">Triage <span class="brand-rush">RUSH!</span></span></label>
+            <label><input type="radio" name="mode">
+              <span class="brand-sign">Triage!</span></label>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <div class="setting-group-label">Scoring Difficulty</div>
+          <div class="option-row">
+            <label><input type="radio" name="difficulty" checked> Forgiving</label>
+            <label><input type="radio" name="difficulty"> Strict</label>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <div class="setting-group-label">Shift Length</div>
+          <div class="option-row" id="rushLengths">
+            <label><input type="radio" name="rushLength" checked> 60 seconds</label>
+            <label><input type="radio" name="rushLength"> 120 seconds</label>
+          </div>
+          <div class="option-row" id="triageLengths" hidden>
+            <label><input type="radio" name="triageLength" checked> 5 minutes</label>
+            <label><input type="radio" name="triageLength"> 10 minutes</label>
+          </div>
+        </div>
+
+        <hr class="board-divider">
+
+        <div class="board-title board-title--sub">Sound Options</div>
+
+        <div class="setting-group setting-group--headline">
+          <div class="setting-group-label">Global Sound</div>
+          <div class="option-row">
+            <label><input type="radio" name="soundMaster"> Off</label>
+            <label><input type="radio" name="soundMaster" checked> On</label>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <div class="setting-group-label">Game Sounds</div>
+          <div class="option-row">
+            <label><input type="radio" name="gameLoud"> Off</label>
+            <label><input type="radio" name="gameLoud"> Lo</label>
+            <label><input type="radio" name="gameLoud" checked> Hi</label>
+          </div>
+        </div>
+        <div class="setting-group">
+          <div class="setting-group-label">KING-FM (music)</div>
+          <div class="option-row">
+            <label><input type="radio" name="musicLoud" checked> Off</label>
+            <label><input type="radio" name="musicLoud"> Lo</label>
+            <label><input type="radio" name="musicLoud"> Hi</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+const shell = document.getElementById("shell");
+const btnA = document.getElementById("btnA");
+const btnB = document.getElementById("btnB");
+btnA.addEventListener("click", () => {
+  shell.className = "app-shell lettering-a";
+  btnA.classList.add("is-active"); btnB.classList.remove("is-active");
+});
+btnB.addEventListener("click", () => {
+  shell.className = "app-shell lettering-b";
+  btnB.classList.add("is-active"); btnA.classList.remove("is-active");
+});
+
+/* Mode radios swap which shift-length row shows (real game behavior). */
+const modeRadios = document.querySelectorAll('input[name="mode"]');
+modeRadios[0].addEventListener("change", () => {
+  document.getElementById("rushLengths").hidden = false;
+  document.getElementById("triageLengths").hidden = true;
+});
+modeRadios[1].addEventListener("change", () => {
+  document.getElementById("rushLengths").hidden = true;
+  document.getElementById("triageLengths").hidden = false;
+});
+</script>
+
+</body>
+</html>

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#071822">
   <title>Triage RUSH!</title>
-  <link rel="stylesheet" href="./triageRush/styles.css?v=2026-0806-vit1a">
+  <link rel="stylesheet" href="./triageRush/styles.css?v=2026-0807-hints1a">
 </head>
 <body>
 
@@ -176,11 +176,6 @@
           <label><input type="checkbox" id="settingSoundMusic"> Music (KING-FM)</label>
         </fieldset>
 
-        <fieldset class="chalk-fieldset">
-          <legend>HELP</legend>
-          <label><input type="checkbox" id="settingHints"> Show UI hints</label>
-        </fieldset>
-
         <p class="popup-note" id="musicStatusNote" hidden></p>
       </div>
 
@@ -243,8 +238,9 @@
           <small>READY</small>
           <strong>SELECT A PATIENT</strong>
           <!-- Hint lines are filled by renderPatient: queue tap always,
-               plus the recall-door line when a recall is possible. -->
-          <span class="patient-empty-hint" id="patientEmptyHint" hidden></span>
+               plus the recall-door line when a recall is possible.
+               Always shown (permanent since 2026-08-07). -->
+          <span class="patient-empty-hint" id="patientEmptyHint"></span>
         </div>
         <!-- The entire occupied panel is the one Chart hit target: a
              transparent button layer over the chart (doc 7). Hidden while
@@ -526,9 +522,9 @@
 
 </div>
 
-<script src="./triageRush/assets.js?v=2026-0806-vit1a"></script>
-<script src="./triageRush/game.js?v=2026-0806-vit1a"></script>
-<script src="./triageRush/ui.js?v=2026-0806-vit1a"></script>
-<script src="./triageRush/app.js?v=2026-0806-vit1a"></script>
+<script src="./triageRush/assets.js?v=2026-0807-hints1a"></script>
+<script src="./triageRush/game.js?v=2026-0807-hints1a"></script>
+<script src="./triageRush/ui.js?v=2026-0807-hints1a"></script>
+<script src="./triageRush/app.js?v=2026-0807-hints1a"></script>
 </body>
 </html>

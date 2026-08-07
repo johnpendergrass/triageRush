@@ -105,7 +105,6 @@ implemented against it):
     difficulty: "forgiving",    // forgiving | strict
     triageLengthSeconds: 300,
     rushLengthSeconds: 60,
-    hints: true,
     // Three-toggle sound model (boombox retired). Music plays only when
     // soundGlobal && soundMusic, decided on HOME.
     soundGlobal: true,

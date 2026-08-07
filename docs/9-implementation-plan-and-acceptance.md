@@ -125,7 +125,8 @@ Implement:
 - About board;
 - the three sound toggles (GLOBAL, GAME SOUNDS, MUSIC) on the shift board;
 - player title/initials;
-- mode, difficulty, length, and hints preferences.
+- mode, difficulty, and length preferences. (The hints preference was
+  removed 2026-08-07; loadPreferences strips it from older saves.)
 
 Acceptance:
 

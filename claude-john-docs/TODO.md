@@ -38,7 +38,7 @@ Notes (Claude):
   during play). Treat this item and the asset-loading-strategy todo as ONE
   design conversation at Phase 10 planning.
 
-## 3. Fix up the settings blackboards (added 2026-08-06) — BIG ITEM
+## 3. Fix up the settings blackboards (added 2026-08-06) — BIG ITEM, IN PROGRESS
 
 Really need to fix up the settings blackboards when expanded — the text and
 the operation of the settings.
@@ -50,25 +50,101 @@ the other big items (1 and 11), not a quick fix. The chalk-board naming
 and styling carve-outs from the branding work (item 2 in DONE) land here
 too.
 
-## 5. UI HINTS: a glow on clickable things (added 2026-08-06)
+### Design state (2026-08-07 session — mockups, nothing in the game yet)
 
-Figure out a way to have UI HINTS that make sense: hints for the player of
-what is available to click, so they see the options. On/off in settings.
-Rather than arrows that point, John is considering a 'glow' around the
-clickable items that indicates clickability. Think about this.
+**BOTH BOARDS' LOOKS ARE LOCKED (John, 2026-08-07):** the PLAYER NAME
+board (odometer drums) and the GAME OPTIONS board (two-line setting
+groups, headline GAME MODE + GLOBAL SOUND, GAME OPTIONS / SOUND
+OPTIONS sections). Iterate only on the small opens listed at the end;
+do not redesign the locked layouts.
 
-Notes (Claude):
+Reference art John supplied (NOT final, direction only):
+`assets/lobby-page/settings-blackboard-*-MOCKUP.png`. Working mockups:
+`_mockups/settings-letterboard-mockup-PLAYER.html` and `-GAME.html`,
+both rendered inside a faithful copy of the 9:16 shell + popup card so
+they are phone-true. (The old combined `settings-letterboard-mockup.html`
+is a superseded pointer page, safe to delete.)
 
-- `state.settings.hints` already exists as a boolean, so the toggle has a
-  home waiting.
-- iOS constraint applies: no hover on the iPhone, so the glow must be
-  always-on (or gently pulsing) while hints are enabled — never
-  hover-revealed.
+Decisions LOCKED for both boards:
+
+- Letter-board look (press-in white plastic lettering on the ribbed
+  board art), uppercase; the ONLY orange is the brand words
+  "Triage RUSH!" / "Triage!" in the .brand-sign treatment.
+- Radios/checkboxes keep the current native green accent-color style.
+- Sound model (revised same day to the one-line form): three rows, no
+  checkboxes — `GLOBAL SOUND off/on` (the master mute, extra breathing
+  room), `GAME SOUNDS off/lo/hi`, `KING-FM off/lo/hi`. OFF lives inside
+  each loudness selector, so per-family on/off toggles are gone — this
+  is the standard games pattern (master mute + a level per category)
+  and John confirmed it after asking how most programs handle it. NO
+  ambiance option — deferred until ambient sound assets exist; if ever
+  added it probably folds into the Game sounds controls (John).
+  Build-time schema: soundGame/soundMusic booleans fold into
+  gameLoudness/musicLoudness enums; soundGlobal stays a boolean.
+- Layout (revised again same day): GLOBAL SOUND off/on is the HEADLINE
+  control — larger lettering + radios, centered under SOUND SETTINGS —
+  and GAME SOUNDS / KING-FM (MUSIC) sit below it as quieter two-line
+  sub-groups (dim label line, indented off/lo/hi row, smaller radios).
+- The game-screen sound icon = GLOBAL SOUND, period (John,
+  2026-08-07): the icon and this setting are two views of ONE persisted
+  value. Flipping the icon mid-game writes soundGlobal (and the board
+  shows it); no more per-shift-only mute. Build note: this retires the
+  gameSoundsAudible runtime-override pattern, and the icon toggle must
+  persist via savePreferences; global off silences music too. This
+  also fixes the semantics for TODO 6's note/stop icon art.
+- Final board naming (John, 2026-08-07, after trying GAME/SOUND
+  SETTINGS): sections are **GAME OPTIONS** and **SOUND OPTIONS**; the
+  player board is **PLAYER NAME** (it's where you build your name for
+  the shift report). Title font stepped down a notch from the first cut.
+- Whole-board layout LOCKED direction: every setting is a two-line
+  `setting-group` — left-justified header (nudged in from the left
+  edge), CENTERED options row with wide tap gaps. Each section opens
+  with a `--headline` group (GAME MODE with enlarged brand words /
+  GLOBAL SOUND): bigger brighter header, larger radios, breathing room
+  around. Shift-length units stay spelled out (60/120 SECONDS,
+  5/10 MINUTES — room verified; secs/mins rejected as unneeded). The
+  divider rule is inset from the frame on both sides.
+
+PLAYER NAME detail board (renamed from Player Settings):
+**LOOK LOCKED (John, 2026-08-07)**
+
+- No TITLE/INITIALS section headers — the machines are self-evident.
+- Vegas/automobile odometer drums: brushed-metal bezel, dark drum
+  window, previous/next values peeking squashed+dim above/below the
+  centered current value, separator ridges, cylinder shading, 150ms
+  roll animation. One title drum + three initials drums, all values the
+  same size.
+- Dual input, no typing ever: big chevron buttons step with wrap-around
+  AND tapping the value opens the native picker (invisible <select>
+  over the window; iOS shows its wheel; 16px font so iOS doesn't zoom).
+- Title list adds "Hey you!" (build-time change to PLAYER_TITLES).
+- Initials alphabet: A-Z, "-", then emoji ⚕️ 🚑 💀 😷 ❤️ ➕ ⭐.
+  Emoji store like letters (strings); build-time change: initials
+  validation/normalization moves from /^[A-Z]{1,3}$/ to membership in
+  the symbol list, counting SYMBOLS not JS code units.
+
+Still OPEN on this item:
+
+- Lettering variant A (Arial Black, compact) vs B (Arial bold, airier)
+  — toggle is on the mockups, John has not picked.
+- Whether the music header keeps the parenthetical: "KING-FM (MUSIC)"
+  vs plain "KING-FM".
+- The SUMMARY boards (small blackboards on the ER ENTRANCE screen)
+  — John wants to look at the player summary after the detail panels.
+- Build phase after mockups: settings schema migration (loudness
+  fields + emoji-aware initials validation; friendly strip/map
+  pattern), Web Audio gain + stream volume wiring, the sound-icon =
+  GLOBAL SOUND change (retires gameSoundsAudible), popup markup/CSS/JS
+  replacement, PLAYER_TITLES += "Hey you!".
 
 ## 6. Sound icon: musical note + stop overlay (added 2026-08-06)
 
 Change the sound icon in the game screen: a note icon when sound is on, and
 the note icon with the stop overlay when off.
+
+DEFERRED (John, 2026-08-07): do not work on the sound items (this one,
+item 10, and related sound options) until the settings blackboard
+redesign (item 3) is settled — the sound stuff is likely to live there.
 
 ## 9. BUG: sounds sometimes do not play (added 2026-08-06)
 
@@ -106,6 +182,9 @@ hack — looping a silent HTML5 audio element — is the code fix for that.)
 Think about some sort of loudness high/medium/off switch in settings —
 maybe tied to that game-screen sound icon too (cycle through levels?).
 Related to the existing "sound volume control" backlog item.
+
+DEFERRED (John, 2026-08-07): waits for the settings blackboard redesign
+(item 3) — see the note on item 6.
 
 ## 11. Shift history: a queue of completed shifts (added 2026-08-06)
 
@@ -182,6 +261,57 @@ Notes (Claude):
   persistence exists.
 
 ## DONE
+
+## 5. UI HINTS: a glow on clickable things (RESOLVED 2026-08-07)
+
+Figure out a way to have UI HINTS that make sense: hints for the player of
+what is available to click, so they see the options. On/off in settings.
+Rather than arrows that point, John is considering a 'glow' around the
+clickable items that indicates clickability. Think about this.
+
+RESOLVED 2026-08-07 (cache 2026-0807-hints1a) by John's decision to go
+the other way: remove the hint system, complete the game, and have a
+couple of folk play test it — no hints work on the wrong stuff, and no
+building what turns out to be unnecessary. If play testing shows hints
+are needed, a redesign (the glow idea is the parked candidate) happens
+then, informed by where testers actually got stuck.
+
+What was done:
+
+- REMOVED: the "→"/"↔" queue badges on waiting rows, the "Show UI
+  hints" settings checkbox (its whole HELP fieldset), and
+  `state.settings.hints` (default, validation, applySettings copy).
+- KEPT AND MADE PERMANENT: the empty-state arrows in the patient panel
+  ("◀━━ TAP A WAITING ROOM PATIENT" / "or TAP THE TRIAGE ROOM DOOR TO
+  RECALL THAT PATIENT") — always shown now, no setting gates them.
+- KEPT (were never part of the hint system): the Chart / Patients Seen
+  MORE ABOVE/BELOW scroll indicators and the shift-over "tap to see
+  your results" line — those are navigation affordances.
+- Preferences guard: loadPreferences strips a stale `hints` key from
+  older saved envelopes (same friendly pattern as the LPN/PA title
+  mapping), so nobody's settings get reset.
+- Verified: 11-check Node harness (defaults, applySettings, old + new
+  envelope round-trips) plus browser smoke test (settings board clean,
+  arrows permanent, zero badges, chart opens; console clean save the
+  known favicon 404).
+- iOS glow constraint (no hover — glow must be always-on or pulsing)
+  is preserved in the notes here for any future redesign.
+
+## 16. Player titles: remove LPN + PA, add MR/MRS/M/MS (DONE 2026-08-06)
+
+In the title of the character, remove LPN, PA, and add MR, MRS, M, and MS.
+
+Notes (Claude):
+
+- The list is `PLAYER_TITLES` in game.js (currently: Doctor, Nurse, RN,
+  LPN, RES, Intern, EMS, PA, MS1, MS2, MS3, MS4). After the change:
+  Doctor, Nurse, RN, RES, Intern, EMS, MS1-MS4, plus MR, MRS, M, MS.
+- Confirm at build time: is "M" intended as-is (e.g. the French M.), or
+  short for something like MX? Recorded verbatim from John.
+- Persistence guard: a stored preference with title "LPN" or "PA" will
+  fail isValidPlayerShape after the change and the whole preferences
+  envelope is rejected (settings reset to defaults). Acceptable, or map
+  removed titles to "Doctor" when loading — decide at build time.
 
 ## 12. Vitals panel: icons + text + number values (DONE 2026-08-06)
 
