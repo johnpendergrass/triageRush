@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#071822">
-  <title>triageRush</title>
-  <link rel="stylesheet" href="./triageRush/styles.css?v=2026-0806-pacing1c">
+  <title>Triage RUSH!</title>
+  <link rel="stylesheet" href="./triageRush/styles.css?v=2026-0806-rooms1a">
 </head>
 <body>
 
@@ -52,7 +52,7 @@
     <!-- Green utility-cover oval embossed ABOUT at bottom left. -->
     <button class="about-hotspot" id="aboutButton" type="button"
             aria-haspopup="dialog">
-      <span class="visually-hidden">About triageRush</span>
+      <span class="visually-hidden">About Triage RUSH!</span>
     </button>
 
     <!-- Quiet loading status; Start Shift stays blocked until ready. -->
@@ -91,8 +91,8 @@
 
         <fieldset class="chalk-fieldset">
           <legend>MODE</legend>
-          <label><input type="radio" name="settingMode" value="triage"> Triage</label>
-          <label><input type="radio" name="settingMode" value="rush"> TriageRUSH</label>
+          <label><input type="radio" name="settingMode" value="triage"> Triage!</label>
+          <label><input type="radio" name="settingMode" value="rush"> Triage RUSH!</label>
         </fieldset>
 
         <fieldset class="chalk-fieldset">
@@ -130,11 +130,11 @@
 
       <!-- About board content -->
       <div class="popup-content popup-content--marker" id="aboutBoardContent" hidden>
-        <h2 class="popup-heading popup-heading--marker">triageRush</h2>
+        <h2 class="popup-heading popup-heading--marker">Triage RUSH!</h2>
         <p>Patients are waiting. Read each chart, judge how sick they really
            are, and send them to the right triage room.</p>
         <p><strong>Triage</strong> is a timed, thoughtful shift.
-           <strong>TriageRUSH</strong> keeps them coming faster and faster.</p>
+           <strong>Triage RUSH!</strong> keeps them coming faster and faster.</p>
         <p>Wrong guesses cost points &mdash; but you can always recall a
            patient and try a better room.</p>
         <p class="popup-fine-print">A game by John Pendergrass.
@@ -157,7 +157,7 @@
        ================================================================= -->
   <section class="game-view" id="gameView" hidden>
     <header class="game-header">
-      <p class="brand" id="gameBrand">TRIAGE!</p>
+      <p class="brand brand-sign" id="gameBrand">Triage <span class="brand-rush">RUSH!</span></p>
       <p class="header-scorecard" id="gameScorecard">
         <strong class="score-correct" id="scoreCorrect">0</strong>
         <span class="score-divider" id="scoreCloseDivider">/</span>
@@ -360,12 +360,12 @@
     <div class="review-paper">
 
       <header class="review-head">
-        <!-- Two spans: the mode name keeps the game's heavy sans; "Shift
-             Report" renders as serif small-caps, like a printed report
-             masthead. ui.js writes only the mode span. The TriageRUSH
-             mixed case is deliberate - never text-transform here. -->
+        <!-- One centered unit: the red 3D brand + serif small-caps
+             "Shift Report", static in every mode (John, 2026-08-06) -
+             only the MODE: line below names the mode. Never
+             text-transform the brand. -->
         <p class="review-title" id="reviewTitleLine">
-          <span id="reviewTitleMode">TRIAGE</span>
+          <span class="brand-sign">Triage <span class="brand-rush">RUSH!</span></span>
           <span class="review-title-report">Shift Report</span>
         </p>
         <p class="review-mode" id="reviewModeLine">MODE: Triage, Forgiving, 5 minutes</p>
@@ -462,6 +462,7 @@
        summary without needing a z-index.
        ================================================================= -->
   <button class="shift-over" id="shiftOverOverlay" type="button" hidden>
+    <span class="shift-over-brand brand-sign">Triage <span class="brand-rush">RUSH!</span></span>
     <span class="shift-over-headline" id="shiftOverHeadline">TIME&rsquo;S UP</span>
     <span class="shift-over-count" id="shiftOverCount">0 patients</span>
     <span class="shift-over-hint">tap to see your results</span>
@@ -469,9 +470,9 @@
 
 </div>
 
-<script src="./triageRush/assets.js?v=2026-0806-pacing1c"></script>
-<script src="./triageRush/game.js?v=2026-0806-pacing1c"></script>
-<script src="./triageRush/ui.js?v=2026-0806-pacing1c"></script>
-<script src="./triageRush/app.js?v=2026-0806-pacing1c"></script>
+<script src="./triageRush/assets.js?v=2026-0806-rooms1a"></script>
+<script src="./triageRush/game.js?v=2026-0806-rooms1a"></script>
+<script src="./triageRush/ui.js?v=2026-0806-rooms1a"></script>
+<script src="./triageRush/app.js?v=2026-0806-rooms1a"></script>
 </body>
 </html>

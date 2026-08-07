@@ -406,7 +406,7 @@
     UI.renderWaiting(state, portraitUrlFor);
     UI.renderPatient(state, portraitUrlFor);
     UI.renderChartOverlay(state, portraitUrlFor);
-    UI.renderRooms(state);
+    UI.renderRooms(state, portraitUrlFor);
     UI.renderConfirmQuit(state);
     UI.renderConfirmStop(state);
     UI.renderReview(state);
@@ -629,7 +629,7 @@
       UI.renderWaiting(state, portraitUrlFor);
       UI.renderPatient(state, portraitUrlFor);
       /* Selection may have finalized an assigned case: that door closes. */
-      UI.renderRooms(state);
+      UI.renderRooms(state, portraitUrlFor);
       UI.renderGameHeader(state);
       topUpPortraitReserve();
     });
@@ -650,7 +650,7 @@
         /* Recall cancels any lingering result display. */
         clearTimeout(feedbackClearTimeoutId);
         UI.clearAssignmentFeedback();
-        UI.renderRooms(state);
+        UI.renderRooms(state, portraitUrlFor);
         UI.renderPatient(state, portraitUrlFor);
         UI.renderWaiting(state, portraitUrlFor);
         return;
@@ -663,7 +663,7 @@
       if (!assignment.accepted) return;
       GAME.assertStateInvariants(state, "assignActivePatientToRoom");
       playGameSound(assignment.outcome);
-      UI.renderRooms(state);
+      UI.renderRooms(state, portraitUrlFor);
       UI.renderPatient(state, portraitUrlFor);
       UI.renderWaiting(state, portraitUrlFor);
       UI.renderGameHeader(state);

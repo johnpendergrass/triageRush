@@ -1,6 +1,40 @@
 # triageRush — specifications (pointer file)
 
-**Last modified:** 2026-08-06
+**Last modified:** 2026-08-06 (third session: branding, naming, room layers)
+
+## Branding + naming policy (2026-08-06, third session): BUILT
+
+The game's NAME is **"Triage RUSH!"** — the ER ENTRANCE sign's spelling
+(space, mixed case, exclamation) — in ALL places and BOTH modes: game
+header, Shift Report masthead, shift-over screen, page title, ABOUT.
+**"Triage!"** alone names the MODE in exactly two places: the report's
+"MODE: Triage!, Forgiving, 5 minutes" line and the settings mode-chooser
+radios. The ! is part of the name even mid-sentence. This supersedes
+"TriageRUSH" (2026-08-05).
+
+The lettering mimics the sign with fonts only (mockup variant B,
+`_mockups/brand-font-mockups.html`): red-orange face #ec543d sampled from
+the art, stacked brick-red 3D extrusion, Arial Black stack, RUSH! a step
+larger. Layout rulings: the report masthead is one centered unit (brand +
+gap + serif "Shift Report"); the game-header brand centers between left
+edge and scorecard; on the shift-over screen the brand baseline sits at
+~30% of the shell height, SHIFT ENDED's at ~50%, and the tap hint is
+white/bold/count-sized with rules above and below. Chalk boards were
+deliberately left unstyled for TODO 3.
+
+TODO item 4 (ABOUT letters in the entrance art) was RESOLVED by John
+choosing to keep the original image — do not re-pitch.
+
+## Layered room composition (2026-08-06, third session): BUILT
+
+Each triage-room cell stacks, back to front: flat green rail color →
+shared wall art → per-room interior scene (in the door-art box) →
+assigned patient standing in the doorway (open room only) → door art,
+whose transparent open doorway does the reveal. The reserved
+wall/interior PNGs are now live manifest assets. **Patient scale and
+placement await John's verification** (first pass: bottom 3%, height
+62%, max-width 52% of the cell). Docs 3/7/8 still describe the old brand
+and flat rail — fold in on the next docs pass.
 
 ## Pacing + sound revision (2026-08-06, second session): BUILT
 

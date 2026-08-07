@@ -1,6 +1,36 @@
 # triageRush — technical notes (pointer file)
 
-**Last modified:** 2026-08-06 (pacing revision, Triage cues, iOS audio hardening)
+**Last modified:** 2026-08-06 (third session: brand CSS, room layers)
+
+## Brand lettering (2026-08-06)
+
+`.brand-sign` (styles.css) is the one treatment: Arial Black stack,
+weight 900, face `var(--brand-face)` #ec543d, four stacked #a03426
+text-shadows + soft cast — offsets in EM so it scales from 48px to 17px.
+`.brand-sign .brand-rush` is 1.18em. Because the brand is identical in
+every mode, all three brand spots are STATIC markup in index.html and
+ui.js writes none of them — do not reintroduce JS rendering. The report
+masthead `.review-title` is a baseline-aligned flex row (gap 1.3em,
+justify-content center, nowrap) at 4.8cqw/23px — that size is what
+guarantees the unit fits one line at every width; don't raise it without
+re-measuring. Shift-over baselines use cqw-only math (container-type is
+inline-size; height% × 16/9 = cqw): brand absolute at top 45cqw
+(baseline ≈30% height), headline via 79.5cqw padding-top (≈50%), using
+~0.85em top-of-line-to-baseline for the Arial family.
+
+## Layered room cells (2026-08-06)
+
+renderRooms(state, portraitUrlFor) builds per cell: img.room-wall (inset
+0, fill) → img.room-interior (same 61%/91% bottom box as .door-art) →
+img.room-patient (open room only; bottom 3% / height 62% / max-width 52%,
+contain, bottom-center — JOHN'S FINE-TUNE PENDING) → img.door-art.
+Stacking is DOM order, no z-index. The art was authored at matching
+aspects (wall ≈ cell ≈ 1.0; interiors = door art = 1152x1792 ≈ 0.643;
+discharge pair is 1777x1792 and stretches like its door always has), so
+object-fit: fill is distortion-free. assets.js gained game.roomsWall +
+game.roomInteriors[roomKey] and the loader verifies them (+8 startup
+images — counted against the asset-loading debt). Portraits are square
+1024 RGBA cut-outs, which is why the doorway figure works.
 
 Full technical contracts: `docs/4`, `docs/8`. This file records only
 practical build knowledge that lives nowhere else.

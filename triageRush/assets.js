@@ -13,7 +13,7 @@
 
 "use strict";
 
-const TRIAGE_RUSH_CACHE_VERSION = "2026-0806-pacing1c";
+const TRIAGE_RUSH_CACHE_VERSION = "2026-0806-rooms1a";
 
 /* All paths are relative to the site root (where index.html lives). */
 const ASSET_ROOT = "./triageRush/assets";
@@ -72,18 +72,26 @@ for (const roomKey of ROOM_KEYS) {
   };
 }
 
+/* Layered room composition (TODO item 7, built 2026-08-06): every room
+   cell stacks wall -> interior -> patient -> door, back to front. One
+   wall image serves all seven rooms; each room has its own interior
+   scene, drawn at the door art's aspect so it sits exactly behind the
+   doorway. An open door's transparent doorway reveals the interior. */
+const ROOMS_WALL_PATH =
+  `${ASSET_ROOT}/game-page/triage-rooms-panel/background-wall-for-all-rooms.png`;
+
+const roomInteriors = {};
+for (const roomKey of ROOM_KEYS) {
+  roomInteriors[roomKey] =
+    `${ASSET_ROOT}/game-page/triage-rooms-panel/background-${roomKey}-room.png`;
+}
+
 /* ---------------------------------------------------------------------------
    The manifest object consumed by the rest of the application.
 
    Not listed on purpose (retired or unused by the approved design):
    - lobby-page/boombox.png            (boombox metaphor retired 2026-08-04)
    - game-page/patient-panel/*-bubble  (superseded by the unified chart cards)
-
-   Not listed yet (reserved for the layered room composition, per John
-   2026-08-04: wall, then room interior, then patient, then door). They
-   are NOT general screen background art; the rails use a flat color:
-   - triage-rooms-panel/background-wall-for-all-rooms.png (base wall layer)
-   - triage-rooms-panel/background-*-room.png (room interiors)
 
    Not listed yet (asset does not exist yet):
    - six vital icons (HR, BP, RR, SpO2, Temp, Pain) - added here when produced.
@@ -102,7 +110,9 @@ const TRIAGE_RUSH_ASSETS = Object.freeze({
   game: Object.freeze({
     patientPanelBackground: `${ASSET_ROOT}/game-page/patient-panel/patient-panel-background-hires.png`,
     waitingBackgrounds: Object.freeze(waitingBackgrounds),
-    doors: Object.freeze(roomDoors)
+    doors: Object.freeze(roomDoors),
+    roomsWall: ROOMS_WALL_PATH,
+    roomInteriors: Object.freeze(roomInteriors)
   }),
 
   music: Object.freeze({
@@ -134,9 +144,11 @@ function listAllImageAssetPaths() {
   for (const key of TRIAGE_RUSH_ASSETS.waitingBackgroundKeys) {
     paths.push(TRIAGE_RUSH_ASSETS.game.waitingBackgrounds[key]);
   }
+  paths.push(TRIAGE_RUSH_ASSETS.game.roomsWall);
   for (const roomKey of TRIAGE_RUSH_ASSETS.roomKeys) {
     paths.push(TRIAGE_RUSH_ASSETS.game.doors[roomKey].open);
     paths.push(TRIAGE_RUSH_ASSETS.game.doors[roomKey].closed);
+    paths.push(TRIAGE_RUSH_ASSETS.game.roomInteriors[roomKey]);
   }
   return paths;
 }

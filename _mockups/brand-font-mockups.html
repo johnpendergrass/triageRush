@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>triageRush — brand font mockups</title>
+<style>
+  /* ----------------------------------------------------------------------
+     Brand font mockups — matching the "Triage RUSH!" sign in the ER
+     ENTRANCE background art with FONTS + CSS only (no bitmap).
+
+     Standalone by convention (like shift-review-mockups.html): open this
+     file straight from disk, no server, no fetch. Values are COPIED from
+     the app, never linked.
+
+     Colors sampled from the sign in
+     triageRush/assets/lobby-page/background-w-open-glass-doors.png:
+       letter face   #ec543d  (red-orange / vermilion; avg #e25241)
+       letter sides  #a03426  (deep brick red — the 3D extrusion)
+       cast shadow   #834d2e  (soft warm brown on the wall)
+     For comparison, the app's current accent orange is #ff9f1c.
+
+     All text-shadow offsets are in EM so every variant scales cleanly
+     from poster size down to the real 17px game header.
+     --------------------------------------------------------------------- */
+
+  :root {
+    --sign-face:   #ec543d;
+    --sign-face-hi:#f06a4a;   /* lit top of the gradient face */
+    --sign-face-lo:#d94a35;   /* shaded bottom of the gradient face */
+    --sign-brick:  #a03426;   /* extrusion (letter sides) */
+    --sign-shadow: rgba(60, 30, 15, 0.55); /* soft warm cast shadow */
+    --app-orange:  #ff9f1c;   /* current in-game accent, for comparison */
+    /* the real game header background, copied from styles.css .game-header */
+    --header-bg: linear-gradient(180deg, #102d3d 0%, #071720 55%, #030c12 100%);
+  }
+
+  body {
+    margin: 0;
+    background: #2b2f33;
+    color: #e8e4da;
+    font-family: Arial, sans-serif;
+    padding: 24px 16px 60px;
+  }
+
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .note { color: #b8b2a6; font-size: 13px; max-width: 640px; line-height: 1.45; }
+
+  /* color swatch strip */
+  .swatches { display: flex; gap: 10px; margin: 14px 0 26px; flex-wrap: wrap; }
+  .swatch { width: 110px; font-size: 11px; color: #cfc9bd; }
+  .swatch .chip { height: 34px; border-radius: 4px; border: 1px solid #0006; margin-bottom: 3px; }
+
+  /* one card per variant */
+  .card {
+    background: #383d42;
+    border: 1px solid #1c1f22;
+    border-radius: 8px;
+    padding: 14px 16px 18px;
+    margin-bottom: 22px;
+    max-width: 720px;
+  }
+  .card h2 { font-size: 15px; margin: 0 0 2px; color: #ffd9a0; }
+  .card .how { font-size: 12px; color: #b8b2a6; margin: 0 0 12px; }
+
+  /* big display row (light + dark), then a real-size game header strip */
+  .stage {
+    padding: 18px 20px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .stage.light { background: #b9b4ad; }          /* fascia-gray, like the wall */
+  .stage.dark  { background: var(--header-bg); }
+
+  .headerstrip {
+    margin-top: 10px;
+    background: var(--header-bg);
+    border-bottom: 2px solid #59707a;
+    padding: 6px 8px;
+    font-size: 17px;                      /* the game brand's real max size */
+  }
+  .headerstrip .label {
+    font-family: Arial, sans-serif;
+    font-size: 10px; color: #93a7b0; letter-spacing: 0.08em;
+    display: block; margin-bottom: 2px;
+  }
+
+  /* ----------------------------------------------------------------------
+     The brand text itself. Shared bones for every variant:
+     heavy grotesque sans, tight tracking, RUSH! one step bigger — all
+     matching the sign's lettering.
+     --------------------------------------------------------------------- */
+  .brand {
+    font-family: "Arial Black", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    line-height: 1.1;
+  }
+  .big  { font-size: 44px; }
+  .brand .rush { font-size: 1.18em; }    /* RUSH! is larger on the sign */
+
+  /* Variant 0 — what the game does today (baseline for comparison) */
+  .v0 { color: #fff; letter-spacing: -0.06em; }
+  .v0 .rush { color: var(--app-orange); font-size: 1em; }
+
+  /* Variant A — flat sign color + one soft drop shadow. Simplest. */
+  .vA {
+    color: var(--sign-face);
+    text-shadow: 0.05em 0.06em 0.08em var(--sign-shadow);
+  }
+
+  /* Variant B — layered extrusion: a few stacked brick-red shadows make the
+     letters read as 3D channel letters, plus the soft cast shadow last. */
+  .vB {
+    color: var(--sign-face);
+    text-shadow:
+      0.012em 0.012em 0 var(--sign-brick),
+      0.024em 0.024em 0 var(--sign-brick),
+      0.036em 0.036em 0 var(--sign-brick),
+      0.048em 0.048em 0 var(--sign-brick),
+      0.09em 0.11em 0.10em var(--sign-shadow);
+  }
+
+  /* Variant C — variant B's extrusion + a lit gradient face (top brighter),
+     closest to the photo. Needs background-clip, so the shadow layers move
+     to a ::before underneath (a clipped element can't also show shadows). */
+  .vC { position: relative; display: inline-block; }
+  .vC .face {
+    position: relative;      /* stacks the face above the depth layer */
+    background: linear-gradient(180deg, var(--sign-face-hi) 0%, var(--sign-face-lo) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .vC .depth {
+    position: absolute;
+    inset: 0;
+    color: transparent;
+    text-shadow:
+      0.012em 0.012em 0 var(--sign-brick),
+      0.024em 0.024em 0 var(--sign-brick),
+      0.036em 0.036em 0 var(--sign-brick),
+      0.048em 0.048em 0 var(--sign-brick),
+      0.09em 0.11em 0.10em var(--sign-shadow);
+  }
+</style>
+</head>
+<body>
+
+<h1>Brand font mockups — matching the ER ENTRANCE sign</h1>
+<p class="note">
+  Goal: a font family + color close to the "Triage RUSH!" channel letters in the
+  entrance art, done entirely with CSS. Each card shows the treatment on a
+  wall-gray stage, on the dark game-header gradient, and then at the brand's
+  REAL size (17px) in a copy of the game header strip. Shadows are in em units,
+  so what works big works small too.
+</p>
+
+<div class="swatches">
+  <div class="swatch"><div class="chip" style="background:#ec543d"></div>face #ec543d</div>
+  <div class="swatch"><div class="chip" style="background:#a03426"></div>brick #a03426</div>
+  <div class="swatch"><div class="chip" style="background:#834d2e"></div>shadow #834d2e</div>
+  <div class="swatch"><div class="chip" style="background:#ff9f1c"></div>current #ff9f1c</div>
+</div>
+
+<!-- ================= VARIANT 0 : today's look ================= -->
+<div class="card">
+  <h2>Variant 0 — current game brand (baseline)</h2>
+  <p class="how">White + golden-orange RUSH!, no shadow. Here only for comparison.</p>
+  <div class="stage dark">
+    <span class="brand big v0">TRIAGE!</span>
+    <span class="brand big v0">TRIAGE <span class="rush">RUSH!</span></span>
+  </div>
+  <div class="headerstrip"><span class="label">REAL SIZE (17px)</span>
+    <span class="brand v0">TRIAGE <span class="rush">RUSH!</span></span>
+  </div>
+</div>
+
+<!-- ================= VARIANT A : flat + soft shadow ================= -->
+<div class="card">
+  <h2>Variant A — flat sign color + one soft shadow</h2>
+  <p class="how">Simplest possible: color #ec543d, single blurred drop shadow.</p>
+  <div class="stage light">
+    <span class="brand big vA">Triage <span class="rush">RUSH!</span></span>
+    <span class="brand big vA">TRIAGE <span class="rush">RUSH!</span></span>
+  </div>
+  <div class="stage dark">
+    <span class="brand big vA">TRIAGE!</span>
+    <span class="brand big vA">TriageRUSH</span>
+  </div>
+  <div class="headerstrip"><span class="label">REAL SIZE (17px)</span>
+    <span class="brand vA">TRIAGE <span class="rush">RUSH!</span></span>
+  </div>
+</div>
+
+<!-- ================= VARIANT B : layered extrusion ================= -->
+<div class="card">
+  <h2>Variant B — 3D extrusion (stacked brick-red shadows)</h2>
+  <p class="how">Four stacked hard shadows in #a03426 + one soft cast shadow.
+     The classic CSS channel-letter trick.</p>
+  <div class="stage light">
+    <span class="brand big vB">Triage <span class="rush">RUSH!</span></span>
+    <span class="brand big vB">TRIAGE <span class="rush">RUSH!</span></span>
+  </div>
+  <div class="stage dark">
+    <span class="brand big vB">TRIAGE!</span>
+    <span class="brand big vB">TriageRUSH</span>
+  </div>
+  <div class="headerstrip"><span class="label">REAL SIZE (17px)</span>
+    <span class="brand vB">TRIAGE <span class="rush">RUSH!</span></span>
+    &nbsp;&nbsp;
+    <span class="brand vB">Triage<span class="rush">RUSH!</span></span>
+    &nbsp;&nbsp;
+    <span class="brand vB">TriageRUSH!</span>
+  </div>
+</div>
+
+<!-- ================= VARIANT C : gradient face + extrusion ================= -->
+<div class="card">
+  <h2>Variant C — lit gradient face + extrusion (closest to the photo)</h2>
+  <p class="how">Same extrusion as B, but the face is a top-lit gradient
+     (#f06a4a &rarr; #d94a35) via background-clip. Slightly more markup:
+     the text appears twice (face + depth layer).</p>
+  <div class="stage light">
+    <span class="brand big vC"><span class="depth" aria-hidden="true">Triage <span class="rush">RUSH!</span></span><span class="face">Triage <span class="rush">RUSH!</span></span></span>
+  </div>
+  <div class="stage dark">
+    <span class="brand big vC"><span class="depth" aria-hidden="true">TRIAGE <span class="rush">RUSH!</span></span><span class="face">TRIAGE <span class="rush">RUSH!</span></span></span>
+  </div>
+  <div class="headerstrip"><span class="label">REAL SIZE (17px)</span>
+    <span class="brand vC"><span class="depth" aria-hidden="true">TRIAGE <span class="rush">RUSH!</span></span><span class="face">TRIAGE <span class="rush">RUSH!</span></span></span>
+  </div>
+</div>
+
+<p class="note">
+  Font stack everywhere: <code>"Arial Black", "Helvetica Neue", Arial,
+  sans-serif</code> at weight 900 — the sign's heavy grotesque, using fonts
+  every device already has. "RUSH!" is 1.18&times; larger, matching the sign's
+  proportions. If none of these feel right at 17px, the fallback plan is to
+  reserve the treatment for larger text (review headers, ABOUT) and keep the
+  game header simpler.
+</p>
+
+</body>
+</html>

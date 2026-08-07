@@ -43,6 +43,12 @@
   --chalk: #e8e4da;
   --marker-ink: #1d2a30;
 
+  /* The ER ENTRANCE sign lettering (TODO item 2, 2026-08-06): colors
+     sampled from the "Triage RUSH!" channel letters in the entrance art. */
+  --brand-face: #ec543d;                 /* letter faces (red-orange) */
+  --brand-brick: #a03426;                /* letter sides - the 3D depth */
+  --brand-cast: rgba(60, 30, 15, 0.55);  /* soft warm cast shadow */
+
   color-scheme: dark;
 }
 
@@ -540,15 +546,36 @@ img {
   box-shadow: inset 0 -2px #0009;
 }
 
-.brand {
-  font-size: clamp(11px, 3.7cqw, 17px);
+/* The "Triage RUSH!" sign treatment (TODO item 2, 2026-08-06): the heavy
+   grotesque, face color and stacked brick-red extrusion of the channel
+   letters in the ER ENTRANCE art, drawn with fonts + text-shadow only
+   (mockup: _mockups/brand-font-mockups.html, variant B). Shared by the
+   game brand and the Shift Report masthead. Offsets are in em so the
+   depth scales with the font size. */
+.brand-sign {
+  font-family: "Arial Black", "Helvetica Neue", Arial, sans-serif;
   font-weight: 900;
-  letter-spacing: -0.06em;
-  white-space: nowrap;
+  color: var(--brand-face);
+  text-shadow:
+    0.012em 0.012em 0 var(--brand-brick),
+    0.024em 0.024em 0 var(--brand-brick),
+    0.036em 0.036em 0 var(--brand-brick),
+    0.048em 0.048em 0 var(--brand-brick),
+    0.09em 0.11em 0.1em var(--brand-cast);
 }
 
-.brand .brand-rush {
-  color: var(--orange);
+/* "RUSH!" runs a step larger than "Triage", like the sign. */
+.brand-sign .brand-rush {
+  font-size: 1.18em;
+}
+
+.brand {
+  font-size: clamp(11px, 3.7cqw, 17px);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  /* Centered in the space between the shell's left edge and the
+     scorecard (John, 2026-08-06). */
+  text-align: center;
 }
 
 .header-scorecard {
@@ -1063,6 +1090,15 @@ img {
    7d. Seven-room door rail.
    Equal rows; accepted door art centered at 61% width / 91% height,
    bottom-aligned (doc 7).
+
+   Layered composition (TODO item 7, John 2026-08-06), back to front:
+   the rail's flat green, the shared wall art filling the whole cell,
+   the room's interior scene in the same box as the door art, the
+   assigned patient standing in the doorway (open room only), then the
+   door art itself - an open door's transparent doorway reveals the
+   interior and patient. The wall was drawn at roughly the cell's aspect
+   and the interiors at the door art's aspect, so plain fills line up;
+   stacking order comes from DOM order, no z-index needed.
    --------------------------------------------------------------------- */
 
 .rooms-panel {
@@ -1079,6 +1115,39 @@ img {
 
 .room-choice:last-child {
   border-bottom: none;
+}
+
+.room-wall {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.room-interior {
+  position: absolute;
+  left: 50%;
+  bottom: 1%;
+  transform: translateX(-50%);
+  width: 61%;
+  height: 91%;
+  object-fit: fill;
+}
+
+/* First-pass patient scale (John: get it fitting, fine-tune after):
+   centered in the doorway, feet near the door's bottom edge. The
+   portraits are square 1024 cut-outs with transparency, so contain
+   keeps the figure whole. */
+.room-patient {
+  position: absolute;
+  left: 50%;
+  bottom: 3%;
+  transform: translateX(-50%);
+  height: 62%;
+  max-width: 52%;
+  object-fit: contain;
+  object-position: bottom center;
 }
 
 .door-art {
@@ -2070,13 +2139,26 @@ img {
   text-align: center;
 }
 
-/* Mixed case is deliberate: "TriageRUSH", not "TRIAGERUSH" (John,
-   2026-08-05), so text-transform must NEVER be applied here. */
+/* The brand is the sign spelling "Triage RUSH!" (John, 2026-08-06), so
+   text-transform must NEVER be applied here - the mixed case is the
+   brand. The span carries .brand-sign for the red 3D lettering.
+
+   Layout (John, 2026-08-06): brand + "Shift Report" read as ONE unit -
+   a four-or-five-space gap between them - centered as a whole in the
+   header. Baseline alignment keeps the two type families sitting on the
+   same line. The 4.8cqw/23px size (down from the original 5.6/27) is
+   what fits the whole unit on one line; every part scales with cqw, so
+   the fit holds at any shell width. */
 .review-title {
-  font-size: clamp(16px, 5.6cqw, 27px);
+  font-size: clamp(14px, 4.8cqw, 23px);
   font-weight: 900;
   letter-spacing: 0.01em;
   line-height: 1.05;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 1.3em;
+  white-space: nowrap;
 }
 
 /* "Shift Report" as a printed-report masthead: serif small-caps (John,
@@ -2403,9 +2485,16 @@ img {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  /* Content flows from a fixed top edge rather than centering (John,
+     2026-08-06): the headline's BASELINE lands at ~50% of the shell
+     height, the brand's (absolutely positioned below) at ~30%. Only cqw
+     tracks the shell (container-type is inline-size); the shell is
+     locked 9:16, so height% x 16/9 converts to cqw. 50% = 88.9cqw, minus
+     ~0.85em of the 11cqw headline (top-of-line to baseline for the Arial
+     family) = ~79.5cqw of top padding. */
+  justify-content: flex-start;
   gap: clamp(6px, 2.4cqw, 14px);
-  padding: 8%;
+  padding: 79.5cqw 8% 8%;
   text-align: center;
   /* Near-opaque plus a blur: the finished summary stays faintly present
      behind the message, but as a soft wash rather than readable text
@@ -2413,6 +2502,20 @@ img {
   background: rgb(3 12 18 / 95%);
   backdrop-filter: blur(7px);
   animation: shift-over-in 260ms ease-out both;
+}
+
+/* The sign brand crowns the acknowledgement, a touch smaller than the
+   headline (RUSH! at 1.18em brings it up to about the same presence).
+   Absolutely positioned so its BASELINE sits at ~30% of the shell height
+   (John, 2026-08-06): 30% = 53.3cqw, minus ~0.85em of the 9.5cqw font
+   = ~45cqw of top offset. */
+.shift-over-brand {
+  position: absolute;
+  top: 45cqw;
+  left: 0;
+  right: 0;
+  font-size: clamp(22px, 9.5cqw, 48px);
+  letter-spacing: -0.02em;
 }
 
 .shift-over-headline {
@@ -2430,12 +2533,19 @@ img {
   color: var(--orange);
 }
 
-/* The prompt fades up late so the headline lands first. */
+/* The prompt fades up late so the headline lands first. Same size and
+   weight as the patients-seen count, white, framed by a rule above and
+   below, and sitting about two line-heights lower than the quiet steel
+   version it replaced (John, 2026-08-06). */
 .shift-over-hint {
-  margin-top: clamp(10px, 4cqw, 24px);
-  font-size: clamp(9px, 3.2cqw, 15px);
+  margin-top: clamp(36px, 13.5cqw, 70px);
+  font-size: clamp(11px, 4cqw, 19px);
+  font-weight: 700;
   letter-spacing: 0.14em;
-  color: var(--steel);
+  color: #fff;
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  padding: 0.45em 0.6em;
   animation: shift-over-hint-in 900ms ease-out both;
 }
 

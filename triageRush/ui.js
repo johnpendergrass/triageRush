@@ -53,7 +53,7 @@
     "chartOverlayMount", "chartMoreAbove", "chartMoreBelow", "chartZoomView",
     "chartTimer", "chartTimerValue",
     // REVIEW
-    "reviewView", "reviewTitleMode", "reviewModeLine", "reviewProvider",
+    "reviewView", "reviewModeLine", "reviewProvider",
     "reviewDate", "reviewDuration", "reviewDurationNote", "reviewSeen",
     "reviewScoreValue", "reviewFormulas", "reviewUnder", "reviewOver",
     "reviewUnderButton", "reviewOverButton",
@@ -260,15 +260,9 @@
   }
 
   function renderGameHeader(state) {
-    /* Brand: TRIAGE! in Triage; TRIAGE + orange RUSH! in RUSH (doc 7). */
-    if (state.settings.mode === "rush") {
-      ui.gameBrand.replaceChildren(
-        document.createTextNode("TRIAGE"),
-        Object.assign(document.createElement("span"),
-          { className: "brand-rush", textContent: "RUSH!" }));
-    } else {
-      ui.gameBrand.textContent = "TRIAGE!";
-    }
+    /* The brand is static markup in index.html - "Triage RUSH!" in every
+       mode (John, 2026-08-06) - so the header renders only the live
+       numbers. */
 
     const totals = GAME.selectScoreTotals(state);
     ui.scoreCorrect.textContent = String(totals.correct);
@@ -927,7 +921,11 @@
   }
 
   /* ----------------------------------------------------------------------
-     5d. Seven-room door rail (Phase 5).
+     5d. Seven-room door rail (Phase 5; layered composition TODO item 7,
+     2026-08-06). Each cell stacks, back to front: the rail's flat green
+     (CSS), the shared wall art, the room's interior scene, the assigned
+     patient standing in the doorway (open room only), then the door art -
+     an open door's transparent doorway reveals the interior and patient.
      Exactly one door is open: the assigned patient's. While recall is
      legal that door also carries the orange leftward recall arrow.
      Clicks are delegated in app.js (assign or recall).
@@ -943,7 +941,7 @@
     "discharge": "Discharge"
   };
 
-  function renderRooms(state) {
+  function renderRooms(state, portraitUrlFor) {
     const assets = window.TRIAGE_RUSH_ASSETS;
     const rows = [];
     for (const roomKey of assets.roomKeys) {
@@ -965,6 +963,26 @@
       room.setAttribute("aria-label", isOpen
         ? `Recall patient from ${ROOM_ACCESSIBLE_NAMES[roomKey]}`
         : ROOM_ACCESSIBLE_NAMES[roomKey]);
+
+      const wall = document.createElement("img");
+      wall.className = "room-wall";
+      wall.alt = "";
+      wall.src = assets.game.roomsWall;
+
+      const interior = document.createElement("img");
+      interior.className = "room-interior";
+      interior.alt = "";
+      interior.src = assets.game.roomInteriors[roomKey];
+
+      room.append(wall, interior);
+
+      if (isOpen) {
+        const patient = document.createElement("img");
+        patient.className = "room-patient";
+        patient.alt = "";
+        patient.src = portraitUrlFor(state.assigned.patientId);
+        room.append(patient);
+      }
 
       const door = document.createElement("img");
       door.className = "door-art";
@@ -1144,14 +1162,14 @@
     const isRush = state.settings.mode === "rush";
     const totals = GAME.selectScoreTotals(state);
 
-    /* Only the mode word changes; "Shift Report" is static markup with
-       its serif masthead styling. The mixed case on "TriageRUSH" is
-       deliberate (John, 2026-08-05); the CSS must never uppercase it. */
-    ui.reviewTitleMode.textContent = isRush ? "TriageRUSH" : "TRIAGE";
+    /* The masthead is static markup ("Triage RUSH! Shift Report" in every
+       mode, John 2026-08-06); this MODE: line is what names the mode.
+       "Triage!" on its own appears ONLY here and in the settings mode
+       chooser. */
     const difficultyName =
       state.settings.difficulty === "strict" ? "Strict" : "Forgiving";
     ui.reviewModeLine.textContent =
-      `MODE: ${isRush ? "TriageRUSH" : "Triage"}, ${difficultyName}, ` +
+      `MODE: ${isRush ? "Triage RUSH!" : "Triage!"}, ${difficultyName}, ` +
       configuredShiftLengthLabel(state);
 
     ui.reviewProvider.textContent =
