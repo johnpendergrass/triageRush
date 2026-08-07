@@ -1009,15 +1009,32 @@ img {
   border: 1px solid #cbd0d1;
 }
 
+/* Variant A tile (mockup 2026-08-06): icon left, label-over-value stack
+   right. The icon is sized to sit within the stack's height, so the
+   tile's vertical rhythm is unchanged from the icon-less original. */
 .vital-tile {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 1px;
+  gap: clamp(3px, 1.2cqw, 6px);
   border: 0.5px solid #cbd0d1;
   min-width: 0;
   min-height: 0;
+}
+
+.vital-icon {
+  width: clamp(12px, 3.6cqw, 18px);
+  height: clamp(12px, 3.6cqw, 18px);
+  flex: none;
+}
+
+.vital-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  min-width: 0;
 }
 
 .vital-tile small {

@@ -62,9 +62,11 @@ Triage is the measured teaching mode.
 - Waiting patients do not reduce the score.
 - Shift Review ends the shift early when selected.
 
-### TriageRUSH
+### Triage RUSH! (RUSH)
 
-TriageRUSH is the timed pressure mode.
+Triage RUSH! is the timed pressure mode. (Naming, 2026-08-06: the
+player-facing mode names are "Triage!" and "Triage RUSH!" — the docs'
+shorthand RUSH refers to the latter.)
 
 - Offer 60- and 120-second shifts; default to 60 seconds.
 - Start with two waiting patients inside a five-slot visual minimum.
@@ -130,8 +132,10 @@ Triage mode never needs this — it refills to five on every selection.
 - Empty RUSH rows retain background artwork but no patient.
 - Duplicate visible patient IDs are prohibited.
 - Duplicate waiting backgrounds are avoided while alternatives remain.
-- A waiting background travels with its patient until that patient leaves or is
-  swapped from the queue.
+- A background belongs to its waiting ROW, not to the patient (2026-08-06):
+  a fresh one is chosen whenever a patient enters the waiting room, and
+  waiting rows are the only place backgrounds appear. A patient swapped
+  back into the queue therefore gets a new background.
 - Selecting a patient into an empty center removes that entry and compacts the
   queue upward.
 - Selecting a queued patient while a different, unassigned patient is active
@@ -504,12 +508,15 @@ tabs during an active shift.
 
 Shift Review shows (variant B "LEGIBLE", built 2026-08-06):
 
-- the title — `TRIAGE Shift Report` or `TriageRUSH Shift Report`, where
-  "Shift Report" renders as serif small-caps like a printed report masthead
-  (the mixed case on TriageRUSH is deliberate; never uppercase it with CSS);
+- the title — one centered unit, identical in both modes (2026-08-06): the
+  `Triage RUSH!` brand lettering (sign colors, `.brand-sign`) followed by
+  "Shift Report" in serif small-caps like a printed report masthead
+  (never uppercase the brand with CSS; the ! is part of the name);
 - a mode line beneath, given its own prominence (a blank-line gap and a size
   above the meta text): `MODE: <Mode>, <Difficulty>, <configured length>`,
-  e.g. `MODE: TriageRUSH, Strict, 60 seconds`. The length is the CONFIGURED
+  e.g. `MODE: Triage RUSH!, Strict, 60 seconds` or
+  `MODE: Triage!, Forgiving, 5 minutes` — the two places (with the settings
+  radios) where "Triage!" alone names the mode. The length is the CONFIGURED
   setting worded exactly as its Settings radio — RUSH in seconds, Triage in
   minutes;
 - meta cells: PROVIDER (title + initials), DURATION (time actually run, with

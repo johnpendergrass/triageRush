@@ -128,9 +128,8 @@ function createInitialState() {
     },
 
     waiting: [],               // [{ patientId, waitingBackgroundKey }]
-    active: null,              // { patientId, waitingBackgroundKey,
-                               //   recalledFromRoomKey? } | null
-    assigned: null,            // { patientId, roomKey, waitingBackgroundKey }
+    active: null,              // { patientId, recalledFromRoomKey? } | null
+    assigned: null,            // { patientId, roomKey }
     recallAvailable: false,
 
     ledger: {
@@ -281,7 +280,8 @@ function validatePatientRecord(record, expectedPatientId) {
 /* ------------------------------------------------------------------------
    5b. Deck, waiting queue, and patient selection (doc 8).
    The deck is a shuffled array of patient IDs plus a cursor. Waiting
-   entries are tiny records: { patientId, waitingBackgroundKey }. Actions
+   entries are tiny records: { patientId, waitingBackgroundKey } - the
+   background belongs to the row, not the patient (2026-08-06). Actions
    return one-time effect flags (e.g. doink) that app.js executes once;
    nothing here plays sounds or touches the DOM.
    --------------------------------------------------------------------- */
@@ -321,14 +321,13 @@ function drawUniquePatientId(state, context) {
   return null;
 }
 
-/* Prefer a background no on-screen patient is using; with all 16 in use,
-   any of them is fine (doc 8 waiting backgrounds). */
+/* Backgrounds belong to waiting ROWS, not patients (John, 2026-08-06):
+   a fresh one is chosen every time a patient enters a row, and rows are
+   the only place backgrounds appear. Prefer one no visible row is using;
+   with all 16 in use, any of them is fine. */
 function chooseWaitingBackgroundKey(state, context) {
   const allKeys = TRIAGE_RUSH_ASSETS.waitingBackgroundKeys;
   const usedKeys = new Set(state.waiting.map(e => e.waitingBackgroundKey));
-  if (state.active) usedKeys.add(state.active.waitingBackgroundKey);
-  if (state.assigned) usedKeys.add(state.assigned.waitingBackgroundKey);
-
   const unusedKeys = allKeys.filter(key => !usedKeys.has(key));
   const pool = unusedKeys.length > 0 ? unusedKeys : allKeys;
   return pool[Math.floor(context.random() * pool.length)];
@@ -387,18 +386,16 @@ function selectWaitingPatient(state, context, waitingIndex) {
   }
 
   if (state.active !== null) {
-    /* Swap: backgrounds travel with their patients; no insert, no doink,
-       no ledger change (doc 8). A recalled marker does not survive going
-       back to the queue. */
+    /* Swap: no insert, no doink, no ledger change (doc 8). The patient
+       returning to the row gets a fresh background (rows own their
+       backgrounds). A recalled marker does not survive going back to
+       the queue. */
     const waitingEntry = state.waiting[waitingIndex];
     state.waiting[waitingIndex] = {
       patientId: state.active.patientId,
-      waitingBackgroundKey: state.active.waitingBackgroundKey
+      waitingBackgroundKey: chooseWaitingBackgroundKey(state, context)
     };
-    state.active = {
-      patientId: waitingEntry.patientId,
-      waitingBackgroundKey: waitingEntry.waitingBackgroundKey
-    };
+    state.active = { patientId: waitingEntry.patientId };
     return { accepted: true, doink: false };
   }
 
@@ -410,10 +407,7 @@ function selectWaitingPatient(state, context, waitingIndex) {
   }
 
   const [selectedEntry] = state.waiting.splice(waitingIndex, 1);
-  state.active = {
-    patientId: selectedEntry.patientId,
-    waitingBackgroundKey: selectedEntry.waitingBackgroundKey
-  };
+  state.active = { patientId: selectedEntry.patientId };
   let doink = false;
   if (state.settings.mode === "triage") {
     const refill = insertWaitingPatient(state, context, { announce: true });
@@ -519,11 +513,7 @@ function assignActivePatientToRoom(state, context, patientRecord, roomKey) {
     lastAssignedAtMs: nowMs
   };
 
-  state.assigned = {
-    patientId: patientRecord.id,
-    roomKey,
-    waitingBackgroundKey: state.active.waitingBackgroundKey
-  };
+  state.assigned = { patientId: patientRecord.id, roomKey };
   state.active = null;
   state.recallAvailable = true;
 
@@ -553,7 +543,6 @@ function recallAssignedPatient(state, roomKey) {
   }
   state.active = {
     patientId: state.assigned.patientId,
-    waitingBackgroundKey: state.assigned.waitingBackgroundKey,
     recalledFromRoomKey: roomKey
   };
   state.assigned = null;

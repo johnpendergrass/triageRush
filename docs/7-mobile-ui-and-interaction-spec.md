@@ -152,11 +152,15 @@ mode brand | scorecard | timer | sound
 Reference proportions are `1.02fr 1.48fr 0.72fr 24px`, with 4px gaps and
 4-5px internal padding.
 
-### Mode brand
+### Brand lettering (2026-08-06)
 
-- Triage: `TRIAGE!`
-- RUSH: `TRIAGE` plus orange `RUSH!`
-- Condensed heavy uppercase, responsive approximately 11-17px.
+- IDENTICAL in both modes: `Triage RUSH!` — the ER ENTRANCE sign's
+  spelling and colors (face #ec543d, stacked brick-red 3D extrusion
+  shadows; `.brand-sign`, em-based so it scales). RUSH! renders 1.18x
+  larger (`.brand-rush`), like the sign.
+- Because the brand never varies, all brand spots are STATIC markup in
+  index.html; ui.js writes none of them.
+- Centered between the shell's left edge and the scorecard.
 
 ### Scorecard
 
@@ -186,8 +190,13 @@ Reference proportions are `1.02fr 1.48fr 0.72fr 24px`, with 4px gaps and
 ## Waiting queue
 
 - The queue rail sits on a flat dark green (#0f3d2f, tunable), not wall
-  artwork. The wall and room-interior PNGs are reserved for future layered
-  room rendering (wall → interior → patient → door), never rail backgrounds.
+  artwork.
+- Each triage-room cell is a LAYERED composition (built 2026-08-06), back
+  to front: the rail's flat green → shared wall art filling the cell →
+  per-room interior scene (in the door-art box, 61%/91% bottom-aligned) →
+  assigned patient standing in the doorway (open room only; center at 45%
+  of cell width, bottom 9%, height 80%, max-width 66%) → door art, whose
+  transparent open doorway does the reveal. Stacking is DOM order.
 - 3px internal padding and approximately 3px row gaps.
 - Minimum five equal-height rows; RUSH expands to at most ten.
 - Each occupied row is a button containing:
@@ -246,6 +255,11 @@ Quote is enlarged relative to note because quotes run longer than notes.
 
 - Two rows by three columns.
 - Order: HR, BP, RR, SpO2, TEMP, PAIN.
+- Each tile (variant A, 2026-08-06): vital icon on the left, label-over-
+  value stack on the right. The icons are hand-authored inline SVG defs in
+  index.html stamped per tile with <use> (mockup:
+  _mockups/vitals-icons-mockup.html); no icon image assets exist or are
+  needed.
 - Labels small and strong; values larger.
 - Authored red/yellow status colors apply to values.
 - Cell borders remain light and consistent.
@@ -419,17 +433,18 @@ explored and NOT adopted.
 
 Show:
 
-- the title — `TRIAGE Shift Report` or `TriageRUSH Shift Report`
-  (2026-08-06). The mode word keeps the game's heavy sans; "Shift Report"
-  renders as serif small-caps (Georgia stack), like a printed report
-  masthead — the one text "Shift Report" serves both modes because
-  small-caps capitalizes it visually. The mixed case on `TriageRUSH` is
-  deliberate and must be preserved: NEVER apply `text-transform: uppercase`
-  to this element;
+- the title — ONE centered unit, identical in both modes (2026-08-06): the
+  `Triage RUSH!` brand lettering (sign treatment, `.brand-sign`) plus a
+  1.3em gap plus "Shift Report" in serif small-caps (Georgia stack), like
+  a printed report masthead. Sized (4.8cqw/23px) so the unit always fits
+  one line; NEVER apply `text-transform: uppercase` to the brand — the
+  mixed case and the ! are part of the name;
 - the mode line beneath, deliberately prominent (2026-08-06): a blank-line
   gap under the title and a font size above the meta text. It reads
   `MODE: <Mode>, <Difficulty>, <configured length>`, e.g.
-  `MODE: TriageRUSH, Strict, 60 seconds`. The length is the CONFIGURED
+  `MODE: Triage RUSH!, Strict, 60 seconds` or `MODE: Triage!, Forgiving,
+  5 minutes` — this line and the settings radios are the only two places
+  where "Triage!" alone names the mode. The length is the CONFIGURED
   shift length, worded exactly as its Settings radio (RUSH in seconds,
   Triage in minutes) — labels use words, running time uses m:ss;
 - meta as a 2 x 2 grid of left-ruled cells, key over value: PROVIDER,

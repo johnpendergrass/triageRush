@@ -1,6 +1,31 @@
 # triageRush — specifications (pointer file)
 
-**Last modified:** 2026-08-06 (third session: branding, naming, room layers)
+**Last modified:** 2026-08-06 (fourth session: art resize, row-owned
+backgrounds, vitals icons, full docs sweep)
+
+## Fourth session (2026-08-06 evening): BUILT + docs swept
+
+- **Art diet:** all 38 room/waiting PNGs (doors, interiors, wall, waiting
+  backgrounds) resized for delivery — 170 MB → 5.5 MB — sized for the
+  iPhone 3x shell with headroom. Hi-res originals in
+  `assets/HIRES-ORIGINAL-ART/`; script in `assets/_asset-audit-and-resize/`.
+  This also fixed the quarter-second bare-doorway flash on assignment
+  (TODO 14) with no preload code.
+- **Row-owned waiting backgrounds (TODO 8):** a fresh background is chosen
+  whenever a patient enters the waiting room; it never travels. active/
+  assigned records carry no background key anymore.
+- **Vitals icons (TODO 12):** six hand-authored inline SVGs (defs in
+  index.html, `<use>` per tile) recreating the vitals-bubble artwork;
+  variant A tile layout (icon left, label over value). Resolves the old
+  "six missing vital icons" item — no icon assets needed, ever. Mockup:
+  `_mockups/vitals-icons-mockup.html`.
+- **Room patient APPROVED** (TODO 7 closed): center 45%, bottom 9%,
+  height 80%, max-width 66%.
+- **Docs sweep DONE:** docs 1/3/6/7/8/9 now carry the current brand, the
+  layered rooms, the row-owned backgrounds, the resized asset dims, and
+  the vitals icons; doc 2 gained the 2026-08-06 dev-history entries.
+  TODO 13 (REVIEW LAST SHIFT? button on ER ENTRANCE) was added this
+  session; placement TBD (sidewalk vs erasing the Emergency sign).
 
 ## Branding + naming policy (2026-08-06, third session): BUILT
 
@@ -31,10 +56,10 @@ Each triage-room cell stacks, back to front: flat green rail color →
 shared wall art → per-room interior scene (in the door-art box) →
 assigned patient standing in the doorway (open room only) → door art,
 whose transparent open doorway does the reveal. The reserved
-wall/interior PNGs are now live manifest assets. **Patient scale and
-placement await John's verification** (first pass: bottom 3%, height
-62%, max-width 52% of the cell). Docs 3/7/8 still describe the old brand
-and flat rail — fold in on the next docs pass.
+wall/interior PNGs are live manifest assets. The patient figure was
+fine-tuned and APPROVED (fourth session): center at 45% of cell width,
+bottom 9%, height 80%, max-width 66%. Docs are current as of the
+fourth-session sweep.
 
 ## Pacing + sound revision (2026-08-06, second session): BUILT
 

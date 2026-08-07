@@ -134,9 +134,8 @@ implemented against it):
   },
 
   waiting: [],                  // [{ patientId, waitingBackgroundKey }]
-  active: null,                 // { patientId, waitingBackgroundKey,
-                                //   recalledFromRoomKey? } | null
-  assigned: null,               // { patientId, roomKey, waitingBackgroundKey }
+  active: null,                 // { patientId, recalledFromRoomKey? } | null
+  assigned: null,               // { patientId, roomKey }
   recallAvailable: false,
 
   ledger: {
@@ -250,15 +249,17 @@ If no legal ID exists, fail with an explicit state error rather than loop foreve
 
 ## Waiting backgrounds
 
-When a patient is inserted:
+A background belongs to its waiting ROW, not to the patient (2026-08-06).
+Whenever a patient enters the waiting room (insertion or swap-back):
 
-1. Collect backgrounds used by waiting, active, and assigned patient state when
-   retained.
+1. Collect backgrounds used by the current waiting rows (the only place
+   backgrounds appear).
 2. Choose randomly from unused production backgrounds.
 3. If all 16 are in use, choose from the full set.
 4. Store its manifest key as `waitingBackgroundKey` on the waiting entry.
 
-Selection and swapping move the stored background with the patient.
+The background never travels: active and assigned records carry no
+background key, and a patient swapped back into the queue gets a fresh one.
 
 ## Shift start
 
@@ -322,8 +323,9 @@ The doink belongs here. No other action directly plays it.
 
 ### Active unassigned center
 
-Swap the selected waiting entry and active entry, including backgrounds. Do not
-insert, doink, score, or alter the ledger.
+Swap the selected waiting entry and active entry; the patient returning to
+the row gets a FRESH background (rows own their backgrounds, 2026-08-06).
+Do not insert, doink, score, or alter the ledger.
 
 ### Assigned state
 
@@ -396,11 +398,7 @@ assignRoom(roomKey) {
   if (!previous) ledger.order.push(patientRecord.id)
   ledger.byPatientId[patientRecord.id] = nextRecord
 
-  assigned = {
-    patientId: patientRecord.id,
-    roomKey,
-    waitingBackgroundKey: active.waitingBackgroundKey
-  }
+  assigned = { patientId: patientRecord.id, roomKey }
   active = null
   recallAvailable = true
 
@@ -430,7 +428,6 @@ recallAssignedPatient(roomKey) {
 
   active = {
     patientId: assigned.patientId,
-    waitingBackgroundKey: assigned.waitingBackgroundKey,
     recalledFromRoomKey: roomKey
   }
   assigned = null

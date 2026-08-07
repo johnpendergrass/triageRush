@@ -109,7 +109,9 @@ triageRush/
 
 ## Current cautions
 
-- Triage and TriageRUSH are the only mode names.
+- "Triage!" and "Triage RUSH!" are the only mode names (2026-08-06 sign
+  spelling; docs use the shorthand RUSH for the latter). The GAME's name is
+  always "Triage RUSH!", in both modes.
 - Strict and Forgiving are the only evaluation choices.
 - Use `shift`, not `round`, in player-facing language.
 - Never reveal the correct room through immediate Wrong or Close feedback.

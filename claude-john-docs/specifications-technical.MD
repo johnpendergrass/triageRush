@@ -1,6 +1,7 @@
 # triageRush — technical notes (pointer file)
 
-**Last modified:** 2026-08-06 (third session: brand CSS, room layers)
+**Last modified:** 2026-08-06 (fourth session: art resize, row-owned
+backgrounds, vitals SVG icons)
 
 ## Brand lettering (2026-08-06)
 
@@ -22,18 +23,47 @@ inline-size; height% × 16/9 = cqw): brand absolute at top 45cqw
 
 renderRooms(state, portraitUrlFor) builds per cell: img.room-wall (inset
 0, fill) → img.room-interior (same 61%/91% bottom box as .door-art) →
-img.room-patient (open room only; bottom 3% / height 62% / max-width 52%,
-contain, bottom-center — JOHN'S FINE-TUNE PENDING) → img.door-art.
+img.room-patient (open room only; left 45% / bottom 9% / height 80% /
+max-width 66%, contain, bottom-center — JOHN-APPROVED FINAL) →
+img.door-art.
 Stacking is DOM order, no z-index. The art was authored at matching
-aspects (wall ≈ cell ≈ 1.0; interiors = door art = 1152x1792 ≈ 0.643;
-discharge pair is 1777x1792 and stretches like its door always has), so
-object-fit: fill is distortion-free. assets.js gained game.roomsWall +
+aspects (wall ≈ cell ≈ 1.0; interiors = door art ≈ 0.643 aspect;
+discharge pair is ≈0.99 and stretches like its door always has), so
+object-fit: fill is distortion-free. All 38 door/interior/wall/waiting
+PNGs were resized 2026-08-06 for delivery (170 MB → 5.5 MB; doors
+257x400, interiors 288x448, wall 317x320, waiting 317x448 — discharge
+pair wider). Hi-res originals: assets/HIRES-ORIGINAL-ART/. Script:
+assets/_asset-audit-and-resize/resize_game_art.py. The resize also cured
+the bare-doorway flash on assignment (open door now decodes instantly). assets.js gained game.roomsWall +
 game.roomInteriors[roomKey] and the loader verifies them (+8 startup
 images — counted against the asset-loading debt). Portraits are square
 1024 RGBA cut-outs, which is why the doorway figure works.
 
 Full technical contracts: `docs/4`, `docs/8`. This file records only
 practical build knowledge that lives nowhere else.
+
+## Row-owned waiting backgrounds (2026-08-06)
+
+`waitingBackgroundKey` lives ONLY on waiting entries now. game.js
+chooseWaitingBackgroundKey checks just the visible rows; the swap branch
+gives the returning patient a fresh key; active is `{patientId,
+recalledFromRoomKey?}` and assigned is `{patientId, roomKey}`. Nothing
+outside the waiting rows renders a background, so nothing else needs the
+key. Node harness pattern for this lives in doc 9's conventions (rebuild
+in scratchpad as needed).
+
+## Vitals SVG icons (2026-08-06)
+
+Six `<g id="vital-icon-<key>">` defs in a hidden SVG at the top of
+index.html (keys = the VITAL_DISPLAY_ORDER keys: hr, bp, rr, spo2, temp,
+pain). buildPatientChart stamps each tile with an SVG `<use>` — one defs
+block serves the panel, clipboard, and review because they share the
+document. Tile is variant A: `.vital-tile` is a flex ROW of `.vital-icon`
+(clamp 12-18px, sized to stay inside the stack height) + `.vital-stack`
+(label over value). Gradient/clipPath ids are prefixed (vitalThermoGradient,
+vitalBpClip) to stay unique in the page. Icon shapes were tuned in
+`_mockups/vitals-icons-mockup.html` — edit there first, then copy into
+index.html.
 
 ## One structural fact worth keeping
 
@@ -51,7 +81,7 @@ overwrite the first rather than create a new record. Nothing today does that.
   file:// does not work (fetch).
 - Cache busting: one version string in TWO places — index.html query
   params (5 refs) and `TRIAGE_RUSH_CACHE_VERSION` in assets.js. Bump BOTH
-  on every asset/CSS/JS change (currently "2026-0806-pacing1c"; the
+  on every asset/CSS/JS change (currently "2026-0806-vit1a"; the
   trailing letter increments per tweak).
 
 ## Architecture in one breath

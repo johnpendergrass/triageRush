@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>triageRush — vitals icons mockup</title>
+<style>
+  /* Standalone comparison harness (same conventions as the other
+     _mockups files): copies palette values, no fetch, opens from disk.
+     The only external reference is the original artwork PNG, loaded
+     with a plain <img> for side-by-side comparison. */
+  body {
+    margin: 0; padding: 24px 28px 60px;
+    background: #12242e; color: #e8e4da;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  h2 { font-size: 15px; margin: 34px 0 10px; color: #ffc93c; }
+  p.note { font-size: 12px; color: #a9b6bc; max-width: 620px; margin: 4px 0 12px; }
+
+  /* ---- Section 1: original artwork ---- */
+  .artwork img { width: 540px; max-width: 100%; border-radius: 10px; }
+
+  /* ---- Section 2: recreated icons, large ---- */
+  .bubble {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+    background: #efe9dd; border-radius: 14px; padding: 14px;
+    width: 600px; max-width: 100%; box-sizing: border-box;
+  }
+  .bubble .card {
+    display: flex; align-items: center; gap: 14px; min-width: 0;
+    background: #f5f1e7; border: 1px solid #ddd5c4; border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .bubble .card svg { width: 44px; height: 44px; flex: none; }
+  .bubble .card b { font-size: 22px; color: #1b2b45; letter-spacing: 0.01em; }
+  .bubble .card b sub { font-size: 60%; }
+
+  /* ---- Section 3: in-context tiles (game-panel palette + sizes) ---- */
+  .variant-row { display: flex; gap: 34px; flex-wrap: wrap; align-items: flex-start; }
+  .variant h3 { font-size: 12px; color: #a9b6bc; margin: 0 0 6px; font-weight: 700; }
+
+  .vitals {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    border-radius: 6px; overflow: hidden;
+    background: #f2f3f2; border: 1px solid #cbd0d1;
+  }
+  .vitals.desktop { width: 282px; }
+  .vitals.phone   { width: 216px; }
+  .tile {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 1px;
+    border: 0.5px solid #cbd0d1; margin: 0; padding: 4px 2px;
+    box-sizing: border-box;
+  }
+  .tile small {
+    color: #47616f; font-weight: 800; letter-spacing: 0.08em;
+    font-size: 8px;
+  }
+  .tile strong { color: #1d2a30; font-size: 13px; font-weight: 900; }
+  .phone .tile small  { font-size: 6px; }
+  .phone .tile strong { font-size: 10px; }
+  .is-yellow { color: #b46a00 !important; }
+  .is-red    { color: #c72d25 !important; }
+
+  /* Variant A: icon sits left of the label+value stack. */
+  .tile.va { flex-direction: row; gap: 6px; }
+  .tile.va .stack { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; }
+  .tile.va svg { width: 18px; height: 18px; flex: none; }
+  .phone .tile.va svg { width: 14px; height: 14px; }
+
+  /* Variant B: label on top, then icon + value side by side. */
+  .tile.vb .pair { display: flex; align-items: center; gap: 4px; }
+  .tile.vb svg { width: 15px; height: 15px; flex: none; }
+  .phone .tile.vb svg { width: 12px; height: 12px; }
+
+  /* Variant C: icon on top (replacing nothing - label stays), value below. */
+  .tile.vc svg { width: 16px; height: 16px; }
+  .phone .tile.vc svg { width: 13px; height: 13px; }
+</style>
+</head>
+<body>
+
+<h1>Vitals icons — SVG recreations vs the artwork</h1>
+<p class="note">The artwork's icons are AI-drawn flat art matching standard
+medical glyph conventions; these are hand-authored inline SVGs (no fonts,
+no image files) with colors sampled from the artwork. Icons defined once
+below and stamped everywhere via <code>&lt;use&gt;</code>.</p>
+
+<!-- ================= icon definitions (one copy, reused) ================= -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="thermo" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f5822a"/>
+      <stop offset="1" stop-color="#d81d0c"/>
+    </linearGradient>
+    <clipPath id="bp-clip">
+      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+    </clipPath>
+
+    <g id="i-hr">
+      <path fill="#cf2015" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+    </g>
+
+    <g id="i-bp">
+      <path fill="#1a6b40" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      <polyline clip-path="url(#bp-clip)" points="2.5,10.6 8.6,10.6 10.4,7.4 12.5,14.2 14.2,10.6 21.5,10.6"
+        fill="none" stroke="#fff" stroke-width="1.5"
+        stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <g id="i-rr">
+      <path fill="#2e6cc6" d="M10.6 9.2 C10.6 8 9.5 7.3 8.4 7.8 C5.2 9.2 3.2 12.8 3 16.8 C2.9 19.4 4 20.8 6.1 21 C8.8 21.3 10.6 19.8 10.6 17.2 Z"/>
+      <path fill="#2e6cc6" d="M13.4 9.2 C13.4 8 14.5 7.3 15.6 7.8 C18.8 9.2 20.8 12.8 21 16.8 C21.1 19.4 20 20.8 17.9 21 C15.2 21.3 13.4 19.8 13.4 17.2 Z"/>
+      <path fill="none" stroke="#2e6cc6" stroke-width="1.9" stroke-linecap="round"
+        d="M12 2.6 V6.8 M12 6.8 C12 8.2 11.2 8.8 10.1 9.4 M12 6.8 C12 8.2 12.8 8.8 13.9 9.4"/>
+    </g>
+
+    <g id="i-spo2">
+      <text x="3" y="17.5" font-family="Arial Black, Arial, sans-serif"
+        font-weight="900" font-size="16" fill="#2565c0">O</text>
+      <text x="15" y="21.5" font-family="Arial Black, Arial, sans-serif"
+        font-weight="900" font-size="9" fill="#2565c0">2</text>
+    </g>
+
+    <g id="i-temp">
+      <rect x="10" y="2" width="4" height="12.6" rx="2" fill="url(#thermo)"/>
+      <circle cx="12" cy="17.4" r="4.4" fill="#d81d0c"/>
+      <circle cx="11" cy="16.4" r="1.5" fill="#f5822a" opacity="0.6"/>
+    </g>
+
+    <g id="i-pain">
+      <circle cx="12" cy="5.1" r="2.9" fill="#e8941a"/>
+      <path fill="#e8941a" d="M12 9 C8.8 9 6.5 11.1 6.2 14.3 L6 17.1 C6 18.1 6.6 18.7 7.5 18.7 L16.5 18.7 C17.4 18.7 18 18.1 18 17.1 L17.8 14.3 C17.5 11.1 15.2 9 12 9 Z"/>
+      <path fill="none" stroke="#f5f1e7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"
+        d="M8.2 12.6 L10.3 14.4 L8.6 16.4 M15.8 12.6 L13.7 14.4 L15.4 16.4"/>
+    </g>
+  </defs>
+</svg>
+
+<!-- ================= 1. original ================= -->
+<h2>1. The original artwork (reference)</h2>
+<div class="artwork">
+  <img src="../triageRush/assets/game-page/patient-panel/patient-panel-vitals-bubble-hires.png"
+       alt="original vitals bubble artwork">
+</div>
+
+<!-- ================= 2. recreations, large ================= -->
+<h2>2. SVG recreations at artwork scale</h2>
+<div class="bubble">
+  <div class="card"><svg viewBox="0 0 24 24"><use href="#i-hr"/></svg><b>HR</b></div>
+  <div class="card"><svg viewBox="0 0 24 24"><use href="#i-bp"/></svg><b>BP</b></div>
+  <div class="card"><svg viewBox="0 0 24 24"><use href="#i-rr"/></svg><b>RR</b></div>
+  <div class="card"><svg viewBox="0 0 24 24"><use href="#i-spo2"/></svg><b>SpO<sub>2</sub></b></div>
+  <div class="card"><svg viewBox="0 0 24 24"><use href="#i-temp"/></svg><b>Temp</b></div>
+  <div class="card"><svg viewBox="0 0 24 24"><use href="#i-pain"/></svg><b>Pain</b></div>
+</div>
+
+<!-- ================= 3. in-context tiles ================= -->
+<h2>3. In the vitals grid, at real panel sizes</h2>
+<p class="note">Replica of the game's .chart-vitals tiles (same palette,
+borders, font sizes) at approximate desktop and phone widths. Values show
+the authored color coding (normal / yellow / red). Three layout variants —
+tap-test on the iPhone before choosing.</p>
+
+<div class="variant-row" id="variants"></div>
+
+<script>
+  /* Sample vitals with authored colors, one of each state. */
+  const VITALS = [
+    { key: "hr",   label: "HR",   value: "132",    color: "red" },
+    { key: "bp",   label: "BP",   value: "144/92", color: "yellow" },
+    { key: "rr",   label: "RR",   value: "18",     color: "" },
+    { key: "spo2", label: "SPO2", value: "97%",    color: "" },
+    { key: "temp", label: "TEMP", value: "99.1",   color: "yellow" },
+    { key: "pain", label: "PAIN", value: "8/10",   color: "red" }
+  ];
+  const icon = (key) =>
+    `<svg viewBox="0 0 24 24"><use href="#i-${key}"/></svg>`;
+  const val = (v) =>
+    `<strong class="${v.color ? "is-" + v.color : ""}">${v.value}</strong>`;
+
+  const layouts = {
+    "A — icon left, label over value":
+      (v) => `<p class="tile va">${icon(v.key)}<span class="stack">
+                <small>${v.label}</small>${val(v)}</span></p>`,
+    "B — label top, icon beside value":
+      (v) => `<p class="tile vb"><small>${v.label}</small>
+                <span class="pair">${icon(v.key)}${val(v)}</span></p>`,
+    "C — icon top, label + value below":
+      (v) => `<p class="tile vc">${icon(v.key)}<small>${v.label}</small>${val(v)}</p>`
+  };
+
+  const mount = document.getElementById("variants");
+  for (const [name, tile] of Object.entries(layouts)) {
+    const block = document.createElement("div");
+    block.className = "variant";
+    const grids = ["desktop", "phone"].map(size =>
+      `<div class="vitals ${size}">${VITALS.map(tile).join("")}</div>`
+    ).join("<div style='height:10px'></div>");
+    block.innerHTML = `<h3>${name}</h3>${grids}`;
+    mount.append(block);
+  }
+</script>
+
+</body>
+</html>

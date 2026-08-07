@@ -70,13 +70,6 @@ Notes (Claude):
 Change the sound icon in the game screen: a note icon when sound is on, and
 the note icon with the stop overlay when off.
 
-## 8. Waiting backgrounds need NOT travel with the patient (added 2026-08-06)
-
-Not sure if we are still tracking this: it is NOT required that the waiting
-room backgrounds travel with the patient — they are really never used
-again. (Today the code and doc 3 make the background travel with its
-patient through select/swap/assign; this permits simplifying that.)
-
 ## 9. BUG: sounds sometimes do not play (added 2026-08-06)
 
 Sometimes the timer clicks and other sounds do not play, even though sound
@@ -153,16 +146,6 @@ Notes (Claude):
   "Add to Home Screen" effectively protects the storage (the web app's own
   use counts as visiting); an export button is the heavier fallback.
 
-## 12. Vitals panel: icons + text + number values (added 2026-08-06)
-
-A big item — the vitals panel. It is supposed to use the icons, text and
-number values. It is still just text.
-
-Notes (Claude):
-
-- Related old backlog item: "six missing vital icons" — worth resolving
-  what icon assets exist vs are missing when this is picked up.
-
 ## 13. ER ENTRANCE: "REVIEW LAST SHIFT?" button (added 2026-08-06)
 
 When the player returns to the ER ENTRANCE screen, having completed or
@@ -199,6 +182,50 @@ Notes (Claude):
   persistence exists.
 
 ## DONE
+
+## 12. Vitals panel: icons + text + number values (DONE 2026-08-06)
+
+A big item — the vitals panel. It is supposed to use the icons, text and
+number values. It is still just text.
+
+Built 2026-08-06 (cache 2026-0806-vit1a), APPROVED by John same day:
+
+- The vitals-bubble artwork's icons were identified as AI-drawn flat art
+  matching standard medical glyphs (no icon font to find) and recreated
+  as six hand-authored inline SVGs, colors sampled from the artwork.
+  Mockup: `_mockups/vitals-icons-mockup.html`; John chose layout
+  variant A (icon left, label-over-value stack — no tile height change).
+- Icons are `<g id="vital-icon-*">` defs in index.html, stamped per tile
+  with `<use>` by buildPatientChart, so they appear in the panel, Chart
+  clipboard, and Patients Seen alike. New CSS: `.vital-icon`,
+  `.vital-stack`; `.vital-tile` became a row.
+- This RESOLVES the old "six missing vital icons" backlog item: no icon
+  image assets are needed, ever — the SVGs are the icons.
+- Verified in Chrome (panel + clipboard, console clean); Node harness
+  not applicable (pure presentation).
+
+## 8. Waiting backgrounds need NOT travel with the patient (DONE 2026-08-06)
+
+Not sure if we are still tracking this: it is NOT required that the waiting
+room backgrounds travel with the patient — they are really never used
+again. (The code and doc 3 made the background travel with its patient
+through select/swap/assign; this permitted simplifying that.)
+
+Built 2026-08-06 (cache 2026-0806-bg1a) under John's new rule: a
+background belongs to the waiting ROW, not the patient — a fresh random
+one is chosen whenever a patient enters the waiting room, and rows are
+the only place backgrounds appear.
+
+- `state.active` and `state.assigned` no longer carry
+  waitingBackgroundKey (they are just {patientId} / {patientId,
+  roomKey}); only waiting entries keep it. Seven copy-around spots in
+  game.js removed; chooseWaitingBackgroundKey now checks only visible
+  rows for duplicates.
+- Visible behavior change (accepted): swapping the center patient back
+  into a row shows a fresh background, not the one it left with.
+- Verified: 15-check Node harness (select/swap/assign/recall paths, no
+  stray keys, invariants clean) plus browser smoke test. Docs 3/8 still
+  state the old traveling rule — fold into the next docs pass.
 
 ## 14. Preload the open-door art (RESOLVED 2026-08-06)
 

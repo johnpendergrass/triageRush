@@ -13,7 +13,7 @@
 
 "use strict";
 
-const TRIAGE_RUSH_CACHE_VERSION = "2026-0806-art1a";
+const TRIAGE_RUSH_CACHE_VERSION = "2026-0806-vit1a";
 
 /* All paths are relative to the site root (where index.html lives). */
 const ASSET_ROOT = "./triageRush/assets";
@@ -43,7 +43,9 @@ function patientPortraitPath(patientId) {
 /* ---------------------------------------------------------------------------
    Waiting-room backgrounds: 16 interchangeable scenes. Keys are
    "background-1" .. "background-16"; a waiting entry stores one key as its
-   waitingBackgroundKey and the background travels with the patient.
+   waitingBackgroundKey. The background belongs to the ROW, not the
+   patient (2026-08-06): a fresh one is chosen whenever a patient enters
+   the waiting room, and rows are the only place backgrounds appear.
    ------------------------------------------------------------------------ */
 
 const WAITING_BACKGROUND_KEYS = [];

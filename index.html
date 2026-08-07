@@ -5,9 +5,65 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#071822">
   <title>Triage RUSH!</title>
-  <link rel="stylesheet" href="./triageRush/styles.css?v=2026-0806-art1a">
+  <link rel="stylesheet" href="./triageRush/styles.css?v=2026-0806-vit1a">
 </head>
 <body>
+
+<!-- Vital-sign icon definitions (TODO 12, 2026-08-06). Hand-authored inline
+     SVGs recreating the vitals-bubble artwork (mockup: _mockups/
+     vitals-icons-mockup.html, variant A chosen). Defined ONCE here, hidden;
+     every vitals tile stamps them with <use href="#vital-icon-...">, so the
+     icons work in the panel, the Chart clipboard, and Patients Seen alike.
+     No webfonts, no image files - same ethos as the brand lettering. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="vitalThermoGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f5822a"/>
+      <stop offset="1" stop-color="#d81d0c"/>
+    </linearGradient>
+    <clipPath id="vitalBpClip">
+      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+    </clipPath>
+
+    <g id="vital-icon-hr">
+      <path fill="#cf2015" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+    </g>
+
+    <g id="vital-icon-bp">
+      <path fill="#1a6b40" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      <polyline clip-path="url(#vitalBpClip)" points="2.5,10.6 8.6,10.6 10.4,7.4 12.5,14.2 14.2,10.6 21.5,10.6"
+        fill="none" stroke="#fff" stroke-width="1.5"
+        stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <g id="vital-icon-rr">
+      <path fill="#2e6cc6" d="M10.6 9.2 C10.6 8 9.5 7.3 8.4 7.8 C5.2 9.2 3.2 12.8 3 16.8 C2.9 19.4 4 20.8 6.1 21 C8.8 21.3 10.6 19.8 10.6 17.2 Z"/>
+      <path fill="#2e6cc6" d="M13.4 9.2 C13.4 8 14.5 7.3 15.6 7.8 C18.8 9.2 20.8 12.8 21 16.8 C21.1 19.4 20 20.8 17.9 21 C15.2 21.3 13.4 19.8 13.4 17.2 Z"/>
+      <path fill="none" stroke="#2e6cc6" stroke-width="1.9" stroke-linecap="round"
+        d="M12 2.6 V6.8 M12 6.8 C12 8.2 11.2 8.8 10.1 9.4 M12 6.8 C12 8.2 12.8 8.8 13.9 9.4"/>
+    </g>
+
+    <g id="vital-icon-spo2">
+      <text x="3" y="17.5" font-family="Arial Black, Arial, sans-serif"
+        font-weight="900" font-size="16" fill="#2565c0">O</text>
+      <text x="15" y="21.5" font-family="Arial Black, Arial, sans-serif"
+        font-weight="900" font-size="9" fill="#2565c0">2</text>
+    </g>
+
+    <g id="vital-icon-temp">
+      <rect x="10" y="2" width="4" height="12.6" rx="2" fill="url(#vitalThermoGradient)"/>
+      <circle cx="12" cy="17.4" r="4.4" fill="#d81d0c"/>
+      <circle cx="11" cy="16.4" r="1.5" fill="#f5822a" opacity="0.6"/>
+    </g>
+
+    <g id="vital-icon-pain">
+      <circle cx="12" cy="5.1" r="2.9" fill="#e8941a"/>
+      <path fill="#e8941a" d="M12 9 C8.8 9 6.5 11.1 6.2 14.3 L6 17.1 C6 18.1 6.6 18.7 7.5 18.7 L16.5 18.7 C17.4 18.7 18 18.1 18 17.1 L17.8 14.3 C17.5 11.1 15.2 9 12 9 Z"/>
+      <path fill="none" stroke="#f5f1e7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"
+        d="M8.2 12.6 L10.3 14.4 L8.6 16.4 M15.8 12.6 L13.7 14.4 L15.4 16.4"/>
+    </g>
+  </defs>
+</svg>
 
 <!-- One 9:16 shell on every device. HOME, GAME, and SHIFT REVIEW are separate
      full-shell views inside it; only one is ever visible (doc 7). -->
@@ -470,9 +526,9 @@
 
 </div>
 
-<script src="./triageRush/assets.js?v=2026-0806-art1a"></script>
-<script src="./triageRush/game.js?v=2026-0806-art1a"></script>
-<script src="./triageRush/ui.js?v=2026-0806-art1a"></script>
-<script src="./triageRush/app.js?v=2026-0806-art1a"></script>
+<script src="./triageRush/assets.js?v=2026-0806-vit1a"></script>
+<script src="./triageRush/game.js?v=2026-0806-vit1a"></script>
+<script src="./triageRush/ui.js?v=2026-0806-vit1a"></script>
+<script src="./triageRush/app.js?v=2026-0806-vit1a"></script>
 </body>
 </html>

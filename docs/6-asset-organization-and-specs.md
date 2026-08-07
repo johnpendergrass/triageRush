@@ -26,7 +26,11 @@ triageRush/assets/
 |   `-- waiting-room-panel/
 |-- lobby-page/
 |-- audio/
-|-- icons/                      empty: six vital icons still to be produced
+|-- icons/                      empty; RESOLVED 2026-08-06: the six vital
+|                               icons are inline SVG defs in index.html
+|                               (no image assets needed, ever)
+|-- HIRES-ORIGINAL-ART/         John's full backup of the pre-resize
+|                               hi-res artwork (2026-08-06); NOT runtime
 |-- patient-chart-popup/        empty: the Chart clipboard is CSS-drawn
 |-- review-page/
 `-- _asset-audit-and-resize/    non-runtime audit and trial workspace
@@ -64,8 +68,10 @@ available and reports the missing logical key and path.
 background-1.png through background-16.png
 ```
 
-Each image is 1777 x 2509. A background is assigned when a patient enters the
-queue and travels with that patient through compaction or swapping. Avoid a
+Each image is 317 x 448 (resized 2026-08-06 from the 1777 x 2509 hi-res
+originals, which live in `HIRES-ORIGINAL-ART/`). A fresh background is
+chosen whenever a patient enters the waiting room; it belongs to the ROW,
+not the patient (2026-08-06 — it does NOT travel through swaps). Avoid a
 visible duplicate while an unused alternative exists.
 
 Empty RUSH slots may use deterministic backgrounds from the same set. Empty
@@ -79,7 +85,8 @@ slot decoration is not attached to a patient until insertion.
 patient-panel-background-hires.png      (runtime: the corridor scene art)
 patient-panel-name-bubble-hires.png     (unused, see below)
 patient-panel-quote-bubble-hires.png    (unused, see below)
-patient-panel-vitals-bubble-hires.png   (unused, see below)
+patient-panel-vitals-bubble-hires.png   (unused at runtime; reference
+                                         artwork for the vitals SVG icons)
 patient-panel-clipboard-bubble-hires.png (unused, see below)
 ```
 
@@ -99,10 +106,11 @@ remain bottom-aligned, and not be forced to the background's magnification.
 - seven `background-*-room.png` interiors; and
 - fourteen accepted `door-*-open.png` / `door-*-closed.png` images.
 
-The wall and the seven interiors are NOT screen background art and are not in
-the runtime manifest yet: both rails render on a flat dark green (#0f3d2f).
-They are reserved layers for the future layered room composition (wall →
-room interior → patient → door) and must not be archived.
+The wall and the seven interiors ARE runtime manifest assets (built
+2026-08-06): each room cell layers, back to front, the rail's flat dark
+green (#0f3d2f) → wall art → room interior → assigned patient (open room
+only) → door art, whose transparent open doorway does the reveal. The
+waiting rail still renders on the flat green with no wall art.
 
 Room keys are:
 
@@ -112,12 +120,16 @@ esi-1, esi-2, esi-3, esi-4, esi-5, psych, discharge
 
 #### Accepted door baseline
 
-As verified on 2026-08-04, the current high-resolution source/runtime baseline
-contains:
+The accepted door SET is unchanged from the 2026-08-04 verification; on
+2026-08-06 every file was resized for delivery (originals in
+`HIRES-ORIGINAL-ART/`; ~170 MB of room/waiting art became ~5.5 MB):
 
 - Production contains exactly 14 `door-*.png` files.
-- ESI 1-5 and Psych open/closed files are 1152 x 1792 RGBA.
-- Discharge open/closed files are 1777 x 1792 RGBA.
+- ESI 1-5 and Psych open/closed files are 257 x 400 RGBA (were 1152 x 1792).
+- Discharge open/closed files are 397 x 400 RGBA (were 1777 x 1792).
+- Interiors are 288 x 448 (discharge 444 x 448); the shared wall is
+  317 x 320; targets sized for the iPhone 3x shell with headroom
+  (script: `_asset-audit-and-resize/resize_game_art.py`).
 - Sign backgrounds and lettering are accepted and readable.
 - Open-door and outer-frame transparency is intentional and required.
 

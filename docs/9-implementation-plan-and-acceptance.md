@@ -177,7 +177,9 @@ Automated gate:
 Visual gate:
 
 - five through ten queue rows remain legible;
-- both rails sit on the flat dark green (#0f3d2f), not wall artwork;
+- the waiting rail sits on the flat dark green (#0f3d2f); each room cell
+  layers wall art → interior → assigned patient (open room only) → door
+  art over that green (2026-08-06), with the open doorway doing the reveal;
 - the empty panel shows the 9:16 SELECT A PATIENT box with its hint lines and
   fused text arrows (U+FE0E);
 - the nameplate shows the cream age/sex wristband chip; long names ellipsize
@@ -398,10 +400,11 @@ Acceptance:
   CLOSE as NA with EMPTY count and multiplier cells (2026-08-06);
 - LEFT WAITING appears nowhere on the review — no row, no stat (2026-08-06);
 - no waiting penalty in any mode: score is assignment points only;
-- the title reads `TRIAGE Shift Report` / `TriageRUSH Shift Report` (mixed
-  case preserved; "Shift Report" in serif small-caps), with the mode line
-  `MODE: <Mode>, <Difficulty>, <configured length>` — RUSH lengths in
-  seconds, Triage lengths in minutes;
+- the title reads `Triage RUSH!` (brand lettering, identical in both
+  modes) + "Shift Report" in serif small-caps, one centered unit, with
+  the mode line `MODE: <Mode>, <Difficulty>, <configured length>` using
+  mode names "Triage!" / "Triage RUSH!" — RUSH lengths in seconds,
+  Triage lengths in minutes;
 - duration reports time actually run, not the selected shift length;
 - a shift the player stopped early marks DURATION inline: `0:42 * ended
   early`; timer expiry shows no note; a quit shift never reaches review;

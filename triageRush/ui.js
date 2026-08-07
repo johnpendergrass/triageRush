@@ -483,20 +483,35 @@
     quoteBody.textContent = `“${presentation.quote}”`;
     quote.append(quoteKicker, quoteBody);
 
-    /* Vitals: 3 x 2 tiles; authored colors only (doc 4). Icon slots are
-       ready but empty until John's generated icons arrive. */
+    /* Vitals: 3 x 2 tiles; authored colors only (doc 4). Each tile is
+       variant A from _mockups/vitals-icons-mockup.html (2026-08-06):
+       icon on the left, label-over-value stack on the right. Icons are
+       <use> stamps of the vital-icon-* defs in index.html. */
     const vitals = document.createElement("div");
     vitals.className = "chart-vitals";
+    const SVG_NS = "http://www.w3.org/2000/svg";
     for (const { vitalKey, label } of VITAL_DISPLAY_ORDER) {
       const vital = presentation.vitals[vitalKey];
       const tile = document.createElement("p");
       tile.className = "vital-tile";
+
+      const icon = document.createElementNS(SVG_NS, "svg");
+      icon.setAttribute("viewBox", "0 0 24 24");
+      icon.setAttribute("class", "vital-icon");
+      icon.setAttribute("aria-hidden", "true");
+      const iconRef = document.createElementNS(SVG_NS, "use");
+      iconRef.setAttribute("href", "#vital-icon-" + vitalKey);
+      icon.append(iconRef);
+
+      const stack = document.createElement("span");
+      stack.className = "vital-stack";
       const tileLabel = document.createElement("small");
       tileLabel.textContent = label;
       const tileValue = document.createElement("strong");
       tileValue.textContent = String(vital.value);
       tileValue.className = "vital-value is-" + vital.color;
-      tile.append(tileLabel, tileValue);
+      stack.append(tileLabel, tileValue);
+      tile.append(icon, stack);
       tile.setAttribute("aria-label", `${label} ${vital.value}`);
       vitals.append(tile);
     }

@@ -165,6 +165,27 @@ not inventory superseded code or assets. Historical detail remains in
   new minuteDong bell ("dink dink dooooonk") — endDong's family, higher and
   much shorter, so a minute is unmistakable without sounding like the end.
 
+### 2026-08-06 Brand, room layers, art diet, and vitals icons
+
+- The game's NAME became "Triage RUSH!" everywhere, in both modes — the ER
+  ENTRANCE sign's spelling recreated with fonts alone (mockup variant B:
+  flat #ec543d face, stacked brick-red 3D extrusion). "Triage!" alone names
+  the mode in exactly two places (Shift Report MODE: line, settings radios).
+- The layered room composition was built and approved: wall art → room
+  interior → assigned patient → door art in every cell, the open doorway
+  doing the reveal. The patient figure was tuned live with John (center
+  45%, bottom 9%, height 80%).
+- All 38 room/waiting art files were resized for delivery — 170 MB became
+  5.5 MB — with the hi-res originals kept in assets/HIRES-ORIGINAL-ART/.
+  The resize also cured the quarter-second bare-doorway flash on
+  assignment, so no preload code was ever written.
+- Waiting backgrounds became ROW-owned (a fresh scene whenever a patient
+  enters the queue): the traveling-background rule and its bookkeeping on
+  active/assigned records were removed.
+- The vitals tiles gained their icons: six hand-authored inline SVGs
+  recreating the vitals-bubble artwork (no icon assets ever needed),
+  variant A layout — icon left, label over value, tile height unchanged.
+
 ## Historical lookup
 
 Use [the archive index](archive/README.md) only when older rationale is needed.
