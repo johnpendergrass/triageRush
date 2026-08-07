@@ -33,10 +33,8 @@
     // Popups
     "popupLayer", "popupCard", "popupBoardArt", "popupCloseButton",
     "popupApplyButton", "playerBoardContent", "shiftBoardContent",
-    "aboutBoardContent", "playerTitleSelect", "playerInitialsInput",
-    "triageLengthFieldset", "rushLengthFieldset",
-    "settingSoundGlobal", "settingSoundGame", "settingSoundMusic",
-    "musicStatusNote",
+    "aboutBoardContent", "playerTitleWheel", "playerInitialsWheels",
+    "triageLengthOptions", "rushLengthOptions", "musicStatusNote",
     // Overlays
     "arrivingOverlay", "confirmQuitOverlay", "confirmQuitCancel",
     "confirmQuitAccept", "confirmStopOverlay", "confirmStopCancel",
@@ -89,6 +87,8 @@
      3. HOME rendering.
      ------------------------------------------------------------------- */
 
+  /* Kept for the summary-board design (2026-08-07): the boards are blank
+     for now, and this is the label they showed - "5:00", "60s". */
   function formatShiftLengthLabel(state) {
     const seconds = GAME.selectedShiftLengthSeconds(state);
     if (seconds >= 60 && seconds % 60 === 0) {
@@ -97,15 +97,19 @@
     return `${seconds}s`;
   }
 
+  /* The sidewalk summary boards are deliberately BLANK (John,
+     2026-08-07): the detail boards now carry the letter-board look, and
+     the summaries get their own design pass. The boards still open the
+     settings; only their lettering is held back. When the summary design
+     lands, fill these same lines - the values each one wants are already
+     one expression away, kept here as the comments below.  */
   function renderHomeBoardSummaries(state) {
-    ui.playerBoardTitleLine.textContent = state.player.title.toUpperCase();
-    ui.playerBoardInitialsLine.textContent = state.player.initials;
+    ui.playerBoardTitleLine.textContent = "";       // state.player.title
+    ui.playerBoardInitialsLine.textContent = "";    // state.player.initials
 
-    ui.shiftBoardModeLine.textContent =
-      state.settings.mode === "rush" ? "TRIAGE RUSH!" : "TRIAGE";
-    ui.shiftBoardDifficultyLine.textContent =
-      state.settings.difficulty.toUpperCase();
-    ui.shiftBoardLengthLine.textContent = formatShiftLengthLabel(state);
+    ui.shiftBoardModeLine.textContent = "";         // mode name
+    ui.shiftBoardDifficultyLine.textContent = "";   // difficulty
+    ui.shiftBoardLengthLine.textContent = "";       // formatShiftLengthLabel
   }
 
   /* Loading status states: progress text, ready (fades out), or error. */
@@ -152,7 +156,7 @@
     ui.popupApplyButton.hidden = isAbout;
 
     ui.popupLayer.setAttribute("aria-label",
-      isPlayer ? "Player settings" : isShift ? "Shift settings" : "About");
+      isPlayer ? "Player name" : isShift ? "Game options" : "About");
 
     if (isPlayer || isShift) fillSettingsControls(state);
     ui.popupLayer.hidden = false;
@@ -172,19 +176,126 @@
     return !ui.popupLayer.hidden;
   }
 
+  /* ---- PLAYER NAME odometer drums (TODO 3, 2026-08-07) ----------------
+     One drum per value. Two ways to change it, and neither ever raises a
+     keyboard: the chevrons step with wrap-around, and tapping the value
+     opens the platform's own picker (an invisible <select> over the
+     window). The drums are rebuilt on every open, and the wheels the
+     build hands back are what readSettingsControls reads. */
+
+  const CHEVRON_UP =
+    '<svg viewBox="0 0 22 14" aria-hidden="true"><path d="M3 11 L11 3 L19 11"/></svg>';
+  const CHEVRON_DOWN =
+    '<svg viewBox="0 0 22 14" aria-hidden="true"><path d="M3 3 L11 11 L19 3"/></svg>';
+
+  /* { title, initials: [wheel, wheel, wheel] }, rebuilt on each open. */
+  let playerWheels = null;
+
+  function buildWheel(mountElement, values, startValue, pickerLabel) {
+    let index = Math.max(0, values.indexOf(startValue));
+    const count = values.length;
+    const valueAt = (offset) => values[(index + offset + count) % count];
+
+    mountElement.replaceChildren();
+
+    const stepUpButton = document.createElement("button");
+    stepUpButton.type = "button";
+    stepUpButton.className = "wheel-step";
+    stepUpButton.innerHTML = CHEVRON_UP;
+    stepUpButton.setAttribute("aria-label", `${pickerLabel}: previous`);
+
+    const bezel = document.createElement("div");
+    bezel.className = "wheel-bezel";
+    const windowElement = document.createElement("div");
+    windowElement.className = "wheel-window";
+    const drum = document.createElement("div");
+    drum.className = "wheel-drum";
+    windowElement.append(drum);
+    bezel.append(windowElement);
+
+    const picker = document.createElement("select");
+    picker.className = "wheel-select";
+    picker.setAttribute("aria-label", pickerLabel);
+    /* Named so it is a proper form field (nothing reads it by name). */
+    picker.name = "playerWheel-" + pickerLabel.replace(/\s+/g, "-").toLowerCase();
+    for (const value of values) {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = value;
+      picker.append(option);
+    }
+    picker.value = values[index];
+    picker.addEventListener("change", () => {
+      index = Math.max(0, values.indexOf(picker.value));
+      renderDrum();
+    });
+    windowElement.append(picker);
+
+    const stepDownButton = document.createElement("button");
+    stepDownButton.type = "button";
+    stepDownButton.className = "wheel-step";
+    stepDownButton.innerHTML = CHEVRON_DOWN;
+    stepDownButton.setAttribute("aria-label", `${pickerLabel}: next`);
+
+    /* Three cells: the value above peeking, the current one, the value
+       below peeking. Rebuilt on every step - simpler than moving a long
+       strip, and the roll animation covers the swap. */
+    function renderDrum() {
+      drum.replaceChildren();
+      for (const offset of [-1, 0, 1]) {
+        const cell = document.createElement("div");
+        cell.className = "drum-cell" + (offset === 0 ? "" : " drum-cell--peek");
+        cell.textContent = valueAt(offset);
+        drum.append(cell);
+      }
+    }
+
+    function step(direction) {
+      index = (index + direction + count) % count;
+      picker.value = values[index];
+      renderDrum();
+      drum.className = "wheel-drum " + (direction > 0 ? "roll-down" : "roll-up");
+      /* Restart the animation even on rapid taps: clearing the property
+         and reading a layout value forces the browser to start over. */
+      drum.style.animation = "none";
+      void drum.offsetWidth;
+      drum.style.animation = "";
+    }
+
+    stepUpButton.addEventListener("click", () => step(-1));
+    stepDownButton.addEventListener("click", () => step(1));
+
+    renderDrum();
+    mountElement.append(stepUpButton, bezel, stepDownButton);
+
+    return { value: () => values[index] };
+  }
+
+  function buildPlayerWheels(state) {
+    const constants = GAME.GAME_CONSTANTS;
+    const symbols = GAME.initialsSymbols(state.player.initials);
+
+    const title = buildWheel(ui.playerTitleWheel,
+      constants.PLAYER_TITLES, state.player.title, "Title");
+
+    /* Always three drums, even if a stored name is shorter. */
+    ui.playerInitialsWheels.replaceChildren();
+    const initials = [];
+    for (let position = 0; position < constants.INITIALS_LENGTH; position += 1) {
+      const mountElement = document.createElement("div");
+      mountElement.className = "wheel";
+      ui.playerInitialsWheels.append(mountElement);
+      initials.push(buildWheel(mountElement, constants.INITIAL_SYMBOLS,
+        symbols[position] || "A", `Initial ${position + 1}`));
+    }
+
+    playerWheels = { title, initials };
+  }
+
   /* Copy current state into the form controls (both boards at once; only
      one is visible, and reading them back together keeps apply simple). */
   function fillSettingsControls(state) {
-    /* Titles are rebuilt each open so the enum lives in one place. */
-    ui.playerTitleSelect.replaceChildren();
-    for (const title of GAME.GAME_CONSTANTS.PLAYER_TITLES) {
-      const option = document.createElement("option");
-      option.value = title;
-      option.textContent = title;
-      ui.playerTitleSelect.appendChild(option);
-    }
-    ui.playerTitleSelect.value = state.player.title;
-    ui.playerInitialsInput.value = state.player.initials;
+    buildPlayerWheels(state);
 
     setRadioGroup("settingMode", state.settings.mode);
     setRadioGroup("settingDifficulty", state.settings.difficulty);
@@ -193,9 +304,10 @@
     setRadioGroup("settingRushLength",
       String(state.settings.rushLengthSeconds));
 
-    ui.settingSoundGlobal.checked = state.settings.soundGlobal;
-    ui.settingSoundGame.checked = state.settings.soundGame;
-    ui.settingSoundMusic.checked = state.settings.soundMusic;
+    setRadioGroup("settingSoundGlobal",
+      state.settings.soundGlobal ? "on" : "off");
+    setRadioGroup("settingGameLoudness", state.settings.gameLoudness);
+    setRadioGroup("settingMusicLoudness", state.settings.musicLoudness);
 
     renderModeLengthVisibility();
   }
@@ -216,29 +328,52 @@
   /* Only the selected mode's length choices are shown. */
   function renderModeLengthVisibility() {
     const mode = getRadioGroup("settingMode");
-    ui.triageLengthFieldset.hidden = mode !== "triage";
-    ui.rushLengthFieldset.hidden = mode !== "rush";
+    ui.triageLengthOptions.hidden = mode !== "triage";
+    ui.rushLengthOptions.hidden = mode !== "rush";
   }
 
   /* Read the form controls back into candidate player/settings objects.
      Validation happens in game.js applySettings, not here. */
   function readSettingsControls(state) {
+    /* The drums exist only while a board has been opened; before that,
+       the stored name is the answer. */
+    const initials = playerWheels
+      ? playerWheels.initials.map((wheel) => wheel.value()).join("")
+      : state.player.initials;
+
     return {
       player: {
-        title: ui.playerTitleSelect.value,
-        initials: GAME.normalizeInitials(
-          ui.playerInitialsInput.value, state.player.initials)
+        title: playerWheels ? playerWheels.title.value() : state.player.title,
+        initials: GAME.normalizeInitials(initials, state.player.initials)
       },
       settings: {
         mode: getRadioGroup("settingMode"),
         difficulty: getRadioGroup("settingDifficulty"),
         triageLengthSeconds: Number(getRadioGroup("settingTriageLength")),
         rushLengthSeconds: Number(getRadioGroup("settingRushLength")),
-        soundGlobal: ui.settingSoundGlobal.checked,
-        soundGame: ui.settingSoundGame.checked,
-        soundMusic: ui.settingSoundMusic.checked
+        soundGlobal: getRadioGroup("settingSoundGlobal") === "on",
+        gameLoudness: getRadioGroup("settingGameLoudness"),
+        musicLoudness: getRadioGroup("settingMusicLoudness")
       }
     };
+  }
+
+  /* The sound choices as they stand ON THE BOARD right now - which is
+     not what state says until apply. Auditioning a level has to follow
+     the pending selections, including a pending GLOBAL SOUND off
+     (2026-08-07). */
+  function pendingSoundSelections() {
+    return {
+      soundGlobal: getRadioGroup("settingSoundGlobal") === "on",
+      gameLoudness: getRadioGroup("settingGameLoudness"),
+      musicLoudness: getRadioGroup("settingMusicLoudness")
+    };
+  }
+
+  /* Used when a music audition fails: the board goes back to OFF without
+     anything being persisted. */
+  function setPendingMusicLoudness(value) {
+    setRadioGroup("settingMusicLoudness", value);
   }
 
   function showMusicStatusNote(messageText) {
@@ -278,12 +413,13 @@
        stays readable while the chart is open (John, 2026-08-05). */
     ui.chartTimerValue.textContent = formatClock(state.shift.remainingMs);
 
-    ui.gameSoundButton.classList.toggle(
-      "is-muted", !state.gameSoundsAudible);
-    ui.gameSoundButton.textContent =
-      state.gameSoundsAudible ? "♪" : "×";
+    /* The icon IS the GLOBAL SOUND setting (John, 2026-08-07) - one
+       persisted value seen twice, here and on the settings board. */
+    const soundOn = state.settings.soundGlobal;
+    ui.gameSoundButton.classList.toggle("is-muted", !soundOn);
+    ui.gameSoundButton.textContent = soundOn ? "♪" : "×";
     ui.gameSoundButton.setAttribute("aria-label",
-      state.gameSoundsAudible ? "Mute sounds" : "Unmute sounds");
+      soundOn ? "Mute sounds" : "Unmute sounds");
   }
 
   function renderConfirmQuit(state) {
@@ -415,12 +551,22 @@
     wrong: "−"
   };
 
+  /* Temperatures are authored in CELSIUS (all 160 records sit between
+     36.2 and 41.2). John's format, 2026-08-07: show both, Celsius first,
+     as "37.0 / 98.6" - compact, and obvious to anyone medical. The
+     stored record is never touched; this is display only. */
+  function formatTemperature(celsius) {
+    if (typeof celsius !== "number") return String(celsius);
+    const fahrenheit = celsius * 9 / 5 + 32;
+    return `${celsius.toFixed(1)} / ${fahrenheit.toFixed(1)}`;
+  }
+
   const VITAL_DISPLAY_ORDER = [
     { vitalKey: "hr", label: "HR" },
     { vitalKey: "bp", label: "BP" },
     { vitalKey: "rr", label: "RR" },
     { vitalKey: "spo2", label: "SpO2" },
-    { vitalKey: "temp", label: "TEMP" },
+    { vitalKey: "temp", label: "TEMP C/F" },
     { vitalKey: "pain", label: "PAIN" }
   ];
 
@@ -499,11 +645,16 @@
       const tileLabel = document.createElement("small");
       tileLabel.textContent = label;
       const tileValue = document.createElement("strong");
-      tileValue.textContent = String(vital.value);
+      const displayValue = vitalKey === "temp"
+        ? formatTemperature(vital.value)
+        : String(vital.value);
+      tileValue.textContent = displayValue;
       tileValue.className = "vital-value is-" + vital.color;
       stack.append(tileLabel, tileValue);
       tile.append(icon, stack);
-      tile.setAttribute("aria-label", `${label} ${vital.value}`);
+      tile.setAttribute("aria-label", vitalKey === "temp"
+        ? `${label} ${displayValue} degrees Celsius / Fahrenheit`
+        : `${label} ${vital.value}`);
       vitals.append(tile);
     }
 
@@ -807,7 +958,8 @@
       lines.push(
         orLine,
         buildHintLine("━━▶︎",
-          "TAP THE TRIAGE ROOM DOOR TO RECALL THAT PATIENT", false));
+          "TAP THE TRIAGE ROOM DOOR TO RECALL YOUR MOST RECENT PATIENT",
+          false));
     }
     ui.patientEmptyHint.replaceChildren(...lines);
   }
@@ -1322,6 +1474,8 @@
     closePopup,
     isPopupOpen,
     readSettingsControls,
+    pendingSoundSelections,
+    setPendingMusicLoudness,
     renderModeLengthVisibility,
     showMusicStatusNote,
     renderWaiting,

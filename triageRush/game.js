@@ -42,11 +42,36 @@ const GAME_CONSTANTS = Object.freeze({
 
   PLAYER_TITLES: Object.freeze([
     "Doctor", "Nurse", "RN", "RES", "Intern", "EMS",
-    "MS1", "MS2", "MS3", "MS4", "MR", "MRS", "M", "MS"
+    "MS1", "MS2", "MS3", "MS4", "MR", "MRS", "M", "MS",
+    "Hey you!"
   ]),
+
+  /* The initials alphabet the odometer drums step through (TODO 3,
+     2026-08-07): A-Z, a "-" spacer, then the approved medical emoji.
+     Kept as an array of WHOLE STRINGS - several of these emoji are two
+     JS code units, so this list can never be produced by splitting a
+     string, and initials must be measured with Array.from, never
+     .length. */
+  INITIAL_SYMBOLS: Object.freeze([
+    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+    "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+    "-",
+    "⚕️",   /* staff of aesculapius */
+    "\u{1F691}",      /* ambulance */
+    "\u{1F480}",      /* skull */
+    "\u{1F637}",      /* face with medical mask */
+    "❤️",   /* red heart */
+    "➕",         /* heavy plus */
+    "⭐"          /* star */
+  ]),
+  INITIALS_LENGTH: 3,
 
   MODES: Object.freeze(["triage", "rush"]),
   DIFFICULTIES: Object.freeze(["forgiving", "strict"]),
+  /* Per-family sound levels (TODO 3, 2026-08-07). OFF lives inside the
+     level, so there are no per-family on/off toggles; soundGlobal is the
+     master mute above both. */
+  LOUDNESS_LEVELS: Object.freeze(["off", "lo", "hi"]),
 
   VIEWS: Object.freeze(["home", "game", "review"]),
   PHASES: Object.freeze(["loading", "ready", "active", "complete", "error"])
@@ -98,18 +123,16 @@ function createInitialState() {
       difficulty: "forgiving", // forgiving | strict
       triageLengthSeconds: 300,
       rushLengthSeconds: 60,
-      /* Sound preferences (design change 2026-08-04, boombox retired):
-         GLOBAL master switch, GAME SOUNDS family, MUSIC (KING-FM stream).
-         Music plays only when soundGlobal && soundMusic, decided on HOME. */
+      /* Sound preferences (revised 2026-08-07, TODO 3): a GLOBAL master
+         mute plus one level per family - GAME SOUNDS and KING-FM music.
+         "off" inside a level replaces the old per-family checkbox, which
+         is the standard games pattern. The game screen's sound icon is
+         a second view of soundGlobal, not a separate runtime flag.
+         Music plays only when soundGlobal && musicLoudness !== "off". */
       soundGlobal: true,
-      soundGame: true,
-      soundMusic: false
+      gameLoudness: "hi",
+      musicLoudness: "off"
     },
-
-    /* Shift-runtime override: the in-game mute button flips only this flag.
-       It is re-derived from soundGlobal && soundGame at every shift start
-       and never rewrites the persisted preferences. */
-    gameSoundsAudible: true,
 
     shift: {
       id: null,
@@ -163,14 +186,33 @@ function createInitialState() {
    an illegal call must leave state untouched (doc 4 action contract).
    --------------------------------------------------------------------- */
 
-/* Uppercase, strip non A-Z, keep at most 3. Empty result falls back to
-   the previous value so a stray edit can never blank the initials. */
+/* Split a stored initials string into its symbols. Array.from splits by
+   CODE POINT, which keeps two-code-unit emoji whole; the variation
+   selector that follows some emoji (⚕️, ❤️) is re-attached to the symbol
+   before it so one drum value stays one symbol. */
+const VARIATION_SELECTOR_16 = "️";
+
+function initialsSymbols(rawText) {
+  const symbols = [];
+  for (const codePoint of Array.from(String(rawText || ""))) {
+    if (codePoint === VARIATION_SELECTOR_16 && symbols.length > 0) {
+      symbols[symbols.length - 1] += codePoint;
+    } else {
+      symbols.push(codePoint);
+    }
+  }
+  return symbols;
+}
+
+/* Keep only symbols the drums can actually show (letters are upper-cased
+   first, so an older "abc" save still reads), at most three. An empty
+   result falls back to the previous value so a stray edit can never blank
+   the initials. */
 function normalizeInitials(rawText, previousInitials) {
-  const cleaned = String(rawText || "")
-    .toUpperCase()
-    .replace(/[^A-Z]/g, "")
-    .slice(0, 3);
-  return cleaned.length > 0 ? cleaned : previousInitials;
+  const kept = initialsSymbols(String(rawText || "").toUpperCase())
+    .filter((symbol) => GAME_CONSTANTS.INITIAL_SYMBOLS.includes(symbol))
+    .slice(0, GAME_CONSTANTS.INITIALS_LENGTH);
+  return kept.length > 0 ? kept.join("") : previousInitials;
 }
 
 function isValidSettingsShape(candidate) {
@@ -181,17 +223,24 @@ function isValidSettingsShape(candidate) {
     GAME_CONSTANTS.TRIAGE_LENGTH_CHOICES_SECONDS.includes(candidate.triageLengthSeconds) &&
     GAME_CONSTANTS.RUSH_LENGTH_CHOICES_SECONDS.includes(candidate.rushLengthSeconds) &&
     typeof candidate.soundGlobal === "boolean" &&
-    typeof candidate.soundGame === "boolean" &&
-    typeof candidate.soundMusic === "boolean"
+    GAME_CONSTANTS.LOUDNESS_LEVELS.includes(candidate.gameLoudness) &&
+    GAME_CONSTANTS.LOUDNESS_LEVELS.includes(candidate.musicLoudness)
   );
 }
 
 function isValidPlayerShape(candidate) {
   if (!candidate || typeof candidate !== "object") return false;
+  if (!GAME_CONSTANTS.PLAYER_TITLES.includes(candidate.title)) return false;
+  if (typeof candidate.initials !== "string") return false;
+
+  /* Initials are 1-3 SYMBOLS from the drum alphabet - counted as symbols,
+     never as string length, because an emoji is two code units (and some
+     carry a variation selector on top of that). */
+  const symbols = initialsSymbols(candidate.initials);
   return (
-    GAME_CONSTANTS.PLAYER_TITLES.includes(candidate.title) &&
-    typeof candidate.initials === "string" &&
-    /^[A-Z]{1,3}$/.test(candidate.initials)
+    symbols.length >= 1 &&
+    symbols.length <= GAME_CONSTANTS.INITIALS_LENGTH &&
+    symbols.every((symbol) => GAME_CONSTANTS.INITIAL_SYMBOLS.includes(symbol))
   );
 }
 
@@ -209,10 +258,18 @@ function applySettings(state, newPlayer, newSettings) {
     triageLengthSeconds: newSettings.triageLengthSeconds,
     rushLengthSeconds: newSettings.rushLengthSeconds,
     soundGlobal: newSettings.soundGlobal,
-    soundGame: newSettings.soundGame,
-    soundMusic: newSettings.soundMusic
+    gameLoudness: newSettings.gameLoudness,
+    musicLoudness: newSettings.musicLoudness
   };
   return true;
+}
+
+/* Are game sounds audible right now? The master mute and the GAME SOUNDS
+   level are one persisted pair - there is no separate runtime flag
+   (John, 2026-08-07: the game screen's sound icon IS the global
+   setting). */
+function gameSoundsAudible(state) {
+  return state.settings.soundGlobal && state.settings.gameLoudness !== "off";
 }
 
 /* The shift length that the current mode actually uses. */
@@ -929,11 +986,11 @@ function startShift(state, context) {
     emptyRefillSecondAtMs: null
   };
 
-  /* The in-game mute starts from the persisted preferences each shift. */
-  state.gameSoundsAudible =
-    state.settings.soundGlobal && state.settings.soundGame;
+  /* Nothing to derive for sound: the in-game icon reads and writes
+     settings.soundGlobal directly, so a shift never carries its own
+     mute state (John, 2026-08-07).
 
-  /* Fresh shuffled deck; seeding happens after the initial portraits
+     Fresh shuffled deck; seeding happens after the initial portraits
      decode (doc 4 loading contract), via seedInitialQueue. */
   state.deck = {
     ids: shuffledCopy(TRIAGE_RUSH_ASSETS.patients.ids, context.random),
@@ -1059,9 +1116,12 @@ function resetToLobby(state) {
   state.shift.lastLogicalQuarter = -1;
 }
 
-/* The in-game mute button: flips only the runtime flag, never preferences. */
-function toggleGameSoundsAudible(state) {
-  state.gameSoundsAudible = !state.gameSoundsAudible;
+/* The in-game sound icon: it IS the GLOBAL SOUND setting (John,
+   2026-08-07), so tapping it writes the persisted preference - the
+   settings board shows the same value, and music follows it too. The
+   caller persists and re-syncs music. */
+function toggleGlobalSound(state) {
+  state.settings.soundGlobal = !state.settings.soundGlobal;
 }
 
 /* ------------------------------------------------------------------------
@@ -1215,6 +1275,18 @@ function loadPreferences(state) {
     delete stored.settings.hints;
   }
 
+  /* The per-family sound checkboxes became loudness levels 2026-08-07
+     (TODO 3). Map an older save rather than rejecting it: a family that
+     was ON comes back at full volume, one that was OFF stays off. */
+  if (stored.settings && "soundGame" in stored.settings) {
+    stored.settings.gameLoudness = stored.settings.soundGame ? "hi" : "off";
+    delete stored.settings.soundGame;
+  }
+  if (stored.settings && "soundMusic" in stored.settings) {
+    stored.settings.musicLoudness = stored.settings.soundMusic ? "hi" : "off";
+    delete stored.settings.soundMusic;
+  }
+
   if (!isValidPlayerShape(stored.player) ||
       !isValidSettingsShape(stored.settings)) {
     return false;
@@ -1249,6 +1321,8 @@ window.TRIAGE_RUSH_GAME = {
   createGameContext,
   createInitialState,
   normalizeInitials,
+  initialsSymbols,
+  gameSoundsAudible,
   isValidSettingsShape,
   isValidPlayerShape,
   applySettings,
@@ -1285,7 +1359,7 @@ window.TRIAGE_RUSH_GAME = {
   stepPatientsSeen,
   selectPatientSeenRecord,
   returnToLobby,
-  toggleGameSoundsAudible,
+  toggleGlobalSound,
   collectInvariantViolations,
   assertStateInvariants,
   savePreferences,

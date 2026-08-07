@@ -178,13 +178,14 @@ Reference proportions are `1.02fr 1.48fr 0.72fr 24px`, with 4px gaps and
 - Always counts down in both modes.
 - No elapsed-time presentation.
 
-### Sound (in-game mute)
+### Sound (the GLOBAL SOUND setting)
 
 - Compact semantic toggle, approximately 24 x 28 CSS pixels in the reference
   header but with an accessible hit target where possible.
-- Governs game sounds only; it never starts or stops music (document `3`
-  sound model).
-- Accessible name alternates between Mute game sounds and Unmute game sounds.
+- It IS the GLOBAL SOUND setting, not a per-shift mute (2026-08-07): tapping
+  it writes and persists that value, so it silences music as well as game
+  sounds, survives the shift, and the settings board shows the same state.
+- Accessible name alternates between Mute sounds and Unmute sounds.
 - Muted state is visible without relying only on color.
 
 ## Waiting queue
@@ -253,14 +254,24 @@ Quote is enlarged relative to note because quotes run longer than notes.
 
 #### Vitals
 
-- Two rows by three columns.
-- Order: HR, BP, RR, SpO2, TEMP, PAIN.
+- Two rows by three columns, and the columns are NOT equal: the middle one
+  is wider (0.75fr / 1.5fr / 0.75fr) because it carries both long readings,
+  BP and TEMP. The outer columns hold two- and three-character numbers and
+  give the width up (2026-08-07).
+- Order: HR, BP, RR, SpO2, TEMP, PAIN. This order is what puts BP and TEMP
+  in the middle column; reordering means re-deriving the column widths.
+- TEMP shows both scales, Celsius first: `37.0 / 98.6`, under a `TEMP C/F`
+  label. Records are authored in Celsius and stay that way - the
+  conversion happens at display time in the chart builder, so the panel,
+  the Chart clipboard, and Patients Seen always agree.
 - Each tile (variant A, 2026-08-06): vital icon on the left, label-over-
   value stack on the right. The icons are hand-authored inline SVG defs in
   index.html stamped per tile with <use> (mockup:
   _mockups/vitals-icons-mockup.html); no icon image assets exist or are
   needed.
-- Labels small and strong; values larger.
+- Labels small and strong; values larger. The icon is sized against the
+  label-over-value stack beside it, never larger, so it never drives the
+  tile's height.
 - Authored red/yellow status colors apply to values.
 - Cell borders remain light and consistent.
 
@@ -290,7 +301,8 @@ in the Chart overlay and review settings of the same chart builder.
 - Show `READY / SELECT A PATIENT` in a 9:16 aspect box (matching the shell),
   width preserved, vertically centered in the panel.
 - Hint lines below: `TAP A WAITING ROOM PATIENT` always; plus `or` and
-  `TAP THE TRIAGE ROOM DOOR TO RECALL THAT PATIENT` when recall is legal.
+  `TAP THE TRIAGE ROOM DOOR TO RECALL YOUR MOST RECENT PATIENT` when recall
+  is legal (wording set by John, 2026-08-07).
 - Directional arrows are white fused text arrows (◀︎━━ / ━━▶︎) carrying U+FE0E
   variation selectors so phones do not render boxed emoji.
 - Do not offer the Chart from the empty state.
@@ -410,21 +422,49 @@ code and asset keys keep `home`/`lobby`.
 HOME has one gameplay state: pre-shift setup with a Start Shift overlay/action.
 There is no Resume Shift, active-entrance, or Return to Game presentation.
 
-The settings board contains:
+The settings boards (letter-board look, built 2026-08-07 from the locked
+mockups) contain:
 
-- title and initials (player board);
-- Triage/RUSH mode;
-- Strict/Forgiving;
-- mode-specific length;
-- the three sound toggles: GLOBAL, GAME SOUNDS, MUSIC.
+- PLAYER NAME board: title and three initials, each on a Vegas-odometer drum.
+  Two ways to change one and neither raises a keyboard - chevrons step with
+  wrap-around, and tapping the value opens the platform picker. The initials
+  alphabet is A-Z, "-", and seven emoji.
+- GAME OPTIONS board: Triage/RUSH mode, Strict/Forgiving, mode-specific
+  length, then a SOUND OPTIONS section - GLOBAL SOUND off/on as the headline,
+  with GAME SOUNDS and KING-FM each off/lo/hi below it. There are no
+  per-family on/off toggles: OFF lives inside each level. A selected OFF fills
+  red rather than green.
+
+Every setting is a two-line group: a left-justified header over a centered
+options row with wide tap gaps. The section-opening groups (GAME MODE, GLOBAL
+SOUND) run a step larger. The brand words are the only orange on the board.
+
+The game screen's sound icon IS the GLOBAL SOUND setting - one persisted value
+seen in two places, not a per-shift mute.
+
+Sound levels audition as they are tapped, because the board lives on HOME
+where a player would otherwise be choosing a volume they cannot hear: KING-FM
+starts or stops immediately at the chosen volume, and a GAME SOUNDS tap plays
+one representative sound. An audition follows what the board currently shows,
+GLOBAL SOUND included, and saves nothing - cancelling puts music back to the
+saved setting, exactly as the red X does for every other edit.
+
+The two small sidewalk summary boards are BLANK for now: they open the detail
+boards, and their own lettering waits on its design pass.
 
 There is no UI Hints control (setting removed 2026-08-07); the patient
 panel's empty-state arrows are permanent.
 
-Title choices include `Intern`. Settings controls use real labels, radios,
-checkboxes, and selects over the board artwork. About uses the accepted About
-board. There is no boombox: the boombox metaphor is retired, and music
-(KING-FM) starts only from HOME gestures and never autoplays.
+Title choices include `Intern`. Settings controls are the letter-board groups
+described above - radios over the board artwork, and odometer drums for the
+player name; there are no text inputs or selects on the boards, and no
+keyboard ever appears. About uses the accepted About board. There is no
+boombox: the boombox metaphor is retired, and music starts only from a user
+gesture and never autoplays.
+
+The music source (a KING-FM stream today) is being retired in favour of local
+files, because the stream cannot be volume-controlled on iOS - see TODO.md
+item 20. The board row, its levels, and its auditioning are unaffected.
 
 ## SHIFT REVIEW view
 

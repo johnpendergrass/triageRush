@@ -462,7 +462,9 @@ The GAME header contains:
 - `TRIAGE!` or `TRIAGE RUSH!`;
 - a bordered numbers-only outcome scorecard;
 - a larger unboxed countdown; and
-- the in-game mute control (game sounds only; it never affects music).
+- the sound control, which IS the GLOBAL SOUND setting (2026-08-07): it
+  writes and persists that value, so it silences music too and the settings
+  board agrees with it.
 
 The scorecard reads:
 
@@ -566,7 +568,7 @@ player-facing name; internal code and asset keys keep `home`/`lobby`.)
 - Difficulty: Strict or Forgiving.
 - Triage length: 5 or 10 minutes; default 5.
 - RUSH length: 60 or 120 seconds; default 60.
-- Sound: the three toggles below.
+- Sound: GLOBAL SOUND plus a level for each family; see the sound model below.
 
 There is no UI Hints setting (removed 2026-08-07): the patient panel's
 empty-state arrows are always shown, and no other hint UI exists. Any
@@ -579,23 +581,40 @@ available for game sounds.
 
 ### Sound model
 
-Three persisted on/off toggles live on the shift-settings blackboard:
+Sound settings live on the GAME OPTIONS board: one master switch, then a
+level per family (revised 2026-08-07; the old per-family on/off toggles are
+gone, because OFF now lives inside each level).
 
-| Toggle | Meaning |
+| Setting | Meaning |
 |---|---|
-| **GLOBAL** | Master switch. Off silences everything (game sounds and music). |
-| **GAME SOUNDS** | Every synthesized sound: ticks, doinks, feedback tones, recall, countdown ticks, completion dong. |
-| **MUSIC** | The Classical KING-FM internet radio stream (currently the only music). |
+| **GLOBAL SOUND** | `off` / `on`. The master switch: off silences everything, game sounds and music alike. |
+| **GAME SOUNDS** | `off` / `lo` / `hi`. Every synthesized sound: ticks, doinks, feedback tones, recall, countdown ticks, completion dong. |
+| **MUSIC** | `off` / `lo` / `hi`. See the retirement note below. |
 
-- Music plays only when GLOBAL and MUSIC are both on, and can only be started
-  from HOME gestures. The game screen can never turn music on. Music never
-  autoplays.
-- Game sounds are audible during a shift when GLOBAL and GAME SOUNDS were both
-  on at shift start and the in-game mute is off. The in-game mute flips only a
-  runtime flag; it never rewrites the persisted toggles and never affects music.
+- Game sounds are audible when GLOBAL SOUND is on and GAME SOUNDS is not
+  `off`. There is no separate runtime mute: the game screen's sound icon IS
+  the GLOBAL SOUND setting, so tapping it writes and persists that value, the
+  settings board agrees with it, and it silences music too.
+- Music plays only when GLOBAL SOUND is on and MUSIC is not `off`, and starts
+  only from a user gesture. It never autoplays.
+- Both levels AUDITION as they are tapped on the board, so a player can hear
+  what they are choosing; nothing is persisted until apply, and cancelling
+  returns music to the saved setting.
 - Every game sound has its own named registry entry with an individual enabled
   flag, so per-sound preferences can be added later without restructuring.
-- Device/browser controls own volume.
+- A level is a real volume, not a metaphor: game sounds pass through one gain
+  node, and music carries its own much quieter scale, since a music source is
+  mastered far hotter than a synthesized blip.
+
+**MUSIC IS BEING RETIRED IN ITS CURRENT FORM (John, 2026-08-07).** The music
+source today is the Classical KING-FM internet radio stream, and it is going
+away: iOS ignores `HTMLMediaElement.volume`, and the only way around that -
+routing through a Web Audio gain node - requires CORS, which the routed
+element then refused to play on the iPhone. So on the primary device the
+stream had no level control at all. The plan is LOCAL MUSIC FILES, which are
+same-origin and therefore controllable everywhere. Nothing has been built yet
+and the stream still plays; the settings row, the levels, the persistence, and
+the auditioning all carry over unchanged. See TODO.md item 20.
 
 ### About
 

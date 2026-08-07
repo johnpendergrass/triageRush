@@ -38,7 +38,7 @@ Notes (Claude):
   during play). Treat this item and the asset-loading-strategy todo as ONE
   design conversation at Phase 10 planning.
 
-## 3. Fix up the settings blackboards (added 2026-08-06) — BIG ITEM, IN PROGRESS
+## 3. Fix up the settings blackboards (added 2026-08-06) — BIG ITEM, DETAIL BOARDS BUILT
 
 Really need to fix up the settings blackboards when expanded — the text and
 the operation of the settings.
@@ -49,6 +49,115 @@ odometer-style input and such. Expect a design conversation first, like
 the other big items (1 and 11), not a quick fix. The chalk-board naming
 and styling carve-outs from the branding work (item 2 in DONE) land here
 too.
+
+### BUILT 2026-08-07 (cache 2026-0807-boards1a): both DETAIL boards
+
+The two detail boards are IN THE GAME, lifted from the locked mockups with
+lettering variant A (John's pick):
+
+- PLAYER NAME board: title drum + three initials drums, chevrons and the
+  tap-value native picker, A-Z + "-" + 7 emoji, "Hey you!" added.
+- GAME OPTIONS board: two-line setting groups, headline GAME MODE +
+  GLOBAL SOUND, GAME SOUNDS and KING-FM as off/lo/hi.
+- Schema migrated: soundGame/soundMusic booleans became
+  gameLoudness/musicLoudness ("off"/"lo"/"hi"); initials validation now
+  counts SYMBOLS from INITIAL_SYMBOLS; old saves are mapped, never
+  rejected (an ON family becomes "hi").
+- The game-screen sound icon now writes settings.soundGlobal and
+  persists it; state.gameSoundsAudible is gone.
+- Loudness is one gain node in app.js (off 0 / lo 0.35 / hi 1) plus the
+  music element's own volume.
+- OFF radios fill RED, not green (John, 2026-08-07) — done with
+  accent-color, so they are still native radios in every state.
+- The music status note now overlays the bottom of the board, because the
+  board's layout is sized to fit exactly.
+- The two sidewalk SUMMARY boards are BLANK for now (John): they open the
+  detail boards; their lettering waits on the summary design.
+- Verified: 40-check Node harness (schema, emoji initials, migration,
+  sound rules) + browser pass (both boards, drums, apply/cancel,
+  persistence, sound icon, a played shift); console clean but the known
+  favicon 404. Docs 4/6/7/8/9 swept the same session.
+
+Enlarged the same day (John: "a bit more finger room"). The boards were
+already 93.5% of the shell, but both PNGs carried ~20% transparent
+margin, so the board you SAW was only 74.7% of it. Both were cropped to
+their own edges (941x1672 -> 752x1387, one common box so a single card
+geometry still serves the blackboard AND the About whiteboard;
+uncropped originals in assets/lobby-page/archived/). The same 93.75%
+card height now shows a board ~20% larger: face 458px -> 552px, radios
+28px -> 34px, tap rows 30px -> 36px at desktop size. Card aspect, the
+content insets, and the two corner buttons were re-derived from the
+crop box; the letter boards now size themselves in cqw of the FACE
+(container-type on .popup-content--board), so a future re-crop cannot
+require re-tuning the type. Both mockups were re-fitted to match.
+
+Two fixes found while measuring: the GAME MODE row was overflowing the
+board's wooden frame on John's iPhone (the brand words dropped from a
+step larger to the regular option size - the content box is wider than
+the ribbed board area, so the widest row rode onto the frame), and the
+brand words were being uppercased by the board face; they now keep the
+ER ENTRANCE sign's own "Triage RUSH!" spelling.
+
+Sound finished 2026-08-07 (cache 2026-0807-audition1b), after John
+asked whether the levels were actually wired and whether music could
+respond immediately:
+
+- VERIFIED wired, not just written: all nine sound recipes route through
+  one gain node, and it measures exactly 1 at "hi" and 0.35 at "lo",
+  flipping on each tap.
+- Both families now AUDITION as you tap them. KING-FM plays or stops at
+  once; a GAME SOUNDS tap plays one doink at that level. Auditions read
+  the PENDING board selections (a pending GLOBAL SOUND off silences them
+  too) and write nothing.
+- Cancel semantics, per John's own question: the red X already means
+  "discard my edits", so it also discards the audition - music returns
+  to the saved setting. All three cancel paths (X, scrim, Escape) go
+  through one cancelPopup() so none can drift.
+- If an audition's stream fails, the note appears and the BOARD's music
+  selection returns to off - preferences are untouched, because nothing
+  was applied.
+- MUSIC HAS ITS OWN VOLUME SCALE (John: KING-FM was drowning the game
+  sounds): a broadcast stream is mastered far hotter than synthesized
+  blips, and this is background audio, not a music player. Set by ear
+  over two rounds - the first cut (music 0.08/0.25, game lo 0.35) was
+  still far too loud - landing at MUSIC_VOLUME lo 0.02 / hi 0.06 and
+  game LOUDNESS_GAIN lo 0.22 / hi 1. These four numbers are the only
+  knobs; John's ear is the authority on them.
+- IPHONE, and it is NOT solved (John, 2026-08-07): music levels did
+  nothing on the iPhone while working on desktop, because iOS IGNORES
+  HTMLMediaElement.volume - Apple gives media volume to the hardware
+  buttons. Routing KING-FM through a Web Audio GainNode (which iOS does
+  honor) fixed it in principle, but iOS then REFUSED to play the routed
+  element at all and showed the "stream could not start" note. The code
+  now degrades: first refusal drops to a plain, unrouted element and
+  retries silently, so music plays again on the phone. Net state:
+  desktop has real level control, iOS has none (lo and hi sound the
+  same there). See specifications-technical for what was and was not
+  established about the cause. OPEN QUESTION for John: leave lo/hi as a
+  desktop-only nicety, or simplify the row - and it may be worth trying
+  a different KING-FM endpoint, since the constraint is that stream, not
+  our code. RESOLVED 2026-08-07: John dropped the KING-FM option
+  altogether - see item 20. No code was changed.
+- DIAGNOSTIC WAITING FOR JOHN'S PHONE: `_mockups/ios-music-test.html`
+  isolates the variable that was never separated - CORS versus Web Audio
+  routing - and tries the station's other mounts. Open it on the phone
+  from John's 8090 server. Each test reports whether play() was refused
+  (with the error name) and measures the actual SIGNAL from the audio
+  graph, so a stream that plays silently because CORS tainted it is
+  distinguishable from one that genuinely works. Validated on desktop:
+  routed-with-CORS measured 0.0372, routed-without-CORS measured 0.0000.
+  Test 2 is the decisive one - if crossOrigin alone plays on iOS, CORS
+  is innocent and WebKit's createMediaElementSource is the culprit; if
+  it refuses, CORS is. Test 5 is the one that could WIN: any mount that
+  plays with signal restores iOS volume control outright.
+- pagehide now pauses the music element too, not just the audio context:
+  a page being unloaded or frozen must release the stream, since the
+  next page cannot reach it.
+- Side benefit: auditioning gives iOS extra genuine user gestures to
+  unlock audio on, which may help item 9.
+
+STILL OPEN on this item: the SUMMARY boards design, and John's iPhone
+pass on the built boards.
 
 ### Design state (2026-08-07 session — mockups, nothing in the game yet)
 
@@ -123,19 +232,14 @@ PLAYER NAME detail board (renamed from Player Settings):
   validation/normalization moves from /^[A-Z]{1,3}$/ to membership in
   the symbol list, counting SYMBOLS not JS code units.
 
-Still OPEN on this item:
+Small opens, as they stood before the build:
 
-- Lettering variant A (Arial Black, compact) vs B (Arial bold, airier)
-  — toggle is on the mockups, John has not picked.
-- Whether the music header keeps the parenthetical: "KING-FM (MUSIC)"
-  vs plain "KING-FM".
+- Lettering variant A vs B — JOHN PICKED A (2026-08-07), built.
+- Whether the music header keeps the parenthetical — built AS
+  "KING-FM (MUSIC)"; say so if it should lose the parenthetical.
 - The SUMMARY boards (small blackboards on the ER ENTRANCE screen)
-  — John wants to look at the player summary after the detail panels.
-- Build phase after mockups: settings schema migration (loudness
-  fields + emoji-aware initials validation; friendly strip/map
-  pattern), Web Audio gain + stream volume wiring, the sound-icon =
-  GLOBAL SOUND change (retires gameSoundsAudible), popup markup/CSS/JS
-  replacement, PLAYER_TITLES += "Hey you!".
+  — STILL OPEN, and the next piece of design work on this item.
+- Build phase — DONE, see the BUILT section above.
 
 ## 6. Sound icon: musical note + stop overlay (added 2026-08-06)
 
@@ -260,7 +364,125 @@ Notes (Claude):
   is enough — the button only has to survive within the session until
   persistence exists.
 
+## 18. Preload the settings blackboard art (added 2026-08-07)
+
+The large blackboard background shows up AFTER the settings text when a
+board opens. It needs to be preloaded.
+
+Notes (Claude, diagnosed 2026-08-07):
+
+- The image IS already fetched and decoded at startup - app.js stage 1
+  calls loadImage(ASSETS.lobby.settingsBlackboard). The delay is not a
+  download.
+- The cause is that the popup sets `ui.popupBoardArt.src` at OPEN time,
+  on a different <img> element from the one stage 1 decoded. That
+  element has to decode the 941x1672 PNG before it can paint, while the
+  board's text is plain DOM and paints immediately - hence text first,
+  board second.
+- Candidate fixes, cheapest first: (a) await `popupBoardArt.decode()`
+  before unhiding the popup layer; (b) set the src once at boot instead
+  of per open, and stack a second <img> for the About whiteboard,
+  toggling visibility rather than swapping src (this is the fix that
+  worked for the door art in item 14's family); (c) both.
+- PARTLY HELPED 2026-08-07: cropping the board art for the resize work
+  removed ~37% of its pixels (941x1672 -> 752x1387), so there is less to
+  decode. The paint ORDER is unchanged though, so this item stays open
+  until one of the fixes above is done.
+- Same shape as item 14 (the open-door art), which was cured by making
+  the art smaller. The blackboard is 941x1672 and is displayed at about
+  that size, so resizing is NOT the lever here.
+
+## 20. Retire KING-FM; music becomes file-based (decided 2026-08-07)
+
+John's decision after the iOS volume work failed: eliminate the KING-FM
+music option. He may bring in file-based music instead.
+
+**NOTHING WAS CHANGED IN THE APP** at John's explicit instruction - the
+game still streams KING-FM exactly as it does today. This item is the
+decision record and the work to do when he is ready.
+
+Why the stream lost: iOS ignores HTMLMediaElement.volume, and the only
+way around that - routing through a Web Audio GainNode - requires CORS,
+which the routed element refused to play on the iPhone. So on John's
+primary device the music had NO level control and sat at full stream
+volume against the game sounds. That is a property of the stream, not
+of our code, and no amount of tuning fixes it.
+
+Why a file will succeed where the stream did not: a local audio file is
+SAME-ORIGIN. No CORS to negotiate, no createMediaElementSource refusal -
+so the gain node works, and lo/hi become real on iOS. This is the whole
+reason the file approach is worth doing.
+
+Already built and reusable, so a file-based source is a small job:
+
+- the settings row (off/lo/hi) with its red OFF, and the audition on tap;
+- `musicLoudness` in the settings schema, persisted and migrated;
+- MUSIC_VOLUME as a separate, much quieter scale from the game sounds;
+- applyMusicPlayback taking explicit values so previews work;
+- the cancel-reverts-to-saved contract and the pagehide release.
+
+What to do when John says go:
+
+- swap `ASSETS.music.kingFmStreamUrl` for a local file (or a short list
+  to shuffle), and drop the crossOrigin/fallback machinery, which exists
+  only because the source was cross-origin;
+- rename the board's KING-FM row to whatever the music becomes;
+- decide looping and whether music restarts each shift;
+- retune MUSIC_VOLUME by ear - on a file the numbers will finally apply
+  on the phone, so the current 0.02/0.06 mean nothing yet;
+- doc 6 needs the audio asset entry, and the "Music (boombox retired)"
+  section rewritten.
+
+`_mockups/ios-music-test.html` stays as the record of what was tried; it
+is only relevant if a STREAM is ever revisited.
+
 ## DONE
+
+## 19. Temperature shows both scales (DONE 2026-08-07)
+
+Anywhere temp is mentioned - including the vitals section - add F.
+
+The stored values are CELSIUS (all 160 records between 36.2 and 41.2),
+so this could not be a label change. John chose the format: Celsius
+first, then Fahrenheit, as "37.0 / 98.6" - compact and obvious to
+anyone medical. Built same day (cache 2026-0807-boards1e):
+
+- ui.js formatTemperature converts at DISPLAY time only; the patient
+  records stay Celsius (schema-preserving boundary, doc 4).
+- It lives in buildPatientChart, so the panel, the Chart clipboard, and
+  Patients Seen all show it from one place.
+- The tile label reads TEMP C/F so the pair is unambiguous. Say the word
+  if you would rather it stayed plain TEMP.
+- FOLLOW-UP same day (cache 2026-0807-vitals1b): the longer value wrapped
+  to two lines, and went wonky once Fahrenheit passed 100. John's fix -
+  widen the middle vitals column by taking width from the outer two,
+  which only ever hold two- and three-character numbers. The grid went
+  from `repeat(3, 1fr)` to `0.8fr 1.4fr 0.8fr`, one line in
+  `.chart-vitals`, so the panel, Chart clipboard, and Patients Seen all
+  get it. Measured against the widest readings the data can produce
+  (BP 188/104, TEMP 41.2 / 106.2) on a small phone: nothing wraps, the
+  tightest tile keeps 5px of slack in the panel and 12px in the
+  clipboard, and every other tile has 13px or more.
+- The icons were enlarged in the same pass (John: "given the new space,
+  maybe the icons can be a bit larger?"). They had vertical room all
+  along - an icon only starts driving tile height once it exceeds the
+  stack beside it - so width was the limit. Icons went from
+  clamp(12, 3.6cqw, 18) to clamp(15, 4.6cqw, 23), funded by taking the
+  grid one step further to 0.75fr / 1.5fr / 0.75fr. On a small phone
+  that is 14px -> 18px of icon while the temperature tile still GAINED
+  room (5px -> 8px of slack); at desktop the icons sit at 23px. Tile
+  heights are unchanged in all three contexts.
+
+
+## 17. Recall hint wording (DONE 2026-08-07)
+
+When the player can recall a triage room patient, the message should read:
+"Tap the Triage room door to recall your most recent patient."
+
+Built same day (cache 2026-0807-boards1a): the empty-state recall line in
+ui.js renderEmptyStateHint now reads TAP THE TRIAGE ROOM DOOR TO RECALL
+YOUR MOST RECENT PATIENT (it said "THAT PATIENT"). Doc 7 swept.
+
 
 ## 5. UI HINTS: a glow on clickable things (RESOLVED 2026-08-07)
 

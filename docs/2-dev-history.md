@@ -1,10 +1,9 @@
 # Development History
 
-**Last modified:** 2026-08-05
+**Last modified:** 2026-08-07
 
-**Latest change:** Recorded the production build of Phases 1-6 and the
-2026-08-04/05 design decisions (sound model, unified chart, Chart rename,
-ER Entrance, footer wording).
+**Latest change:** Recorded the settings-board build, the sound-model
+rewrite, and the decision to retire the KING-FM stream for local music.
 
 ## Purpose
 
@@ -185,6 +184,35 @@ not inventory superseded code or assets. Historical detail remains in
 - The vitals tiles gained their icons: six hand-authored inline SVGs
   recreating the vitals-bubble artwork (no icon assets ever needed),
   variant A layout — icon left, label over value, tile height unchanged.
+
+### 2026-08-07 Hints removed, and the settings boards built
+
+- The UI-hints system was REMOVED rather than redesigned: finish the game,
+  play test it, and only build hints from where testers actually get stuck.
+  The patient panel's empty-state arrows became permanent.
+- Both detail settings boards were designed as phone-true mockups, locked,
+  and then BUILT: PLAYER NAME (odometer drums for title and three initials,
+  chevrons or the platform picker, never a keyboard, alphabet A-Z + "-" +
+  seven emoji) and GAME OPTIONS / SOUND OPTIONS (two-line setting groups,
+  headline GAME MODE and GLOBAL SOUND). Lettering variant A.
+- The sound model was rewritten with them: GLOBAL SOUND plus a level per
+  family (off/lo/hi) replaced the three on/off toggles, levels became real
+  volumes through one gain node, and the game screen's sound icon BECAME the
+  GLOBAL SOUND setting - retiring the per-shift runtime mute entirely.
+- Levels audition as they are tapped, since the boards live on HOME where a
+  player would otherwise be choosing a volume they cannot hear. Cancelling
+  the board discards an audition exactly as it discards an edit.
+- Both board images were cropped to their own edges (they carried ~20%
+  transparent margin), which made the same card show a board about 20%
+  larger - John's "more finger room" - and cut their decode cost.
+- The vitals tiles gained unequal columns so temperature could show both
+  scales (`37.0 / 98.6`), and their icons grew with the space that freed.
+- KING-FM MET ITS LIMIT: iOS ignores `HTMLMediaElement.volume`, and the Web
+  Audio gain node that would fix it requires CORS, which the routed element
+  then refused to play on the iPhone. Two rounds of ear-tuning and a routing
+  rewrite could not give the stream a working volume control on the primary
+  device. The decision was to retire the stream for LOCAL MUSIC FILES, which
+  are same-origin and therefore controllable everywhere. Not yet built.
 
 ## Historical lookup
 

@@ -1,7 +1,69 @@
 # triageRush — technical notes (pointer file)
 
-**Last modified:** 2026-08-07 (hints removal mechanics; blackboard
-mockup conventions + build-phase plan)
+**Last modified:** 2026-08-07 (settings detail boards built)
+
+## Settings letter boards, as built (2026-08-07)
+
+The mockups' conventions carried over verbatim; what is worth knowing
+about the real build:
+
+- `container-type: inline-size` now sits on `.popup-card`, so every cqw
+  inside a popup tracks the CARD, not the shell — that is what makes the
+  board sizes phone-true. The card is ~93.8% of the shell's width, so
+  the About board's own cqw numbers were raised ~6.5% to keep rendering
+  as before.
+- **The board art was CROPPED to its own edges** (2026-08-07): both
+  PNGs sat on a 941x1672 canvas carrying ~20% transparent margin, so
+  the visible board was only 74.7% of the shell's width while the card
+  was 93.5%. Cropping both with ONE common box (93,142)-(845,1529) ->
+  752x1387 keeps a single card geometry serving the blackboard and the
+  About whiteboard, and makes the same 93.75% card height show a board
+  ~20% larger. Everything derived from the crop box: card
+  `aspect-ratio: 752 / 1387`, `.popup-content` insets 3.9/3.5/6.6/7.8%,
+  and the corner buttons at top/bottom 0 and right 0.4% (they hug the
+  art's corners, which is where they always were). Uncropped originals:
+  `assets/lobby-page/archived/*-uncropped-941x1672.png`.
+- **The letter boards size themselves in cqw of the FACE**, not the
+  card (`container-type: inline-size` on `.popup-content--board`), so a
+  future re-crop or inset change needs no type re-tuning. The About
+  board and the two corner buttons stay on the card's basis. When the
+  crop happened, card-basis values were scaled x1.25133 (941/752) and
+  face-basis values x1.35135 - one uniform factor each, so every
+  proportion the mockups locked survived exactly.
+- **The content box is WIDER than the board's ribbed area.**
+  `.popup-content` is inset 13% each side of the card, but the art puts
+  the ribbed face at 15.9%-83.5% of the card's width - so a row that
+  uses the full content width rides onto the wooden frame. Every row is
+  narrower than that except GAME MODE, which is why only that row showed
+  the problem (John's iPhone, 2026-08-07; fixed by dropping the brand
+  words to the regular 2.9cqw option size, which puts that row's frame
+  clearance in line with SHIFT LENGTH, the next widest). If a future row
+  needs the full width, tighten the insets to ~16.5%/17% rather than
+  shrinking type - but that narrows BOTH boards, so re-measure every row
+  first.
+- The GAME board's face fits EXACTLY (scrollHeight 597 = clientHeight at
+  every size). Two gotchas that cost that fit: the hidden music status
+  note silently takes `:last-child` from the final setting group (hence
+  the explicit `.setting-group--last` class), and the note itself is
+  absolutely positioned over the board's bottom so showing it can never
+  reflow the locked layout.
+- Odometer drums are built by `ui.js buildWheel`, which returns
+  `{ value() }`; `buildPlayerWheels` stores `{title, initials[3]}` in a
+  module-level `playerWheels` that `readSettingsControls` reads. The
+  drums are rebuilt on every open, so nothing needs resetting on cancel.
+- `initialsSymbols` in game.js splits by code point AND re-attaches a
+  U+FE0F variation selector to the symbol before it — without that,
+  ⚕️ and ❤️ each count as two symbols and a three-emoji name fails
+  validation.
+- Sound levels: `gameSoundOutput(audio)` lazily creates ONE gain node
+  per context (recreated when the context is, including the iOS
+  pagehide close) and every sound recipe connects through it instead of
+  `audio.destination`. Music uses the element's own `volume`.
+- A selected OFF radio is red via `accent-color` on
+  `input[type="radio"][value="off"]` — deliberately NOT hand-drawn: an
+  earlier `appearance: none` version had to imitate the native unchecked
+  disc (#363636 flat, no rim) and was abandoned when John asked whether
+  plain red was more standard. It is.
 
 ## Hints removal mechanics (2026-08-07, built)
 
@@ -14,7 +76,7 @@ from index.html). `.queue-hint` CSS and the settingHints element-id
 entry in ui.js are deleted — restoring any hint UI means re-adding the
 id to ui.js's REQUIRED_ELEMENT list or lookups fail at boot.
 
-## Settings blackboard mockups (2026-08-07, design locked, NOT built)
+## Settings blackboard mockups (2026-08-07) — NOW BUILT
 
 `_mockups/settings-letterboard-mockup-{PLAYER,GAME}.html` are
 PHONE-TRUE: they copy the shell + popup-card rules from styles.css
@@ -35,16 +97,86 @@ exactly game-scale. Conventions that matter for the build:
   stops iOS's focus zoom) kept in sync with the chevrons.
 - Initials symbols MUST be stored as an array of whole strings — some
   emoji are two JS code units; never .split("") an emoji alphabet.
-  Build-time: normalizeInitials/isValidPlayerShape move from
-  /^[A-Z]{1,3}$/ to symbol-list membership, counting symbols.
-- Build-time sound schema: soundGlobal stays boolean; soundGame /
-  soundMusic become gameLoudness / musicLoudness ("off"/"lo"/"hi") —
-  migrate old saves with the friendly strip/map pattern. Loudness maps
-  to a gain multiplier in app.js's Web Audio registry and .volume on
-  the KING-FM stream element. The sound icon becomes a WRITER of
-  soundGlobal (persisted via savePreferences), retiring the
-  gameSoundsAudible per-shift override (game.js 112/933/1064,
-  app.js 361, ui.js renderSoundButton).
+  BUILT: normalizeInitials/isValidPlayerShape check symbol-list
+  membership and count SYMBOLS via initialsSymbols, not string length.
+- The build-time plan that used to sit here (loudness schema, the sound
+  icon becoming a writer of soundGlobal, retiring gameSoundsAudible) is
+  DONE — the sections below describe what actually shipped rather than
+  what was intended.
+
+## Sound levels and auditioning (2026-08-07)
+
+Game sounds run through ONE gain node (`gameSoundOutput`) created with -
+and discarded with - the AudioContext, so a level is a single multiplier
+rather than a number threaded through ten recipes. It is refreshed from
+state on every play, which is why a level change needs no rebuild.
+
+Music does NOT share that scale: `MUSIC_VOLUME` is lo 0.02 / hi 0.06
+against the game family's 0.22 / 1, because a broadcast stream is
+mastered far hotter than synthesized blips and KING-FM is background
+audio. These are amplitudes and loudness is roughly logarithmic, so 0.06
+is about 24dB down. All four numbers were set BY EAR, and twice: the
+first cut (music 0.08/0.25, game lo 0.35) was still far too loud. They
+are the only knobs - do not compensate anywhere else.
+
+**iOS ignores `HTMLMediaElement.volume`** - Apple reserves media volume
+for the hardware buttons, so setting `.volume` is a silent no-op there.
+That is why every KING-FM level sounded identical on John's iPhone while
+working perfectly in desktop Chrome (2026-08-07). The stream is
+therefore routed through Web Audio - `createMediaElementSource` into a
+GainNode - because a GainNode IS honored on iOS, and the gain now
+carries the level; `.volume` is left at 1 and only used as a fallback if
+routing ever fails. Three things this depends on:
+
+- `crossOrigin = "anonymous"` MUST be set before `src`. Routing a
+  cross-origin stream through Web Audio yields SILENCE (no error) unless
+  CORS allows it. The KING-FM stream reflects whatever Origin it is
+  sent, so CORS itself is fine in dev and in production.
+- **iOS refuses the routed element anyway** (John's iPhone, 2026-08-07 -
+  and note every iOS browser is WebKit, so "Chrome on the iPhone" is
+  Safari here). With crossOrigin set, `play()` rejects and the player
+  gets the "stream could not start" note. The stream's OPTIONS preflight
+  was briefly suspected (one response omitted `Range` from
+  Access-Control-Allow-Headers, which would fail Safari's ranged media
+  request) but it allowed Range on 8/8 retries, so that is NOT
+  established; WebKit's long-standing weakness with
+  `createMediaElementSource` on live streams is the likelier cause.
+  Rather than guess, the code DEGRADES: the first refusal drops to a
+  plain element (no CORS, no routing) and retries once, silently. Verified
+  both paths - a simulated refusal falls back and plays with no note
+  shown, and the desktop path routes exactly once and keeps its gain.
+- **The consequence is that iOS has no music level control**: the
+  fallback element is governed by `.volume`, which iOS ignores, so lo
+  and hi sound identical there. Desktop keeps real control. Restoring it
+  on iOS needs a stream whose live playback survives Web Audio routing
+  on WebKit - a different endpoint or provider, not a code change.
+- An element can be routed ONCE, into ONE context. The node is created
+  lazily and never rebuilt; a second attempt (a replaced context) throws
+  and falls back to `.volume`.
+- Music now flows through the AudioContext, so a suspended or
+  interrupted context silences music as well as game sounds. The
+  resume-from-any-state handling already covers this (TODO 9).
+
+Verified by tapping the gain node with an AnalyserNode during real
+playback: RMS 0.006 / peak 0.028 behind a 0.06 gain. A CORS-tainted
+stream would have measured exactly zero.
+
+The pagehide handler pauses the music element as well as closing the
+audio context: a page on its way out, or frozen into the back/forward
+cache, must not keep the stream running, because the next page gets its
+own element and cannot reach the old one.
+
+Auditioning: `applyMusicPlayback(soundGlobal, musicLoudness, isAudition)`
+takes explicit values rather than reading state, because a preview is by
+definition not what state says yet. `syncMusicPlayback()` is the saved
+view of it, and is what apply, the sound icon, and cancel all call.
+Game sounds preview through `auditionGameLoudness`, a module-level
+override that `gameSoundOutput` prefers when set - safe as a plain
+variable because a sound reads the gain synchronously as it is built, so
+the override is cleared before anything else can run. Pending selections
+come from `UI.pendingSoundSelections()`, which reads the radios, never
+state. Every cancel path funnels through `cancelPopup()`; adding a new
+one without it would leave an audition playing.
 
 ## Brand lettering (2026-08-06)
 
@@ -107,6 +239,28 @@ document. Tile is variant A: `.vital-tile` is a flex ROW of `.vital-icon`
 vitalBpClip) to stay unique in the page. Icon shapes were tuned in
 `_mockups/vitals-icons-mockup.html` — edit there first, then copy into
 index.html.
+
+## Vitals column widths (2026-08-07)
+
+`.chart-vitals` is `0.75fr 1.5fr 0.75fr`, not three equal columns: the
+middle column holds both long readings (BP, and TEMP once it shows
+`41.2 / 106.2`) while the outer columns hold two- and three-character
+numbers. This depends on VITAL_DISPLAY_ORDER keeping BP and TEMP in the
+middle of each row - reorder the vitals and the ratios must be
+re-derived. The binding case is the PANEL on a small phone, where the
+value font has hit its clamp floor while the tile keeps shrinking:
+there the tightest tile leaves about 6px of slack.
+
+The icons were enlarged in the same pass (`clamp(15px, 4.6cqw, 23px)`,
+up from 12/3.6/18): an icon has vertical room until it reaches the
+label-over-value stack beside it - 25px in the panel, 31px in the
+clipboard - so WIDTH is the only limit, and widening the middle column
+paid for the growth. Net effect on a small phone: icons 14px -> 18px
+AND the temperature tile gained slack (5px -> 8px), with no tile
+changing height. At desktop the icons cap at 23px against a 28-34px
+stack. Measure there
+first, not on the desktop clipboard, before widening anything in a
+vitals tile.
 
 ## One structural fact worth keeping
 
@@ -209,9 +363,11 @@ minuteTick (1600Hz), countdownTick (2000Hz), endDong (220Hz+octave,
 completed-minute bell, 2026-08-06) — each `{enabled, play}` so per-sound
 preferences are a flag away. Triage now uses the RUSH-style three-beat at
 EVERY ten-second boundary, with minuteDong as the minute's boundary beat. Cue schedule computed in game.js (clockCueForQuarter), one
-cue max per quarter. `state.gameSoundsAudible` = runtime mute
-(re-derived each shift start from soundGlobal && soundGame); music
-(KING-FM stream) starts from HOME gestures only.
+cue max per quarter. There is NO runtime mute flag any more (2026-08-07):
+audibility is `soundGlobal && gameLoudness !== "off"`, read live via
+game.js `gameSoundsAudible(state)`, and the game screen's icon writes
+`soundGlobal` itself. Music starts only from a user gesture; see the
+sound-levels section above for the gain routing and the iOS limits.
 
 iOS audio hardening (2026-08-06, TODO 9): `ensureAudioContext` resumes
 from ANY non-running state (iOS reports "interrupted" after a call/Siri/

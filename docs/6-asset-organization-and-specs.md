@@ -178,31 +178,46 @@ or scale the overlay independently after registration.
 ### Settings and About
 
 ```text
-settings-blackboard.png    941 x 1672
-about-whiteboard.png       941 x 1672
+settings-blackboard.png    752 x 1387
+about-whiteboard.png       752 x 1387
 ```
 
-The blackboard supports Player and Shift Settings; application text and controls
-distinguish them. Center a board in the HOME frame at 93.75% of frame height
+The blackboard supports the PLAYER NAME and GAME OPTIONS boards; application
+text and controls distinguish them. Both boards were cropped to their own
+edges on 2026-08-07 (from a 941x1672 canvas that carried ~20% transparent
+margin, using one common box so a single card geometry still serves both).
+The uncropped originals are in `lobby-page/archived/`. Because the canvas is
+now pure artwork, the card's percentage geometry describes the board itself:
+re-cropping means re-deriving the card aspect ratio, the content insets, and
+the two corner buttons' positions. Center a board in the HOME frame at 93.75% of frame height
 while preserving aspect ratio. Use a close target of at least 44 CSS pixels near
 the board's established top-right close position.
 
-### Music (boombox retired)
+### Music (boombox retired; the stream is being retired too)
 
 The boombox metaphor is retired (2026-08-04): its artwork, hotspots, and LED
 buttons are not implemented. `lobby-page/boombox.png` (and boombox.txt) stay
 on disk, unused and out of the runtime manifest, pending John's decision on
-archiving unused art. Sound options are the three toggles (GLOBAL, GAME
-SOUNDS, MUSIC) on the shift-settings blackboard.
+archiving unused art. Sound options are GLOBAL SOUND plus a level for each of
+GAME SOUNDS and MUSIC on the GAME OPTIONS board.
 
-The music endpoint used by the MUSIC toggle is:
+The music source today is an internet radio stream:
 
 ```text
 https://classicalking.streamguys1.com/KING-FM-128KAAC
 ```
 
-Never autoplay; playback starts only from a user gesture on HOME. A stream
-error must clear false active state and leave gameplay usable.
+**This stream is being retired (John, 2026-08-07).** It cannot be volume-
+controlled on iOS: Apple ignores `HTMLMediaElement.volume`, and routing the
+stream through a Web Audio gain node - the one mechanism iOS does honor -
+requires CORS, which the routed element then refused to play on the iPhone.
+The replacement is LOCAL MUSIC FILES, which are same-origin and therefore
+routable and controllable on every device. Nothing is built yet; TODO.md item
+20 has the plan. When it lands, this section gains an audio-asset entry with
+the usual naming and manifest rules, and the stream URL leaves `assets.js`.
+
+Never autoplay; playback starts only from a user gesture. A source error must
+clear false active state and leave gameplay usable.
 
 ## Responsive artwork rules
 

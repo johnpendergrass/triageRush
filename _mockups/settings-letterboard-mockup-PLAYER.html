@@ -13,7 +13,7 @@
   controls are obvious); wheels restyled as automobile / Vegas odometer
   drums — the previous and next values peek above and below the current
   one through a curved metal-bezeled window — and everything is bigger:
-  arrow buttons are ~16x11cqw, past Apple's 44px tap-target floor. The
+  arrow buttons are ~16x14.86cqw, past Apple's 44px tap-target floor. The
   player id is the ONLY content on this board, so it spreads out.
 
   Revision 3 (John, 2026-08-07): (1) tapping a drum VALUE opens the
@@ -23,6 +23,15 @@
   like letters — a string is a string; only the length validation cares
   that some emoji are two JS code units); (3) title and initials drums
   share one value size.
+-->
+<!--
+  2026-08-07, AFTER the build: the board art was cropped to its own
+  edges (941x1672 canvas -> 752x1387 of pure artwork; the PNGs carried
+  ~20% transparent margin), which let the same 93.75% card height show a
+  board about 20% larger. This mockup was re-fitted to match the game:
+  new aspect ratio, face insets, corner-button positions, and every size
+  rebased from the card's width to the FACE's width. The layout itself
+  is unchanged - only its measuring stick.
 -->
 <style>
   :root {
@@ -78,7 +87,7 @@
   .popup-card {
     position: relative;
     height: 93.75%;
-    aspect-ratio: 941 / 1672;
+    aspect-ratio: 752 / 1387;
     max-width: 96%;
     container-type: inline-size;
   }
@@ -92,40 +101,44 @@
   }
   .popup-close {
     position: absolute;
-    top: 8.5%; right: 10.5%;
-    width: 10cqw; height: 10cqw;
+    top: 0; right: 0.4%;
+    width: clamp(35px, 12.01cqw, 50px);
+    height: clamp(35px, 12.01cqw, 50px);
     z-index: 3;
     border-radius: 7px;
     border: 2px solid #fff;
     background: linear-gradient(#f4574c, #a20e08);
     color: #fff; font-weight: 900;
-    font-size: 5cqw; line-height: 1;
+    font-size: clamp(17px, 6.13cqw, 28px); line-height: 1;
   }
   .popup-apply {
     position: absolute;
-    bottom: 8.5%; right: 10.5%;
-    width: 11cqw; height: 11cqw;
+    bottom: 0; right: 0.4%;
+    width: clamp(38px, 13.39cqw, 58px);
+    height: clamp(38px, 13.39cqw, 58px);
     z-index: 3;
     border-radius: 7px;
     border: 2px solid #fff;
     background: linear-gradient(#2fbd7c, #0a6b3e);
     color: #fff; font-weight: 900;
-    font-size: 5.5cqw; line-height: 1;
+    font-size: clamp(19px, 6.88cqw, 30px); line-height: 1;
   }
 
   /* ---- the board face ---- */
   .board-face {
     position: absolute;
-    left: 13%; right: 13%;
-    top: 14%; bottom: 15%;
+    left: 3.9%; right: 3.5%;
+    top: 6.6%; bottom: 7.8%;
+    /* cqw inside the face tracks the FACE, not the card. */
+    container-type: inline-size;
     z-index: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     /* Top padding clears the absolutely-positioned board title. */
-    padding-top: 10cqw;
-    gap: 8cqw;
+    padding-top: 13.51cqw;
+    gap: 10.81cqw;
     color: var(--letter);
     text-transform: uppercase;
     overflow: hidden;
@@ -146,10 +159,10 @@
 
   .board-title {
     position: absolute;
-    top: 2cqw;
+    top: 2.7cqw;
     left: 0; right: 0;
     text-align: center;
-    font-size: 5.3cqw;
+    font-size: 7.16cqw;
     letter-spacing: 0.09em;
   }
   .lettering-b .board-title { letter-spacing: 0.15em; }
@@ -163,27 +176,27 @@
   .wheel-block {
     display: flex;
     justify-content: center;
-    gap: 4.5cqw;
+    gap: 6.08cqw;
   }
 
   .wheel {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.5cqw;
+    gap: 2.03cqw;
   }
 
   .wheel-step {
-    width: 16cqw;
-    height: 11cqw;
+    width: 21.62cqw;
+    height: 18.59cqw;
     color: var(--letter);
     display: grid;
     place-items: center;
-    border-radius: 2.5cqw;
+    border-radius: 3.38cqw;
     background: rgb(255 255 255 / 6%);
   }
   .wheel-step:active { background: rgb(255 255 255 / 18%); }
-  .wheel-step svg { width: 9cqw; height: 5.5cqw; display: block; }
+  .wheel-step svg { width: 12.16cqw; height: 9.3cqw; display: block; }
   .wheel-step svg path {
     fill: none;
     stroke: currentColor;
@@ -194,25 +207,25 @@
 
   /* Brushed-metal bezel around the drum window. */
   .wheel-bezel {
-    padding: 1.2cqw;
-    border-radius: 3cqw;
+    padding: 1.62cqw;
+    border-radius: 4.05cqw;
     background: linear-gradient(180deg,
       #9aa2a8 0%, #5a6167 18%, #2e3338 50%, #565d63 84%, #8d959b 100%);
     box-shadow:
-      0 1cqw 2.5cqw rgb(0 0 0 / 60%),
-      inset 0 0.3cqw 0.6cqw rgb(255 255 255 / 35%);
+      0 1.35cqw 3.38cqw rgb(0 0 0 / 60%),
+      inset 0 0.41cqw 0.81cqw rgb(255 255 255 / 35%);
   }
 
   /* The drum window: fixed height, three stacked value rows inside. */
   .wheel-window {
     position: relative;
-    width: 17cqw;
-    height: 24cqw;
-    border-radius: 2cqw;
+    width: 22.97cqw;
+    height: 32.43cqw;
+    border-radius: 2.7cqw;
     background: #0a0c0e;
     overflow: hidden;
   }
-  .wheel--title .wheel-window { width: 56cqw; }
+  .wheel--title .wheel-window { width: 75.68cqw; }
 
   .wheel-drum {
     position: absolute;
@@ -227,7 +240,7 @@
     height: 33.34%;
     display: grid;
     place-items: center;
-    font-size: 8.5cqw;
+    font-size: 11.49cqw;
     line-height: 1;
     white-space: nowrap;
   }

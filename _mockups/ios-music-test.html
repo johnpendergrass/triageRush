@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KING-FM on iOS — what actually works</title>
+<!--
+  Diagnostic page (2026-08-07). NOT part of the game.
+
+  The problem: iOS ignores HTMLMediaElement.volume, so the only way to
+  control music volume there is to route the stream through a Web Audio
+  GainNode - and on John's iPhone the routed element REFUSES to play. Two
+  candidate causes were never separated: the CORS the routing requires, or
+  WebKit's weakness with createMediaElementSource on a live stream.
+
+  Each test below isolates one variable. Tap them in order on the PHONE
+  (every iOS browser is WebKit, so Chrome there counts as Safari) and read
+  the result lines. "SIGNAL" is measured from the audio graph, so it tells
+  a silent-but-playing stream (CORS tainted) apart from a real one.
+
+  Serve from the project root - John's bat server on 8090 - and open
+  http://<pc-ip>:8090/_mockups/ios-music-test.html
+-->
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 16px 14px 40px;
+    font: 16px/1.5 -apple-system, system-ui, "Segoe UI", Arial, sans-serif;
+    background: #0d2532; color: #e8e4da;
+  }
+  h1 { font-size: 19px; margin: 0 0 4px; }
+  p.lede { margin: 0 0 18px; color: #9fb3bd; font-size: 14px; }
+  .test {
+    border: 1px solid #34505f; border-radius: 10px;
+    padding: 12px; margin-bottom: 12px; background: #102c3b;
+  }
+  .test h2 { font-size: 15px; margin: 0 0 2px; }
+  .test .why { font-size: 13px; color: #9fb3bd; margin: 0 0 10px; }
+  button {
+    font: inherit; font-weight: 700;
+    width: 100%; min-height: 52px; padding: 12px;
+    border-radius: 8px; border: 0; cursor: pointer;
+    background: #1f6f8b; color: #fff;
+  }
+  button:active { background: #2a8bad; }
+  button.stop { background: #8b2b22; }
+  .result { margin-top: 10px; font-size: 14px; white-space: pre-wrap; }
+  .ok { color: #57d996; }
+  .bad { color: #ff8a80; }
+  .pending { color: #ffd479; }
+  .gainrow { display: flex; gap: 10px; align-items: center; margin-top: 10px; }
+  .gainrow input { flex: 1; }
+  footer { margin-top: 22px; font-size: 13px; color: #9fb3bd; }
+</style>
+</head>
+<body>
+
+<h1>KING-FM on iOS — what actually works</h1>
+<p class="lede">Tap each test, listen, and read the line under it.
+  Each one plays for about 5 seconds. SIGNAL is measured from the audio
+  graph: a stream that plays but reads 0.000 is being silenced by CORS.</p>
+
+<div class="test" id="t1">
+  <h2>1. Plain element</h2>
+  <p class="why">No CORS, no Web Audio — what the game falls back to today.
+     Expect: plays, at full volume, and no volume control.</p>
+  <button data-test="plain">Play plain element</button>
+  <div class="result"></div>
+</div>
+
+<div class="test" id="t2">
+  <h2>2. crossOrigin only</h2>
+  <p class="why">Asks for CORS but does NOT route through Web Audio.
+     If this fails, CORS is the problem. If it plays, CORS is fine and
+     the routing is what iOS refuses.</p>
+  <button data-test="cors">Play with crossOrigin</button>
+  <div class="result"></div>
+</div>
+
+<div class="test" id="t3">
+  <h2>3. crossOrigin + Web Audio gain</h2>
+  <p class="why">Exactly what the game tries first. This is the one that
+     refused on the phone. If it plays here, the slider below should
+     change its volume — which is the whole prize.</p>
+  <button data-test="routed">Play routed through a gain node</button>
+  <div class="gainrow">
+    <span>Gain</span>
+    <input type="range" id="gainSlider" min="0" max="100" value="6">
+    <span id="gainValue">0.06</span>
+  </div>
+  <div class="result"></div>
+</div>
+
+<div class="test" id="t4">
+  <h2>4. Web Audio gain, NO crossOrigin</h2>
+  <p class="why">Routed but without asking for CORS. Expect it to play
+     while SIGNAL reads 0.000 — that is what "silently tainted" looks
+     like, and it confirms the measurement is meaningful.</p>
+  <button data-test="routed-nocors">Play routed without CORS</button>
+  <div class="result"></div>
+</div>
+
+<div class="test" id="t5">
+  <h2>5. Other KING-FM mounts, routed</h2>
+  <p class="why">Same as test 3 against the station's other streams. If
+     any ONE of these plays with signal, the game can switch to it and
+     iOS gets its volume control back.</p>
+  <button data-test="alt-aac">AAC 128k mount</button>
+  <div class="result"></div>
+  <button data-test="alt-mp3" style="margin-top:10px">MP3 128k mount</button>
+  <div class="result"></div>
+</div>
+
+<div class="test">
+  <button class="stop" data-test="stop">Stop everything</button>
+</div>
+
+<footer>
+  Report back: which tests played, which were silent, and any error name
+  shown. That is enough to settle it.
+</footer>
+
+<script>
+"use strict";
+
+const STREAMS = {
+  main: "https://classicalking.streamguys1.com/KING-FM-128KAAC",
+  aac: "https://classicalking.streamguys1.com/king-fm-aac-128k",
+  mp3: "https://classicalking.streamguys1.com/king-fm-mp3-128k"
+};
+
+let currentElement = null;
+let audioContext = null;
+let currentGain = null;
+
+function stopEverything() {
+  if (currentElement) {
+    currentElement.pause();
+    currentElement.src = "";
+    currentElement = null;
+  }
+  currentGain = null;
+}
+
+/* Measure what is actually reaching the speakers. Returns null when the
+   test is not routed through Web Audio (nothing to tap). */
+async function measureSignal(analyser, seconds) {
+  if (!analyser) return null;
+  const buffer = new Float32Array(analyser.fftSize);
+  let peak = 0;
+  const until = Date.now() + seconds * 1000;
+  while (Date.now() < until) {
+    analyser.getFloatTimeDomainData(buffer);
+    for (const sample of buffer) peak = Math.max(peak, Math.abs(sample));
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  return peak;
+}
+
+async function runTest(kind, resultElement) {
+  stopEverything();
+  resultElement.className = "result pending";
+  resultElement.textContent = "starting…";
+
+  const useCors = kind === "cors" || kind === "routed"
+    || kind === "alt-aac" || kind === "alt-mp3";
+  const useWebAudio = kind === "routed" || kind === "routed-nocors"
+    || kind === "alt-aac" || kind === "alt-mp3";
+  const url = kind === "alt-aac" ? STREAMS.aac
+    : kind === "alt-mp3" ? STREAMS.mp3 : STREAMS.main;
+
+  const element = new Audio();
+  element.preload = "none";
+  if (useCors) element.crossOrigin = "anonymous";
+  element.src = url;
+  currentElement = element;
+
+  let analyser = null;
+  if (useWebAudio) {
+    try {
+      if (!audioContext || audioContext.state === "closed") {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioContext.state !== "running") await audioContext.resume();
+      const source = audioContext.createMediaElementSource(element);
+      const gain = audioContext.createGain();
+      gain.gain.value = Number(document.getElementById("gainSlider").value) / 100;
+      analyser = audioContext.createAnalyser();
+      source.connect(gain).connect(audioContext.destination);
+      gain.connect(analyser);
+      currentGain = gain;
+    } catch (routingError) {
+      resultElement.className = "result bad";
+      resultElement.textContent =
+        "ROUTING FAILED before playback\n"
+        + routingError.name + ": " + routingError.message;
+      return;
+    }
+  }
+
+  try {
+    await element.play();
+  } catch (playError) {
+    resultElement.className = "result bad";
+    resultElement.textContent =
+      "PLAY REFUSED\n" + playError.name + ": " + playError.message;
+    return;
+  }
+
+  resultElement.className = "result pending";
+  resultElement.textContent = "playing — listening for 5 seconds…";
+  const peak = await measureSignal(analyser, 5);
+
+  const lines = ["PLAYED"];
+  if (peak === null) {
+    lines.push("SIGNAL: not measurable (not routed) — judge by ear");
+  } else if (peak < 0.0005) {
+    lines.push("SIGNAL: " + peak.toFixed(4) + "  <-- SILENT (CORS tainted)");
+  } else {
+    lines.push("SIGNAL: " + peak.toFixed(4) + "  <-- real audio");
+  }
+  if (currentGain) lines.push("gain in use: " + currentGain.gain.value.toFixed(3));
+  resultElement.className = "result " + (peak === null || peak >= 0.0005 ? "ok" : "bad");
+  resultElement.textContent = lines.join("\n");
+}
+
+document.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-test]");
+  if (!button) return;
+  const kind = button.dataset.test;
+  if (kind === "stop") { stopEverything(); return; }
+  /* The result line belongs to the button that was tapped. */
+  const resultElement = button.nextElementSibling.classList.contains("result")
+    ? button.nextElementSibling
+    : button.closest(".test").querySelector(".result");
+  runTest(kind, resultElement);
+});
+
+const slider = document.getElementById("gainSlider");
+slider.addEventListener("input", () => {
+  const value = Number(slider.value) / 100;
+  document.getElementById("gainValue").textContent = value.toFixed(2);
+  if (currentGain) currentGain.gain.value = value;
+});
+</script>
+
+</body>
+</html>

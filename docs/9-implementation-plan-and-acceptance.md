@@ -121,22 +121,35 @@ Implement:
 
 - registered HOME (ER ENTRANCE) composition;
 - Start Shift with no Resume Shift or active-entrance state;
-- Player and Shift Settings boards;
+- the PLAYER NAME and GAME OPTIONS boards (letter-board look, built
+  2026-08-07 - see document `7`);
 - About board;
-- the three sound toggles (GLOBAL, GAME SOUNDS, MUSIC) on the shift board;
-- player title/initials;
+- the sound model on the GAME OPTIONS board: GLOBAL SOUND off/on, then
+  GAME SOUNDS and KING-FM each off/lo/hi;
+- player title/initials, set on odometer drums (no typing);
 - mode, difficulty, and length preferences. (The hints preference was
   removed 2026-08-07; loadPreferences strips it from older saves.)
 
 Acceptance:
 
 - title list includes Intern;
-- initials accept one to three A-Z characters and normalize uppercase;
+- initials accept one to three symbols from the drum alphabet (A-Z, "-",
+  seven emoji) and uppercase any letters;
+- the game screen's sound icon writes GLOBAL SOUND, so the board agrees
+  with it after a shift and the choice survives;
+- an older save whose sound settings were booleans still loads: an ON
+  family becomes "hi", an OFF family becomes "off";
 - Triage offers 5 and 10 minutes, default 5;
 - RUSH offers 60 and 120 seconds, default 60;
 - No Timer is absent;
-- music never autoplays;
-- stream failure leaves UI honest and game usable;
+- music never autoplays, and starts only from a user gesture;
+- a music failure leaves the UI honest and the game usable: the note appears,
+  the setting returns to off, and an audition failure persists nothing;
+- both sound levels are audible differences, not just stored values, and are
+  auditioned as they are tapped;
+- NOTE: the KING-FM stream is being retired for local files (TODO.md item 20)
+  because iOS cannot control a stream's volume. These acceptance points are
+  written about the music SOURCE and survive that change unaltered;
 - HOME never displays Resume Shift or Return to Game;
 - every Start Shift creates a new shift and resets shift-local state.
 

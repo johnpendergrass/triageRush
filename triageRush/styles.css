@@ -41,6 +41,9 @@
 
   /* Chalk and marker text for the lobby boards. */
   --chalk: #e8e4da;
+  /* Press-in white plastic lettering on the settings letter boards
+     (TODO 3, 2026-08-07). */
+  --letter: #f2ede1;
   --marker-ink: #1d2a30;
 
   /* The ER ENTRANCE sign lettering (TODO item 2, 2026-08-06): colors
@@ -327,11 +330,22 @@ img {
   backdrop-filter: blur(2px);
 }
 
+/* The card IS the artwork (2026-08-07). Both board PNGs used to carry
+   about 20% transparent margin on a 941x1672 canvas; they were cropped
+   to their own edges (752x1387, one common box so a single geometry
+   still serves both), so the same 93.75% card height now shows a board
+   about 20% larger - which is where the extra finger room came from.
+   container-type makes every cqw inside the popup track this card, so
+   sizes stay phone-true at any screen size; the letter boards narrow
+   that further to their own face. If the art is ever re-cropped, the
+   numbers to re-derive are this aspect ratio, the .popup-content insets,
+   and the two corner buttons' positions - nothing else. */
 .popup-card {
   position: relative;
   height: 93.75%;
-  aspect-ratio: 941 / 1672;
+  aspect-ratio: 752 / 1387;
   max-width: 96%;
+  container-type: inline-size;
 }
 
 .popup-board-art {
@@ -344,142 +358,382 @@ img {
 
 .popup-close {
   position: absolute;
-  top: 8.5%;
-  right: 10.5%;
-  width: clamp(28px, 9cqw, 40px);
-  height: clamp(28px, 9cqw, 40px);
+  top: 0;
+  right: 0.4%;
+  width: clamp(35px, 12.01cqw, 50px);
+  height: clamp(35px, 12.01cqw, 50px);
   z-index: 3;
   border-radius: 7px;
   border: 2px solid #fff;
   background: linear-gradient(#f4574c, #a20e08);
   color: #fff;
   font-weight: 900;
-  font-size: clamp(14px, 4.6cqw, 22px);
+  font-size: clamp(18px, 6.13cqw, 28px);
   line-height: 1;
 }
 
 .popup-apply {
   position: absolute;
-  bottom: 8.5%;
-  right: 10.5%;
-  width: clamp(30px, 10cqw, 46px);
-  height: clamp(30px, 10cqw, 46px);
+  bottom: 0;
+  right: 0.4%;
+  width: clamp(38px, 13.39cqw, 58px);
+  height: clamp(38px, 13.39cqw, 58px);
   z-index: 3;
   border-radius: 7px;
   border: 2px solid #fff;
   background: linear-gradient(#2fbd7c, #0a6b3e);
   color: #fff;
   font-weight: 900;
-  font-size: clamp(15px, 5cqw, 24px);
+  font-size: clamp(19px, 6.63cqw, 30px);
   line-height: 1;
 }
 
 /* Content sits on the board's usable face inside its frame. */
 .popup-content {
   position: absolute;
-  left: 13%;
-  right: 13%;
-  top: 14%;
-  bottom: 15%;
+  left: 3.9%;
+  right: 3.5%;
+  top: 6.6%;
+  bottom: 7.8%;
   z-index: 2;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: clamp(6px, 1.8cqw, 14px);
+  gap: clamp(8px, 2.38cqw, 18px);
 }
 
 .popup-heading {
   text-align: center;
-  font-size: clamp(14px, 4.6cqw, 24px);
+  font-size: clamp(18px, 6.13cqw, 30px);
   letter-spacing: 0.14em;
   font-weight: 800;
 }
 
-/* Chalk styling for the blackboard settings faces. */
-.popup-content--chalk {
-  color: var(--chalk);
-}
-
-.field-label {
-  font-size: clamp(9px, 2.8cqw, 13px);
-  letter-spacing: 0.14em;
-  font-weight: 700;
-  opacity: 0.85;
-}
-
-.chalk-select,
-.chalk-input {
-  font: inherit;
-  font-weight: 700;
-  color: var(--chalk);
-  background: rgb(255 255 255 / 8%);
-  border: 1px solid rgb(232 228 218 / 45%);
-  border-radius: 5px;
-  padding: clamp(4px, 1.4cqw, 8px);
-  font-size: clamp(12px, 3.6cqw, 18px);
-}
-
-.chalk-select option {
-  color: var(--chalk);
-  background: #17272e;
-}
-
-.chalk-input {
+/* ---- the letter boards (TODO 3, 2026-08-07) --------------------------
+   Press-in white plastic lettering on the ribbed board art. Lettering
+   variant A (John's pick): Arial Black, tight-ish tracking. Sizes are in
+   cqw of the popup card, exactly as tuned in the mockups, so the board
+   is the same at every screen size. The face never scrolls - the layout
+   is sized to fit. */
+.popup-content--board {
+  /* cqw inside a letter board tracks the FACE, not the card: every size
+     below is a proportion of the usable board area, so re-cropping or
+     re-insetting the art never means re-tuning the type (2026-08-07). */
+  container-type: inline-size;
+  color: var(--letter);
+  font-family: "Arial Black", "Arial Bold", Arial, sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  letter-spacing: 0.3em;
+  gap: 0;
+  overflow: hidden;
+}
+
+.board-title {
   text-align: center;
+  font-size: 6.49cqw;
+  margin: 2.03cqw 0 5.41cqw;
+  letter-spacing: 0.09em;
 }
 
-.chalk-fieldset {
-  border: 1px solid rgb(232 228 218 / 35%);
-  border-radius: 6px;
-  padding: clamp(4px, 1.4cqw, 9px) clamp(6px, 2cqw, 12px);
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(4px, 1.6cqw, 10px) clamp(8px, 3cqw, 18px);
+/* The sub-title gets the same visual padding above it (below the
+   divider) that the main title gets from the board's top frame. */
+.board-title--sub {
+  font-size: 5.95cqw;
+  margin: 6.76cqw 0 2.7cqw;
 }
 
-.chalk-fieldset legend {
-  padding: 0 6px;
-  font-size: clamp(8px, 2.6cqw, 12px);
-  letter-spacing: 0.16em;
-  font-weight: 800;
-  opacity: 0.8;
+/* Every setting is a two-line group: a left-justified header, then a
+   CENTERED options row with wide gaps so each radio is an easy
+   independent tap. */
+.setting-group { margin: 0 0 6.08cqw; }
+
+/* The last group's bottom margin is invisible slack - reclaimed to fund
+   the sub-title's top padding. Marked with a class rather than
+   :last-child because the music status note, hidden or not, is the real
+   last element and would quietly take the match. */
+.setting-group--last { margin-bottom: 0; }
+
+.setting-group-label {
+  font-size: 3.92cqw;
+  opacity: 0.72;
+  padding-left: 7.43cqw;
+  margin-bottom: 1.35cqw;
 }
 
-.chalk-fieldset label {
+.option-row {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: clamp(11px, 3.2cqw, 16px);
-  font-weight: 700;
+  justify-content: center;
+  gap: 10.81cqw;
+}
+
+.option-row label {
+  display: flex;
+  align-items: center;
+  gap: 1.76cqw;
+  font-size: 3.92cqw;
+  opacity: 0.85;
   cursor: pointer;
   white-space: nowrap;
 }
 
-.chalk-fieldset input[type="radio"],
-.chalk-fieldset input[type="checkbox"] {
+.option-row input[type="radio"] {
   accent-color: var(--green);
-  width: clamp(12px, 3.6cqw, 17px);
-  height: clamp(12px, 3.6cqw, 17px);
+  width: 4.59cqw;
+  height: 4.59cqw;
   cursor: pointer;
+  margin: 0;
 }
 
-.popup-note {
-  font-size: clamp(9px, 2.8cqw, 13px);
-  line-height: 1.4;
-  opacity: 0.9;
+/* OFF is a stop, not just another choice, so it fills RED rather than
+   green when it is the selected option (John, 2026-08-07). This is the
+   same one-property native mechanism as the green - the browser still
+   draws the radio in every state - so nothing here is hand-drawn. */
+.option-row input[type="radio"][value="off"] {
+  accent-color: var(--red);
 }
+
+/* Each section opens with a headline group - GAME MODE, GLOBAL SOUND -
+   a step larger and brighter, with breathing room around it. The doubled
+   class beats the .setting-group margin shorthand above. */
+.setting-group.setting-group--headline { margin: 4.05cqw 0 9.46cqw; }
+
+.setting-group--headline .setting-group-label {
+  font-size: 5cqw;
+  opacity: 1;
+}
+
+.setting-group--headline .option-row { gap: 8.11cqw; }
+
+.setting-group--headline .option-row label {
+  font-size: 4.59cqw;
+  opacity: 1;
+}
+
+.setting-group--headline .option-row input[type="radio"] {
+  width: 6.22cqw;
+  height: 6.22cqw;
+}
+
+/* The board face uppercases its lettering, but the brand keeps the ER
+   ENTRANCE sign's own mixed-case spelling everywhere it appears
+   (branding rule, 2026-08-06), so it opts out of that transform.
+
+   The brand words run at the board's REGULAR option size, not the
+   headline size and certainly not the 5.27cqw first tried: GAME MODE is
+   the widest row on the board, and at 5.27cqw it measured the full width
+   of the content box and spilled onto the board's wooden frame on
+   John's iPhone (2026-08-07). At this size the row measures about the
+   same as SHIFT LENGTH, the next widest - so it is as wide as the board
+   ever gets. Re-measure that row before enlarging them again. */
+.setting-group--headline .option-row .brand-sign {
+  font-size: 3.92cqw;
+  text-transform: none;
+}
+
+/* Inset from both sides so the rule reads as ON the board rather than
+   touching the frame. */
+.board-divider {
+  border: 0;
+  border-top: 0.68cqw solid rgb(242 237 225 / 85%);
+  margin: 4.73cqw 9.46cqw 0;
+  width: auto;
+  align-self: stretch;
+}
+
+/* The music status note only appears when the stream fails, and the
+   board's layout is sized to fit exactly - so the note sits OVER the
+   bottom of the face on its own panel instead of pushing the settings
+   around. */
+.popup-note {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 2.7cqw 4.05cqw;
+  border-radius: 2.7cqw;
+  background: rgb(3 16 25 / 92%);
+  border: 1px solid rgb(242 237 225 / 35%);
+  font-size: 3.51cqw;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+/* ---- PLAYER NAME board: the odometer drums ---------------------------
+   The player id is the only content on this board, so it spreads out and
+   centers. Each wheel is a big chevron, a brushed-metal bezel around a
+   dark drum window (previous and next values peeking, squashed and dim,
+   above and below the current one), then the other chevron. */
+.popup-content--player {
+  align-items: center;
+  justify-content: center;
+  /* Clears the absolutely-positioned board title. */
+  padding-top: 13.51cqw;
+  gap: 10.81cqw;
+}
+
+.popup-content--player .board-title {
+  position: absolute;
+  top: 2.7cqw;
+  left: 0;
+  right: 0;
+  margin: 0;
+  font-size: 7.16cqw;
+}
+
+.wheel-block {
+  display: flex;
+  justify-content: center;
+  gap: 6.08cqw;
+}
+
+.wheel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.03cqw;
+}
+
+/* Chevron step buttons, sized well past the 44px tap-target floor. */
+.wheel-step {
+  width: 21.62cqw;
+  height: 14.86cqw;
+  color: var(--letter);
+  display: grid;
+  place-items: center;
+  border-radius: 3.38cqw;
+  background: rgb(255 255 255 / 6%);
+}
+
+.wheel-step:active { background: rgb(255 255 255 / 18%); }
+
+.wheel-step svg {
+  width: 12.16cqw;
+  height: 7.43cqw;
+  display: block;
+}
+
+.wheel-step svg path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.wheel-bezel {
+  padding: 1.62cqw;
+  border-radius: 4.05cqw;
+  background: linear-gradient(180deg,
+    #9aa2a8 0%, #5a6167 18%, #2e3338 50%, #565d63 84%, #8d959b 100%);
+  box-shadow:
+    0 1.35cqw 3.38cqw rgb(0 0 0 / 60%),
+    inset 0 0.41cqw 0.81cqw rgb(255 255 255 / 35%);
+}
+
+/* The drum window: fixed height, three stacked value rows inside. */
+.wheel-window {
+  position: relative;
+  width: 22.97cqw;
+  height: 32.43cqw;
+  border-radius: 2.7cqw;
+  background: #0a0c0e;
+  overflow: hidden;
+}
+
+.wheel--title .wheel-window { width: 75.68cqw; }
+
+.wheel-drum {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.drum-cell {
+  height: 33.34%;
+  display: grid;
+  place-items: center;
+  font-size: 11.49cqw;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* Neighbors: squashed and dim, as if curving away on the cylinder. */
+.drum-cell--peek {
+  transform: scaleY(0.62);
+  opacity: 0.38;
+  color: #cfc9bb;
+}
+
+/* Cylinder shading plus the center "read line" highlight. */
+.wheel-window::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg,
+      rgb(0 0 0 / 88%) 0%,
+      rgb(0 0 0 / 30%) 22%,
+      rgb(255 255 255 / 7%) 38%,
+      rgb(255 255 255 / 7%) 62%,
+      rgb(0 0 0 / 30%) 78%,
+      rgb(0 0 0 / 88%) 100%);
+}
+
+/* Thin separator ridges between the rows, like a real odometer. */
+.wheel-window::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 33.34%;
+  height: 33.33%;
+  pointer-events: none;
+  z-index: 1;
+  border-top: 1px solid rgb(255 255 255 / 14%);
+  border-bottom: 1px solid rgb(255 255 255 / 14%);
+}
+
+/* Invisible native-picker trigger over the window: tapping the value
+   opens the platform picker (iOS shows its wheel), so both input styles
+   work and the keyboard never appears. The 16px font is what stops iOS
+   zooming the page on focus - do not shrink it. */
+.wheel-select {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  font-size: 16px;
+  cursor: pointer;
+  appearance: none;
+  border: 0;
+}
+
+/* Roll: the drum slides one cell from its old position into the new one
+   (ui.js rebuilds the cells first, then restarts the animation). */
+.wheel-drum.roll-up { animation: drum-up 150ms ease-out; }
+.wheel-drum.roll-down { animation: drum-down 150ms ease-out; }
+
+@keyframes drum-up { from { transform: translateY(-33.34%); } }
+@keyframes drum-down { from { transform: translateY(33.34%); } }
 
 /* Marker styling for the About whiteboard face. */
 .popup-content--marker {
   color: var(--marker-ink);
-  gap: clamp(8px, 2.6cqw, 16px);
+  gap: clamp(10px, 3.5cqw, 20px);
 }
 
 .popup-content--marker p {
   font-family: Arial, sans-serif;
-  font-size: clamp(11px, 3.3cqw, 17px);
+  font-size: clamp(14px, 4.38cqw, 21px);
   line-height: 1.45;
 }
 
@@ -490,7 +744,7 @@ img {
 
 .popup-fine-print {
   margin-top: auto;
-  font-size: clamp(9px, 2.6cqw, 12px);
+  font-size: clamp(11px, 3.5cqw, 15px);
   opacity: 0.75;
 }
 
@@ -981,7 +1235,13 @@ img {
   flex: 18 1 0;
   min-height: 0;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* The middle column carries both long readings - BP (122/76) and TEMP
+     (41.2 / 106.2 at its widest) - while the outer columns hold two- and
+     three-character numbers. So the middle takes width from the sides
+     rather than everything wrapping to fit the narrowest case (John,
+     2026-08-07). This holds as long as VITAL_DISPLAY_ORDER keeps BP and
+     TEMP in the middle of each row. */
+  grid-template-columns: 0.75fr 1.5fr 0.75fr;
   grid-template-rows: repeat(2, 1fr);
   border-radius: 6px;
   overflow: hidden;
@@ -1003,9 +1263,15 @@ img {
   min-height: 0;
 }
 
+/* Enlarged 2026-08-07 once the middle column was widened: vertically an
+   icon has room until it reaches the label-over-value stack beside it
+   (25px in the panel, 31px in the clipboard), so WIDTH is what limits it,
+   and the widening paid for the growth. Measured on a small phone with
+   the widest readings the data can produce, every tile still fits on one
+   line and no tile changed height. */
 .vital-icon {
-  width: clamp(12px, 3.6cqw, 18px);
-  height: clamp(12px, 3.6cqw, 18px);
+  width: clamp(15px, 4.6cqw, 23px);
+  height: clamp(15px, 4.6cqw, 23px);
   flex: none;
 }
 

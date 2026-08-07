@@ -20,6 +20,15 @@
   brand words are the only orange, current green radio/checkbox style,
   "Game sounds" naming, no ambiance row. Lettering A/B toggle top-left.
 -->
+<!--
+  2026-08-07, AFTER the build: the board art was cropped to its own
+  edges (941x1672 canvas -> 752x1387 of pure artwork; the PNGs carried
+  ~20% transparent margin), which let the same 93.75% card height show a
+  board about 20% larger. This mockup was re-fitted to match the game:
+  new aspect ratio, face insets, corner-button positions, and every size
+  rebased from the card's width to the FACE's width. The layout itself
+  is unchanged - only its measuring stick.
+-->
 <style>
   :root {
     --navy-950: #031019;
@@ -77,7 +86,7 @@
   .popup-card {
     position: relative;
     height: 93.75%;
-    aspect-ratio: 941 / 1672;
+    aspect-ratio: 752 / 1387;
     max-width: 96%;
     /* cqw units below track THIS card's width. */
     container-type: inline-size;
@@ -92,32 +101,36 @@
   }
   .popup-close {
     position: absolute;
-    top: 8.5%; right: 10.5%;
-    width: 10cqw; height: 10cqw;
+    top: 0; right: 0.4%;
+    width: clamp(35px, 12.01cqw, 50px);
+    height: clamp(35px, 12.01cqw, 50px);
     z-index: 3;
     border-radius: 7px;
     border: 2px solid #fff;
     background: linear-gradient(#f4574c, #a20e08);
     color: #fff; font-weight: 900;
-    font-size: 5cqw; line-height: 1;
+    font-size: clamp(17px, 6.13cqw, 28px); line-height: 1;
   }
   .popup-apply {
     position: absolute;
-    bottom: 8.5%; right: 10.5%;
-    width: 11cqw; height: 11cqw;
+    bottom: 0; right: 0.4%;
+    width: clamp(38px, 13.39cqw, 58px);
+    height: clamp(38px, 13.39cqw, 58px);
     z-index: 3;
     border-radius: 7px;
     border: 2px solid #fff;
     background: linear-gradient(#2fbd7c, #0a6b3e);
     color: #fff; font-weight: 900;
-    font-size: 5.5cqw; line-height: 1;
+    font-size: clamp(19px, 6.88cqw, 30px); line-height: 1;
   }
 
   /* ---- the board face: usable area inside the frame ---- */
   .board-face {
     position: absolute;
-    left: 13%; right: 13%;
-    top: 14%; bottom: 15%;
+    left: 3.9%; right: 3.5%;
+    top: 6.6%; bottom: 7.8%;
+    /* cqw inside the face tracks the FACE, not the card. */
+    container-type: inline-size;
     z-index: 2;
     display: flex;
     flex-direction: column;
@@ -140,27 +153,27 @@
 
   .board-title {
     text-align: center;
-    font-size: 4.8cqw;
-    margin: 1.5cqw 0 4cqw;
+    font-size: 6.49cqw;
+    margin: 2.03cqw 0 5.41cqw;
     letter-spacing: 0.09em;
   }
   .lettering-b .board-title { letter-spacing: 0.15em; }
 
   /* The sub-title gets the same visual padding above it (below the
      divider) that the main title gets from the board's top frame. */
-  .board-title--sub { font-size: 4.4cqw; margin: 5cqw 0 2cqw; }
+  .board-title--sub { font-size: 5.95cqw; margin: 6.76cqw 0 2.7cqw; }
 
   .option-row {
     display: flex;
     align-items: center;
-    gap: 2.8cqw;
-    margin: 1.2cqw 0;
+    gap: 3.78cqw;
+    margin: 1.62cqw 0;
   }
   .option-row label {
     display: flex;
     align-items: center;
-    gap: 1.3cqw;
-    font-size: 3.1cqw;
+    gap: 1.76cqw;
+    font-size: 4.19cqw;
     cursor: pointer;
     white-space: nowrap;
   }
@@ -169,55 +182,57 @@
      header, then a CENTERED options row with wide gaps so each radio
      is an easy independent tap. The --headline variant (GAME MODE and
      GLOBAL SOUND) is a step larger and brighter, with breathing room. */
-  .setting-group { margin: 0 0 4.5cqw; }
+  .setting-group { margin: 0 0 6.08cqw; }
   /* The last group's bottom margin is invisible slack — reclaim it to
      fund the sub-title's new top padding. */
   .setting-group:last-child { margin-bottom: 0; }
   .setting-group-label {
-    font-size: 2.9cqw;
+    font-size: 3.92cqw;
     opacity: 0.72;
-    padding-left: 5.5cqw;
-    margin-bottom: 1cqw;
+    padding-left: 7.43cqw;
+    margin-bottom: 1.35cqw;
   }
   .setting-group .option-row {
     justify-content: center;
     margin: 0;
-    gap: 8cqw;
+    gap: 10.81cqw;
   }
   .setting-group .option-row label {
-    font-size: 2.9cqw;
+    font-size: 3.92cqw;
     opacity: 0.85;
   }
   .setting-group .option-row input[type="radio"] {
-    width: 3.4cqw;
-    height: 3.4cqw;
+    width: 4.59cqw;
+    height: 4.59cqw;
   }
 
   /* Doubled class beats the .setting-group margin shorthand. */
-  .setting-group.setting-group--headline { margin: 3cqw 0 7cqw; }
+  .setting-group.setting-group--headline { margin: 4.05cqw 0 9.46cqw; }
   .setting-group--headline .setting-group-label {
-    font-size: 3.7cqw;
+    font-size: 5cqw;
     opacity: 1;
   }
-  .setting-group--headline .option-row { gap: 6cqw; }
+  .setting-group--headline .option-row { gap: 8.11cqw; }
   .setting-group--headline .option-row label {
-    font-size: 3.4cqw;
+    font-size: 4.59cqw;
     opacity: 1;
   }
   .setting-group--headline .option-row input[type="radio"] {
-    width: 4.6cqw;
-    height: 4.6cqw;
+    width: 6.22cqw;
+    height: 6.22cqw;
   }
 
-  /* The brand words are the stars of the board — a step larger than
-     their radio row's lettering (John, 2026-08-07). */
-  .setting-group--headline .option-row .brand-sign { font-size: 3.9cqw; }
+  /* The brand words run at the board's REGULAR option size. They were
+     tried a step larger (5.27cqw); at that size GAME MODE is the widest
+     row on the board and spilled onto the wooden frame on an iPhone, so
+     the built board uses this size (John, 2026-08-07). */
+  .setting-group--headline .option-row .brand-sign { font-size: 3.92cqw; }
 
   .option-row input[type="radio"],
   .option-row input[type="checkbox"] {
     accent-color: var(--green);
-    width: 3.8cqw;
-    height: 3.8cqw;
+    width: 5.14cqw;
+    height: 5.14cqw;
     cursor: pointer;
     margin: 0;
   }
@@ -226,8 +241,8 @@
      touching the frame. */
   .board-divider {
     border: 0;
-    border-top: 0.5cqw solid rgb(242 237 225 / 85%);
-    margin: 3.5cqw 7cqw 0;
+    border-top: 0.68cqw solid rgb(242 237 225 / 85%);
+    margin: 4.73cqw 9.46cqw 0;
     width: auto;
     align-self: stretch;
   }

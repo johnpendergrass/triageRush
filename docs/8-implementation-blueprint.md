@@ -105,17 +105,18 @@ implemented against it):
     difficulty: "forgiving",    // forgiving | strict
     triageLengthSeconds: 300,
     rushLengthSeconds: 60,
-    // Three-toggle sound model (boombox retired). Music plays only when
-    // soundGlobal && soundMusic, decided on HOME.
+    // Master mute plus one level per family (2026-08-07, TODO 3). "off"
+    // inside a level replaces the old per-family toggle. Music plays only
+    // when soundGlobal && musicLoudness !== "off".
     soundGlobal: true,
-    soundGame: true,
-    soundMusic: false
+    gameLoudness: "hi",         // off | lo | hi
+    musicLoudness: "off"        // off | lo | hi
   },
 
-  // Shift-runtime override: the in-game mute button flips only this flag.
-  // Re-derived from soundGlobal && soundGame at every shift start; never
-  // rewrites the persisted preferences.
-  gameSoundsAudible: true,
+  // There is NO runtime sound flag: the game screen's sound icon is a
+  // second view of settings.soundGlobal and writes it directly
+  // (2026-08-07). Game sounds are audible when soundGlobal is true and
+  // gameLoudness is not "off".
 
   shift: {
     id: null,
@@ -269,7 +270,6 @@ set phase loading and show PATIENTS ARE ARRIVING
 create new shift id/timestamps
 clear ledger, queue, active, assigned, review, and pause state
 reset Chart Clinical to collapsed
-re-derive gameSoundsAudible from soundGlobal && soundGame
 shuffle deck and reset cursor
 fetch and decode initial portraits plus measured reserve
 set selected countdown
@@ -682,9 +682,39 @@ minuteDong   Triage completed-minute bell (330Hz+octave, ~0.7s ring):
              endDong's family, higher and much shorter (2026-08-06)
 ```
 
-A sound plays only when its own flag, `state.gameSoundsAudible`, and the sound
-model in document `3` allow it. Music (the KING-FM stream) is separate from
-the registry and starts from HOME gestures only.
+A sound plays only when its own registry flag allows it and the sound model in
+document `3` does: `soundGlobal` is true and `gameLoudness` is not `"off"`.
+The level is one gain node between every sound and the speakers
+(`off` 0, `lo` 0.22, `hi` 1), not a number threaded through the recipes.
+
+Music is separate from the registry and has its OWN, much lower scale:
+`lo` 0.02, `hi` 0.06. A music source is mastered far hotter than these
+synthesized blips, and it is background audio rather than a music player, so
+sharing one scale made it drown the game sounds (John, 2026-08-07). Music
+starts from a user gesture - applying settings, auditioning a level on the
+board, or the game screen's sound icon, which is the global setting itself.
+
+**The level must NOT be applied with `HTMLMediaElement.volume`: iOS ignores
+that property outright.** Only a Web Audio GainNode is honored there, which
+means the source has to survive `createMediaElementSource` - and that requires
+`crossOrigin = "anonymous"` (set before `src`) or the audio is silently muted.
+
+**The KING-FM stream fails that test and is being retired (John,
+2026-08-07).** With CORS requested, iOS refused to play the routed element at
+all; without it, routing produces silence. The shipped code therefore tries
+the routed element and falls back to a plain one on refusal, which restores
+playback everywhere at the cost of any level control on iOS. The fix is to
+replace the stream with LOCAL MUSIC FILES: same-origin, so no CORS and no
+refusal, and the gain node works on every device. Nothing is built yet -
+TODO.md item 20 lists what changes and what carries over (everything except
+the source URL and the CORS fallback machinery).
+
+Both sound levels AUDITION as they are tapped on the board: music plays or
+stops at once, and a GAME SOUNDS tap plays one representative sound at that
+level. Auditions follow the PENDING selections (including a pending GLOBAL
+SOUND off) and persist nothing; cancelling the board returns music to the
+saved setting, and an audition whose stream fails reports it and returns the
+board's own selection to off without writing preferences.
 
 ## Rendering boundaries
 
@@ -718,7 +748,10 @@ high-resolution file at the same logical manifest key without changing code.
 
 ## HOME/settings
 
-- Validate initials by uppercasing, removing non-A-Z, and limiting to three.
+- Validate initials as one to three SYMBOLS drawn from `INITIAL_SYMBOLS`
+  (A-Z, "-", and seven emoji), counted with `Array.from` and never with
+  `String.length` - several emoji are two code units and some carry a
+  variation selector. Letters are uppercased first.
 - Include Intern in the title enum and UI.
 - Store Triage and RUSH lengths separately so mode switching retains each choice.
 - Apply HOME settings only while phase is ready.

@@ -1,7 +1,65 @@
 # triageRush — specifications (pointer file)
 
-**Last modified:** 2026-08-07 (hints removed; settings blackboards
-redesign LOCKED at mockup stage)
+**Last modified:** 2026-08-07 (settings detail boards BUILT; hints removed)
+
+## 2026-08-07 (second session): the detail settings boards are BUILT
+
+The PLAYER NAME and GAME OPTIONS letter boards are in the game (cache
+`2026-0807-boards1a`), lifted from the locked mockups in lettering
+variant A — John's pick. What this changed beyond appearance:
+
+- **Sound model.** GLOBAL SOUND (off/on) is the master; GAME SOUNDS and
+  KING-FM each carry their own level (off/lo/hi), so per-family on/off
+  toggles are gone. Levels are real volume: one gain node for every game
+  sound (off 0, lo 0.35, hi 1) and the same figure on the music
+  element's volume.
+- **The game screen's sound icon IS the GLOBAL SOUND setting** — one
+  persisted value seen twice. Tapping it writes and saves the
+  preference, and music follows it. The old per-shift
+  `gameSoundsAudible` runtime flag is retired.
+- **The player name is set on odometer drums, never typed** — chevrons
+  or the platform picker. The initials alphabet is A-Z, "-", and seven
+  emoji; "Hey you!" joined the titles.
+- **A selected OFF fills red instead of green.** Still a native radio
+  (accent-color), so it draws correctly in every state, iOS included.
+- **The sidewalk summary boards are blank for now** (John): they open
+  the detail boards, and their own lettering waits on the summary design
+  — the next piece of work on TODO 3.
+- **The boards are ~20% bigger**, and it cost no layout work: both
+  board PNGs carried about 20% transparent margin, so cropping them to
+  their own edges made the same card show a much larger board. The
+  visible board went from 74.7% to 90% of the shell's width. Two things
+  surfaced while measuring it - the GAME MODE row had been spilling onto
+  the board's wooden frame on the iPhone (the brand words are now at the
+  regular option size), and the board face had been uppercasing the
+  brand, which now keeps its "Triage RUSH!" sign spelling.
+- **KING-FM IS BEING RETIRED; music goes LOCAL** (John, 2026-08-07). iOS
+  ignores `HTMLMediaElement.volume`, and the only mechanism it honors - a
+  Web Audio gain node - needs CORS, which the routed stream element then
+  refused to play on the iPhone. So the stream had no level control at all
+  on the primary device, at full volume against the game sounds. NOTHING
+  WAS CHANGED IN THE APP at John's instruction: the stream still plays.
+  Local files are same-origin, so the gain node will work and lo/hi will
+  finally be real on the phone. TODO.md item 20 has the plan and lists
+  what carries over (everything but the source URL and the CORS
+  fallback).
+- **Sound levels audition as you tap them** (2026-08-07): KING-FM plays
+  or stops immediately, a GAME SOUNDS tap plays one sample sound, and
+  both follow the board's pending selections. Cancelling the board puts
+  music back to the saved setting - the red X discards an audition just
+  as it discards an edit. Music also got its own, much quieter scale
+  (lo 0.08 / hi 0.25 against the game family's 0.35 / 1): it is
+  background audio, and a broadcast stream is mastered far hotter than
+  the game's synthesized sounds.
+- **Temperature shows both scales** as "36.8 / 98.2" under a TEMP C/F
+  label (TODO 19). The records are Celsius and stay that way; the
+  conversion is display-time only, in the one chart builder, so the
+  panel, Chart, and Patients Seen all agree.
+- The recall hint now reads TAP THE TRIAGE ROOM DOOR TO RECALL YOUR MOST
+  RECENT PATIENT (TODO 17).
+
+Docs 4/6/7/8/9 were swept the same session; TODO.md item 3 carries the
+build record and what remains.
 
 ## 2026-08-07: hints removed + blackboard redesign locked
 

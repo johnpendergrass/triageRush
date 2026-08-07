@@ -102,7 +102,8 @@ The state must cover:
 - clock heartbeat, remaining time, and pause state;
 - RUSH arrival countdown and current base interval;
 - active two-patient burst staging;
-- the runtime game-sound audibility flag (in-game mute);
+- (no runtime sound flag: the game screen's sound icon writes the persisted
+  GLOBAL SOUND setting directly, 2026-08-07);
 - Chart Clinical expanded/collapsed preference for this shift; and
 - Patients Seen review index.
 
@@ -243,15 +244,21 @@ Required effect families:
 - ordinary clock tick;
 - ten-second/minute emphasis tick;
 - zero completion dong; and
-- the optional HOME music stream (KING-FM).
+- the optional music source (a KING-FM stream today; being replaced by local
+  files - see TODO.md item 20).
 
 Track every game sound individually in one registry, each entry with its own
 enabled flag, so per-sound preferences can be added later without new
-structure. A game sound plays only when the persisted GLOBAL and GAME SOUNDS
-toggles were on at shift start and the in-game mute is off; the in-game mute
-flips only the runtime audibility flag and never touches music or the
-persisted toggles. Music plays only when GLOBAL and MUSIC are on and is
-started exclusively from HOME gestures.
+structure. A game sound plays only when GLOBAL SOUND is on and the GAME
+SOUNDS level is not `off`, read live from the persisted settings - there is
+no runtime audibility flag, because the game screen's sound icon writes
+GLOBAL SOUND itself. Music plays only when GLOBAL SOUND is on and the MUSIC
+level is not `off`, and starts only from a user gesture.
+
+The level is a real volume: every game sound routes through one gain node
+rather than each recipe carrying its own number, and music has a separate,
+much quieter scale. Music must never be attenuated with
+`HTMLMediaElement.volume` alone - iOS ignores that property outright.
 
 Doink is emitted only by the successful `insertWaitingPatient` effect, never
 by swap, initial seed, or a blocked capacity attempt; recall plays the
@@ -373,7 +380,7 @@ before use.
 Persist:
 
 - player title and initials;
-- safe sound and UI-hint preferences;
+- sound preferences: the global mute plus the game and music levels;
 - default mode, difficulty, and mode-specific shift lengths; and
 - an optional active-shift recovery snapshot used only for automatic
   interruption recovery directly into GAME.

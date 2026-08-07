@@ -69,8 +69,12 @@ triageRush/
 - Triage offers five- and ten-minute countdowns, defaulting to five minutes.
 - Successful runtime patient additions play the arrival `doink`; recall plays
   its own C5/E5 recall sound, never a doink.
-- Sound is three settings toggles (GLOBAL, GAME SOUNDS, MUSIC) plus an in-game
-  mute that governs game sounds only; the boombox is retired.
+- Sound is GLOBAL SOUND (off/on) plus a level for GAME SOUNDS and for MUSIC
+  (off/lo/hi) on the GAME OPTIONS board; the boombox is retired. The game
+  screen's sound icon IS the GLOBAL SOUND setting - there is no separate
+  in-game mute (2026-08-07). The music source, a KING-FM stream, is being
+  retired for local files because a stream's volume cannot be controlled on
+  iOS; see TODO.md item 20.
 - `Intern` is a player-title option.
 - Each scheduled RUSH arrival has a 20% chance to add a two-patient burst,
   subject to the ten-patient maximum.
