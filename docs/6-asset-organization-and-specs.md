@@ -1,10 +1,12 @@
 # Asset Organization and Specifications
 
-**Last modified:** 2026-08-05
+**Last modified:** 2026-08-07
 
-**Latest change:** Swept in the 2026-08-04/05 amendments: boombox retired,
-bubble layers superseded by CSS-drawn chart cards, wall/interior art reserved
-for future layered room rendering, and ER ENTRANCE naming.
+**Latest change:** The Music section is rewritten for LOCAL AUDIO FILES - five
+anonymous, AM-filtered tracks plus the transcode pipeline that makes them
+(2026-08-07). Earlier: the 2026-08-04/05 amendments - boombox retired, bubble
+layers superseded by CSS-drawn chart cards, wall/interior art reserved for
+future layered room rendering, and ER ENTRANCE naming.
 
 ## Ownership
 
@@ -193,7 +195,7 @@ the two corner buttons' positions. Center a board in the HOME frame at 93.75% of
 while preserving aspect ratio. Use a close target of at least 44 CSS pixels near
 the board's established top-right close position.
 
-### Music (boombox retired; the stream is being retired too)
+### Music (boombox retired; local files since 2026-08-07)
 
 The boombox metaphor is retired (2026-08-04): its artwork, hotspots, and LED
 buttons are not implemented. `lobby-page/boombox.png` (and boombox.txt) stay
@@ -201,23 +203,60 @@ on disk, unused and out of the runtime manifest, pending John's decision on
 archiving unused art. Sound options are GLOBAL SOUND plus a level for each of
 GAME SOUNDS and MUSIC on the GAME OPTIONS board.
 
-The music source today is an internet radio stream:
+**The KING-FM stream was retired 2026-08-07** (TODO.md item 20). It could not
+be volume-controlled on iOS: Apple ignores `HTMLMediaElement.volume`, and
+routing through a Web Audio gain node - the one mechanism iOS honors -
+requires CORS, which the routed element then refused to play on the iPhone.
+Local files are same-origin, so the gain node works everywhere.
+
+#### The audio assets
 
 ```text
-https://classicalking.streamguys1.com/KING-FM-128KAAC
+triageRush/assets/audio/track-01.mp3 .. track-05.mp3      2.5 MB total
 ```
 
-**This stream is being retired (John, 2026-08-07).** It cannot be volume-
-controlled on iOS: Apple ignores `HTMLMediaElement.volume`, and routing the
-stream through a Web Audio gain node - the one mechanism iOS does honor -
-requires CORS, which the routed element then refused to play on the iPhone.
-The replacement is LOCAL MUSIC FILES, which are same-origin and therefore
-routable and controllable on every device. Nothing is built yet; TODO.md item
-20 has the plan. When it lands, this section gains an audio-asset entry with
-the usual naming and manifest rules, and the stream URL leaves `assets.js`.
+Five tracks, in `ASSETS.music.tracks`. **Array order is play order** - the
+filenames carry no other meaning, so reordering the playlist means reordering
+the array (and re-running the transcode script if the numbering should match).
+
+Three rules these files must keep:
+
+- **NEUTRAL NAMES AND NO METADATA.** They are copyrighted recordings in a
+  public repository. The sources' ID3 tags named the song, artist, album,
+  label and catalog number, so renaming alone would have accomplished nothing;
+  `-map_metadata -1` strips all of it. Adding a track means keeping both
+  halves.
+- **NOT PRELOADED, NOT IN THE LOADING GATE.** A shift must never wait on
+  music, and a player who has not unlocked it must never fetch a byte.
+  `listAllImageAssetPaths()` does not and must not include them.
+- **THE AM-RADIO SOUND IS BAKED IN**, not applied at runtime. Nothing in the
+  game filters audio.
+
+#### The transcode pipeline
+
+`assets/_audio-transcode/transcode-music.sh` turns full-quality sources into
+the shipped files, and carries the recipe and the play-order table. John chose
+it by ear from a seven-way listening test (`_mockups/audio-bitrate-test.html`,
+variant "G, heavy AM"):
+
+```text
+highpass 400 Hz + lowpass 3.2 kHz + acompressor 6:1 @ -16 dB
+24 kbps, mono, 22.05 kHz, no cover art, no tags        37 MB -> 2.5 MB
+```
+
+**24 kbps is not a mistake.** Low bitrates wreck the treble first, and the
+lowpass has already thrown that treble away, so the encoder has nothing left
+to ruin - the same 24 kbps applied to UNFILTERED music sounds swirly and
+underwater. Filtering first is what buys the small file.
+
+The full-quality originals and the `track-NN` → real-song mapping live in
+`assets/audio/_originals-untreated/`, which is **gitignored**, as is the
+listening test. To add or re-treat tracks: drop sources in there, add a line
+to the script's `PLAYLIST` table, re-run, add the file to `assets.js`.
 
 Never autoplay; playback starts only from a user gesture. A source error must
-clear false active state and leave gameplay usable.
+clear false active state and leave gameplay usable - a missing track reports
+once and stops, and the shift is unaffected.
 
 ## Responsive artwork rules
 

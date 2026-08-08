@@ -154,14 +154,21 @@ mode brand | scorecard | timer | sound
 Reference proportions are `1.02fr 1.48fr 0.72fr 24px`, with 4px gaps and
 4-5px internal padding.
 
-### Brand lettering (2026-08-06)
+### Mode lettering (2026-08-06; names the MODE since 2026-08-07)
 
-- IDENTICAL in both modes: `Triage RUSH!` — the ER ENTRANCE sign's
-  spelling and colors (face #ec543d, stacked brick-red 3D extrusion
-  shadows; `.brand-sign`, em-based so it scales). RUSH! renders 1.18x
-  larger (`.brand-rush`), like the sign.
-- Because the brand never varies, all brand spots are STATIC markup in
-  index.html; ui.js writes none of them.
+- The header names the MODE BEING PLAYED - `Triage!` or `Triage RUSH!` -
+  NOT the game (John, 2026-08-07). Showing the brand in both modes read as
+  branding and told the player nothing about which shift they were on.
+- The sign treatment is unchanged: the ER ENTRANCE sign's spelling and
+  colors (face #ec543d, stacked brick-red 3D extrusion shadows;
+  `.brand-sign`, em-based so it scales). RUSH! renders 1.18x larger
+  (`.brand-rush`), like the sign.
+- BOTH spellings are STATIC markup inside one `<p>`, and ui.js unhides one -
+  the same pattern the sidewalk summary board uses. Elsewhere the brand still
+  never varies and ui.js writes none of it.
+- **The two modes are SIZED SEPARATELY**, as on the summary board.
+  `Triage RUSH!` is unchanged; `Triage!` is five characters shorter and takes
+  the freed width at 1.4em (19px against 13.6px on a 371px shell).
 - Centered between the shell's left edge and the scorecard.
 
 ### Scorecard
@@ -433,9 +440,13 @@ mockups) contain:
   alphabet is A-Z, "-", and seven emoji.
 - GAME OPTIONS board: Triage/RUSH mode, Strict/Forgiving, mode-specific
   length, then a SOUND OPTIONS section - GLOBAL SOUND off/on as the headline,
-  with GAME SOUNDS and KING-FM each off/lo/hi below it. There are no
+  with GAME SOUNDS and MUSIC each off/lo/hi below it. There are no
   per-family on/off toggles: OFF lives inside each level. A selected OFF fills
-  red rather than green.
+  red rather than green. **The MUSIC row is ABSENT** - not disabled - until
+  the player's middle initial is 🎼 (2026-08-07); a greyed-out control
+  advertises itself, a missing one does not. The Music line on the sidewalk
+  summary board hides with it, so a locked player sees no trace of music on
+  either board.
 
 Every setting is a two-line group: a left-justified header over a centered
 options row with wide tap gaps. The section-opening groups (GAME MODE, GLOBAL
@@ -445,7 +456,7 @@ The game screen's sound icon IS the GLOBAL SOUND setting - one persisted value
 seen in two places, not a per-shift mute.
 
 Sound levels audition as they are tapped, because the board lives on HOME
-where a player would otherwise be choosing a volume they cannot hear: KING-FM
+where a player would otherwise be choosing a volume they cannot hear: music
 starts or stops immediately at the chosen volume, and a GAME SOUNDS tap plays
 one representative sound. An audition follows what the board currently shows,
 GLOBAL SOUND included, and saves nothing - cancelling puts music back to the
@@ -505,9 +516,13 @@ keyboard ever appears. About uses the accepted About board. There is no
 boombox: the boombox metaphor is retired, and music starts only from a user
 gesture and never autoplays.
 
-The music source (a KING-FM stream today) is being retired in favour of local
-files, because the stream cannot be volume-controlled on iOS - see TODO.md
-item 20. The board row, its levels, and its auditioning are unaffected.
+Music is five LOCAL files played in order and looped (2026-08-07), replacing
+the KING-FM stream, which could not be volume-controlled on iOS. It plays
+everywhere - entrance, shift and report - and a new shift never interrupts it;
+turning it off and on again restarts at the first track. Because a reload
+cannot resume audio unattended, the first tap anywhere restarts the playlist
+if the settings want it. The board row, its levels, and its auditioning are
+unchanged, except that the row is hidden until the name unlocks it.
 
 ## SHIFT REVIEW view
 

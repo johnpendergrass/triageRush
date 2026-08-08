@@ -244,8 +244,10 @@ Required effect families:
 - ordinary clock tick;
 - ten-second/minute emphasis tick;
 - zero completion dong; and
-- the optional music source (a KING-FM stream today; being replaced by local
-  files - see TODO.md item 20).
+- the optional music source: five LOCAL files listed in the manifest, played
+  in order and looped (2026-08-07; replaced the KING-FM stream). They are not
+  preloaded and are never part of the loading gate - a shift must never wait
+  on music - and they are not requested at all until the player unlocks them.
 
 Track every game sound individually in one registry, each entry with its own
 enabled flag, so per-sound preferences can be added later without new

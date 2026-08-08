@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#071822">
   <title>Triage RUSH!</title>
-  <link rel="stylesheet" href="./triageRush/styles.css?v=2026-0807-summary1h">
+  <link rel="stylesheet" href="./triageRush/styles.css?v=2026-0807-music1b">
 </head>
 <body>
 
@@ -177,7 +177,9 @@
           <span class="lbl">Game</span>
           <span class="val" id="shiftBoardGameLoudLine"></span>
         </span>
-        <span class="sum-row sum-row--level">
+        <!-- Hidden with the settings row it mirrors, so a locked player
+             sees no trace of music on either board. -->
+        <span class="sum-row sum-row--level" id="shiftBoardMusicRow">
           <span class="lbl">Music</span>
           <span class="val" id="shiftBoardMusicLoudLine"></span>
         </span>
@@ -277,7 +279,7 @@
           </div>
         </div>
 
-        <div class="setting-group">
+        <div class="setting-group" id="settingGameSoundsGroup">
           <div class="setting-group-label">Game Sounds</div>
           <div class="option-row">
             <label><input type="radio" name="settingGameLoudness" value="off"> Off</label>
@@ -286,8 +288,11 @@
           </div>
         </div>
 
-        <div class="setting-group setting-group--last">
-          <div class="setting-group-label">KING-FM (music)</div>
+        <!-- Hidden entirely until the player's middle initial unlocks
+             music (game.js MUSIC_UNLOCK_SYMBOL). Absent, not disabled:
+             a greyed-out control advertises itself. -->
+        <div class="setting-group setting-group--last" id="settingMusicGroup">
+          <div class="setting-group-label">Music</div>
           <div class="option-row">
             <label><input type="radio" name="settingMusicLoudness" value="off"> Off</label>
             <label><input type="radio" name="settingMusicLoudness" value="lo"> Lo</label>
@@ -327,7 +332,19 @@
        ================================================================= -->
   <section class="game-view" id="gameView" hidden>
     <header class="game-header">
-      <p class="brand brand-sign" id="gameBrand">Triage <span class="brand-rush">RUSH!</span></p>
+      <!-- The header names the MODE BEING PLAYED, not the game (John,
+           2026-08-07): "Triage RUSH!" in both modes read as branding and
+           told the player nothing about which shift they were on. Both
+           spellings are static markup and ui.js unhides one - the same
+           pattern the sidewalk summary board uses. One <p> so the header
+           grid still sees a single cell. -->
+      <p class="brand brand-sign" id="gameBrand">
+        <span class="brand-mode brand-mode--triage"
+              id="gameBrandTriage">Triage!</span>
+        <span class="brand-mode brand-mode--rush"
+              id="gameBrandRush" hidden>Triage <span
+              class="brand-rush">RUSH!</span></span>
+      </p>
       <p class="header-scorecard" id="gameScorecard">
         <strong class="score-correct" id="scoreCorrect">0</strong>
         <span class="score-divider" id="scoreCloseDivider">/</span>
@@ -641,9 +658,9 @@
 
 </div>
 
-<script src="./triageRush/assets.js?v=2026-0807-summary1h"></script>
-<script src="./triageRush/game.js?v=2026-0807-summary1h"></script>
-<script src="./triageRush/ui.js?v=2026-0807-summary1h"></script>
-<script src="./triageRush/app.js?v=2026-0807-summary1h"></script>
+<script src="./triageRush/assets.js?v=2026-0807-music1b"></script>
+<script src="./triageRush/game.js?v=2026-0807-music1b"></script>
+<script src="./triageRush/ui.js?v=2026-0807-music1b"></script>
+<script src="./triageRush/app.js?v=2026-0807-music1b"></script>
 </body>
 </html>

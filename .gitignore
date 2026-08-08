@@ -32,3 +32,17 @@ Desktop.ini
 *.temp
 *.bak
 *~
+
+# Music sources. The game ships anonymous, heavily filtered track-NN.mp3
+# files (see assets/_audio-transcode/transcode-music.sh). The full-quality
+# originals stay OUT of the repository - they are copyrighted recordings,
+# their filenames and ID3 tags name the songs, and they are 37 MB. The
+# track-mapping.txt that says which track-NN is which song lives in there
+# too, and is excluded for the same reason.
+triageRush/assets/audio/_originals-untreated/
+
+# The bitrate/filter listening test that chose the recipe. Its clips are
+# unfiltered excerpts and the page names the song, so it stays local. Keep
+# it as your own reference; regenerate it any time from the originals.
+_mockups/audio-bitrate-test/
+_mockups/audio-bitrate-test.html

@@ -1,6 +1,63 @@
 # triageRush — specifications (pointer file)
 
-**Last modified:** 2026-08-07 (summary boards + REVIEW LAST SHIFT built)
+**Last modified:** 2026-08-07 (local music + mode name in the game header)
+
+## 2026-08-07 (fourth session): KING-FM is GONE; music is local files
+
+TODO 20 is DONE (cache `2026-0807-music1b`). The stream lost because iOS
+ignores `HTMLMediaElement.volume` and the Web Audio gain node that would fix
+it needs CORS, which the routed element then refused to play on the iPhone -
+so on John's primary device music had no level control at all. Local files
+are SAME-ORIGIN, so the gain node works and lo/hi are finally real there.
+
+- **Five tracks, played in manifest order and looped forever.** Music plays
+  everywhere - entrance, shift, report - and a new shift never interrupts or
+  restarts it. Turning it off and on again restarts at the first track; a
+  level change mid-track does not. After a reload the first tap anywhere
+  starts the playlist, because browsers refuse to resume audio unattended.
+- **The sound was chosen before the code was written.** A seven-way
+  listening test at the game's real 6% volume; John picked the most extreme
+  option: an AM radio, 400 Hz - 3.2 kHz, hard-compressed, 24 kbps mono.
+  37 MB became 2.5 MB. **Filtering first is what buys the small file** - the
+  lowpass throws away exactly the treble a low bitrate would wreck. The
+  filter is BAKED INTO THE FILES; nothing in the game filters audio.
+- **The files are anonymous by design.** They are copyrighted songs in a
+  public repo, and their ID3 tags named song, artist, album, label and
+  catalog number - so renaming alone would have achieved nothing. They ship
+  as `track-NN.mp3` with metadata stripped; originals, the name mapping, and
+  the listening test are gitignored.
+- **MUSIC IS UNLOCKED BY THE PLAYER'S NAME** (John). 🎼 joined the initials
+  alphabet; if it is the MIDDLE of three initials, the MUSIC row appears on
+  both the settings board and the summary board and playback is possible.
+  Otherwise the row is ABSENT - not disabled - and no audio file is fetched
+  at all. Renaming away locks it again but keeps the chosen level saved.
+  John's own framing: an easter egg, not protection; 2-5 people will ever
+  play this.
+- **All the stream machinery is gone**: crossOrigin, the CORS fallback,
+  `abandonMusicRouting`, the failure path that wrote preferences, and
+  `UI.setPendingMusicLoudness`. What survived is what earned it - the gain
+  node, the pagehide release, audition-on-tap, cancel-reverts-to-saved.
+- **STILL UNTUNED: `MUSIC_VOLUME` (lo 0.02 / hi 0.06).** Those numbers were
+  set by ear against the loud, unfiltered stream and mean little against
+  compressed, band-limited files. John's ear is the authority. A 3.3 dB
+  spread between the five tracks is also open; one re-run of the transcode
+  script evens it out at no size cost.
+
+## 2026-08-07 (fourth session): the game header names the MODE
+
+The header showed `Triage RUSH!` in both modes. After a playthrough John
+found that confusing - it read as branding and said nothing about which
+shift was being played - so it now shows the MODE: `Triage!` or
+`Triage RUSH!`, with `Triage!` a step larger (1.4em) and centered in the
+same space. Both spellings are static markup in one `<p>`; ui.js unhides
+one, exactly as the sidewalk summary board does. The two modes are sized
+separately, the same rule that board follows.
+
+A measurement worth remembering: the header cell is CONTENT-sized (the grid
+column is `fr`, but the brand is `nowrap`, so the column's floor is the
+text). The mode name therefore cannot clip - past ~2.07em it would squeeze
+the scorecard instead. In RUSH mode the header is unchanged, because
+`Triage RUSH!` IS that mode's name.
 
 ## 2026-08-07 (third session): the SUMMARY boards are BUILT, and TODO 13 with them
 

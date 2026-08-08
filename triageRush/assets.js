@@ -13,7 +13,7 @@
 
 "use strict";
 
-const TRIAGE_RUSH_CACHE_VERSION = "2026-0807-summary1h";
+const TRIAGE_RUSH_CACHE_VERSION = "2026-0807-music1b";
 
 /* All paths are relative to the site root (where index.html lives). */
 const ASSET_ROOT = "./triageRush/assets";
@@ -118,9 +118,27 @@ const TRIAGE_RUSH_ASSETS = Object.freeze({
   }),
 
   music: Object.freeze({
-    /* Classical KING 98.1 FM, Seattle. Secure 128 kbps AAC stream.
-       Never autoplays; playback starts only from a user gesture on HOME. */
-    kingFmStreamUrl: "https://classicalking.streamguys1.com/KING-FM-128KAAC"
+    /* Local background music, replacing the KING-FM stream (2026-08-07).
+       Same-origin is the whole point: the stream could not be routed
+       through a Web Audio gain node without CORS, so iOS had no volume
+       control over it at all. A file has no such problem.
+
+       ARRAY ORDER IS PLAY ORDER. The player runs straight down this list
+       and returns to the top - see app.js section 3. The files are
+       deliberately anonymous and carry no metadata; which track is which
+       song is recorded outside the repository (see
+       assets/_audio-transcode/transcode-music.sh).
+
+       These are NOT preloaded and are NOT part of the loading gate: a
+       shift must never wait on music, and a player who has not unlocked
+       it should never fetch it. */
+    tracks: Object.freeze([
+      `${ASSET_ROOT}/audio/track-01.mp3`,
+      `${ASSET_ROOT}/audio/track-02.mp3`,
+      `${ASSET_ROOT}/audio/track-03.mp3`,
+      `${ASSET_ROOT}/audio/track-04.mp3`,
+      `${ASSET_ROOT}/audio/track-05.mp3`
+    ])
   }),
 
   patients: Object.freeze({

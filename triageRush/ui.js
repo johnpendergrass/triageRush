@@ -32,18 +32,21 @@
     "shiftBoardButton", "shiftBoardModeTriage", "shiftBoardModeRush",
     "shiftBoardDifficultyLine", "shiftBoardLengthLine",
     "shiftBoardSoundLine", "shiftBoardGameLoudLine",
-    "shiftBoardMusicLoudLine", "aboutButton", "homeLoadingStatus",
+    "shiftBoardMusicLoudLine", "shiftBoardMusicRow",
+    "aboutButton", "homeLoadingStatus",
     // Popups
     "popupLayer", "popupCard", "popupBoardArt", "popupCloseButton",
     "popupApplyButton", "playerBoardContent", "shiftBoardContent",
     "aboutBoardContent", "playerTitleWheel", "playerInitialsWheels",
     "triageLengthOptions", "rushLengthOptions", "musicStatusNote",
+    "settingMusicGroup", "settingGameSoundsGroup",
     // Overlays
     "arrivingOverlay", "confirmQuitOverlay", "confirmQuitCancel",
     "confirmQuitAccept", "confirmStopOverlay", "confirmStopCancel",
     "confirmStopAccept",
     // GAME
-    "gameView", "gameBrand", "gameScorecard", "scoreCorrect",
+    "gameView", "gameBrand", "gameBrandTriage", "gameBrandRush",
+    "gameScorecard", "scoreCorrect",
     "scoreCloseDivider", "scoreClose", "scoreWrong", "scoreTotal",
     "gameTimer", "gameSoundButton", "waitingPanel", "patientPanel",
     "patientChartMount", "patientPanelHitButton", "patientEmptyState",
@@ -134,6 +137,12 @@
     writeSoundValue(ui.shiftBoardSoundLine, settings.soundGlobal ? "on" : "off");
     writeSoundValue(ui.shiftBoardGameLoudLine, settings.gameLoudness);
     writeSoundValue(ui.shiftBoardMusicLoudLine, settings.musicLoudness);
+
+    /* The Music line exists only for a player who has unlocked it. The
+       board simply gets shorter - it hangs from the top frame, so nothing
+       below has to move, and losing a row only adds clearance to the
+       bottom rail. */
+    ui.shiftBoardMusicRow.hidden = !GAME.musicUnlocked(state);
 
     /* With the master off, the two level rows are moot; they dim rather
        than disappear, so the board never changes shape. */
@@ -342,7 +351,23 @@
     setRadioGroup("settingGameLoudness", state.settings.gameLoudness);
     setRadioGroup("settingMusicLoudness", state.settings.musicLoudness);
 
+    renderMusicVisibility(state);
     renderModeLengthVisibility();
+  }
+
+  /* Show the MUSIC row only to a player who has unlocked it. The unlock
+     lives on the PLAYER board (the middle initial), so this is read fresh
+     every time the GAME OPTIONS board opens - set the name, accept, reopen
+     settings, and the row is there.
+
+     --last carries `margin-bottom: 0`, so it has to move to whatever group
+     is actually last, or a hidden music row leaves a gap under Game
+     Sounds. */
+  function renderMusicVisibility(state) {
+    const unlocked = GAME.musicUnlocked(state);
+    ui.settingMusicGroup.hidden = !unlocked;
+    ui.settingGameSoundsGroup.classList.toggle("setting-group--last", !unlocked);
+    if (!unlocked) ui.musicStatusNote.hidden = true;
   }
 
   function setRadioGroup(groupName, value) {
@@ -403,12 +428,6 @@
     };
   }
 
-  /* Used when a music audition fails: the board goes back to OFF without
-     anything being persisted. */
-  function setPendingMusicLoudness(value) {
-    setRadioGroup("settingMusicLoudness", value);
-  }
-
   function showMusicStatusNote(messageText) {
     ui.musicStatusNote.textContent = messageText;
     ui.musicStatusNote.hidden = false;
@@ -426,9 +445,12 @@
   }
 
   function renderGameHeader(state) {
-    /* The brand is static markup in index.html - "Triage RUSH!" in every
-       mode (John, 2026-08-06) - so the header renders only the live
-       numbers. */
+    /* The header names the MODE being played (John, 2026-08-07), not the
+       game. Both spellings are static markup; only the visibility is
+       decided here - the same arrangement as the summary board. */
+    const isRush = state.settings.mode === "rush";
+    ui.gameBrandTriage.hidden = isRush;
+    ui.gameBrandRush.hidden = !isRush;
 
     const totals = GAME.selectScoreTotals(state);
     ui.scoreCorrect.textContent = String(totals.correct);
@@ -1514,7 +1536,6 @@
     isPopupOpen,
     readSettingsControls,
     pendingSoundSelections,
-    setPendingMusicLoudness,
     renderModeLengthVisibility,
     showMusicStatusNote,
     renderWaiting,

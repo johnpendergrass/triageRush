@@ -405,7 +405,94 @@ Notes (Claude, diagnosed 2026-08-07):
   the art smaller. The blackboard is 941x1672 and is displayed at about
   that size, so resizing is NOT the lever here.
 
-## 20. Retire KING-FM; music becomes file-based (decided 2026-08-07)
+## 20. Retire KING-FM; music becomes file-based (DONE 2026-08-07)
+
+**BUILT 2026-08-07 (cache `2026-0807-music1a`).** Everything below this
+heading is the original decision record; what actually happened follows.
+
+### What was built
+
+- **Five local tracks**, `assets/audio/track-01.mp3` .. `track-05.mp3`,
+  2.5 MB total, listed in `ASSETS.music.tracks`. Array order IS play order;
+  John chose `1, 2, 15, 3, 14` of the source numbering.
+- **Sequential, looping, everywhere.** Last track hands back to the first.
+  Plays on the entrance, through the shift, across the report; a new shift
+  never interrupts it. Off-then-on restarts at track one; a level change
+  mid-track does not restart. After a reload, the first tap anywhere starts
+  it (browsers refuse to resume audio unattended).
+- **The stream machinery is GONE**: `crossOrigin`, the CORS/no-CORS
+  fallback, `abandonMusicRouting`, the failure path that wrote preferences,
+  and `UI.setPendingMusicLoudness`, which existed only to serve it. The gain
+  node, the pagehide release, the audition-on-tap, and cancel-reverts-to-
+  saved all survived.
+- **The row is now called MUSIC**, on both the settings board and the
+  summary board.
+
+### The sound: chosen by ear, baked into the files
+
+John picked variant "G, heavy AM" from a seven-way listening test
+(`_mockups/audio-bitrate-test.html`, gitignored) auditioned at the game's
+real 6% volume:
+
+```text
+highpass 400 Hz + lowpass 3.2 kHz + acompressor 6:1 @ -16 dB
+24 kbps, mono, 22.05 kHz                             37 MB -> 2.5 MB
+```
+
+**Filtering first is what buys the small file** - the lowpass throws away
+the treble that low bitrates would have wrecked, so the encoder has nothing
+left to ruin. The same 24 kbps on unfiltered music sounds underwater (that
+is D vs E on the test page). The filter is BAKED IN; nothing in the game
+filters audio. Recipe and play-order table:
+`assets/_audio-transcode/transcode-music.sh`.
+
+**Anonymity was half the job.** The sources' ID3 tags named the song,
+artist, album, label and catalog number, so renaming alone would have done
+nothing; `-map_metadata -1` strips it. Originals, the `track-NN` mapping,
+and the listening test are gitignored.
+
+### The unlock (John, 2026-08-07)
+
+🎼 (U+1F3BC MUSICAL SCORE) joined the initials alphabet as the 35th symbol.
+If the MIDDLE of three initials is that symbol, the MUSIC row appears on
+both boards and playback is possible; otherwise the row is absent - not
+disabled - and no audio file is requested at all. `J🎼P` unlocks; `JMP`,
+`🎼JP`, `JP🎼` and shorter names do not. Renaming away stops music and hides
+the rows but leaves the level saved, so re-unlocking restores it.
+
+Deliberately NOT the real treble clef U+1D11E - that is a notation
+character with patchy phone font coverage; every other symbol in the
+alphabet is an emoji. John first proposed a hidden title (`SCRUBBER`) and
+then this; a 15-item title drum cannot hide anything, three drums of 35 can.
+He is aware it is an easter egg rather than protection, and said so
+explicitly: the game will be played by 2-5 people.
+
+### Still open
+
+- **`MUSIC_VOLUME` is UNTUNED.** Still `lo 0.02 / hi 0.06`, set by ear
+  against the loud unfiltered stream. The tracks are compressed and
+  band-limited now and will probably want raising. Two numbers in app.js.
+- **A 3.3 dB loudness spread** across the five tracks (-17.5 to -20.8 LUFS);
+  on a fixed order, Overkill sits back from Superman every cycle. One
+  re-run of the transcode script with `loudnorm` evens it out at no size
+  cost - better judged after the lo/hi levels are settled.
+- Whether track 05 (a 29-second end-credit sting) belongs in the rotation.
+
+### Verified
+
+53-check Node harness (unlock rules incl. variation-selector emoji
+neighbours, `musicAudible` combinations, relock-preserves-level, manifest,
+files on disk, old-save migration, and a grep that no stream URL /
+`crossOrigin` / `kingFm` identifier survives) plus a browser pass: locked
+board showed five setting groups and no Music, unlocked showed six, first
+gesture started track-01, six `ended` events walked 01-02-03-04-05-01, a
+level change kept the track, and all five files fetched 200 and decoded
+through `OfflineAudioContext` (mono; 219/209/174/218/29 s; 2485 KB).
+Console clean.
+
+---
+
+### Original decision record (2026-08-07, before the build)
 
 John's decision after the iOS volume work failed: eliminate the KING-FM
 music option. He may bring in file-based music instead.
@@ -450,6 +537,36 @@ What to do when John says go:
 is only relevant if a STREAM is ever revisited.
 
 ## DONE
+
+## 22. GAME header should name the MODE, not the game (DONE 2026-08-07)
+
+John, after a playthrough: "in the game screen I had decided to always call
+the game 'Triage RUSH!' in the header. I now think that is confusing, and
+that it should show the mode - ie. just Triage! if that is what is being
+played. Just show Triage! in a bit larger font, centered in the same space."
+
+Built the same session (cache `2026-0807-music1b`):
+
+- Both spellings are static markup inside ONE `<p>` (so the header grid
+  still sees a single cell) and `ui.js renderGameHeader` unhides one - the
+  same pattern the sidewalk summary board already uses.
+- `Triage!` runs at 1.4em of the header base (19px against RUSH's 13.6px on
+  a 371px shell). `Triage RUSH!` is untouched.
+- **The header cell is CONTENT-sized, not fixed** - the grid column is `fr`
+  but the brand is `nowrap`, so the column's floor is the text and the cell
+  grows to fit. Enlarging `Triage!` cannot clip; past a point it would
+  squeeze the scorecard instead. At 1.4em it is 70px of ink inside a cell
+  RUSH already stretches to 104px, so the header layout is unchanged
+  (scorecard 148px in both modes, no overflow). Ceiling is ~2.07em.
+- Verified by storing each mode and reloading, reading back what the app
+  itself chose - not by toggling spans by hand. Console clean.
+
+NOTE FOR LATER (John's call, not raised as a problem): in RUSH mode the
+header still reads `Triage RUSH!`, because that IS the mode's name in the
+settings radios and the report's MODE: line. So RUSH mode looks exactly as
+it did, and the confusion only resolves in Triage mode. Changing RUSH to
+read just `RUSH!` would sharpen the distinction but is a branding change
+with three other sites to keep honest.
 
 ## 21. iPhone zoomed when tapping the odometer (DONE 2026-08-07)
 

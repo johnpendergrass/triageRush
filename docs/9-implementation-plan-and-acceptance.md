@@ -130,7 +130,7 @@ Implement:
   carrying the welcome half plus the two review buttons;
 - About board;
 - the sound model on the GAME OPTIONS board: GLOBAL SOUND off/on, then
-  GAME SOUNDS and KING-FM each off/lo/hi;
+  GAME SOUNDS and MUSIC each off/lo/hi (the MUSIC row only when unlocked);
 - player title/initials, set on odometer drums (no typing);
 - mode, difficulty, and length preferences. (The hints preference was
   removed 2026-08-07; loadPreferences strips it from older saves.)
@@ -139,7 +139,7 @@ Acceptance:
 
 - title list includes Intern;
 - initials accept one to three symbols from the drum alphabet (A-Z, "-",
-  seven emoji) and uppercase any letters;
+  seven emoji, and 🎼) and uppercase any letters;
 - the game screen's sound icon writes GLOBAL SOUND, so the board agrees
   with it after a shift and the choice survives;
 - an older save whose sound settings were booleans still loads: an ON
@@ -148,13 +148,26 @@ Acceptance:
 - RUSH offers 60 and 120 seconds, default 60;
 - No Timer is absent;
 - music never autoplays, and starts only from a user gesture;
-- a music failure leaves the UI honest and the game usable: the note appears,
-  the setting returns to off, and an audition failure persists nothing;
+- a music failure leaves the UI honest and the game usable: the note appears
+  once, playback stops, and nothing is persisted;
 - both sound levels are audible differences, not just stored values, and are
   auditioned as they are tapped;
-- NOTE: the KING-FM stream is being retired for local files (TODO.md item 20)
-  because iOS cannot control a stream's volume. These acceptance points are
-  written about the music SOURCE and survive that change unaltered;
+- MUSIC IS LOCAL FILES (built 2026-08-07, TODO.md item 20 DONE). Its own
+  acceptance:
+  - the five tracks play in manifest order and the last hands back to the
+    first;
+  - music plays on the entrance, through a shift, and across the report, and
+    starting a shift neither interrupts nor restarts it;
+  - turning music off and on again restarts at the FIRST track, while a level
+    change mid-track does not restart anything;
+  - after a reload with music saved on, the first tap anywhere starts the
+    playlist at track one;
+  - the MUSIC row is absent from BOTH boards, and no audio file is requested
+    at all, unless the initials are three symbols with 🎼 in the MIDDLE
+    (`J🎼P` yes; `JMP`, `🎼JP`, `JP🎼`, and shorter names no);
+  - renaming away from the unlock stops playback and hides the rows but
+    leaves the chosen level saved, so re-unlocking restores it;
+  - the tracks are never preloaded and never block READY;
 - HOME never displays Resume Shift or Return to Game;
 - every Start Shift creates a new shift and resets shift-local state.
 

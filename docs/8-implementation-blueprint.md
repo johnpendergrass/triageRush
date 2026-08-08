@@ -741,18 +741,35 @@ board, or the game screen's sound icon, which is the global setting itself.
 
 **The level must NOT be applied with `HTMLMediaElement.volume`: iOS ignores
 that property outright.** Only a Web Audio GainNode is honored there, which
-means the source has to survive `createMediaElementSource` - and that requires
-`crossOrigin = "anonymous"` (set before `src`) or the audio is silently muted.
+means the source has to survive `createMediaElementSource`. For a CROSS-ORIGIN
+source that additionally requires `crossOrigin = "anonymous"` (set before
+`src`) or the audio is silently muted.
 
-**The KING-FM stream fails that test and is being retired (John,
-2026-08-07).** With CORS requested, iOS refused to play the routed element at
-all; without it, routing produces silence. The shipped code therefore tries
-the routed element and falls back to a plain one on refusal, which restores
-playback everywhere at the cost of any level control on iOS. The fix is to
-replace the stream with LOCAL MUSIC FILES: same-origin, so no CORS and no
-refusal, and the gain node works on every device. Nothing is built yet -
-TODO.md item 20 lists what changes and what carries over (everything except
-the source URL and the CORS fallback machinery).
+**The KING-FM stream failed that test and was retired (built 2026-08-07,
+TODO.md item 20 DONE).** With CORS requested, iOS refused to play the routed
+element at all; without it, routing produced silence. Local files are
+SAME-ORIGIN, so there is no CORS to negotiate, no refusal, and the gain node
+works on every device - lo/hi are finally real on the iPhone. All the
+crossOrigin and fallback machinery existed only to fight that one problem and
+is gone.
+
+Playback is a plain playlist over `ASSETS.music.tracks`: set `src`, play, and
+on `ended` advance with a wrapping index. `preload` stays `"none"` so a locked
+player never fetches a byte. A full stop clears `src` and resets the index to
+-1, which is what makes "off then on again" restart at the first track, while
+a level change mid-track only rewrites the gain. The element is created once
+and routed once - an element can be routed into only one context ever - so a
+rebuilt context (an iOS pagehide close) falls back to element volume rather
+than attempting a second `createMediaElementSource`, which would throw.
+
+**Music is gated on the PLAYER NAME, not on the settings alone.** `game.js`
+owns two predicates: `musicUnlocked(state)` is true only when the initials are
+three symbols and the middle is `MUSIC_UNLOCK_SYMBOL` (🎼), and
+`musicAudible(state)` additionally requires GLOBAL SOUND on and the MUSIC
+level above off. Every music path asks these, so the setting rows hide, the
+fetch never happens, and playback stops the moment a rename locks it again.
+The unlock symbol is U+1F3BC MUSICAL SCORE (an emoji), deliberately NOT
+U+1D11E MUSICAL SYMBOL G CLEF, whose font coverage on phones is patchy.
 
 Both sound levels AUDITION as they are tapped on the board: music plays or
 stops at once, and a GAME SOUNDS tap plays one representative sound at that

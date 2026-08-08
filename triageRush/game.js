@@ -62,9 +62,21 @@ const GAME_CONSTANTS = Object.freeze({
     "\u{1F637}",      /* face with medical mask */
     "❤️",   /* red heart */
     "➕",         /* heavy plus */
-    "⭐"          /* star */
+    "⭐",         /* star */
+    "🎼"          /* musical score - UNLOCKS MUSIC, see MUSIC_UNLOCK_SYMBOL */
   ]),
   INITIALS_LENGTH: 3,
+
+  /* Background music stays hidden until the player's MIDDLE initial is
+     this symbol - "J🎼P" turns it on, "JMP" does not (John, 2026-08-07).
+     An easter egg rather than a lock: the music is copyrighted, and this
+     keeps it from playing for anyone who is just passing through.
+
+     A note on the glyph: this is U+1F3BC MUSICAL SCORE, an emoji, and NOT
+     U+1D11E MUSICAL SYMBOL G CLEF - the real treble clef is a notation
+     character with patchy font coverage that renders as tofu on many
+     phones. Every other symbol in the alphabet is an emoji too. */
+  MUSIC_UNLOCK_SYMBOL: "🎼",
 
   MODES: Object.freeze(["triage", "rush"]),
   DIFFICULTIES: Object.freeze(["forgiving", "strict"]),
@@ -124,11 +136,11 @@ function createInitialState() {
       triageLengthSeconds: 300,
       rushLengthSeconds: 60,
       /* Sound preferences (revised 2026-08-07, TODO 3): a GLOBAL master
-         mute plus one level per family - GAME SOUNDS and KING-FM music.
-         "off" inside a level replaces the old per-family checkbox, which
-         is the standard games pattern. The game screen's sound icon is
-         a second view of soundGlobal, not a separate runtime flag.
-         Music plays only when soundGlobal && musicLoudness !== "off". */
+         mute plus one level per family - GAME SOUNDS and MUSIC. "off"
+         inside a level replaces the old per-family checkbox, which is the
+         standard games pattern. The game screen's sound icon is a second
+         view of soundGlobal, not a separate runtime flag.
+         Music additionally requires the unlock - see musicAudible(). */
       soundGlobal: true,
       gameLoudness: "hi",
       musicLoudness: "off"
@@ -283,6 +295,33 @@ function applySettings(state, newPlayer, newSettings) {
    setting). */
 function gameSoundsAudible(state) {
   return state.settings.soundGlobal && state.settings.gameLoudness !== "off";
+}
+
+/* Has this player unlocked background music? True only when the initials
+   are a full three symbols and the MIDDLE one is the unlock symbol
+   (2026-08-07). Initials may legitimately be shorter than three, and a
+   one- or two-symbol name has no middle, so those never unlock.
+
+   Everything music-related asks THIS, not the settings: the row is hidden
+   on both boards, no track is fetched, and nothing plays. Locking again by
+   renaming leaves musicLoudness untouched, so unlocking later restores the
+   level the player last chose. */
+function musicUnlocked(state) {
+  const symbols = initialsSymbols(state.player.initials);
+  return (
+    symbols.length === GAME_CONSTANTS.INITIALS_LENGTH &&
+    symbols[1] === GAME_CONSTANTS.MUSIC_UNLOCK_SYMBOL
+  );
+}
+
+/* Should music be playing right now? The unlock, the master mute, and the
+   MUSIC level all have to agree. */
+function musicAudible(state) {
+  return (
+    musicUnlocked(state) &&
+    state.settings.soundGlobal &&
+    state.settings.musicLoudness !== "off"
+  );
 }
 
 /* The shift length that the current mode actually uses. */
@@ -1416,6 +1455,8 @@ window.TRIAGE_RUSH_GAME = {
   normalizeInitials,
   initialsSymbols,
   gameSoundsAudible,
+  musicUnlocked,
+  musicAudible,
   isValidSettingsShape,
   isValidPlayerShape,
   applySettings,

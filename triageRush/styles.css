@@ -1072,6 +1072,25 @@ img {
   text-align: center;
 }
 
+/* The two mode names are sized SEPARATELY, the same rule the sidewalk
+   summary board follows (2026-08-07). "Triage RUSH!" is left exactly as
+   it was; "Triage!" is five characters shorter and gets the freed width.
+   A shared size would cap both at what the longer one can afford.
+
+   The header cell is CONTENT-sized, not fixed: the grid column is `fr`,
+   but the brand is `nowrap`, so the column's min-content floor is the
+   text itself and the cell grows to fit it. Enlarging "Triage!" therefore
+   cannot clip - past a point it would squeeze the scorecard instead.
+
+   Measured on a 371px shell: "Triage RUSH!" is 13.6px and 104px of ink,
+   which is what sets the cell today. "Triage!" at 1.4em is 19px and only
+   70px of ink, so it sits well inside the footprint RUSH mode already
+   imposes and the header is untouched (scorecard 148px either way, no
+   overflow). It could reach about 2.07em before the header got any wider
+   than RUSH already makes it - that, not clipping, is the real ceiling.
+   Re-measure at this width before going past it. */
+.brand-mode--triage { font-size: 1.4em; }
+
 .header-scorecard {
   height: 30px;
   display: flex;

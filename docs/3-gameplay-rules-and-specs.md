@@ -459,7 +459,11 @@ patient. This applies to both modes.
 
 The GAME header contains:
 
-- `TRIAGE!` or `TRIAGE RUSH!`;
+- the MODE BEING PLAYED - `Triage!` or `Triage RUSH!` (2026-08-07). It names
+  the mode, not the game: showing the brand in both modes told the player
+  nothing about which shift they were on. `Triage!` is set a step larger than
+  `Triage RUSH!`, the same size-them-separately rule the sidewalk summary
+  board follows;
 - a bordered numbers-only outcome scorecard;
 - a larger unboxed countdown; and
 - the sound control, which IS the GLOBAL SOUND setting (2026-08-07): it
@@ -606,15 +610,36 @@ gone, because OFF now lives inside each level).
   node, and music carries its own much quieter scale, since a music source is
   mastered far hotter than a synthesized blip.
 
-**MUSIC IS BEING RETIRED IN ITS CURRENT FORM (John, 2026-08-07).** The music
-source today is the Classical KING-FM internet radio stream, and it is going
-away: iOS ignores `HTMLMediaElement.volume`, and the only way around that -
-routing through a Web Audio gain node - requires CORS, which the routed
-element then refused to play on the iPhone. So on the primary device the
-stream had no level control at all. The plan is LOCAL MUSIC FILES, which are
-same-origin and therefore controllable everywhere. Nothing has been built yet
-and the stream still plays; the settings row, the levels, the persistence, and
-the auditioning all carry over unchanged. See TODO.md item 20.
+**MUSIC IS LOCAL FILES (built 2026-08-07, TODO.md item 20 DONE).** The
+KING-FM stream was retired: iOS ignores `HTMLMediaElement.volume`, and the
+only way around that - routing through a Web Audio gain node - requires CORS,
+which the routed element then refused to play on the iPhone, so on the primary
+device the stream had no level control at all. Local files are same-origin, so
+the gain node works and lo/hi are real on every device. The settings row, the
+levels, the persistence, and the auditioning all carried over unchanged.
+
+The rules of playback:
+
+- Five tracks, played in MANIFEST ORDER and looped forever. The last track
+  hands back to the first.
+- Music plays EVERYWHERE - the ER ENTRANCE, the shift, the report - and a new
+  shift never interrupts or restarts it.
+- Turning music off and on again RESTARTS AT THE FIRST TRACK. A stop forgets
+  its position; a level change mid-track does not.
+- A reload cannot resume audio unattended, so the first tap anywhere starts
+  the playlist if the settings want it, beginning at track one.
+- Music requires all three of: the unlock, GLOBAL SOUND on, and a MUSIC level
+  above off.
+
+**THE MUSIC IS UNLOCKED BY THE PLAYER'S NAME (John, 2026-08-07).** The MUSIC
+row is hidden - absent, not disabled - on both the GAME OPTIONS board and the
+sidewalk summary board, and no audio file is requested at all, unless the
+player's initials are three symbols whose MIDDLE one is 🎼. So `J🎼P` unlocks
+music and `JMP` does not; a clef first or last does not, and a one- or
+two-symbol name has no middle and cannot. An easter egg rather than a lock:
+the tracks are copyrighted, and this keeps them from playing for anyone just
+passing through. Renaming away locks it again and stops playback, but leaves
+the chosen level saved, so unlocking later restores it.
 
 ### About
 

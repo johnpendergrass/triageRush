@@ -72,9 +72,10 @@ triageRush/
 - Sound is GLOBAL SOUND (off/on) plus a level for GAME SOUNDS and for MUSIC
   (off/lo/hi) on the GAME OPTIONS board; the boombox is retired. The game
   screen's sound icon IS the GLOBAL SOUND setting - there is no separate
-  in-game mute (2026-08-07). The music source, a KING-FM stream, is being
-  retired for local files because a stream's volume cannot be controlled on
-  iOS; see TODO.md item 20.
+  in-game mute (2026-08-07). MUSIC is five local files played in order and
+  looped (built 2026-08-07, replacing the KING-FM stream, which could not be
+  volume-controlled on iOS). The row is HIDDEN until the player's middle
+  initial is the 🎼 symbol.
 - `Intern` is a player-title option.
 - Each scheduled RUSH arrival has a 20% chance to add a two-patient burst,
   subject to the ten-patient maximum.

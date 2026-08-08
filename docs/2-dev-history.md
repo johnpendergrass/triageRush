@@ -237,6 +237,37 @@ not inventory superseded code or assets. Historical detail remains in
   because two chevron taps inside 300ms IS iOS's double-tap gesture. Every
   control now opts out of double-tap zoom while pinch zoom stays untouched.
 
+### The radio becomes a record player (2026-08-07, fourth session)
+
+- KING-FM was RETIRED and music became five LOCAL files. Same-origin was the
+  whole point: the gain node the iPhone honors finally works, so lo/hi are
+  real there. Every scrap of CORS and fallback machinery - it existed only to
+  fight that one problem - came out with the stream.
+- The sound was chosen before the code. A seven-way listening test compared
+  bitrates and filters at the game's real 6% volume, and John picked the
+  most extreme: an AM radio, 400 Hz to 3.2 kHz, hard-compressed, 24 kbps
+  mono. 37 MB became 2.5 MB.
+- The lesson from that test is worth keeping: **filtering first is what buys
+  the small file.** Low bitrates wreck the treble first, and the lowpass had
+  already thrown that treble away, so the encoder had nothing left to ruin.
+  The same 24 kbps on unfiltered music sounds underwater.
+- Anonymity turned out to be half the job. The files are copyrighted songs in
+  a public repository, and their ID3 tags named the song, artist, album,
+  label and catalog number - so renaming them alone would have accomplished
+  nothing. They ship as `track-NN.mp3` with all metadata stripped; the
+  originals, the name mapping, and the listening test are gitignored.
+- MUSIC IS UNLOCKED BY THE PLAYER'S NAME. A 🎼 symbol joined the initials
+  alphabet, and putting it in the MIDDLE reveals the music row on both
+  boards; without it nothing is shown and no audio file is requested. John
+  first proposed a hidden title, then chose this: a short title list cannot
+  hide anything, but three drums of 35 symbols can. An easter egg, not a
+  lock - stated plainly at the time and accepted as such.
+- The GAME HEADER now names the MODE, not the game. `Triage RUSH!` in both
+  modes had read as branding and told the player nothing about which shift
+  they were on. A measuring surprise came with it: the header cell is
+  content-sized, so the mode name cannot clip - past a point it squeezes the
+  scorecard instead.
+
 ## Historical lookup
 
 Use [the archive index](archive/README.md) only when older rationale is needed.

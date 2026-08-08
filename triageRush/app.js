@@ -14,7 +14,7 @@
    Section map:
      1. Shared runtime objects
      2. Image and patient loading
-     3. Music (KING-FM stream)
+     3. Music (local playlist)
      4. Rendering orchestration
      5. Start Shift flow
      6. Event wiring
@@ -160,13 +160,18 @@
   const LOUDNESS_GAIN = { off: 0, lo: 0.22, hi: 1 };
 
   /* Music needs its OWN scale, much lower than the game sounds' (John,
-     2026-08-07): a broadcast stream is mastered far hotter than these
-     synthesized blips, so sharing one map made KING-FM drown them. This
+     2026-08-07): commercial music is mastered far hotter than these
+     synthesized blips, so sharing one map made the music drown them. This
      is background audio, not a music player - "hi" is quiet and "lo" is
      barely there. These are amplitudes and loudness is roughly
      logarithmic, so 0.06 sits about 24dB below full and 0.02 about 34dB
-     below. Tuned twice by ear: 0.25/0.08 was still far too loud next to
-     the game sounds. Tune these two numbers by ear; nothing else. */
+     below.
+
+     THESE TWO NUMBERS ARE UNTUNED for the local files. They were set by
+     ear against the KING-FM stream, which was both louder and unfiltered;
+     the tracks are now heavily compressed and band-limited, so they will
+     almost certainly want raising. John's ear is the authority - tune
+     these two numbers and nothing else. */
   const MUSIC_VOLUME = { off: 0, lo: 0.02, hi: 0.06 };
 
   /* Set only while the settings board samples a level the player has not
@@ -215,11 +220,10 @@
       audioContext = null;
       gameGainNode = null;
     }
-    /* Release the stream too. A page on its way out - or frozen into the
-       back/forward cache - must not keep KING-FM playing, because the
-       next page has its own audio element and no way to reach this one
-       (2026-08-07). Nothing auto-resumes it; the player starts music
-       again from the board, as always. */
+    /* Release the music too. A page on its way out - or frozen into the
+       back/forward cache - must not keep playing, because the next page
+       has its own audio element and no way to reach this one
+       (2026-08-07). */
     stopMusicPlayback();
   });
 
@@ -425,94 +429,112 @@
   }
 
   /* ----------------------------------------------------------------------
-     3. Music: the KING-FM stream.
-     Plays only when soundGlobal && musicLoudness !== "off", at the volume
-     that level names. Started from a user gesture - applying settings on
-     HOME, or the game screen's sound icon, which is the global setting
-     itself (2026-08-07). A failed stream turns the preference off and
-     reports honestly.
+     3. Music: a local playlist (replaced the KING-FM stream 2026-08-07).
+
+     Five files, played in manifest order, looping forever. Music plays
+     EVERYWHERE - the ER ENTRANCE, the shift, the report - and a new shift
+     never interrupts it. Playback needs all three of: the unlock (the
+     player's middle initial), GLOBAL SOUND on, and a MUSIC level above
+     off. Starting from silence always begins at the first track.
+
+     Why files beat the stream: the stream was cross-origin, so routing it
+     through a Web Audio gain node needed CORS, which iOS refused to play
+     at all - leaving the iPhone with no volume control over music
+     whatsoever. These files are same-origin, so the gain node just works
+     and lo/hi are real on the phone. All the CORS and fallback machinery
+     that existed only to fight that is gone.
+
+     The AM-radio character is BAKED INTO THE FILES, not applied here (see
+     assets/_audio-transcode/transcode-music.sh). Nothing in the game
+     filters audio.
      ------------------------------------------------------------------- */
 
-  /* crossOrigin MUST be set before src: routing a cross-origin stream
-     through Web Audio (below) yields SILENCE unless the response carries
-     CORS headers and the element asked for them.
+  const musicElement = new Audio();
+  /* Nothing is fetched until a track is actually chosen - a player who
+     has not unlocked music never requests one. */
+  musicElement.preload = "none";
 
-     But asking for CORS is not free. Safari fetches media with Range
-     headers, which puts the request through a PREFLIGHT, and this
-     stream's OPTIONS response allows a different, shorter header list
-     than its GET response - Range is missing from it. So on iOS the
-     CORS-mode load fails outright and play() rejects (John's iPhone,
-     2026-08-07), while desktop Chrome never preflights and works fine.
-     Hence: try the CORS element first, and fall back to a plain one the
-     moment playback refuses. */
-  function createMusicElement(withCors) {
-    const element = new Audio();
-    element.preload = "none";
-    if (withCors) element.crossOrigin = "anonymous";
-    element.src = ASSETS.music.kingFmStreamUrl;
-    return element;
-  }
-
-  let musicElement = createMusicElement(true);
+  /* Index into ASSETS.music.tracks. -1 means "nothing loaded yet", which
+     is also what a stop resets to, so the next start begins at track 0
+     (John, 2026-08-07: turning music on again restarts from the first
+     track). */
+  let musicTrackIndex = -1;
 
   /* iOS IGNORES HTMLMediaElement.volume - Apple reserves media volume for
-     the hardware buttons, so setting .volume is a silent no-op on the
-     iPhone. That is why every KING-FM level sounded identical there while
-     working on desktop Chrome (John, 2026-08-07). A Web Audio GainNode is
-     honored on iOS, so the stream is routed through one and the gain, not
-     the element, carries the level.
+     the hardware buttons, so setting .volume is a silent no-op there. A
+     Web Audio GainNode IS honored, so the level lives on the gain node and
+     the element is left wide open.
 
-     Consequences worth knowing: an element can be routed only ONCE, and
-     only into one context, so this is created lazily and never rebuilt;
-     and because the audio now flows through the context, a suspended
-     context silences music as well as game sounds - which the existing
-     resume-from-any-state handling already covers (TODO 9). */
+     An element can be routed only ONCE, and only into one context, so this
+     is created lazily and never rebuilt. Because the audio then flows
+     through the context, a suspended context silences music as well as
+     game sounds - which the resume-from-any-state handling above already
+     covers (TODO 9). */
   let musicSourceNode = null;
   let musicGainNode = null;
-  let musicRoutingFailed = false;
-
-  /* Give up on Web Audio for music and start over with a plain element:
-     no CORS, no routing, so it loads everywhere - at the cost of losing
-     level control on iOS, which ignores .volume. */
-  function abandonMusicRouting() {
-    musicRoutingFailed = true;
-    musicSourceNode = null;
-    musicGainNode = null;
-    musicElement.pause();
-    musicElement = createMusicElement(false);
-  }
 
   function musicOutput(audio) {
-    if (musicRoutingFailed) return null;
-    if (musicSourceNode && musicSourceNode.context === audio) return musicGainNode;
+    if (musicSourceNode) {
+      /* The context was rebuilt (an iOS pagehide close, say) and this
+         element belongs to the old one. It cannot be re-routed, so fall
+         back to the element's own volume - correct everywhere but iOS. */
+      return musicSourceNode.context === audio ? musicGainNode : null;
+    }
     try {
       musicSourceNode = audio.createMediaElementSource(musicElement);
       musicGainNode = audio.createGain();
       musicSourceNode.connect(musicGainNode).connect(audio.destination);
       return musicGainNode;
     } catch (routingError) {
-      /* Re-routing the same element (a rebuilt context) throws. Fall back
-         to the element's own volume: no worse than before, and still
-         correct everywhere except iOS. */
       console.warn("triageRush: music could not route through Web Audio",
         routingError);
-      musicRoutingFailed = true;
-      musicSourceNode = null;
-      musicGainNode = null;
       return null;
     }
   }
+
+  /* Load a track and play it. Index wraps, which is the whole looping
+     rule: the last track's "ended" hands back to the first. */
+  function startMusicTrack(trackIndex) {
+    const tracks = ASSETS.music.tracks;
+    musicTrackIndex = ((trackIndex % tracks.length) + tracks.length)
+      % tracks.length;
+    musicElement.src = tracks[musicTrackIndex];
+    return musicElement.play();
+  }
+
+  musicElement.addEventListener("ended", () => {
+    /* Only continue if music is still wanted - the setting can change
+       while a track is running. */
+    if (!GAME.musicAudible(state)) return;
+    startMusicTrack(musicTrackIndex + 1).catch((playError) => {
+      console.warn("triageRush: next music track could not start", playError);
+    });
+  });
+
+  /* A missing or unplayable file should cost the game nothing. Say so once
+     and stop; the shift is unaffected. */
+  musicElement.addEventListener("error", () => {
+    if (musicTrackIndex < 0) return;
+    console.warn("triageRush: music track failed to load",
+      musicElement.currentSrc);
+    UI.showMusicStatusNote(
+      "Music could not be played. The game is unaffected.");
+  });
 
   /* Playback is driven by explicit values rather than by state, because
      the settings board AUDITIONS a level before it is applied - what you
      hear while choosing is the pending selection, not the saved one
      (John, 2026-08-07). isAudition only changes what a failure may do:
-     a preview must never write preferences. */
+     a preview must never write preferences.
+
+     The UNLOCK is deliberately read from state, not passed in: it belongs
+     to the player name, which the music rows cannot change. */
   async function applyMusicPlayback(soundGlobal, musicLoudness, isAudition) {
-    if (!soundGlobal || musicLoudness === "off") {
-      musicElement.pause();
+    if (!GAME.musicUnlocked(state) || !soundGlobal || musicLoudness === "off") {
+      stopMusicPlayback();
       return;
     }
+
     const level = MUSIC_VOLUME[musicLoudness] ?? MUSIC_VOLUME.hi;
     const audio = ensureAudioContext();
     const gain = audio ? musicOutput(audio) : null;
@@ -523,35 +545,33 @@
     } else {
       musicElement.volume = level;
     }
+
+    /* Already playing: this was a level change, and the new gain above has
+       already taken effect. Do not restart the track. */
+    if (musicTrackIndex >= 0 && !musicElement.paused) return;
+
     try {
-      await musicElement.play();
+      /* Resuming a track that is merely paused keeps its position; coming
+         from a full stop starts the playlist over. */
+      if (musicTrackIndex >= 0) {
+        await musicElement.play();
+      } else {
+        await startMusicTrack(0);
+      }
     } catch (playError) {
-      /* The CORS element is the likely culprit (see createMusicElement):
-         drop to the plain one and try once more before telling anyone
-         anything. This is what keeps music working on the iPhone. */
-      if (!musicRoutingFailed) {
-        console.warn("triageRush: music refused while routed through "
-          + "Web Audio; retrying without CORS", playError);
-        abandonMusicRouting();
-        return applyMusicPlayback(soundGlobal, musicLoudness, isAudition);
-      }
-      console.warn("triageRush: music stream could not start", playError);
-      UI.showMusicStatusNote(
-        "Music stream could not start. It has been switched off; "
-        + "try again from Game Options.");
-      if (isAudition) {
-        /* Tell the board, persist nothing - the player has not applied. */
-        UI.setPendingMusicLoudness("off");
-        return;
-      }
-      state.settings.musicLoudness = "off";
-      GAME.savePreferences(state, context);
+      /* Almost always the browser refusing to start audio without a user
+         gesture. Not worth alarming anyone over during an audition. */
+      console.warn("triageRush: music could not start", playError);
+      if (!isAudition) musicTrackIndex = -1;
     }
   }
 
-  /* Unconditional stop, used when the page itself is going away. */
+  /* Full stop: the playlist forgets where it was, so the next start begins
+     at track one. Also used when the page itself is going away. */
   function stopMusicPlayback() {
     musicElement.pause();
+    musicElement.removeAttribute("src");
+    musicTrackIndex = -1;
   }
 
   /* Music as the SAVED settings want it - what apply, the sound icon,
@@ -566,6 +586,25 @@
     const pending = UI.pendingSoundSelections();
     return applyMusicPlayback(
       pending.soundGlobal, pending.musicLoudness, true);
+  }
+
+  /* A reload cannot resume music by itself: browsers refuse to start audio
+     without a user gesture, so a saved "music on" would look ignored until
+     the player happened to open a board. Instead the FIRST tap anywhere -
+     the Start Shift door, a board, a patient - quietly starts the playlist
+     if the settings want it (John's default, 2026-08-07). It begins at
+     track one, because a reload is a fresh app.
+
+     One-shot: both listeners come off the moment either fires, so this
+     costs nothing for the rest of the session. */
+  function startMusicOnFirstGesture() {
+    const handleFirstGesture = () => {
+      document.removeEventListener("pointerdown", handleFirstGesture);
+      document.removeEventListener("keydown", handleFirstGesture);
+      if (GAME.musicAudible(state)) syncMusicPlayback();
+    };
+    document.addEventListener("pointerdown", handleFirstGesture);
+    document.addEventListener("keydown", handleFirstGesture);
   }
 
   /* ----------------------------------------------------------------------
@@ -795,8 +834,8 @@
        they cannot hear. Each tap is a real user gesture, which is also
        what lets iOS start the stream. Nothing is persisted until apply.
 
-       KING-FM follows the pending selection; GLOBAL SOUND re-auditions
-       it, so switching global off silences the preview too. */
+       MUSIC follows the pending selection; GLOBAL SOUND re-auditions it,
+       so switching global off silences the preview too. */
     for (const radio of document.querySelectorAll(
       'input[name="settingMusicLoudness"]')) {
       radio.addEventListener("change", auditionMusic);
@@ -1269,6 +1308,7 @@
     wireChartEvents();
     wireReviewEvents();
     wireKeyboardEvents();
+    startMusicOnFirstGesture();
 
     try {
       await loadCriticalLobbyArt();

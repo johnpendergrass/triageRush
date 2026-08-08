@@ -1,6 +1,64 @@
 # triageRush — technical notes (pointer file)
 
-**Last modified:** 2026-08-07 (summary boards + REVIEW LAST SHIFT built)
+**Last modified:** 2026-08-07 (local music + mode name in the game header)
+
+## Local music, as built (2026-08-07)
+
+- **The playlist is four moving parts**: `musicTrackIndex` (-1 means
+  "nothing loaded"), `startMusicTrack(i)` which wraps the index and sets
+  `src`, an `ended` listener that advances, and `stopMusicPlayback()` which
+  clears `src` and resets the index to -1. That reset is the whole
+  "off-then-on restarts at track one" rule - there is no separate flag.
+- `preload = "none"` and `src` set only at play time, so a LOCKED player
+  never fetches a byte. This is deliberate and is the part that actually
+  matters: the network tab, not the UI, is how anyone would find the files.
+- **An element can be routed into only ONE AudioContext, ever.**
+  `musicOutput()` therefore returns the existing gain node if the context
+  matches and falls back to element `volume` if the context was rebuilt (an
+  iOS pagehide close) - a second `createMediaElementSource` on the same
+  element throws. Do not "fix" this by rebuilding the element; that is what
+  the old stream code did and it is why it was so tangled.
+- **The early return in `applyMusicPlayback` matters**: if a track is loaded
+  and not paused, the new gain has already taken effect and the function
+  returns rather than calling `play()` again. Without it, tapping lo/hi
+  would restart the track.
+- The UNLOCK is read from `state` inside `applyMusicPlayback`, never passed
+  in, because it belongs to the PLAYER NAME - which the music rows cannot
+  change. Only the level and global-sound arguments are passed, since those
+  come from the board's PENDING selections during an audition.
+- `musicUnlocked()` counts SYMBOLS with `initialsSymbols`, not string
+  length, so emoji either side of the clef (⚕️, ❤️ - which carry a U+FE0F
+  variation selector) cannot shift what "middle" means. It requires exactly
+  three symbols: a one- or two-symbol name has no middle.
+- The unlock glyph is U+1F3BC MUSICAL SCORE, an EMOJI. U+1D11E (the real
+  treble clef) is a musical-notation character and renders as tofu on many
+  phone font stacks. If it is ever swapped, 🎵 U+1F3B5 is the other safe
+  option.
+- `renderMusicVisibility()` also moves the `setting-group--last` class onto
+  GAME SOUNDS when the music group is hidden - that class carries
+  `margin-bottom: 0`, so without the move a locked board grows a stray gap.
+  Same family of problem as the hidden music note stealing `:last-child`.
+- **Transcoding is a script, not a memory**:
+  `assets/_audio-transcode/transcode-music.sh` holds the filter chain, the
+  bitrate, and the play-order table, and writes the `track-NN` → song
+  mapping into the gitignored originals folder. Re-running it is how the
+  sound changes; there is no runtime filter to adjust.
+
+## The game header names the mode (2026-08-07)
+
+- Both spellings live in ONE `<p id="gameBrand">` with a span each, because
+  the header is a four-column grid - two sibling `<p>`s would consume two
+  cells and break the layout. `renderGameHeader` toggles `hidden`.
+- **The brand cell is CONTENT-sized.** Its column is `1.02fr`, but `nowrap`
+  text gives the column an auto min-content floor, so the cell grows to fit
+  whichever mode name is showing. Consequences: the mode name can never
+  clip, `Triage!` at 1.4em (70px ink) sits inside the 104px cell
+  `Triage RUSH!` already demands, and the ceiling before the header changes
+  shape at all is about 2.07em - measured on a 371px shell.
+- Measure the header at a ~375px shell, not at desktop size. Note that
+  resizing the devtools page does NOT give a 375px shell directly: the shell
+  is height-constrained at 9:16, so a 375x667 page yields a 339px shell.
+  375x732 lands at 371px.
 
 ## Sidewalk summary boards, as built (2026-08-07)
 
@@ -221,15 +279,31 @@ rather than a number threaded through ten recipes. It is refreshed from
 state on every play, which is why a level change needs no rebuild.
 
 Music does NOT share that scale: `MUSIC_VOLUME` is lo 0.02 / hi 0.06
-against the game family's 0.22 / 1, because a broadcast stream is
-mastered far hotter than synthesized blips and KING-FM is background
-audio. These are amplitudes and loudness is roughly logarithmic, so 0.06
+against the game family's 0.22 / 1, because commercial music is mastered
+far hotter than synthesized blips and this is background audio. These are
+amplitudes and loudness is roughly logarithmic, so 0.06
 is about 24dB down. All four numbers were set BY EAR, and twice: the
 first cut (music 0.08/0.25, game lo 0.35) was still far too loud. They
 are the only knobs - do not compensate anywhere else.
 
+**The two MUSIC numbers are STALE as of 2026-08-07**: they were tuned
+against the KING-FM stream, and the local files that replaced it are
+compressed and band-limited, so they will almost certainly want raising.
+The game numbers (0.22 / 1) are unaffected.
+
+### Superseded: the KING-FM routing problem (kept for the lesson only)
+
+Everything from here to the end of this section describes code that NO
+LONGER EXISTS. The stream was retired 2026-08-07 and all of the
+crossOrigin and fallback machinery came out with it. It is kept because
+the underlying iOS behaviour is still true and still constrains any
+future audio work - not as a description of the shipped game.
+
 **iOS ignores `HTMLMediaElement.volume`** - Apple reserves media volume
 for the hardware buttons, so setting `.volume` is a silent no-op there.
+This is why local files were the answer: a same-origin file needs no
+CORS, so `createMediaElementSource` just works and the gain node carries
+the level on every device.
 That is why every KING-FM level sounded identical on John's iPhone while
 working perfectly in desktop Chrome (2026-08-07). The stream is
 therefore routed through Web Audio - `createMediaElementSource` into a
