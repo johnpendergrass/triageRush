@@ -28,8 +28,11 @@
     // HOME
     "homeView", "homeBackground", "startShiftButton", "startShiftArt",
     "playerBoardButton", "playerBoardTitleLine", "playerBoardInitialsLine",
-    "shiftBoardButton", "shiftBoardModeLine", "shiftBoardDifficultyLine",
-    "shiftBoardLengthLine", "aboutButton", "homeLoadingStatus",
+    "reviewLastShiftButton", "reviewPastShiftsButton",
+    "shiftBoardButton", "shiftBoardModeTriage", "shiftBoardModeRush",
+    "shiftBoardDifficultyLine", "shiftBoardLengthLine",
+    "shiftBoardSoundLine", "shiftBoardGameLoudLine",
+    "shiftBoardMusicLoudLine", "aboutButton", "homeLoadingStatus",
     // Popups
     "popupLayer", "popupCard", "popupBoardArt", "popupCloseButton",
     "popupApplyButton", "playerBoardContent", "shiftBoardContent",
@@ -87,29 +90,59 @@
      3. HOME rendering.
      ------------------------------------------------------------------- */
 
-  /* Kept for the summary-board design (2026-08-07): the boards are blank
-     for now, and this is the label they showed - "5:00", "60s". */
+  /* The summary board abbreviates the unit the detail board spells out:
+     it has room for "5 MIN", not "5 MINUTES". The UNITS still follow the
+     mode the way the Settings radios and the Shift Report do - RUSH in
+     seconds, Triage in minutes (John, 2026-08-06) - so RUSH's 60 reads
+     "60 SEC", never "1 MIN". */
   function formatShiftLengthLabel(state) {
     const seconds = GAME.selectedShiftLengthSeconds(state);
-    if (seconds >= 60 && seconds % 60 === 0) {
-      return `${seconds / 60}:00`;
-    }
-    return `${seconds}s`;
+    return state.settings.mode === "rush"
+      ? `${seconds} sec`
+      : `${seconds / 60} min`;
   }
 
-  /* The sidewalk summary boards are deliberately BLANK (John,
-     2026-08-07): the detail boards now carry the letter-board look, and
-     the summaries get their own design pass. The boards still open the
-     settings; only their lettering is held back. When the summary design
-     lands, fill these same lines - the values each one wants are already
-     one expression away, kept here as the comments below.  */
-  function renderHomeBoardSummaries(state) {
-    ui.playerBoardTitleLine.textContent = "";       // state.player.title
-    ui.playerBoardInitialsLine.textContent = "";    // state.player.initials
+  /* The sidewalk summary boards (TODO 3, 2026-08-07). The player board
+     welcomes the player and offers the two review destinations; the
+     game board mirrors all six values of the GAME OPTIONS detail board,
+     read-only.
 
-    ui.shiftBoardModeLine.textContent = "";         // mode name
-    ui.shiftBoardDifficultyLine.textContent = "";   // difficulty
-    ui.shiftBoardLengthLine.textContent = "";       // formatShiftLengthLabel
+     Two things this function does NOT do: it never writes the brand
+     words (they are static markup in both spellings and this only
+     chooses which one shows, per the 2026-08-06 branding rule), and it
+     never decides whether a shift can be reviewed - that comes from the
+     game's own availability rule. */
+  function renderHomeBoardSummaries(state) {
+    const settings = state.settings;
+
+    ui.playerBoardTitleLine.textContent = state.player.title;
+    ui.playerBoardInitialsLine.textContent = state.player.initials;
+
+    const isRush = settings.mode === "rush";
+    ui.shiftBoardModeTriage.hidden = isRush;
+    ui.shiftBoardModeRush.hidden = !isRush;
+
+    ui.shiftBoardDifficultyLine.textContent = settings.difficulty;
+    ui.shiftBoardLengthLine.textContent = formatShiftLengthLabel(state);
+
+    /* An OFF value prints red, the same meaning the detail board's red
+       OFF radios carry. */
+    const writeSoundValue = (element, value) => {
+      element.textContent = value;
+      element.classList.toggle("is-off", value === "off");
+    };
+    writeSoundValue(ui.shiftBoardSoundLine, settings.soundGlobal ? "on" : "off");
+    writeSoundValue(ui.shiftBoardGameLoudLine, settings.gameLoudness);
+    writeSoundValue(ui.shiftBoardMusicLoudLine, settings.musicLoudness);
+
+    /* With the master off, the two level rows are moot; they dim rather
+       than disappear, so the board never changes shape. */
+    ui.shiftBoardButton.classList.toggle("sound-muted", !settings.soundGlobal);
+
+    /* REVIEW LAST SHIFT is live only when a shift reached the SHIFT
+       ENDED screen (TODO 13). REVIEW PAST SHIFTS waits on Phase 9
+       persistence and stays disabled in markup. */
+    ui.reviewLastShiftButton.disabled = !GAME.canReviewLastShift(state);
   }
 
   /* Loading status states: progress text, ready (fades out), or error. */
@@ -1298,9 +1331,9 @@
      minutes ("5 minutes"). Mixed units are deliberate - "300 seconds"
      reads badly and neither matches its Settings label (John,
      2026-08-06). Labels use words; running/elapsed time uses m:ss. */
-  function configuredShiftLengthLabel(state) {
-    const seconds = GAME.selectedShiftLengthSeconds(state);
-    return state.settings.mode === "rush"
+  function configuredShiftLengthLabel(played) {
+    const seconds = GAME.selectedShiftLengthSeconds(played);
+    return played.settings.mode === "rush"
       ? `${seconds} seconds`
       : `${seconds / 60} minutes`;
   }
@@ -1316,7 +1349,13 @@
        timestamps to format, so leave the hidden view alone. */
     if (state.view !== "review") return;
 
-    const isRush = state.settings.mode === "rush";
+    /* The mode, difficulty, length and provider shown here are the ones
+       the shift was PLAYED with, which differ from the live settings
+       only when a past shift is being re-read (TODO 13). Everything
+       else on this screen comes from the ledger, which carries its own
+       history. */
+    const played = GAME.reviewPlayedWith(state);
+    const isRush = played.settings.mode === "rush";
     const totals = GAME.selectScoreTotals(state);
 
     /* The masthead is static markup ("Triage RUSH! Shift Report" in every
@@ -1324,13 +1363,13 @@
        "Triage!" on its own appears ONLY here and in the settings mode
        chooser. */
     const difficultyName =
-      state.settings.difficulty === "strict" ? "Strict" : "Forgiving";
+      played.settings.difficulty === "strict" ? "Strict" : "Forgiving";
     ui.reviewModeLine.textContent =
       `MODE: ${isRush ? "Triage RUSH!" : "Triage!"}, ${difficultyName}, ` +
-      configuredShiftLengthLabel(state);
+      configuredShiftLengthLabel(played);
 
     ui.reviewProvider.textContent =
-      `${state.player.title} ${state.player.initials}`;
+      `${played.player.title} ${played.player.initials}`;
     ui.reviewDate.textContent = formatShiftDate(state.shift.startedAtMs);
     /* Duration is time actually RUN, so ending early at 3:12 of a 5:00
        shift prints 3:12 (John, 2026-08-05). Because the mode line above
@@ -1354,7 +1393,7 @@
     formulas.replaceChildren();
     appendFormulaRow(formulas, "correct", "CORRECT",
       totals.correct, GAME.GAME_CONSTANTS.POINTS.correct);
-    if (state.settings.difficulty === "forgiving") {
+    if (played.settings.difficulty === "forgiving") {
       appendFormulaRow(formulas, "close", "CLOSE",
         totals.close, GAME.GAME_CONSTANTS.POINTS.close);
     } else {

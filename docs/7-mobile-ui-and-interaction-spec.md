@@ -1,10 +1,12 @@
 # Mobile UI and Interaction Specification
 
-**Last modified:** 2026-08-05
+**Last modified:** 2026-08-07
 
-**Latest change:** Swept in the 2026-08-04/05 amendments: Chart naming, footer
-wording and sizing, approved patient-panel layout, empty-state hints, flat
-green rail background, Chart overlay composition, and the photo zoom lightbox.
+**Latest change:** The two ER ENTRANCE summary boards are built - see "The two
+sidewalk summary boards" under HOME - carrying the review buttons with them.
+Earlier: the 2026-08-04/05 amendments (Chart naming, footer wording and sizing,
+approved patient-panel layout, empty-state hints, flat green rail background,
+Chart overlay composition, photo zoom lightbox).
 
 ## Scope and authority
 
@@ -449,8 +451,49 @@ one representative sound. An audition follows what the board currently shows,
 GLOBAL SOUND included, and saves nothing - cancelling puts music back to the
 saved setting, exactly as the red X does for every other edit.
 
-The two small sidewalk summary boards are BLANK for now: they open the detail
-boards, and their own lettering waits on its design pass.
+### The two sidewalk summary boards (built 2026-08-07)
+
+Both boards now carry lettering, in the same press-in white letter-board type
+as the detail boards, inside the ribbed FACE of each board's art - never over
+its wooden frame. Nothing marks either board as tappable: a player tries the
+board and gets the detail board.
+
+The GAME board is a read-only mirror of all six GAME OPTIONS values, hung from
+the top frame: `GAME MODE` labelling the brand words, then SCORING and LENGTH
+as label-over-value pairs, a rule, and SOUND / GAME / MUSIC as compact rows.
+An OFF value prints red, the same meaning the detail board's red OFF radios
+carry, and with GLOBAL SOUND off the two level rows dim, because they are
+moot. Lengths abbreviate what the detail board spells out - `5 MIN`,
+`60 SEC` - keeping the detail board's mode-dependent units.
+
+Only the MODE is enlarged. Every other label and value on that board runs at
+one size: the values are bright white against dim grey labels, so they stand
+out on colour alone (John, 2026-08-07), and holding them level is what gives
+the mode its prominence and the sound section its air. The brand words stay
+on ONE line in both modes, and the mode row RESERVES the taller of the two so
+that switching modes moves nothing below it.
+
+The PLAYER board is two halves, and they behave differently:
+
+- Above the rule, `WELCOME!` over the player's title and initials. This half
+  is ONE button and it opens PLAYER NAME. **The edit target stops at the
+  rule** (John, 2026-08-07).
+- Below it, two buttons, each a single hit box carrying its own two lines -
+  `REVIEW` over `LAST SHIFT` (TODO 13), and `REVIEW` over `PAST SHIFTS`
+  (TODO 11, inert until Phase 9 persistence). They are centered in the space
+  with equal air above, between and below. Each is dimmed and inert when
+  there is nothing to open, rather than disappearing, so the board never
+  changes shape and the player learns the feature exists.
+
+The welcome half takes only the height its three lines need, which puts the
+rule at about 36% down the board and gives the two review buttons the rest -
+that is deliberate, since they are the only tap targets on the board that are
+not the whole board.
+
+REVIEW LAST SHIFT reopens the stored report directly; it does NOT replay the
+SHIFT ENDED acknowledgement, which belongs to finishing a shift. The report it
+shows is the shift as PLAYED - its mode, difficulty, length and provider -
+even if the player has changed settings since.
 
 There is no UI Hints control (setting removed 2026-08-07); the patient
 panel's empty-state arrows are permanent.

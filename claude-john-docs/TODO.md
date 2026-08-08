@@ -71,8 +71,9 @@ lettering variant A (John's pick):
   accent-color, so they are still native radios in every state.
 - The music status note now overlays the bottom of the board, because the
   board's layout is sized to fit exactly.
-- The two sidewalk SUMMARY boards are BLANK for now (John): they open the
-  detail boards; their lettering waits on the summary design.
+- The two sidewalk SUMMARY boards were BLANK at this point; they were
+  designed and built later the same day - see the SUMMARY boards section
+  below.
 - Verified: 40-check Node harness (schema, emoji initials, migration,
   sound rules) + browser pass (both boards, drums, apply/cancel,
   persistence, sound icon, a played shift); console clean but the known
@@ -156,8 +157,55 @@ respond immediately:
 - Side benefit: auditioning gives iOS extra genuine user gestures to
   unlock audio on, which may help item 9.
 
-STILL OPEN on this item: the SUMMARY boards design, and John's iPhone
-pass on the built boards.
+### SUMMARY boards BUILT 2026-08-07 (cache 2026-0807-summary1a)
+
+Designed in `_mockups/summary-boards-mockup.html` (phone-true, on the real
+entrance art) and built the same session. Both boards letter the ribbed FACE
+of their art - rects measured off the 852x1515 canvas, deliberately smaller
+than the old hotspots so no lettering can ride onto the wooden frame the way
+the detail board's GAME MODE row once did.
+
+- GAME board: a read-only mirror of all six values. `GAME MODE` labels the
+  brand words the way SCORING and LENGTH label theirs - the board has NO title
+  of its own (John: "we will let the players figure out for themselves that
+  this is a tappable item"). The brand stays on ONE line in both modes so
+  nothing below it shifts.
+- ONLY THE MODE IS ENLARGED (John, 2026-08-07, cache summary1h): every other
+  label and value on that board runs at one size, because the values are
+  white against dim grey labels and stand out on colour alone. That freed the
+  width and the air for the mode and let the sound rows breathe. "Triage!" is
+  set to the player board's initials size (17cqw here = 16.9px against their
+  16.8px) after a first cut at 20.5cqw came out too large AND pushed the
+  MUSIC row onto the wooden frame on John's iPhone; "Triage RUSH!" is left
+  exactly as it was at 10cqw, since 12 characters already fill the face on
+  one line (John: "do not change Triage RUSH! it is fine"). The mode row
+  reserves the taller of the two (`min-height: 29cqw`) so switching modes
+  moves nothing below it - re-check that reserve if either size changes.
+- OFF prints red, and GLOBAL SOUND off dims the two level rows.
+- Lengths abbreviate: `5 MIN` / `60 SEC`, keeping the mode-dependent units
+  (RUSH in seconds, Triage in minutes).
+- PLAYER board: `WELCOME!` + title + initials above the rule; below it two
+  buttons, each ONE hit box reading `REVIEW` over `LAST SHIFT` /
+  `PAST SHIFTS`, centered with equal air above, between and below (John,
+  revised from a shared REVIEW header, cache 2026-0807-summary1c). The
+  rule above them sits half a WELCOME! away from the initials (John). **The
+  edit target stops at the rule** (John) - the welcome half is one button,
+  the review boxes are their own.
+- Both boards hang their lettering from the TOP frame (John), which puts the
+  rule at ~36% and hands the rest to the review buttons: 30px of tap on the
+  smallest phone, 38px on John's, with 13px of air above, between and below.
+- Every size was set by the WIDEST string it can hold, measured at 375px
+  where the faces are 96 and 99px across, leaving ~15% headroom for iOS's
+  Arial Black metrics. Re-measure there before enlarging anything.
+- Verified: 35-check Node harness + a browser pass driving a real shift
+  (both boards live, edit target stops at the rule, settings round-trip,
+  quit vs stop, restore, Patients Seen); console clean.
+
+STILL OPEN on this item: John's pass on the built summary boards, and the
+A-plain vs B-plates choice for the review lines - **built as A (plain
+lettering)**, since it matches the "let them figure it out" ruling for the
+game board; the mockup still toggles B (pressed-in plates) if he wants the
+tap targets drawn.
 
 ### Design state (2026-08-07 session — mockups, nothing in the game yet)
 
@@ -238,7 +286,7 @@ Small opens, as they stood before the build:
 - Whether the music header keeps the parenthetical — built AS
   "KING-FM (MUSIC)"; say so if it should lose the parenthetical.
 - The SUMMARY boards (small blackboards on the ER ENTRANCE screen)
-  — STILL OPEN, and the next piece of design work on this item.
+  — DESIGNED AND BUILT 2026-08-07, see the SUMMARY boards section above.
 - Build phase — DONE, see the BUILT section above.
 
 ## 6. Sound icon: musical note + stop overlay (added 2026-08-06)
@@ -329,41 +377,6 @@ Notes (Claude):
   "Add to Home Screen" effectively protects the storage (the web app's own
   use counts as visiting); an export button is the heavier fallback.
 
-## 13. ER ENTRANCE: "REVIEW LAST SHIFT?" button (added 2026-08-06)
-
-When the player returns to the ER ENTRANCE screen, having completed or
-stopped short of a shift, they are given the opportunity to return to the
-Shift Review screen. Why? John accidentally tapped 'Return to ER ENTRANCE'
-instead of 'Review the Patients Seen' and was sent back to the ER
-ENTRANCE, and then could not review his shift. So, in the bottom right
-corner of the ER ENTRANCE screen, IF the last shift is still available,
-make it available for a review by a 'REVIEW LAST SHIFT?' button. If it
-was the first game, or a player quit the shift, then it is not available.
-
-Availability rule (John, clarified same day): the test is whether the
-SHIFT ENDED transition screen appeared. If it did — shift ran to
-completion OR was ended early — a shift occurred and the button appears.
-If it did not (the player QUIT the shift), no button. First game ever:
-no button (no shift exists yet).
-
-Placement (John): bottom right portion of the ER ENTRANCE image,
-superimposed on the sidewalk. The 'REVIEW LAST SHIFT?' button appears
-regardless of the availability of the 'REVIEW PAST SHIFTS' option (item
-11); when both exist, BOTH buttons appear together in that sidewalk
-area, with the last shift also showing as the newest entry in the
-past-shifts list. OR maybe erase the Emergency sign from the art and put
-those options there instead — TBD, decide at build time.
-
-Notes (Claude):
-
-- This makes the old backlog item "review the last shift from ER
-  ENTRANCE (lastCompletedShift snapshot)" concrete, and revises item
-  11's supersede note: the two coexist as separate buttons rather than
-  one absorbing the other.
-- If this lands before Phase 9, an in-memory lastCompletedShift snapshot
-  is enough — the button only has to survive within the session until
-  persistence exists.
-
 ## 18. Preload the settings blackboard art (added 2026-08-07)
 
 The large blackboard background shows up AFTER the settings text when a
@@ -437,6 +450,88 @@ What to do when John says go:
 is only relevant if a STREAM is ever revisited.
 
 ## DONE
+
+## 21. iPhone zoomed when tapping the odometer (DONE 2026-08-07)
+
+John, 2026-08-07: "when using the odometer to change initials I often tap and
+the screen magnifies. I have to manually shrink it to use it again."
+
+Cause: stepping a drum means two chevron taps inside ~300ms, which IS iOS's
+double-tap-to-zoom gesture. Fixed with `touch-action: manipulation` on every
+control (`button, label, input, select, .wheel, .wheel-window`) - not just the
+wheels, because the waiting rows and room doors get tapped just as fast in
+RUSH - plus `user-select: none` on `.wheel-drum`, which stops the long-press
+text-selection loupe over a value.
+
+Zooming still works: pinch is untouched everywhere, and the viewport meta
+still has no `user-scalable=no`. Only the double-tap shortcut (and the legacy
+300ms click delay) is gone, and a double tap on a control never meant "zoom".
+The other iOS zoom trap was already handled - the invisible picker `<select>`
+is 16px, below which iOS zooms the page to meet a form control.
+
+## 13. ER ENTRANCE: REVIEW LAST SHIFT (DONE 2026-08-07)
+
+Built with the summary boards (cache 2026-0807-summary1a), and the PLACEMENT
+CHANGED: the button is not a thing on the sidewalk after all - it is the
+`LAST SHIFT` line in the lower half of the PLAYER board, beside `PAST SHIFTS`
+(John, 2026-08-07). The sidewalk/Emergency-sign options below are moot.
+
+- Availability is exactly John's rule: the snapshot is taken in `stopShift`,
+  which is reached only when the SHIFT ENDED screen appears (clock ran out OR
+  ended early). A first game has none, and **quitting CLEARS it** - after a
+  quit, "the last shift" is the one that produced nothing.
+- `game.js captureShiftSnapshot` takes an independent deep copy of the shift
+  and ledger plus the settings and player, because `resetToLobby` is about to
+  wipe the live ones. Reviewing does not consume it: it can be reopened any
+  number of times.
+- `reviewLastShift` restores the shift-scoped slots outright (HOME owns none
+  of them) and lands on the REPORT, not the SHIFT ENDED acknowledgement -
+  that beat belongs to finishing a shift.
+- The report shows the shift AS PLAYED. `reviewPlayedWith(state)` returns the
+  snapshot's settings and player when re-reading, the live ones otherwise, so
+  a Forgiving/Triage!/10-minute shift still says so after the player switches
+  to Strict/RUSH. Scoring never needed this - every point was banked into the
+  ledger as it was earned - so it is display only. The one non-display use is
+  the "Close outcome under Strict" invariant, which now judges the ledger by
+  the settings it was built under.
+- IN MEMORY ONLY: a page reload loses it. Phase 9 persistence is what makes
+  it survive, and what turns it into item 11's queue.
+
+Original item, for the record:
+
+When the player returns to the ER ENTRANCE screen, having completed or
+stopped short of a shift, they are given the opportunity to return to the
+Shift Review screen. Why? John accidentally tapped 'Return to ER ENTRANCE'
+instead of 'Review the Patients Seen' and was sent back to the ER
+ENTRANCE, and then could not review his shift. So, in the bottom right
+corner of the ER ENTRANCE screen, IF the last shift is still available,
+make it available for a review by a 'REVIEW LAST SHIFT?' button. If it
+was the first game, or a player quit the shift, then it is not available.
+
+Availability rule (John, clarified same day): the test is whether the
+SHIFT ENDED transition screen appeared. If it did — shift ran to
+completion OR was ended early — a shift occurred and the button appears.
+If it did not (the player QUIT the shift), no button. First game ever:
+no button (no shift exists yet).
+
+Placement (John): bottom right portion of the ER ENTRANCE image,
+superimposed on the sidewalk. The 'REVIEW LAST SHIFT?' button appears
+regardless of the availability of the 'REVIEW PAST SHIFTS' option (item
+11); when both exist, BOTH buttons appear together in that sidewalk
+area, with the last shift also showing as the newest entry in the
+past-shifts list. OR maybe erase the Emergency sign from the art and put
+those options there instead — TBD, decide at build time.
+
+Notes (Claude):
+
+- This makes the old backlog item "review the last shift from ER
+  ENTRANCE (lastCompletedShift snapshot)" concrete, and revises item
+  11's supersede note: the two coexist as separate buttons rather than
+  one absorbing the other.
+- If this lands before Phase 9, an in-memory lastCompletedShift snapshot
+  is enough — the button only has to survive within the session until
+  persistence exists.
+
 
 ## 19. Temperature shows both scales (DONE 2026-08-07)
 

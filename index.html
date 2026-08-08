@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#071822">
   <title>Triage RUSH!</title>
-  <link rel="stylesheet" href="./triageRush/styles.css?v=2026-0807-musicgain1b">
+  <link rel="stylesheet" href="./triageRush/styles.css?v=2026-0807-summary1h">
 </head>
 <body>
 
@@ -84,32 +84,103 @@
       <span class="visually-hidden">Start Shift</span>
     </button>
 
-    <!-- Sidewalk boards: the transparent buttons over the blank board art.
-         The summary lettering is DELIBERATELY BLANK while the detail
-         boards carry the new letter-board look (John, 2026-08-07): the
-         summary boards get their own design pass, and until then these
-         boards are simply the way in to the settings. ui.js
-         renderHomeBoardSummaries writes the empty strings; the spans and
-         ids are kept so the redesign has its mounting points. -->
-    <button class="board-hotspot board-hotspot--player" id="playerBoardButton"
-            type="button" aria-haspopup="dialog"
-            aria-label="Player name settings">
-      <span class="board-summary board-summary--player">
-        <span class="board-summary-line board-summary-kicker"></span>
-        <span class="board-summary-line" id="playerBoardTitleLine"></span>
-        <span class="board-summary-line board-summary-initials"
-              id="playerBoardInitialsLine"></span>
-      </span>
-    </button>
+    <!-- ================================================================
+         Sidewalk summary boards (TODO 3, built 2026-08-07 from
+         _mockups/summary-boards-mockup.html). Each board's lettering
+         sits in the ribbed FACE of its art - the rects in styles.css
+         are measured from the 852x1515 canvas - and carries the same
+         press-in white letter-board look as the detail boards, so a
+         board and its close-up read as one object.
 
-    <button class="board-hotspot board-hotspot--shift" id="shiftBoardButton"
+         Nothing announces that these are tappable (John, 2026-08-07):
+         a player will try the board and get the detail board.
+         ============================================================= -->
+
+    <!-- PLAYER board. Two halves, and they behave differently: the
+         welcome half is ONE button that opens PLAYER NAME, and the
+         review half below the rule holds its own two buttons. The edit
+         target therefore stops at the rule (John, 2026-08-07). -->
+    <div class="board-face board-face--player">
+      <div class="face-inner">
+        <button class="player-edit" id="playerBoardButton" type="button"
+                aria-haspopup="dialog" aria-label="Player name settings">
+          <span class="sum-welcome">Welcome!</span>
+          <span class="sum-player-name" id="playerBoardTitleLine"></span>
+          <span class="sum-player-initials" id="playerBoardInitialsLine"></span>
+        </button>
+
+        <hr class="sum-divider">
+
+        <!-- Two buttons, each carrying its own REVIEW line, centered in
+             the space with equal air above, between and below (John,
+             2026-08-07). The shared REVIEW header is gone: it read as a
+             label for a group, when what is wanted is two whole
+             destinations. -->
+        <div class="player-half player-half--review">
+          <!-- Available only when a shift ran to the SHIFT ENDED
+               screen; dimmed and inert otherwise (TODO 13). -->
+          <button class="review-line" id="reviewLastShiftButton"
+                  type="button" aria-label="Review last shift">
+            <span class="review-line-kicker">Review</span>
+            <span class="review-line-name">Last Shift</span>
+          </button>
+          <!-- Inert until Phase 9 persistence gives it something to
+               list (TODO 11); the line shows now so the feature is
+               discoverable. -->
+          <button class="review-line" id="reviewPastShiftsButton"
+                  type="button" aria-label="Review past shifts" disabled>
+            <span class="review-line-kicker">Review</span>
+            <span class="review-line-name">Past Shifts</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GAME board: a read-only mirror of the GAME OPTIONS detail
+         board. GAME MODE labels the brand words the way SCORING and
+         LENGTH label theirs; the board carries no title of its own. -->
+    <button class="board-face board-face--game" id="shiftBoardButton"
             type="button" aria-haspopup="dialog"
             aria-label="Game and sound options">
-      <span class="board-summary board-summary--shift">
-        <span class="board-summary-line board-summary-kicker"></span>
-        <span class="board-summary-line" id="shiftBoardModeLine"></span>
-        <span class="board-summary-line" id="shiftBoardDifficultyLine"></span>
-        <span class="board-summary-line" id="shiftBoardLengthLine"></span>
+      <span class="face-inner face-inner--game">
+        <span class="sum-group sum-group--headline">
+          <span class="sum-group-label">Game Mode</span>
+          <!-- The brand is STATIC MARKUP in every spot it appears
+               (branding rule, 2026-08-06) - ui.js shows one of these
+               two and hides the other rather than writing the words. -->
+          <span class="sum-group-value sum-mode sum-mode--triage brand-sign"
+                id="shiftBoardModeTriage">Triage!</span>
+          <span class="sum-group-value sum-mode sum-mode--rush brand-sign"
+                id="shiftBoardModeRush" hidden
+                >Triage <span class="brand-rush">RUSH!</span></span>
+        </span>
+
+        <span class="sum-group">
+          <span class="sum-group-label">Scoring</span>
+          <span class="sum-group-value" id="shiftBoardDifficultyLine"></span>
+        </span>
+
+        <span class="sum-group">
+          <span class="sum-group-label">Length</span>
+          <span class="sum-group-value" id="shiftBoardLengthLine"></span>
+        </span>
+
+        <!-- A span, not an <hr>: a button may only contain phrasing
+             content, and an <hr> inside one is invalid markup. -->
+        <span class="sum-divider"></span>
+
+        <span class="sum-row">
+          <span class="lbl">Sound</span>
+          <span class="val" id="shiftBoardSoundLine"></span>
+        </span>
+        <span class="sum-row sum-row--level">
+          <span class="lbl">Game</span>
+          <span class="val" id="shiftBoardGameLoudLine"></span>
+        </span>
+        <span class="sum-row sum-row--level">
+          <span class="lbl">Music</span>
+          <span class="val" id="shiftBoardMusicLoudLine"></span>
+        </span>
       </span>
     </button>
 
@@ -570,9 +641,9 @@
 
 </div>
 
-<script src="./triageRush/assets.js?v=2026-0807-musicgain1b"></script>
-<script src="./triageRush/game.js?v=2026-0807-musicgain1b"></script>
-<script src="./triageRush/ui.js?v=2026-0807-musicgain1b"></script>
-<script src="./triageRush/app.js?v=2026-0807-musicgain1b"></script>
+<script src="./triageRush/assets.js?v=2026-0807-summary1h"></script>
+<script src="./triageRush/game.js?v=2026-0807-summary1h"></script>
+<script src="./triageRush/ui.js?v=2026-0807-summary1h"></script>
+<script src="./triageRush/app.js?v=2026-0807-summary1h"></script>
 </body>
 </html>

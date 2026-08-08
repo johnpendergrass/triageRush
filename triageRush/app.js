@@ -728,6 +728,18 @@
       UI.openPopup("settings-shift", state, ui.shiftBoardButton);
     });
 
+    /* REVIEW LAST SHIFT (TODO 13): re-opens the stored shift's report.
+       The button is disabled whenever there is nothing to re-read, so
+       this only has to guard against a stale click. */
+    ui.reviewLastShiftButton.addEventListener("click", () => {
+      if (!GAME.reviewLastShift(state)) return;
+      GAME.assertStateInvariants(state, "reviewLastShift");
+      renderAll();
+    });
+
+    /* REVIEW PAST SHIFTS stays disabled in markup until Phase 9
+       persistence gives it a list to show (TODO 11) - no handler yet. */
+
     ui.aboutButton.addEventListener("click", () => {
       state.overlay = "about";
       UI.openPopup("about", state, ui.aboutButton);

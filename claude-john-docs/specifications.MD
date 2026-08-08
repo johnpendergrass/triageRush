@@ -1,6 +1,58 @@
 # triageRush — specifications (pointer file)
 
-**Last modified:** 2026-08-07 (settings detail boards BUILT; hints removed)
+**Last modified:** 2026-08-07 (summary boards + REVIEW LAST SHIFT built)
+
+## 2026-08-07 (third session): the SUMMARY boards are BUILT, and TODO 13 with them
+
+The two sidewalk boards on the ER ENTRANCE now carry lettering (cache
+`2026-0807-summary1h`), designed in
+`_mockups/summary-boards-mockup.html` and built the same session. This
+closes the last design piece of TODO 3 and, because the review buttons
+live on one of them, all of TODO 13.
+
+- **Same lettering as the detail boards**, inside the ribbed FACE of
+  each board's art. The rects are measured off the 852x1515 canvas and
+  are deliberately SMALLER than the old hotspots, so no lettering can
+  ride onto the wooden frame.
+- **Nothing marks either board as tappable** (John): a player will try
+  the board and get the detail board. The GAME board therefore carries
+  no title of its own - its first line is `GAME MODE`, the label for
+  the brand words under it.
+- **The GAME board mirrors all six values.** OFF prints red, the same
+  meaning the detail board's red OFF radios carry, and GLOBAL SOUND off
+  dims the two level rows because they are moot. The brand stays on ONE
+  line in both modes (John) so nothing below it shifts.
+- **Only the mode is enlarged on that board** (John, 2026-08-07):
+  everything else, labels and values alike, runs at one size, because
+  the values are white against dim labels and stand out on colour
+  alone. "Triage!" is set to the player board's initials size; "Triage
+  RUSH!" is left exactly as it was, since 12 characters already fill
+  the face on one line. The mode row reserves the taller of the two.
+- **iOS no longer zooms when you tap the odometer** - stepping a drum
+  looked like a double-tap to the phone. Pinch zoom is untouched.
+- **The PLAYER board is two halves that behave differently.** Above the
+  rule, WELCOME! + the player's name, and that half IS the button that
+  opens PLAYER NAME - **the edit target stops at the rule** (John).
+  Below it, two buttons, each one hit box reading REVIEW over LAST
+  SHIFT / PAST SHIFTS, centered with equal air above, between and below.
+- **Both boards hang their lettering from the top frame** (John), which
+  puts the rule at about 36% down the player board and hands the rest
+  to the review buttons - 30px of tap on the smallest phone, 38px on
+  John's.
+- **REVIEW LAST SHIFT works** (TODO 13). A shift that reached SHIFT
+  ENDED is snapshotted; quitting clears it; the button dims when there
+  is nothing to open rather than disappearing. It reopens the REPORT,
+  not the SHIFT ENDED beat, and shows the shift AS PLAYED - its mode,
+  difficulty, length and provider - even after the player has changed
+  settings. In memory only until Phase 9.
+- **REVIEW PAST SHIFTS** (TODO 11) is on the board but inert until
+  Phase 9 persistence gives it a list.
+- Placement note: TODO 13 originally put this button on the sidewalk in
+  the bottom-right of the art. It is on the player board instead.
+
+Doc 7 carries the built spec. Sizes were set by the widest string each
+line can hold, measured at 375px - re-measure there before enlarging
+anything on these boards.
 
 ## 2026-08-07 (second session): the detail settings boards are BUILT
 
@@ -22,9 +74,9 @@ variant A — John's pick. What this changed beyond appearance:
   emoji; "Hey you!" joined the titles.
 - **A selected OFF fills red instead of green.** Still a native radio
   (accent-color), so it draws correctly in every state, iOS included.
-- **The sidewalk summary boards are blank for now** (John): they open
-  the detail boards, and their own lettering waits on the summary design
-  — the next piece of work on TODO 3.
+- **The sidewalk summary boards were blank at this point** (John): they
+  opened the detail boards and nothing more. Superseded the same day —
+  see the third-session entry above, where they were designed and built.
 - **The boards are ~20% bigger**, and it cost no layout work: both
   board PNGs carried about 20% transparent margin, so cropping them to
   their own edges made the same card show a much larger board. The

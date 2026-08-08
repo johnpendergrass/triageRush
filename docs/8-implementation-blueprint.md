@@ -1,8 +1,11 @@
 # Implementation Blueprint
 
-**Last modified:** 2026-08-06
+**Last modified:** 2026-08-07
 
-**Latest change:** Pacing revision (2026-08-06): the clock starts on the
+**Latest change:** The last-shift snapshot and its re-read action (TODO 13,
+2026-08-07): new `lastShift` and `review.playedWith` state, `captureShiftSnapshot`,
+`canReviewLastShift`, `reviewLastShift`, `reviewPlayedWith`. Earlier: pacing
+revision (2026-08-06): the clock starts on the
 FIRST patient selection (replacing the 2-second acclimation delay), and an
 assignment that empties the RUSH waiting room books a one-second courtesy
 refill of one or two patients (`state.rush.emptyRefillAtMs` /
@@ -161,8 +164,14 @@ implemented against it):
   },
 
   review: {
-    patientIndex: 0
-  }
+    patientIndex: 0,
+    playedWith: null            // while RE-READING a past shift: the
+                                //   settings + player it was played with
+  },
+
+  lastShift: null               // the last shift that reached SHIFT ENDED,
+                                //   kept so the ER ENTRANCE can reopen it
+                                //   (TODO 13). In memory only until Phase 9.
 }
 ```
 
@@ -181,7 +190,9 @@ At every committed transition:
 - every ledger order ID has exactly one `byPatientId` record;
 - no `byPatientId` record exists outside ledger order;
 - ledger points agree with outcome;
-- Close is impossible in Strict;
+- Close is impossible in Strict - judged against the settings the LEDGER
+  was built under, not the live ones, so a Forgiving shift re-read after
+  the player switched to Strict is legal;
 - recall is available only for the assigned patient's open room;
 - the Chart can open only when `active != null`, and no `"chart"` pause
   reason ever exists (the Chart stopped pausing 2026-08-05);
@@ -500,9 +511,43 @@ stopShift(endReason) {
   shift.completedAt = wallClockNow(); shift.endReason = endReason
   overlay = "shift-over"          // dismissed by the player, never timed
   pauseReasons = []
+  review.playedWith = null
+  lastShift = captureShiftSnapshot()   // see below
 }
 dismissShiftOverAcknowledgement()  // any tap/Enter/Space
 ```
+
+### Re-reading a past shift (TODO 13)
+
+Reaching `stopShift` IS the availability test for the ER ENTRANCE's REVIEW
+LAST SHIFT button: it is the only path to the SHIFT ENDED screen, whether the
+clock expired or the player ended early. No separate flag is needed.
+
+```js
+captureShiftSnapshot()   // deep, independent copy: shift + ledger +
+                         //   settings + player. Taken at stopShift because
+                         //   returnToHome is about to wipe the live ones.
+canReviewLastShift()     // home + ready + lastShift != null
+reviewLastShift() {
+  require canReviewLastShift()
+  ledger, shift  <- copies from the snapshot   // shift-scoped: HOME owns none
+  review = { patientIndex: 0, playedWith: {settings, player} }
+  phase = "complete"; view = "review"; overlay = null   // NOT "shift-over"
+}
+reviewPlayedWith()       // the snapshot's settings+player while re-reading,
+                         //   the live ones otherwise
+```
+
+Three rules this encodes:
+
+- the restore lands on the REPORT, not the acknowledgement - that beat belongs
+  to finishing a shift, and replaying it for a deliberate re-read is theatre;
+- it does not consume the snapshot, so a shift can be reopened any number of
+  times; and
+- the report shows the shift AS PLAYED. Only display needs this - scoring sums
+  the ledger, and every point was banked as it was earned - so `reviewPlayedWith`
+  feeds the mode/difficulty/length/provider line and the Close row, plus the
+  Strict invariant above.
 
 The browser walks `ledger.order`, so a reassigned patient is one entry
 showing only the assignment that finally stood:
@@ -785,12 +830,15 @@ quitShift()
   require active GAME and explicit confirmation
   set endReason = quit for diagnostics only
   discard queue, active, assigned, ledger, clock, and recovery snapshot
+  CLEAR lastShift - after a quit, "the last shift" is the one that
+    produced nothing, so REVIEW LAST SHIFT has nothing to offer (TODO 13)
   reset phase = ready and view = home
   do not create review results
 
 returnToHome()   // player-facing action: RETURN TO ER ENTRANCE
   require complete SHIFT REVIEW
-  clear completed runtime state
+  clear completed runtime state, INCLUDING review.playedWith
+  KEEP lastShift - that is the whole point of it
   reset phase = ready and view = home
 ```
 

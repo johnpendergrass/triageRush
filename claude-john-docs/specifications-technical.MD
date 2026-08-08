@@ -1,6 +1,115 @@
 # triageRush — technical notes (pointer file)
 
-**Last modified:** 2026-08-07 (settings detail boards built)
+**Last modified:** 2026-08-07 (summary boards + REVIEW LAST SHIFT built)
+
+## Sidewalk summary boards, as built (2026-08-07)
+
+- **Two container layers, and the reason matters.** `.board-face` is the
+  container (`container-type: inline-size`) and carries NO padding;
+  `.face-inner` inside it carries the padding and everything else. An
+  element's own cqw units resolve against its nearest ANCESTOR
+  container, not itself - a `padding: 4cqw` on the face would silently
+  measure the whole shell. That bug cost the first cut 36px of width.
+- **The face rects are the ribbed area, not the board**, measured off
+  the artwork: player face x 133-378 y 846-1246, game face x 431-684
+  y 848-1247 of the 852x1515 canvas. They are smaller than the old
+  `.board-hotspot` rects (which covered the frame and legs), so the
+  frame and legs are no longer tap targets - accepted, because
+  lettering that reaches the frame rides onto the wood, exactly the bug
+  the detail board's GAME MODE row hit.
+- **Every size is set by the widest string, measured at 375px** where
+  the faces are 96 and 99px across, leaving ~15% headroom for iOS's own
+  Arial Black metrics: PAST SHIFTS 86%, three emoji initials 87%,
+  FORGIVING 86%, "Triage RUSH!" 87%. Re-measure AT THAT WIDTH before
+  enlarging anything - the desktop has room the phone does not.
+- The brand needs `text-transform: none` on the board face, same
+  opt-out as the detail board; without it the sign reads "TRIAGE RUSH!".
+- **The two modes are sized SEPARATELY** (`.sum-mode--triage` 17cqw,
+  `.sum-mode--rush` 10cqw). One line is a hard constraint and "Triage
+  RUSH!" already fills the face at 10cqw, so a shared size would cap
+  both there; John wanted "Triage!" to stand out and RUSH left alone.
+  17cqw of the game face is 16.9px against the player board's initials
+  at 16.8px - matched by eye, then by measurement. The headline group
+  carries `min-height: 29cqw`, above BOTH modes' line boxes, so the
+  rows below cannot move when the mode changes. Re-check that reserve
+  if either size changes: it is the only thing holding the two equal.
+- Everything else on that board is 9cqw, labels and values alike
+  (John): the values are white and the labels dim, so colour does the
+  separating. That is what funded the mode's size and the sound rows'
+  spacing.
+- VERTICAL BUDGET IS THE TIGHT ONE on the game board, not width. At
+  375px the content box is 150px and the content is ~145px. John's
+  iPhone put the MUSIC row on the wooden frame at summary1f, when the
+  mode was 20.5cqw and the clearance had gone to zero; at 17cqw it is
+  9px and correct. Measure `.sum-row:last-of-type` against the face's
+  bottom edge after ANY size change here.
+- `formatShiftLengthLabel` abbreviates ("5 MIN"/"60 SEC") but keeps the
+  MODE-dependent units the Settings radios and the Shift Report use.
+  Not a plain minutes conversion: RUSH's 60 seconds must not read
+  "1 MIN".
+- The player board's welcome half is `flex: 0 0 auto` so it takes only
+  what it needs; the review half takes the rest and distributes it with
+  `justify-content: space-evenly`, which is what puts equal air above,
+  between and below the two buttons. The buttons are content-sized
+  (`flex: 0 1 auto`), not stretched - stretched, there would be no air
+  left to distribute. Their PADDING is the tap target, and because the
+  box is never drawn, trading air for padding costs nothing visually;
+  the limit is that padding widens the gap between the two buttons
+  faster than the gaps above and below them.
+- The player board's rule carries its own margins: half the WELCOME!
+  size above it (5.75cqw against WELCOME!'s 11.5cqw - John's number,
+  2026-08-07) and NOTHING below, because the review half distributes
+  that air with space-evenly and a margin there made the first gap read
+  wider than the other two. The game board keeps the shared margins,
+  which separate its sound rows.
+- Nested buttons are invalid, so the player board is a DIV with three
+  buttons inside it, not one button. The game board is still a single
+  button - and note its divider is a `<span>`, not an `<hr>`: a button
+  may only contain phrasing content.
+
+## iOS double-tap zoom on the odometer (2026-08-07)
+
+Stepping an initials drum meant two chevron taps inside ~300ms, which
+is iOS's double-tap-to-zoom gesture: the board blew up and John had to
+pinch it back down. The cure is `touch-action: manipulation`, applied to
+`button, label, input, select, .wheel, .wheel-window` - every control,
+not just the wheels, because the waiting rows and room doors get tapped
+just as fast in RUSH.
+
+This does NOT disable zooming. Pinch still works everywhere, which is
+the gesture that matters for reading a chart, and the viewport meta
+stays free of `user-scalable=no`. Only the double-tap shortcut (and the
+legacy 300ms click delay) goes away.
+
+The related iOS behaviour is the text-selection LOUPE on a long press,
+which is why `.wheel-drum` also carries `user-select: none` - a drum is
+a machine part, not text. The focus-zoom trap was already handled: the
+invisible `<select>` is 16px, below which iOS zooms the page to meet a
+form control.
+
+## Reviewing a past shift (TODO 13, 2026-08-07)
+
+`state.lastShift` is a deep, independent copy taken in `stopShift`
+(shift + ledger + settings + player). Reaching `stopShift` IS the
+availability test - it is the only path to the SHIFT ENDED screen - so
+no separate flag is needed. `quitShift` nulls it.
+
+`reviewLastShift` restores the SHIFT-SCOPED slots (ledger, shift)
+straight into state, which is safe because HOME owns none of them and
+`resetToLobby` wipes them anyway. The PLAYER-SCOPED ones are not written
+over what the player has since chosen: `state.review.playedWith` holds
+the snapshot's settings and player, and `reviewPlayedWith(state)` hands
+the review either those or the live ones. Four reads in `renderReview`
+use it, plus one invariant - "Close outcome under Strict" has to judge a
+ledger by the settings it was BUILT under, or re-reading a Forgiving
+shift after switching to Strict warns falsely.
+
+Scoring needed no equivalent: `selectScoreTotals` sums the ledger, and
+every point was banked as it was earned.
+
+Two deliberate behaviours: the restore lands on the report, NOT the
+SHIFT ENDED acknowledgement, and it does not consume the snapshot - the
+same shift can be reopened any number of times.
 
 ## Settings letter boards, as built (2026-08-07)
 
@@ -278,7 +387,7 @@ overwrite the first rather than create a new record. Nothing today does that.
   file:// does not work (fetch).
 - Cache busting: one version string in TWO places — index.html query
   params (5 refs) and `TRIAGE_RUSH_CACHE_VERSION` in assets.js. Bump BOTH
-  on every asset/CSS/JS change (currently "2026-0806-vit1a"; the
+  on every asset/CSS/JS change (currently "2026-0807-summary1h"; the
   trailing letter increments per tweak).
 
 ## Architecture in one breath

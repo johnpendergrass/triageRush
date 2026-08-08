@@ -1,8 +1,10 @@
 # Implementation Plan and Acceptance
 
-**Last modified:** 2026-08-05
+**Last modified:** 2026-08-07
 
-**Latest change:** Phase 8 complete (2026-08-05): Shift Review, the
+**Latest change:** Phase 3 gained the two sidewalk summary boards and their
+acceptance list, including REVIEW LAST SHIFT (2026-08-07). Earlier: Phase 8
+complete (2026-08-05): Shift Review, the
 shift-over acknowledgement, and the Patients Seen browser, plus the
 session's review decisions (scroll position carried between patients,
 pinned nameplate, outcome mark and photo badge).
@@ -123,6 +125,9 @@ Implement:
 - Start Shift with no Resume Shift or active-entrance state;
 - the PLAYER NAME and GAME OPTIONS boards (letter-board look, built
   2026-08-07 - see document `7`);
+- the two sidewalk SUMMARY boards (built 2026-08-07 - see document `7`):
+  the GAME board mirroring all six values read-only, and the PLAYER board
+  carrying the welcome half plus the two review buttons;
 - About board;
 - the sound model on the GAME OPTIONS board: GLOBAL SOUND off/on, then
   GAME SOUNDS and KING-FM each off/lo/hi;
@@ -152,6 +157,29 @@ Acceptance:
   written about the music SOURCE and survive that change unaltered;
 - HOME never displays Resume Shift or Return to Game;
 - every Start Shift creates a new shift and resets shift-local state.
+
+Summary-board acceptance (2026-08-07):
+
+- both boards read back exactly what the detail boards hold, and update the
+  moment a change is applied;
+- an OFF value prints red; GLOBAL SOUND off dims the GAME and MUSIC rows;
+- lengths abbreviate but keep their mode's units - RUSH's 60 reads "60 SEC",
+  never "1 MIN";
+- the brand keeps its mixed-case sign spelling on a board face that
+  otherwise uppercases, and switching modes moves nothing below the mode row;
+- tapping the welcome half opens PLAYER NAME; tapping below the rule does
+  NOT - the edit target stops there;
+- REVIEW LAST SHIFT is live only after a shift reached SHIFT ENDED, dims
+  after a quit and on a first run, and REVIEW PAST SHIFTS stays inert until
+  Phase 9;
+- re-reading a shift opens the report (never the SHIFT ENDED beat), shows
+  the mode/difficulty/length/provider it was PLAYED with, walks the restored
+  ledger in Patients Seen, and can be done repeatedly;
+- on the SMALLEST supported shell (375px wide) no lettering wraps, overflows,
+  or reaches a board's wooden frame, with the longest strings the game can
+  produce: "Hey you!", three emoji initials, "Triage RUSH!", "120 SEC";
+- stepping an odometer drum quickly does not zoom the page, and pinch zoom
+  still works.
 
 ## Phase 4: queue and patient presentation
 
@@ -471,11 +499,14 @@ Acceptance scenarios:
 - no catch-up occurs for time while the application is closed unless a later
   product requirement explicitly asks for real-time expiry;
 - incompatible storage discards active shift safely;
-- confirming Quit This Shift clears the recovery snapshot and returns to HOME
-  without a review result;
+- confirming Quit This Shift clears the recovery snapshot AND the last-shift
+  snapshot, and returns to HOME without a review result;
 - canceling Quit This Shift preserves exact active state;
 - End Shift Early clears active recovery after finalizing review;
-- Return to ER Entrance leaves only safe preferences and HOME settings.
+- Return to ER Entrance leaves only safe preferences and HOME settings;
+- the last-shift snapshot (TODO 13) survives a refresh once persisted, and
+  becomes the newest entry of the past-shifts queue (TODO 11). Today it is in
+  memory only, so a reload correctly dims REVIEW LAST SHIFT.
 
 ## Phase 10: assets and visual regression
 

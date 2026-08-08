@@ -2,8 +2,8 @@
 
 **Last modified:** 2026-08-07
 
-**Latest change:** Recorded the settings-board build, the sound-model
-rewrite, and the decision to retire the KING-FM stream for local music.
+**Latest change:** Recorded the sidewalk summary boards, which brought the
+review destinations onto the ER ENTRANCE with them.
 
 ## Purpose
 
@@ -213,6 +213,29 @@ not inventory superseded code or assets. Historical detail remains in
   rewrite could not give the stream a working volume control on the primary
   device. The decision was to retire the stream for LOCAL MUSIC FILES, which
   are same-origin and therefore controllable everywhere. Not yet built.
+
+### The ER ENTRANCE speaks (2026-08-07, third session)
+
+- The two sidewalk boards, blank since the entrance art was accepted, got
+  their lettering - the same press-in letter-board look as the settings
+  boards they open, so a board and its close-up read as one object.
+- The GAME board became a read-only mirror of all six settings. Only the
+  mode is enlarged: everything else runs at one size, because the values are
+  white against dim labels and stand out on colour alone.
+- Nothing announces that either board is tappable. That was a deliberate
+  ruling: a player will try the board, and the detail board is what they get.
+- The PLAYER board took on a second job and split in half - a welcome above
+  the rule, and below it the review destinations. This is where REVIEW LAST
+  SHIFT finally landed, having been imagined as a sidewalk button.
+- With it came the first piece of shift MEMORY: a shift that reaches SHIFT
+  ENDED is snapshotted, and the report can be reopened from the entrance,
+  showing the mode, difficulty, length and provider it was PLAYED with rather
+  than whatever is set now. Quitting clears it. It lives in memory until
+  Phase 9 persistence, which is also what will turn it into the queue of
+  past shifts.
+- A phone finding worth keeping: stepping the odometer drums zoomed the page,
+  because two chevron taps inside 300ms IS iOS's double-tap gesture. Every
+  control now opts out of double-tap zoom while pinch zoom stays untouched.
 
 ## Historical lookup
 

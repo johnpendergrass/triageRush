@@ -175,8 +175,21 @@ function createInitialState() {
     },
 
     review: {
-      patientIndex: 0
-    }
+      patientIndex: 0,
+      /* Set only while REVIEWING A PAST SHIFT (TODO 13): the settings
+         and player the shift was actually played with. A shift played
+         on Triage!/Forgiving must still say so after the player has
+         switched to RUSH/Strict. Null means "the review on screen is
+         the shift that just ended", so the live values are correct. */
+      playedWith: null
+    },
+
+    /* The last shift that reached the SHIFT ENDED screen, kept so it can
+       be re-read from the ER ENTRANCE (TODO 13). Null until one does;
+       quitting clears it, because a quit shift has no results. In
+       memory only for now - Phase 9 persistence is what turns this into
+       the queue of past shifts (TODO 11). */
+    lastShift: null
   };
 }
 
@@ -1010,10 +1023,16 @@ function activateShift(state) {
   return true;
 }
 
-/* Quit discards the shift after confirmation; no review results exist. */
+/* Quit discards the shift after confirmation; no review results exist.
+
+   It also clears any EARLIER shift's snapshot (TODO 13, John's rule:
+   "if a player quit the shift, then it is not available"). The button
+   offers "the last shift", and after a quit the last shift is the one
+   that produced nothing - so there is nothing to offer. */
 function quitShift(state) {
   if (state.phase !== "active" && state.phase !== "loading") return false;
   state.shift.endReason = "quit";
+  state.lastShift = null;
   resetToLobby(state);
   return true;
 }
@@ -1033,7 +1052,78 @@ function stopShift(state, endReason, context) {
   state.view = "review";
   state.overlay = "shift-over";
   state.pauseReasons = [];
+  state.review.playedWith = null;
+  /* Reaching here IS the availability test for REVIEW LAST SHIFT: the
+     SHIFT ENDED screen appeared, whether the clock ran out or the
+     player ended early (John, 2026-08-06). Snapshot now, because
+     returnToLobby is about to wipe the ledger. */
+  state.lastShift = captureShiftSnapshot(state);
   return true;
+}
+
+/* ------------------------------------------------------------------------
+   7c. Reviewing a past shift (TODO 13).
+   The review screens render from the state tree, so re-reading a shift
+   is a matter of putting its data back: the shift-scoped slots (ledger,
+   shift) are restored outright, since HOME owns none of them, while the
+   player-scoped ones (settings, player) are handed to the review as
+   playedWith rather than written over what the player has since chosen.
+   --------------------------------------------------------------------- */
+
+/* A whole, independent copy - the snapshot must not share the ledger
+   objects the next shift will overwrite, and reviewing twice must not
+   consume it. */
+function captureShiftSnapshot(state) {
+  const byPatientId = {};
+  for (const patientId of state.ledger.order) {
+    byPatientId[patientId] = { ...state.ledger.byPatientId[patientId] };
+  }
+  return {
+    shift: { ...state.shift },
+    ledger: { order: [...state.ledger.order], byPatientId },
+    settings: { ...state.settings },
+    player: { ...state.player }
+  };
+}
+
+/* The ER ENTRANCE's REVIEW LAST SHIFT button is live exactly when this
+   is true: HOME, idle, and a completed shift on hand. A first game has
+   none, and a quit shift cleared it. */
+function canReviewLastShift(state) {
+  return state.phase === "ready"
+    && state.view === "home"
+    && state.lastShift !== null;
+}
+
+/* Reopens the stored shift's review. It lands on the report itself, NOT
+   on the SHIFT ENDED acknowledgement: that beat belongs to finishing a
+   shift, and replaying it when the player deliberately asked to re-read
+   the results would be theatre. */
+function reviewLastShift(state) {
+  if (!canReviewLastShift(state)) return false;
+  const snapshot = state.lastShift;
+  const byPatientId = {};
+  for (const patientId of snapshot.ledger.order) {
+    byPatientId[patientId] = { ...snapshot.ledger.byPatientId[patientId] };
+  }
+  state.ledger = { order: [...snapshot.ledger.order], byPatientId };
+  state.shift = { ...snapshot.shift };
+  state.review = {
+    patientIndex: 0,
+    playedWith: { settings: snapshot.settings, player: snapshot.player }
+  };
+  state.phase = "complete";
+  state.view = "review";
+  state.overlay = null;
+  return true;
+}
+
+/* What the review should DISPLAY as its settings and player: the shift's
+   own when re-reading a past one, the live values otherwise. Scoring
+   never needs this - every point was banked into the ledger as it was
+   earned - so this is a display concern only. */
+function reviewPlayedWith(state) {
+  return state.review.playedWith || { settings: state.settings, player: state.player };
 }
 
 /* The acknowledgement waits for the player rather than timing out, so a
@@ -1107,7 +1197,7 @@ function resetToLobby(state) {
   state.recallAvailable = false;
   state.ledger = { order: [], byPatientId: {} };
   state.deck = { ids: [], cursor: 0 };
-  state.review = { patientIndex: 0 };
+  state.review = { patientIndex: 0, playedWith: null };
   state.shift.id = null;
   state.shift.startedAtMs = null;
   state.shift.completedAtMs = null;
@@ -1165,7 +1255,10 @@ function collectInvariantViolations(state) {
     if (record) {
       check(record.points === GAME_CONSTANTS.POINTS[record.outcome],
         `ledger points disagree with outcome for ${patientId}`);
-      if (state.settings.difficulty === "strict") {
+      /* Judged against the settings the LEDGER was built under: a
+         Forgiving shift being re-read after the player switched to
+         Strict legitimately holds Close records (TODO 13). */
+      if (reviewPlayedWith(state).settings.difficulty === "strict") {
         check(record.outcome !== "close", "Close outcome under Strict");
       }
     }
@@ -1358,6 +1451,9 @@ window.TRIAGE_RUSH_GAME = {
   closePatientsSeen,
   stepPatientsSeen,
   selectPatientSeenRecord,
+  canReviewLastShift,
+  reviewLastShift,
+  reviewPlayedWith,
   returnToLobby,
   toggleGlobalSound,
   collectInvariantViolations,

@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ER ENTRANCE summary boards — in-shell mockup</title>
+<!--
+  In-shell mockup for the two SIDEWALK SUMMARY boards (TODO 3, last
+  design piece; also carries TODO 13's REVIEW LAST SHIFT? button).
+  Companions: settings-letterboard-mockup-{PLAYER,GAME}.html, which are
+  the DETAIL boards these two summarize.
+
+  The boards render on the real ER ENTRANCE artwork inside a faithful
+  copy of the game's 9:16 shell, so on an iPhone this IS the size the
+  lettering will be. Shell + palette rules are COPIED from styles.css
+  per the _mockups convention; the background art is the live asset by
+  relative path. Opens from disk on desktop; on the iPhone use John's
+  bat server: http://<pc-ip>:8090/_mockups/summary-boards-mockup.html
+
+  DECISIONS CARRIED IN (John, 2026-08-07):
+  - Same press-in white letter-board lettering as the detail boards, so
+    the sidewalk board and its close-up read as one object.
+  - The GAME board mirrors ALL SIX values (mode, scoring, length,
+    global sound, game sounds, music).
+  - The PLAYER board is two halves: a WELCOME line up top, and below the
+    divider a separate tappable area with REVIEW LAST SHIFT and REVIEW
+    PAST SHIFTS.
+  - PAST SHIFTS is dimmed and inert until Phase 9 persistence exists;
+    LAST SHIFT dims the same way when there is no shift to review
+    (first run, or the player quit).
+
+  THE GAME IS NOW AHEAD OF THIS FILE (2026-08-07). Both boards were
+  built from it and then edited IN THE GAME at John's direction: the
+  brand stays on one line, and the review half is two buttons that each
+  carry their own REVIEW line (no shared REVIEW header), centered with
+  equal air above, between and below. styles.css is the source of truth
+  now; this file is the design record and the A/B comparison.
+
+  BOARD GEOMETRY (measured off the artwork, 852x1515 canvas, 2026-08-07):
+  each board's ribbed FACE inside its frame, not the whole board -
+    player face  x 133-378, y 846-1246  -> left 15.6%  top 55.8%
+                                           width 28.8% height 26.4%
+    game face    x 431-684, y 848-1247  -> left 50.6%  top 56.0%
+                                           width 29.7% height 26.3%
+  The existing .board-hotspot rects in styles.css are deliberately
+  LARGER than these - they are finger targets covering the whole board
+  including its legs. These face rects are where LETTERING may go.
+
+  MOCKUP CHROME (not game UI), the buttons across the top:
+    A plain / B plates - the two review-line treatments to choose from
+    last shift        - available vs nothing to review (first run, quit)
+    data              - typical vs the longest strings the game can
+                        produce (Hey you!, three emoji, RUSH, 120 sec)
+    frames            - outlines the two face rects on the artwork
+
+  EVERY SIZE IS SET BY THE SMALLEST PHONE. On a 375px-wide iPhone SE the
+  faces are only 96 and 100 px across, and each font size here is the
+  largest that leaves the longest possible string about 15% of headroom
+  for iOS's own Arial Black metrics. Widest strings, as measured there:
+  PAST SHIFTS 86%, emoji initials 87%, FORGIVING 86%. Re-measure at that
+  width before enlarging anything.
+
+  BOTH BOARDS HANG THEIR LETTERING FROM THE TOP FRAME (John,
+  2026-08-07), which is what buys the player board's review buttons
+  their height: the welcome half takes only the three lines it needs,
+  the rule lands at about 36% down the board, and the two tap targets
+  split the rest - 35px each on the SE, 46px at iPhone-Pro width.
+-->
+<style>
+  :root {
+    --navy-950: #031019;
+    --green: #27c978;
+    --red: #ef4b3f;
+    --chalk: #e8e4da;
+    --letter: #f2ede1;
+    --brand-face: #ec543d;
+    --brand-brick: #a03426;
+    --brand-cast: rgba(60, 30, 15, 0.55);
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: "Arial Narrow", "Roboto Condensed", Arial, sans-serif;
+    background: radial-gradient(circle at 50% 20%,
+      #244454 0%, #0d2532 40%, #02090e 100%);
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    padding:
+      max(5dvh, env(safe-area-inset-top))
+      max(4px, env(safe-area-inset-right))
+      max(5dvh, env(safe-area-inset-bottom))
+      max(4px, env(safe-area-inset-left));
+  }
+  [hidden] { display: none !important; }
+  button {
+    font: inherit; color: inherit; cursor: pointer;
+    border: none; background: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  img { user-select: none; -webkit-user-drag: none; }
+
+  /* ---- the 9:16 shell (copied from styles.css section 2) ---- */
+  .app-shell {
+    position: relative;
+    width: min(calc(100vw - 8px), calc(90dvh * 0.5625));
+    height: min(90dvh, calc((100vw - 8px) * 1.7778));
+    overflow: hidden;
+    background: var(--navy-950);
+    border: 2px solid #46606b;
+    box-shadow: 0 24px 80px #000c, inset 0 0 0 2px #0b1014;
+    container-type: inline-size;
+  }
+  @supports (height: 100svh) {
+    .app-shell {
+      width: min(
+        calc(100svw - max(4px, env(safe-area-inset-left))
+                    - max(4px, env(safe-area-inset-right))),
+        calc((100svh - max(5svh, env(safe-area-inset-top))
+                     - max(5svh, env(safe-area-inset-bottom))) * 0.5625));
+      height: min(
+        calc(100svh - max(5svh, env(safe-area-inset-top))
+                    - max(5svh, env(safe-area-inset-bottom))),
+        calc((100svw - max(4px, env(safe-area-inset-left))
+                     - max(4px, env(safe-area-inset-right))) * 1.7778));
+    }
+  }
+
+  /* ---- HOME view (copied from styles.css section 4) ---- */
+  .home-view { position: absolute; inset: 0; }
+  .home-background {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: fill;
+  }
+  .door-start-art {
+    position: absolute;
+    left: 37.44%; top: 29.50%; width: 60.33%; height: 15.31%;
+    object-fit: fill;
+  }
+
+  /* ====================================================================
+     THE SUMMARY BOARDS.
+
+     Each face is its own container, so every size below is a cqw of the
+     BOARD FACE - the same discipline the detail boards use, and what
+     makes the lettering phone-true no matter how the shell is sized.
+     ================================================================= */
+  .board-face {
+    position: absolute;
+    container-type: inline-size;
+    overflow: hidden;
+  }
+
+  /* An element's OWN cqw units resolve against its nearest ANCESTOR
+     container, not itself - so the face cannot carry its own padding in
+     cqw without measuring the whole shell. Everything inside this
+     wrapper is a proportion of the FACE, which is what we want. */
+  .face-inner {
+    height: 100%;
+    padding: 3.5cqw 4cqw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--letter);
+    font-family: "Arial Black", "Arial Bold", Arial, sans-serif;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.1;
+    text-shadow: 0 0.04em 0.06em rgb(0 0 0 / 55%);
+  }
+
+  .board-face--player { left: 15.6%; top: 55.8%; width: 28.8%; height: 26.4%; }
+  .board-face--game   { left: 50.6%; top: 56.0%; width: 29.7%; height: 26.3%; }
+
+  /* Debug: show exactly where each face sits on the artwork. */
+  .show-frames .board-face { outline: 1px dashed #4fe3ff; }
+
+  /* ---- shared lettering vocabulary ------------------------------- */
+
+  /* The board's own name, centered under the top frame. */
+  /* Sizes below are set by the WIDEST string each one can ever hold,
+     measured on the smallest phone the shell supports (a 375px-wide
+     iPhone SE, where the face is only 96px across), with about 15%
+     headroom left for iOS's own Arial Black metrics. The percentages
+     in the comments are of the face's usable width.
+
+     The game board carries NO title of its own (John, 2026-08-07): its
+     first line is GAME MODE, the label for the brand words under it,
+     so every value on the board is labelled the same way. Nothing
+     announces that the board is tappable - a player will try it,
+     and the detail board is what they get. */
+
+  /* Both boards hang their content from the TOP frame (John,
+     2026-08-07): the lettering rides high on a real sidewalk board, and
+     on the player board every pixel saved up here becomes finger room
+     for the review buttons below. RUSH mode's brand takes two lines and
+     Triage!'s one, so the game board's slack simply sits at the bottom
+     rather than shifting the whole block between modes. */
+  .face-inner--game { justify-content: flex-start; }
+
+  /* A two-line group: dim label over its value - the same shape the
+     detail boards use, which is what makes the pair read as one
+     setting rather than two words. */
+  .sum-group { text-align: center; margin-bottom: 4.2cqw; }
+  .sum-group-label {
+    font-size: 9cqw;
+    opacity: 0.62;
+    letter-spacing: 0.08em;
+  }
+  .sum-group-value { font-size: 11.5cqw; }   /* "FORGIVING" = 85% */
+
+  /* The mode leads the board as its own headline - the brand words name
+     the mode better than any label could (they are the same words the
+     detail board's GAME MODE row uses). RUSH takes its own line, the
+     way it does on the entrance sign; at one line it would have to drop
+     to 11cqw to fit the face, which would leave the headline smaller
+     than the settings under it. */
+  .sum-group--headline { margin-bottom: 4.6cqw; line-height: 1.02; }
+  .sum-group--headline .sum-group-value { font-size: 13.5cqw; }
+
+  /* A one-line row for the short sound values: label left, value right. */
+  .sum-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 11cqw;
+    margin-top: 3.3cqw;
+  }
+  .sum-row .lbl { opacity: 0.62; letter-spacing: 0.06em; }
+  .sum-row .val { letter-spacing: 0.03em; }
+
+  /* OFF is a stop, not just another value - the same red the detail
+     board's OFF radios fill with. */
+  .sum-row .val.is-off { color: var(--red); }
+
+  /* Global sound off makes the two level rows moot; they say so by
+     going quiet rather than disappearing. */
+  .sound-muted .sum-row--level { opacity: 0.38; }
+
+  .sum-divider {
+    width: 88%;
+    height: 0;
+    border: none;
+    border-top: 0.9cqw solid rgb(242 237 225 / 34%);
+    margin: 3.2cqw 0 3cqw;
+  }
+
+  /* ---- PLAYER board: two halves ----------------------------------
+     Who you are above the rule, what you can go back and read below it.
+     The two halves are NOT equal: the top one takes only the height its
+     three lines need and sits against the top frame, so everything left
+     over falls to the review half - which is the half with the tap
+     targets in it (John, 2026-08-07). The rule therefore lands above
+     the board's midpoint. */
+  .player-half {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .player-half--top { flex: 0 0 auto; }
+  .player-half--review { flex: 1; min-height: 0; }
+
+  .sum-welcome {
+    font-size: 11.5cqw;
+    letter-spacing: 0.1em;
+    opacity: 0.78;
+    margin-bottom: 3.5cqw;
+  }
+  .sum-player-name {
+    font-size: 13cqw;
+    text-align: center;
+  }
+  .sum-player-initials {
+    /* Sized by the WIDEST case, three emoji, which measure about 1.55em
+       each against a letter's 0.83em: at 18.5cqw they take 107 of the
+       face's 117 usable px, leaving slack for a platform whose emoji
+       run wider. Letters are nowhere near the limit. */
+    font-size: 17.5cqw;     /* three emoji = 87%; "AHP" = 60% */
+    white-space: nowrap;
+    letter-spacing: 0.14em;
+    margin-top: 1.5cqw;
+    /* Letter-spacing adds trailing space after the last glyph, which
+       pulls a centered line visually left; half of it back the other
+       way re-centers the letters themselves. */
+    margin-left: 0.07em;
+  }
+
+  /* ---- PLAYER board: the review half ----------------------------- */
+  .review-kicker {
+    font-size: 9.5cqw;
+    opacity: 0.62;
+    letter-spacing: 0.1em;
+    margin-bottom: 2.5cqw;
+  }
+  /* The two lines SPLIT whatever height the top half did not use, up to
+     a cap: past about 36cqw they stop growing and the pair centers in
+     the leftover instead, because two lines flung to opposite ends of
+     the board stop reading as one group. The type is capped by WIDTH,
+     not height, so the room all goes into the TARGET rather than the
+     lettering - roughly a 35px tap on the smallest phone and 45px on
+     John's. */
+  .review-lines {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .review-line {
+    font-family: inherit;
+    font-weight: 900;
+    font-size: 10.5cqw;     /* "PAST SHIFTS" = 86%, the tightest string
+                               on either board */
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--letter);
+    text-shadow: inherit;
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    max-height: 36cqw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1cqw 0;
+  }
+  .review-line + .review-line { margin-top: 3cqw; }
+
+  /* Variant B: each review line is a pressed-in plate, so it reads as a
+     control on a board that is otherwise pure display. */
+  .variant-b .review-line {
+    border: 0.9cqw solid rgb(242 237 225 / 40%);
+    border-radius: 2.4cqw;
+    padding: 1.6cqw 0;
+    background: rgb(0 0 0 / 22%);
+    box-shadow: inset 0 0.6cqw 0.8cqw rgb(0 0 0 / 45%);
+  }
+
+  /* Unavailable: visible so the player learns the feature exists, but
+     plainly inert. */
+  .review-line.is-unavailable {
+    opacity: 0.3;
+    cursor: default;
+  }
+  .variant-b .review-line.is-unavailable {
+    border-color: rgb(242 237 225 / 22%);
+    box-shadow: none;
+  }
+  .review-line:not(.is-unavailable):active { color: var(--green); }
+
+  /* ---- brand lettering (copied from styles.css) ------------------- */
+  .brand-sign {
+    font-family: "Arial Black", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 900;
+    color: var(--brand-face);
+    text-transform: none;
+    text-shadow:
+      0.012em 0.012em 0 var(--brand-brick),
+      0.024em 0.024em 0 var(--brand-brick),
+      0.036em 0.036em 0 var(--brand-brick),
+      0.048em 0.048em 0 var(--brand-brick),
+      0.09em 0.11em 0.1em var(--brand-cast);
+  }
+  .brand-sign .brand-rush { font-size: 1.18em; }
+
+  /* ---- mockup chrome (not game UI) -------------------------------- */
+  .variant-bar {
+    position: fixed;
+    top: max(6px, env(safe-area-inset-top));
+    left: 6px;
+    right: 6px;
+    z-index: 20;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .variant-bar button {
+    font-weight: 700;
+    font-size: 12px;
+    padding: 4px 9px;
+    border-radius: 6px;
+    border: 1px solid rgb(232 228 218 / 45%);
+    background: rgb(7 28 41 / 85%);
+    color: var(--chalk);
+  }
+  .variant-bar button.is-active {
+    background: var(--green);
+    border-color: var(--green);
+    color: #06231a;
+  }
+</style>
+</head>
+<body>
+
+<div class="variant-bar">
+  <button id="btnA" class="is-active">A plain</button>
+  <button id="btnB">B plates</button>
+  <button id="btnShift" class="is-active">last shift: yes</button>
+  <button id="btnData">data: typical</button>
+  <button id="btnFrames">frames</button>
+</div>
+
+<div class="app-shell" id="shell">
+  <div class="home-view">
+    <img class="home-background"
+         src="../triageRush/assets/lobby-page/background-w-open-glass-doors.png" alt="">
+    <img class="door-start-art"
+         src="../triageRush/assets/lobby-page/glass-door-overlay-start-shift.png" alt="">
+
+    <!-- ============================================================
+         PLAYER board (left). Two halves: who you are, and what you
+         can go back and read. In the real build the welcome half and
+         each review line are SEPARATE buttons - the welcome half opens
+         the PLAYER NAME detail board, the review lines go to the
+         review screens.
+         ========================================================= -->
+    <div class="board-face board-face--player" id="playerFace">
+      <div class="face-inner">
+        <div class="player-half player-half--top">
+          <div class="sum-welcome">Welcome!</div>
+          <div class="sum-player-name" id="playerName">Doctor</div>
+          <div class="sum-player-initials" id="playerInitials">AHP</div>
+        </div>
+
+        <hr class="sum-divider">
+
+        <div class="player-half player-half--review">
+          <div class="review-kicker">Review</div>
+          <div class="review-lines">
+            <button class="review-line" id="lastShiftLine">Last Shift</button>
+            <!-- Inert until Phase 9 persistence (John, 2026-08-07). -->
+            <button class="review-line is-unavailable">Past Shifts</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         GAME board (right). A read-only mirror of the GAME OPTIONS
+         detail board: the mode as its own headline (the brand words
+         name it better than any label could), the two remaining game
+         settings as two-line groups, then the three sound values as
+         compact rows under the divider.
+         ========================================================= -->
+    <div class="board-face board-face--game" id="gameFace">
+      <div class="face-inner face-inner--game">
+        <div class="sum-group sum-group--headline">
+          <div class="sum-group-label">Game Mode</div>
+          <div class="sum-group-value brand-sign" id="modeValue">Triage!</div>
+        </div>
+
+        <div class="sum-group">
+          <div class="sum-group-label">Scoring</div>
+          <div class="sum-group-value" id="difficultyValue">Forgiving</div>
+        </div>
+
+        <div class="sum-group">
+          <div class="sum-group-label">Length</div>
+          <div class="sum-group-value" id="lengthValue">5 min</div>
+        </div>
+
+        <hr class="sum-divider">
+
+        <div class="sum-row">
+          <span class="lbl">Sound</span><span class="val" id="soundValue">On</span>
+        </div>
+        <div class="sum-row sum-row--level">
+          <span class="lbl">Game</span><span class="val" id="gameLoudValue">Hi</span>
+        </div>
+        <div class="sum-row sum-row--level">
+          <span class="lbl">Music</span><span class="val" id="musicLoudValue">Off</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Mockup chrome only - the real build reads state.settings and renders
+   the same strings from ui.js renderHomeBoardSummaries. */
+const shell = document.getElementById("shell");
+const gameFace = document.getElementById("gameFace");
+const playerFace = document.getElementById("playerFace");
+
+const btnA = document.getElementById("btnA");
+const btnB = document.getElementById("btnB");
+const btnShift = document.getElementById("btnShift");
+const btnData = document.getElementById("btnData");
+const btnFrames = document.getElementById("btnFrames");
+
+function setVariant(isB) {
+  playerFace.classList.toggle("variant-b", isB);
+  btnA.classList.toggle("is-active", !isB);
+  btnB.classList.toggle("is-active", isB);
+}
+btnA.onclick = () => setVariant(false);
+btnB.onclick = () => setVariant(true);
+
+let hasLastShift = true;
+btnShift.onclick = () => {
+  hasLastShift = !hasLastShift;
+  document.getElementById("lastShiftLine")
+    .classList.toggle("is-unavailable", !hasLastShift);
+  btnShift.classList.toggle("is-active", hasLastShift);
+  btnShift.textContent = `last shift: ${hasLastShift ? "yes" : "no"}`;
+};
+
+/* Two data sets: the typical case, and the longest strings the settings
+   can actually produce (longest title, emoji initials, RUSH mode). */
+const DATA = [
+  { label: "typical",
+    name: "Doctor", initials: "AHP",
+    mode: "Triage!", difficulty: "Forgiving", length: "5 min",
+    sound: "On", game: "Hi", music: "Off" },
+  { label: "longest",
+    name: "Hey you!", initials: "⚕️🚑💀",
+    mode: "Triage<br><span class=\"brand-rush\">RUSH!</span>",
+    difficulty: "Forgiving", length: "120 sec",
+    sound: "Off", game: "Lo", music: "Hi" }
+];
+let dataIndex = 0;
+
+function applyData() {
+  const d = DATA[dataIndex];
+  document.getElementById("playerName").textContent = d.name;
+  document.getElementById("playerInitials").textContent = d.initials;
+  document.getElementById("modeValue").innerHTML = d.mode;
+  document.getElementById("difficultyValue").textContent = d.difficulty;
+  document.getElementById("lengthValue").textContent = d.length;
+
+  const setVal = (id, text) => {
+    const el = document.getElementById(id);
+    el.textContent = text;
+    el.classList.toggle("is-off", text.toLowerCase() === "off");
+  };
+  setVal("soundValue", d.sound);
+  setVal("gameLoudValue", d.game);
+  setVal("musicLoudValue", d.music);
+
+  gameFace.classList.toggle("sound-muted", d.sound.toLowerCase() === "off");
+  btnData.textContent = `data: ${d.label}`;
+}
+btnData.onclick = () => {
+  dataIndex = (dataIndex + 1) % DATA.length;
+  applyData();
+};
+applyData();
+
+btnFrames.onclick = () => {
+  const on = shell.classList.toggle("show-frames");
+  btnFrames.classList.toggle("is-active", on);
+};
+</script>
+
+</body>
+</html>

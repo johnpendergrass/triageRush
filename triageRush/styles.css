@@ -93,6 +93,26 @@ button {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* iOS zooms the page on a DOUBLE TAP, and two taps inside ~300ms is
+   exactly what stepping an odometer chevron looks like - John's iPhone,
+   2026-08-07: the board would blow up and had to be pinched back down.
+   The same trap waits on any control tapped in a hurry, the waiting
+   rows and room doors in RUSH included, so this covers every control
+   rather than just the wheels.
+
+   This does NOT disable zooming: pinch still works everywhere, which is
+   the gesture that matters for reading a chart. Only the double-tap
+   shortcut (and the legacy 300ms click delay) goes away, and a double
+   tap on a control never meant "zoom" in the first place. */
+button,
+label,
+input,
+select,
+.wheel,
+.wheel-window {
+  touch-action: manipulation;
+}
+
 button:focus-visible,
 select:focus-visible,
 input:focus-visible {
@@ -217,64 +237,279 @@ img {
   filter: brightness(1.08);
 }
 
-/* Sidewalk boards. The blank slatted boards are in the artwork; these
-   transparent buttons align with them and carry live chalk summaries.
-   Coordinates are measured from the accepted background composition. */
-.board-hotspot {
+/* ---- Sidewalk summary boards (TODO 3, 2026-08-07) --------------------
+   The two slatted A-frame boards are in the artwork; these rects cover
+   the ribbed FACE inside each board's frame, measured off the 852x1515
+   canvas (player face x 133-378 y 846-1246, game face x 431-684
+   y 848-1247). They are deliberately SMALLER than the boards: the
+   frame and the legs are not tap targets, and lettering that reached
+   the frame would ride onto the wood the way the detail board's GAME
+   MODE row once did.
+
+   The lettering is the same press-in white letter-board look as the
+   detail boards, so a sidewalk board and its close-up read as one
+   object. Nothing marks either board as tappable (John, 2026-08-07): a
+   player tries the board and gets the detail board. */
+.board-face {
   position: absolute;
   z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  container-type: inline-size;
+  overflow: hidden;
   padding: 0;
 }
 
-.board-hotspot--player {
-  left: 13.5%;
-  top: 54%;
-  width: 33%;
-  height: 31%;
-}
+.board-face--player { left: 15.6%; top: 55.8%; width: 28.8%; height: 26.4%; }
+.board-face--game   { left: 50.6%; top: 56.0%; width: 29.7%; height: 26.3%; }
 
-.board-hotspot--shift {
-  left: 49%;
-  top: 54.5%;
-  width: 34%;
-  height: 31.5%;
-}
+/* Worth knowing if lettering ever crowds the bottom again: the boards'
+   bottom edges are NOT level. The game board's ribbed area ends at
+   y1245 at its left edge but runs to y1248 at its right, so these rects
+   sit within about 2px of the shadowed bottom rail on one side. The
+   cure is vertical budget, not a redrawn rect - John's iPhone showed
+   the MUSIC row on the frame in 2026-08-07's summary1f, and giving the
+   sound rows their clearance back fixed it. */
 
-.board-summary {
+/* An element's OWN cqw units resolve against its nearest ANCESTOR
+   container, not itself - so the face cannot carry its own padding in
+   cqw without silently measuring the whole shell. Everything inside
+   this wrapper is a proportion of the FACE, which is what keeps the
+   lettering identical at every screen size. */
+.face-inner {
+  height: 100%;
+  padding: 3.5cqw 4cqw;
   display: flex;
   flex-direction: column;
-  gap: 4%;
   align-items: center;
-  width: 88%;
-  color: var(--chalk);
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  color: var(--letter);
+  font-family: "Arial Black", "Arial Bold", Arial, sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  text-shadow: 0 1px 2px #000c;
+  line-height: 1.1;
+  text-shadow: 0 0.04em 0.06em rgb(0 0 0 / 55%);
 }
 
-/* Slight rotations match each board's lean in the artwork. */
-.board-summary--player { transform: rotate(-2deg); }
-.board-summary--shift { transform: rotate(1.4deg); }
+/* Both boards hang their lettering from the TOP frame: the lettering
+   rides high on a real sidewalk board, and on the player board every
+   pixel saved up here becomes finger room for the review buttons. */
+.face-inner--game { justify-content: flex-start; }
 
-.board-summary-line {
-  font-size: clamp(9px, 3.4cqw, 22px);
-  line-height: 1.25;
+/* Every size below is set by the WIDEST string it can ever hold,
+   measured on the smallest phone the shell supports (375px wide, where
+   the faces are only 96 and 100px across), leaving about 15% headroom
+   for iOS's own Arial Black metrics. The percentages in the comments
+   are of the face's usable width - re-measure AT THAT WIDTH before
+   enlarging anything here. */
+
+/* A two-line group: dim label over its value - the same shape the
+   detail boards use, which is what makes the pair read as one setting
+   rather than two words. */
+.sum-group {
+  display: block;
+  text-align: center;
+  margin-bottom: 5.5cqw;
 }
 
-.board-summary-kicker {
-  font-size: clamp(7px, 2.2cqw, 14px);
-  letter-spacing: 0.18em;
-  opacity: 0.75;
+.sum-group-label {
+  display: block;
+  font-size: 9cqw;
+  opacity: 0.62;
+  letter-spacing: 0.08em;
 }
 
-.board-summary-initials {
-  font-size: clamp(13px, 5.4cqw, 34px);
-  letter-spacing: 0.16em;
+/* The values run at the LABEL size (John, 2026-08-07): they are bright
+   white against dim grey labels, so they stand out on colour alone, and
+   holding them level frees the width and the air the mode headline
+   wants. */
+.sum-group-value {
+  display: block;
+  font-size: 9cqw;
 }
+
+/* The mode leads the board, labelled GAME MODE the way the other two
+   values are labelled. The brand words stay on ONE line in both modes
+   (John, 2026-08-07) so nothing below them shifts when the mode
+   changes; fitting "Triage RUSH!" across the face is what sets this
+   size, and the brand drops the board's tracking because the entrance
+   sign has none. */
+/* The row RESERVES the taller mode's height, so switching modes cannot
+   move anything below it - that was the point of keeping the brand on
+   one line in the first place. */
+.sum-group--headline {
+  margin-bottom: 7cqw;
+  min-height: 29cqw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* The two modes are sized SEPARATELY, because one line is a hard
+   constraint and "Triage RUSH!" (12 characters) already fills the face
+   at 10cqw - a shared size would cap them both there. John's call
+   (2026-08-07): leave RUSH exactly as it is and let "Triage!" (7
+   characters) grow into the width it has spare. */
+.sum-mode {
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+/* Matched BY EYE to the player board's initials (John, 2026-08-07):
+   17.5cqw of that face is 16.8px, and 17cqw of this slightly wider one
+   is 16.9px - the same lettering size across the two boards. */
+.sum-mode--triage { font-size: 17cqw; }
+.sum-mode--rush { font-size: 10cqw; }   /* "Triage RUSH!" = 87% */
+
+/* The board face uppercases its lettering, but the brand keeps the ER
+   ENTRANCE sign's own mixed-case spelling wherever it appears
+   (branding rule, 2026-08-06) - the same opt-out the detail board's
+   GAME MODE row carries. */
+.sum-group--headline .brand-sign { text-transform: none; }
+
+/* A one-line row for the short sound values: label left, value right,
+   both at the same size as everything else on the board (John,
+   2026-08-07) - the sound section reads as three quiet rows rather than
+   competing with the mode. */
+.sum-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 9cqw;
+  margin-top: 5.5cqw;
+}
+
+.sum-row .lbl { opacity: 0.62; letter-spacing: 0.06em; }
+.sum-row .val { letter-spacing: 0.03em; }
+
+/* OFF is a stop, not just another value - the same red the detail
+   board's OFF radios fill with. */
+.sum-row .val.is-off { color: var(--red); }
+
+/* Global sound off makes the two level rows moot; they say so by going
+   quiet rather than disappearing. */
+.sound-muted .sum-row--level { opacity: 0.38; }
+
+.sum-divider {
+  display: block;
+  width: 88%;
+  height: 0;
+  border: none;
+  border-top: 0.9cqw solid rgb(242 237 225 / 34%);
+  margin: 5cqw 0 7cqw;
+}
+
+/* The player board's rule sits its own distance from the initials above
+   it - half the WELCOME! size (John, 2026-08-07) - and adds NOTHING
+   below itself, because the review half distributes that air with
+   space-evenly; a margin there would make the gap above the first
+   button read wider than the other two. The game board keeps the
+   shared margins, which is what separates its sound rows. */
+.board-face--player .sum-divider { margin: 5.75cqw 0 0; }
+
+/* ---- PLAYER board: the welcome half ----------------------------------
+   ONE button, and it stops at the rule: the edit target is the top half
+   of the board, top frame to rule (John, 2026-08-07). It takes only the
+   height its three lines need, which is what leaves the review half
+   its room. */
+.player-edit {
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  text-shadow: inherit;
+}
+
+.sum-welcome {
+  font-size: 11.5cqw;
+  letter-spacing: 0.1em;
+  opacity: 0.78;
+  margin-bottom: 3.5cqw;
+}
+
+.sum-player-name {
+  font-size: 13cqw;     /* "HEY YOU!" = 82% */
+  text-align: center;
+}
+
+.sum-player-initials {
+  /* Sized by the WIDEST case, three emoji, which measure about 1.55em
+     each against a letter's 0.83em. Letters are nowhere near the
+     limit. */
+  font-size: 17.5cqw;   /* three emoji = 87%; "AHP" = 60% */
+  white-space: nowrap;
+  letter-spacing: 0.14em;
+  margin-top: 1.5cqw;
+  /* Letter-spacing adds trailing space after the last glyph, which
+     pulls a centered line visually left; half of it back the other way
+     re-centers the letters themselves. */
+  margin-left: 0.07em;
+}
+
+/* ---- PLAYER board: the review half ----------------------------------
+   Two whole destinations, each a single hit box carrying its own REVIEW
+   line (John, 2026-08-07). space-evenly is what puts equal air above,
+   between and below them; the buttons size to their own two lines plus
+   padding rather than stretching, or there would be no air left to
+   distribute. */
+.player-half--review {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.review-line {
+  font-family: inherit;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--letter);
+  text-shadow: inherit;
+  width: 100%;
+  flex: 0 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  /* The padding IS the tap target: it turns two lines of lettering into
+     a box worth aiming at - about 30px on the smallest phone, 38px on
+     John's. Because the box is never drawn, trading space-evenly's air
+     for padding costs nothing visually and buys target; the limit is
+     that padding widens the gap BETWEEN the two buttons faster than the
+     gaps above and below them, and those three should stay even. */
+  padding: 5.5cqw 0;
+}
+
+.review-line-kicker {
+  font-size: 8cqw;
+  opacity: 0.62;
+  letter-spacing: 0.1em;
+}
+
+.review-line-name {
+  font-size: 10.5cqw;   /* "PAST SHIFTS" = 86%, the tightest string on
+                           either board */
+}
+
+/* Nothing to review yet - a first run, a quit shift, or (for past
+   shifts) no persistence yet. The line stays visible so the player
+   learns the feature exists, but reads plainly inert. */
+.review-line:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.review-line:not(:disabled):active { color: var(--green); }
 
 /* Green ABOUT utility cover embossed in the concrete, bottom left. */
 .about-hotspot {
@@ -652,6 +887,11 @@ img {
   flex-direction: column;
   align-items: stretch;
   justify-content: center;
+  /* A drum is a machine part, not text: without this a slightly long
+     press on iOS starts a text selection and raises the magnifying
+     loupe over the value. */
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .drum-cell {
