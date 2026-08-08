@@ -128,7 +128,9 @@ Implement:
 - the two sidewalk SUMMARY boards (built 2026-08-07 - see document `7`):
   the GAME board mirroring all six values read-only, and the PLAYER board
   carrying the welcome half plus the two review buttons;
-- About board;
+- the ABOUT whiteboard (built 2026-08-08 - see document `7`): logo, opening
+  paragraph, HOW TO PLAY list, centered footer; a reading surface with no
+  apply action, sized to fit one screen without scrolling;
 - the sound model on the GAME OPTIONS board: GLOBAL SOUND off/on, then
   GAME SOUNDS and MUSIC each off/lo/hi (the MUSIC row only when unlocked);
 - player title/initials, set on odometer drums (no typing);
@@ -139,7 +141,7 @@ Acceptance:
 
 - title list includes Intern;
 - initials accept one to three symbols from the drum alphabet (A-Z, "-",
-  seven emoji, and 🎼) and uppercase any letters;
+  seven emoji, and ♫) and uppercase any letters;
 - the game screen's sound icon writes GLOBAL SOUND, so the board agrees
   with it after a shift and the choice survives;
 - an older save whose sound settings were booleans still loads: an ON
@@ -163,8 +165,8 @@ Acceptance:
   - after a reload with music saved on, the first tap anywhere starts the
     playlist at track one;
   - the MUSIC row is absent from BOTH boards, and no audio file is requested
-    at all, unless the initials are three symbols with 🎼 in the MIDDLE
-    (`J🎼P` yes; `JMP`, `🎼JP`, `JP🎼`, and shorter names no);
+    at all, unless the initials are three symbols with ♫ in the MIDDLE
+    (`J♫P` yes; `JMP`, `♫JP`, `JP♫`, and shorter names no);
   - renaming away from the unlock stops playback and hides the rows but
     leaves the chosen level saved, so re-unlocking restores it;
   - the tracks are never preloaded and never block READY;

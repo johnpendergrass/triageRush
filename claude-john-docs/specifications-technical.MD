@@ -1,6 +1,91 @@
 # triageRush — technical notes (pointer file)
 
-**Last modified:** 2026-08-07 (local music + mode name in the game header)
+**Last modified:** 2026-08-08 (the ABOUT board, as built)
+
+## The ABOUT whiteboard, as built (2026-08-08)
+
+Built from `_mockups/about-board-mockup.html`, which is kept in sync and
+stays as the design record. styles.css and index.html are the source of
+truth. All of it is STATIC markup - ui.js writes none of it, the same rule
+the other brand spots follow.
+
+- **THE FACE RECT IS THE WHOLE POINT OF THIS BOARD'S CSS.** The shared
+  `.popup-content` insets (3.9 / 3.5 / 6.6 / 7.8) were tuned for the
+  BLACKBOARD, whose ribbed face runs 15.9%-83.5% of the card. The
+  whiteboard's white dry-erase area is a different rect - measured off the
+  752x1387 art at x 56-703, y 52-1348, i.e. **x 7.4%-93.5%, y 3.8%-97.2%** -
+  so the shared insets sit OUTSIDE it and anything full-width rides onto the
+  silver frame. `.popup-content--marker` therefore overrides all four:
+  10% / 10% / 7.5% / 6%. The 7.5% top is also what clears the close box
+  (~47px of card against the button's 40px), so the logo centres without
+  dodging it.
+- `container-type: inline-size` on `.popup-content--marker` puts every cqw
+  on the FACE rather than the card, exactly as the letter boards do: a
+  future re-crop or inset change needs no type re-tuning.
+- The shared `.popup-content` sets `gap: clamp(8px, 2.38cqw, 18px)`; the
+  About board sets `gap: 0` and spaces itself with margins, because the
+  footer's `margin-top: auto` and the logo's own margin do that job.
+- **`.brand-flat` is the brand WITHOUT the extrusion**, for every mention
+  after the logo: same Arial Black stack, same `--brand-face`, no
+  text-shadow, `white-space: nowrap`, and `.brand-rush` still 1.18em. Do
+  not reach for `.brand-sign` in body copy on this board - at 15px the four
+  stacked shadows read as fringing, and they compete with the logo above.
+- The logo is `.brand-sign` at **11cqw**, which puts "Triage RUSH!" at ~87%
+  of the face. That string runs about **7.6x its font size wide** - the
+  same ratio the game header and the summary boards were measured against,
+  and the number to re-derive from before enlarging it.
+- **The footer is bottom-parked** (`margin-top: auto` on `.about-footer`
+  inside a flex-column `.about-body`), which is why the fit measurement
+  that matters is the SLACK ABOVE IT, not the content height: a
+  bottom-parked footer makes the content read as exactly 100% of the face
+  right up until it overflows. The mockup's readout measures slack for this
+  reason; an earlier version of it measured `scrollHeight` and reported a
+  comfortable board as 100% full.
+- **Every size here was measured in the real app at a 375px shell**, and
+  re-measured after each of John's five wording passes. The board shipped
+  at 5.8cqw body/steps with **33px of slack** (26px at a 320px window). The
+  BINDING line is the intro paragraph, not any step: at 6.2cqw it takes a
+  sixth line and slack collapses. What the alternatives cost, with the
+  final copy: 6cqw plus the old blank line = 7px, 6cqw without it = 24px,
+  5.8cqw without it = 33px.
+- The blank line that used to sit above the two mode lines was a
+  `.step-gap` class carrying `margin-top: 1.36em` - a margin, never an
+  empty `<li>`, because a spacer list item is announced as a real empty
+  item by a screen reader and would draw its own dash. It was spent on the
+  two difficulty lines; restoring it costs ~22px.
+- `.popup-heading` and `.popup-fine-print` were DELETED with this rebuild -
+  their only user was the old About board. The letter boards use
+  `.board-title`.
+- The dashes are `content: "\2013\00a0\00a0"` on `li::before` with a
+  hanging indent (`padding-left` + negative `text-indent`), so wrapped
+  lines align under the text rather than under the dash.
+- `--marker-blue: #1f4e79` is the second dry-erase marker, used only by the
+  HOW TO PLAY heading and its rule.
+
+## The mute icon is DRAWN, not typed (2026-08-08)
+
+`#gameSoundButton` always renders the note ♪; `.sound-button.is-muted`
+dims it and `::after` lays a red slash over it. Why a pseudo-element and
+not a character:
+
+- **No plain-text muted-note glyph exists** in the Arial/Helvetica stack.
+  The Unicode mute symbols (U+1F507 SPEAKER WITH CANCELLATION STROKE and
+  its neighbours) carry EMOJI presentation by default, so iOS draws them
+  in colour - wrong for a dark monochrome header, and unfixable, since
+  Apple ships no text-presentation glyph for them to fall back to.
+  U+20E0 COMBINING ENCLOSING CIRCLE BACKSLASH over a note is the other
+  idea; combining enclosures land unpredictably at 14px. This is the same
+  family of problem as the triangle/U+FE0E glyphs in the testing notes.
+- The slash geometry: 92% of the button's width, 2px tall, centred with
+  `translate(-50%, -50%) rotate(45deg)`. 45° clockwise on a horizontal bar
+  gives the "\" of a prohibition sign. `box-shadow: 0 0 0 1px #102b38`
+  casts it in the button's OWN background, which is what keeps both the
+  slash and the note it crosses legible at 24x28.
+- Colour is `var(--red)`, the same token the OFF radios and the summary
+  board's OFF values use. Red means off in this game; do not invent a
+  second mute colour.
+- The button needed `position: relative` for the pseudo-element to anchor
+  to. Nothing else in the header changed - the button is still 24x28.
 
 ## Local music, as built (2026-08-07)
 
@@ -30,10 +115,24 @@
   length, so emoji either side of the clef (⚕️, ❤️ - which carry a U+FE0F
   variation selector) cannot shift what "middle" means. It requires exactly
   three symbols: a one- or two-symbol name has no middle.
-- The unlock glyph is U+1F3BC MUSICAL SCORE, an EMOJI. U+1D11E (the real
-  treble clef) is a musical-notation character and renders as tofu on many
-  phone font stacks. If it is ever swapped, 🎵 U+1F3B5 is the other safe
-  option.
+- **The unlock glyph is U+266B BEAMED EIGHTH NOTES (♫), and it is the one
+  symbol in the alphabet that is NOT an emoji.** Two earlier glyphs failed
+  on appearance alone: U+1F3BC MUSICAL SCORE (a staff) was unreadable
+  clutter at drum size, and U+1F3B6 MULTIPLE MUSICAL NOTES drew DARK GREY
+  on the blackboard — **a colour emoji carries its own palette inside the
+  font and ignores CSS `color` entirely**, so no rule could fix it. A text
+  character draws in the surrounding ink, which is the whole reason the
+  boards can paint it amber. Avoid U+1D11E and the other U+1Dxxx notation
+  characters — patchy phone coverage, tofu. U+266B needs no U+FE0E: it has
+  no emoji presentation, and its sibling U+266A has been drawing correctly
+  in the game header on John's iPhone since 2026-08-07.
+- Colouring one character inside a name needs a WRAPPER: `ui.js
+  writeInitials()` splits an initials string with `initialsSymbols` and
+  wraps the unlock symbol in `<span class="initial-music">`. All three
+  places initials appear — the odometer drum cells, the sidewalk player
+  board, and the Shift Report's provider line — go through it. The report
+  overrides the amber back to ordinary ink, because amber on cream paper
+  has nothing to stand against.
 - `renderMusicVisibility()` also moves the `setting-group--last` class onto
   GAME SOUNDS when the music group is hidden - that class carries
   `margin-bottom: 0`, so without the move a locked board grows a stray gap.
@@ -286,68 +385,41 @@ is about 24dB down. All four numbers were set BY EAR, and twice: the
 first cut (music 0.08/0.25, game lo 0.35) was still far too loud. They
 are the only knobs - do not compensate anywhere else.
 
-**The two MUSIC numbers are STALE as of 2026-08-07**: they were tuned
-against the KING-FM stream, and the local files that replaced it are
-compressed and band-limited, so they will almost certainly want raising.
-The game numbers (0.22 / 1) are unaffected.
+**SETTLED (John, 2026-08-08): "it is fine where it is."** The two music
+numbers were expected to want raising once the source became compressed
+and band-limited files - they did not. All four numbers are final unless
+John's ear says otherwise.
 
-### Superseded: the KING-FM routing problem (kept for the lesson only)
-
-Everything from here to the end of this section describes code that NO
-LONGER EXISTS. The stream was retired 2026-08-07 and all of the
-crossOrigin and fallback machinery came out with it. It is kept because
-the underlying iOS behaviour is still true and still constrains any
-future audio work - not as a description of the shipped game.
+### Why the music must stay LOCAL (the constraint, not the history)
 
 **iOS ignores `HTMLMediaElement.volume`** - Apple reserves media volume
 for the hardware buttons, so setting `.volume` is a silent no-op there.
-This is why local files were the answer: a same-origin file needs no
-CORS, so `createMediaElementSource` just works and the gain node carries
-the level on every device.
-That is why every KING-FM level sounded identical on John's iPhone while
-working perfectly in desktop Chrome (2026-08-07). The stream is
-therefore routed through Web Audio - `createMediaElementSource` into a
-GainNode - because a GainNode IS honored on iOS, and the gain now
-carries the level; `.volume` is left at 1 and only used as a fallback if
-routing ever fails. Three things this depends on:
+The only mechanism iOS honors is a Web Audio GainNode, which means the
+source has to survive `createMediaElementSource`:
 
-- `crossOrigin = "anonymous"` MUST be set before `src`. Routing a
-  cross-origin stream through Web Audio yields SILENCE (no error) unless
-  CORS allows it. The KING-FM stream reflects whatever Origin it is
-  sent, so CORS itself is fine in dev and in production.
-- **iOS refuses the routed element anyway** (John's iPhone, 2026-08-07 -
-  and note every iOS browser is WebKit, so "Chrome on the iPhone" is
-  Safari here). With crossOrigin set, `play()` rejects and the player
-  gets the "stream could not start" note. The stream's OPTIONS preflight
-  was briefly suspected (one response omitted `Range` from
-  Access-Control-Allow-Headers, which would fail Safari's ranged media
-  request) but it allowed Range on 8/8 retries, so that is NOT
-  established; WebKit's long-standing weakness with
-  `createMediaElementSource` on live streams is the likelier cause.
-  Rather than guess, the code DEGRADES: the first refusal drops to a
-  plain element (no CORS, no routing) and retries once, silently. Verified
-  both paths - a simulated refusal falls back and plays with no note
-  shown, and the desktop path routes exactly once and keeps its gain.
-- **The consequence is that iOS has no music level control**: the
-  fallback element is governed by `.volume`, which iOS ignores, so lo
-  and hi sound identical there. Desktop keeps real control. Restoring it
-  on iOS needs a stream whose live playback survives Web Audio routing
-  on WebKit - a different endpoint or provider, not a code change.
-- An element can be routed ONCE, into ONE context. The node is created
-  lazily and never rebuilt; a second attempt (a replaced context) throws
-  and falls back to `.volume`.
-- Music now flows through the AudioContext, so a suspended or
-  interrupted context silences music as well as game sounds. The
-  resume-from-any-state handling already covers this (TODO 9).
+- A SAME-ORIGIN file just works: no CORS to negotiate, the gain node
+  carries the level on every device.
+- A REMOTE source does not. Routing it needs `crossOrigin = "anonymous"`
+  set before `src` (without it, routing yields SILENCE and no error) -
+  and with it, iOS refuses to play the routed element at all. Both paths
+  were measured on John's iPhone; a remote source therefore has NO level
+  control on the primary device. Remember that every iOS browser is
+  WebKit, so "Chrome on the iPhone" is Safari here.
+- An element can be routed ONCE, into ONE context, forever. The node is
+  created lazily and never rebuilt; a second attempt (after a replaced
+  context) throws and falls back to `.volume`.
+- Music flows through the AudioContext, so a suspended or interrupted
+  context silences music as well as game sounds. The resume-from-any-state
+  handling covers this.
 
-Verified by tapping the gain node with an AnalyserNode during real
-playback: RMS 0.006 / peak 0.028 behind a 0.06 gain. A CORS-tainted
-stream would have measured exactly zero.
+That is the whole reason the tracks are files in the repo. **Do not move
+the music to a remote URL**, and do not reintroduce `crossOrigin` or a
+routing fallback - all of that existed only to fight this and is gone.
 
 The pagehide handler pauses the music element as well as closing the
 audio context: a page on its way out, or frozen into the back/forward
-cache, must not keep the stream running, because the next page gets its
-own element and cannot reach the old one.
+cache, must not keep playing, because the next page gets its own element
+and cannot reach the old one.
 
 Auditioning: `applyMusicPlayback(soundGlobal, musicLoudness, isAudition)`
 takes explicit values rather than reading state, because a preview is by

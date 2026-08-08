@@ -443,7 +443,7 @@ mockups) contain:
   with GAME SOUNDS and MUSIC each off/lo/hi below it. There are no
   per-family on/off toggles: OFF lives inside each level. A selected OFF fills
   red rather than green. **The MUSIC row is ABSENT** - not disabled - until
-  the player's middle initial is 🎼 (2026-08-07); a greyed-out control
+  the player's middle initial is ♫ (2026-08-07); a greyed-out control
   advertises itself, a missing one does not. The Music line on the sidewalk
   summary board hides with it, so a locked player sees no trace of music on
   either board.
@@ -509,15 +509,51 @@ even if the player has changed settings since.
 There is no UI Hints control (setting removed 2026-08-07); the patient
 panel's empty-state arrows are permanent.
 
+### The ABOUT whiteboard (built 2026-08-08, APPROVED)
+
+About opens from its own HOME control onto the whiteboard art, in the same
+popup card the settings blackboards use. It is a READING surface: no
+controls, no apply action, and the red close box in the top right is the
+only way out.
+
+Top to bottom:
+
+- The **Triage RUSH! logo**, centered, in the game's 3D brand lettering -
+  and it is the ONLY 3D brand on the board.
+- An **opening paragraph** naming the game as a hospital ED triage
+  game/simulator. It carries no heading and no rule; the logo introduces it.
+- **HOW TO PLAY**, the board's one headed section: a heading in blue marker
+  over a full-width rule, then eight dashed lines - four actions (tap a
+  waiting patient, tap the patient chart, tap a treatment door, review your
+  shift), then the two modes, then the two scoring difficulties.
+- A **centered footer** parked on the bottom of the face: the
+  fictional-content and not-medical-training line, then a version stamp.
+
+Rules that hold for any future edit of this board:
+
+- **Only the logo is 3D.** Every later mention of the brand is FLAT - the
+  same Arial Black face in the same brand red with the extrusion removed.
+  At body size the stacked shadows read as fringing, and they compete with
+  the logo a few lines above. The brand never breaks across two lines.
+- **It must fit on ONE screen.** If the copy outgrows the face, the answer
+  is to make it scroll like the patient chart, or to break the sections
+  into buttons - NOT to shrink the type to squeeze more in.
+- **The whiteboard's usable face is not the blackboard's.** Its content is
+  inset to the white dry-erase area, which is a different rect from the one
+  the letter boards use; see document `4`.
+- The board says this is a game and **not medical training or advice**.
+  That line is deliberate and matches the ruling that the Shift Review may
+  make no claim about the player's level of training.
+
 Title choices include `Intern`. Settings controls are the letter-board groups
 described above - radios over the board artwork, and odometer drums for the
 player name; there are no text inputs or selects on the boards, and no
-keyboard ever appears. About uses the accepted About board. There is no
+keyboard ever appears. There is no
 boombox: the boombox metaphor is retired, and music starts only from a user
 gesture and never autoplays.
 
-Music is five LOCAL files played in order and looped (2026-08-07), replacing
-the KING-FM stream, which could not be volume-controlled on iOS. It plays
+Music is five LOCAL files played in order and looped - local because a
+remote source cannot be volume-controlled on iOS. It plays
 everywhere - entrance, shift and report - and a new shift never interrupts it;
 turning it off and on again restarts at the first track. Because a reload
 cannot resume audio unattended, the first tap anywhere restarts the playlist

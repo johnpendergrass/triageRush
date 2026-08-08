@@ -610,13 +610,12 @@ gone, because OFF now lives inside each level).
   node, and music carries its own much quieter scale, since a music source is
   mastered far hotter than a synthesized blip.
 
-**MUSIC IS LOCAL FILES (built 2026-08-07, TODO.md item 20 DONE).** The
-KING-FM stream was retired: iOS ignores `HTMLMediaElement.volume`, and the
-only way around that - routing through a Web Audio gain node - requires CORS,
-which the routed element then refused to play on the iPhone, so on the primary
-device the stream had no level control at all. Local files are same-origin, so
-the gain node works and lo/hi are real on every device. The settings row, the
-levels, the persistence, and the auditioning all carried over unchanged.
+**MUSIC IS LOCAL FILES, AND MUST STAY LOCAL.** iOS ignores
+`HTMLMediaElement.volume`, and the only way around that - routing through a
+Web Audio gain node - requires CORS for a remote source, which the routed
+element then refuses to play on the iPhone. So a streamed source has no
+level control at all on the primary device. Local files are same-origin, so
+the gain node works and lo/hi are real everywhere.
 
 The rules of playback:
 
@@ -634,7 +633,7 @@ The rules of playback:
 **THE MUSIC IS UNLOCKED BY THE PLAYER'S NAME (John, 2026-08-07).** The MUSIC
 row is hidden - absent, not disabled - on both the GAME OPTIONS board and the
 sidewalk summary board, and no audio file is requested at all, unless the
-player's initials are three symbols whose MIDDLE one is 🎼. So `J🎼P` unlocks
+player's initials are three symbols whose MIDDLE one is ♫. So `J♫P` unlocks
 music and `JMP` does not; a clef first or last does not, and a one- or
 two-symbol name has no middle and cannot. An easter egg rather than a lock:
 the tracks are copyrighted, and this keeps them from playing for anyone just
@@ -643,7 +642,18 @@ the chosen level saved, so unlocking later restores it.
 
 ### About
 
-- About opens from its dedicated HOME control.
+- About opens from its dedicated HOME control onto the whiteboard art.
+- It is a reading surface only: the brand logo, a paragraph naming the game,
+  a HOW TO PLAY list, and a footer. No controls and no apply action; the red
+  close box is the only way out.
+- The HOW TO PLAY list is the game's only in-app statement of the rules:
+  tap a waiting patient, tap the patient chart, tap a treatment door to move
+  them to that room, review the shift when done - then the two modes
+  (Triage! steady, Triage RUSH! faster) and the two scoring difficulties
+  (Strict wants the correct room, Forgiving allows close enough).
+- It states that patients, charts and artwork are fictional and that this is
+  a game, not medical training or advice.
+- Layout and lettering rules are in document `7`.
 
 ## Accessibility and safety rules
 

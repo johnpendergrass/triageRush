@@ -63,20 +63,31 @@ const GAME_CONSTANTS = Object.freeze({
     "❤️",   /* red heart */
     "➕",         /* heavy plus */
     "⭐",         /* star */
-    "🎼"          /* musical score - UNLOCKS MUSIC, see MUSIC_UNLOCK_SYMBOL */
+    "♫"          /* beamed notes - UNLOCKS MUSIC, see MUSIC_UNLOCK_SYMBOL */
   ]),
   INITIALS_LENGTH: 3,
 
   /* Background music stays hidden until the player's MIDDLE initial is
-     this symbol - "J🎼P" turns it on, "JMP" does not (John, 2026-08-07).
+     this symbol - "J♫P" turns it on, "JMP" does not (John, 2026-08-07).
      An easter egg rather than a lock: the music is copyrighted, and this
      keeps it from playing for anyone who is just passing through.
 
-     A note on the glyph: this is U+1F3BC MUSICAL SCORE, an emoji, and NOT
-     U+1D11E MUSICAL SYMBOL G CLEF - the real treble clef is a notation
-     character with patchy font coverage that renders as tofu on many
-     phones. Every other symbol in the alphabet is an emoji too. */
-  MUSIC_UNLOCK_SYMBOL: "🎼",
+     A note on the glyph (John, 2026-08-08). It is U+266B BEAMED EIGHTH
+     NOTES, and it is deliberately the ONE symbol here that is NOT an
+     emoji. Two earlier tries failed on APPEARANCE: U+1F3BC MUSICAL SCORE
+     (a staff) was unreadable clutter at drum size, and U+1F3B6 MULTIPLE
+     MUSICAL NOTES drew DARK GREY on the blackboard - a colour emoji
+     carries its own palette in the font and ignores CSS colour entirely,
+     so it could not be fixed. U+266B is a TEXT character: it draws in
+     the surrounding ink and can therefore be coloured, which is why the
+     boards paint it amber (see .initial-music in styles.css).
+
+     Still avoid U+1D11E and the other U+1Dxxx notation characters -
+     those have patchy phone font coverage and render as tofu. U+266B is
+     safe: the game header has been drawing its sibling U+266A on John's
+     iPhone since 2026-08-07. Neither carries emoji presentation, so
+     neither needs a U+FE0E variation selector. */
+  MUSIC_UNLOCK_SYMBOL: "♫",
 
   MODES: Object.freeze(["triage", "rush"]),
   DIFFICULTIES: Object.freeze(["forgiving", "strict"]),

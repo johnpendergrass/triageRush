@@ -13,7 +13,7 @@
 
 "use strict";
 
-const TRIAGE_RUSH_CACHE_VERSION = "2026-0807-music1b";
+const TRIAGE_RUSH_CACHE_VERSION = "2026-0808-about1d";
 
 /* All paths are relative to the site root (where index.html lives). */
 const ASSET_ROOT = "./triageRush/assets";
@@ -118,10 +118,11 @@ const TRIAGE_RUSH_ASSETS = Object.freeze({
   }),
 
   music: Object.freeze({
-    /* Local background music, replacing the KING-FM stream (2026-08-07).
-       Same-origin is the whole point: the stream could not be routed
-       through a Web Audio gain node without CORS, so iOS had no volume
-       control over it at all. A file has no such problem.
+    /* Local background music files. SAME-ORIGIN IS THE WHOLE POINT: a
+       remote source cannot be routed through a Web Audio gain node
+       without CORS, and without that node iOS has no volume control at
+       all (it ignores HTMLMediaElement.volume). A local file has no such
+       problem - do not move this music to a remote URL.
 
        ARRAY ORDER IS PLAY ORDER. The player runs straight down this list
        and returns to the top - see app.js section 3. The files are

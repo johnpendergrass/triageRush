@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#071822">
   <title>Triage RUSH!</title>
-  <link rel="stylesheet" href="./triageRush/styles.css?v=2026-0807-music1b">
+  <link rel="stylesheet" href="./triageRush/styles.css?v=2026-0808-about1d">
 </head>
 <body>
 
@@ -303,17 +303,58 @@
         <p class="popup-note" id="musicStatusNote" hidden></p>
       </div>
 
-      <!-- About board content -->
+      <!-- ABOUT whiteboard (2026-08-08, built from
+           _mockups/about-board-mockup.html). The 3D logo, John's
+           opening paragraph, one ruled section, and a centered footer
+           parked on the bottom frame. It is sized to fit on ONE screen -
+           if the copy ever outgrows the face, the plan is to make it
+           scroll like the patient chart, or to break the sections into
+           buttons; do not shrink the type to squeeze more in.
+
+           All of it is STATIC markup, like the other brand spots -
+           ui.js writes none of this. -->
       <div class="popup-content popup-content--marker" id="aboutBoardContent" hidden>
-        <h2 class="popup-heading popup-heading--marker">Triage RUSH!</h2>
-        <p>Patients are waiting. Read each chart, judge how sick they really
-           are, and send them to the right triage room.</p>
-        <p><strong>Triage</strong> is a timed, thoughtful shift.
-           <strong>Triage RUSH!</strong> keeps them coming faster and faster.</p>
-        <p>Wrong guesses cost points &mdash; but you can always recall a
-           patient and try a better room.</p>
-        <p class="popup-fine-print">A game by John Pendergrass.
-           Patients and artwork are fictional.</p>
+        <h2 class="about-logo">
+          <span class="brand-sign">Triage <span class="brand-rush">RUSH!</span></span>
+        </h2>
+
+        <div class="about-body">
+          <!-- John's words, verbatim: the department is the ED here,
+               even though the entrance screen is the ER ENTRANCE. -->
+          <p class="about-intro">
+            <span class="brand-flat">Triage
+            <span class="brand-rush">RUSH!</span></span> is a hospital ED
+            triage game/simulator. With high-density UI and patient
+            data, it will be a challenge for even the most ardent student
+            of emergency medicine.
+          </p>
+
+          <section>
+            <h3 class="about-heading">How to Play</h3>
+            <!-- John's words, including the blank line that separates
+                 "what you do" from "which shift you chose". -->
+            <ul class="about-steps">
+              <li>Tap a waiting patient.</li>
+              <li>Tap the patient chart.</li>
+              <li>Tap a treatment door to move them to that room.</li>
+              <li>Review your shift when done.</li>
+              <li><span class="brand-flat">Triage!</span>
+                  is a steady shift.</li>
+              <li><span class="brand-flat">Triage
+                  <span class="brand-rush">RUSH!</span></span> is faster
+                  paced.</li>
+              <li>&lsquo;Strict&rsquo; requires the correct room.</li>
+              <li>&lsquo;Forgiving&rsquo; allows &lsquo;close
+                  enough&rsquo;.</li>
+            </ul>
+          </section>
+
+          <footer class="about-footer">
+            <p class="about-fine">Patients, charts and artwork are
+               fictional. A game, not medical training or advice.</p>
+            <p class="about-version">v 0.19.2 09/2026 jp/claude/chatty</p>
+          </footer>
+        </div>
       </div>
 
       <button class="popup-apply" id="popupApplyButton" type="button"
@@ -658,9 +699,9 @@
 
 </div>
 
-<script src="./triageRush/assets.js?v=2026-0807-music1b"></script>
-<script src="./triageRush/game.js?v=2026-0807-music1b"></script>
-<script src="./triageRush/ui.js?v=2026-0807-music1b"></script>
-<script src="./triageRush/app.js?v=2026-0807-music1b"></script>
+<script src="./triageRush/assets.js?v=2026-0808-about1d"></script>
+<script src="./triageRush/game.js?v=2026-0808-about1d"></script>
+<script src="./triageRush/ui.js?v=2026-0808-about1d"></script>
+<script src="./triageRush/app.js?v=2026-0808-about1d"></script>
 </body>
 </html>

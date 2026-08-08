@@ -27,7 +27,8 @@ Close box:
   Size in the current test app: 36 x 36 CSS pixels
   The box sits inside the visible upper-right corner of the board frame.
 
-Current prototype implementation:
-  _testAppHomeScreen/styles.css
+Current implementation:
+  triageRush/styles.css  (the prototype this note
+  pointed at, _testAppHomeScreen, was deleted 2026-08-08)
 
 Approved 2026-07-31.

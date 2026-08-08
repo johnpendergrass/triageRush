@@ -18,8 +18,10 @@ Current test placement:
   Base displayed width: 480 background pixels
   Displayed height at 100%: approximately 296 background pixels
 
-The position and scale remain provisional and can be adjusted with the controls
-in _testAppHomeScreen. Scaling must keep the top-left corner anchored.
+The position and scale remain provisional. NOTE 2026-08-08: the prototype
+that carried the adjustment controls (_testAppHomeScreen) has been deleted,
+and the boombox metaphor itself was retired 2026-08-04. Scaling must keep
+the top-left corner anchored.
 
 Interactive controls:
   POWER center: 18.0% from asset left, 16.4% from asset top

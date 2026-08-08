@@ -115,11 +115,31 @@
      chooses which one shows, per the 2026-08-06 branding rule), and it
      never decides whether a shift can be reviewed - that comes from the
      game's own availability rule. */
+  /* Write an initials string, wrapping the music-unlock symbol so CSS can
+     colour that ONE character (John, 2026-08-08: it was unreadable in the
+     drum). This is only possible because the symbol is a TEXT glyph -
+     a colour emoji would carry its own palette and ignore the class.
+     Every place initials are shown goes through here. */
+  function writeInitials(element, initials) {
+    const unlockSymbol = GAME.GAME_CONSTANTS.MUSIC_UNLOCK_SYMBOL;
+    element.replaceChildren();
+    for (const symbol of GAME.initialsSymbols(initials)) {
+      if (symbol === unlockSymbol) {
+        const span = document.createElement("span");
+        span.className = "initial-music";
+        span.textContent = symbol;
+        element.append(span);
+      } else {
+        element.append(symbol);
+      }
+    }
+  }
+
   function renderHomeBoardSummaries(state) {
     const settings = state.settings;
 
     ui.playerBoardTitleLine.textContent = state.player.title;
-    ui.playerBoardInitialsLine.textContent = state.player.initials;
+    writeInitials(ui.playerBoardInitialsLine, state.player.initials);
 
     const isRush = settings.mode === "rush";
     ui.shiftBoardModeTriage.hidden = isRush;
@@ -287,7 +307,9 @@
       for (const offset of [-1, 0, 1]) {
         const cell = document.createElement("div");
         cell.className = "drum-cell" + (offset === 0 ? "" : " drum-cell--peek");
-        cell.textContent = valueAt(offset);
+        /* writeInitials handles a single symbol as happily as three, and
+           it is what colours the music-unlock note on the drum. */
+        writeInitials(cell, valueAt(offset));
         drum.append(cell);
       }
     }
@@ -469,10 +491,15 @@
     ui.chartTimerValue.textContent = formatClock(state.shift.remainingMs);
 
     /* The icon IS the GLOBAL SOUND setting (John, 2026-08-07) - one
-       persisted value seen twice, here and on the settings board. */
+       persisted value seen twice, here and on the settings board.
+       The GLYPH never changes (John, 2026-08-08): it is always the note,
+       and muting draws a red slash across it from CSS. There is no
+       reliable plain-text "muted note" character - the Unicode mute
+       glyphs are colour emoji on iOS - so the overlay is drawn, not
+       typed. See .sound-button.is-muted in styles.css. */
     const soundOn = state.settings.soundGlobal;
     ui.gameSoundButton.classList.toggle("is-muted", !soundOn);
-    ui.gameSoundButton.textContent = soundOn ? "♪" : "×";
+    ui.gameSoundButton.textContent = "♪";
     ui.gameSoundButton.setAttribute("aria-label",
       soundOn ? "Mute sounds" : "Unmute sounds");
   }
@@ -1390,8 +1417,10 @@
       `MODE: ${isRush ? "Triage RUSH!" : "Triage!"}, ${difficultyName}, ` +
       configuredShiftLengthLabel(played);
 
-    ui.reviewProvider.textContent =
-      `${played.player.title} ${played.player.initials}`;
+    ui.reviewProvider.replaceChildren(`${played.player.title} `);
+    writeInitials(
+      ui.reviewProvider.appendChild(document.createElement("span")),
+      played.player.initials);
     ui.reviewDate.textContent = formatShiftDate(state.shift.startedAtMs);
     /* Duration is time actually RUN, so ending early at 3:12 of a 5:00
        shift prints 3:12 (John, 2026-08-05). Because the mode line above

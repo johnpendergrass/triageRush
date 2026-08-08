@@ -191,7 +191,18 @@ margin, using one common box so a single card geometry still serves both).
 The uncropped originals are in `lobby-page/archived/`. Because the canvas is
 now pure artwork, the card's percentage geometry describes the board itself:
 re-cropping means re-deriving the card aspect ratio, the content insets, and
-the two corner buttons' positions. Center a board in the HOME frame at 93.75% of frame height
+the two corner buttons' positions.
+
+**The two boards' usable faces are DIFFERENT rects, and the difference
+matters** (measured 2026-08-08). The blackboard's ribbed face runs
+15.9%-83.5% of the card's width. The whiteboard's white dry-erase area,
+inside its thin silver frame, runs x 7.4%-93.5% and y 3.8%-97.2% - measured
+on the art at x 56-703, y 52-1348 of 752x1387. The shared content insets
+were tuned for the blackboard and sit OUTSIDE the whiteboard's face, so the
+About board carries its own; anything drawn to the shared insets on the
+whiteboard rides onto the silver frame.
+
+Center a board in the HOME frame at 93.75% of frame height
 while preserving aspect ratio. Use a close target of at least 44 CSS pixels near
 the board's established top-right close position.
 
@@ -203,10 +214,10 @@ on disk, unused and out of the runtime manifest, pending John's decision on
 archiving unused art. Sound options are GLOBAL SOUND plus a level for each of
 GAME SOUNDS and MUSIC on the GAME OPTIONS board.
 
-**The KING-FM stream was retired 2026-08-07** (TODO.md item 20). It could not
-be volume-controlled on iOS: Apple ignores `HTMLMediaElement.volume`, and
-routing through a Web Audio gain node - the one mechanism iOS honors -
-requires CORS, which the routed element then refused to play on the iPhone.
+**The music assets are LOCAL FILES, and must stay local.** A remote source
+cannot be volume-controlled on iOS: Apple ignores `HTMLMediaElement.volume`,
+and routing through a Web Audio gain node - the one mechanism iOS honors -
+requires CORS, which the routed element then refuses to play on the iPhone.
 Local files are same-origin, so the gain node works everywhere.
 
 #### The audio assets

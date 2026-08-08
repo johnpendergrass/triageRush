@@ -12,7 +12,7 @@ triageRush/
 |-- docs/                         current product and implementation specification
 |-- triageRush/                   production application and runtime artwork
 |-- patient-data/                 authoritative patient JSON and portraits
-|-- _testAppMobile/               mobile implementation and verification target
+|-- _mockups/                     standalone design harnesses (no fetch, open from disk)
 `-- ___patient-CRUD (standalone)/ future independent patient editor
 ```
 
@@ -24,8 +24,13 @@ triageRush/
 - `triageRush/` owns production code and runtime artwork.
 - `patient-data/` owns authoritative patient JSON, portraits, schema, vital
   bands, and validators.
-- `_testAppMobile/` is the self-contained implementation target used to prove
-  the documented behavior before production transfer.
+- `_mockups/` holds standalone design harnesses. They COPY the shell rules
+  rather than linking them, so they open straight from disk.
+
+The two prototype apps that preceded the production build, `_testAppMobile/`
+and `_testAppHomeScreen/`, were DELETED on 2026-08-08. Everything they proved
+lives in `triageRush/` and `docs/`; their artwork was superseded working
+copies. They remain in git history if ever needed.
 - `___patient-CRUD (standalone)/` is reserved for an independent local patient
   creation and editing tool.
 

@@ -167,11 +167,12 @@
      logarithmic, so 0.06 sits about 24dB below full and 0.02 about 34dB
      below.
 
-     THESE TWO NUMBERS ARE UNTUNED for the local files. They were set by
-     ear against the KING-FM stream, which was both louder and unfiltered;
-     the tracks are now heavily compressed and band-limited, so they will
-     almost certainly want raising. John's ear is the authority - tune
-     these two numbers and nothing else. */
+     SETTLED BY EAR (John, 2026-08-08): "it is fine where it is." These
+     were carried over from an earlier, louder source and were expected to
+     want raising against the compressed, band-limited tracks - they did
+     not. Leave them alone unless John says otherwise, and if the music
+     level ever needs changing, change these two numbers and nothing
+     else. */
   const MUSIC_VOLUME = { off: 0, lo: 0.02, hi: 0.06 };
 
   /* Set only while the settings board samples a level the player has not
@@ -429,7 +430,7 @@
   }
 
   /* ----------------------------------------------------------------------
-     3. Music: a local playlist (replaced the KING-FM stream 2026-08-07).
+     3. Music: a local playlist.
 
      Five files, played in manifest order, looping forever. Music plays
      EVERYWHERE - the ER ENTRANCE, the shift, the report - and a new shift

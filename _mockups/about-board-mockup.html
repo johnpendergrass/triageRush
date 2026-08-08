@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ABOUT whiteboard — in-shell mockup</title>
+<!--
+  In-shell mockup for the ABOUT board (John, 2026-08-08).
+
+  THE BRIEF, in John's words:
+    "It currently brings up a whiteboard type of display. It should have
+     the Triage RUSH! logo at top, in a nice 3D look. I want three
+     sections: 1. Welcome... 2. How to Play... 3. Credits.... All need to
+     fit on the one screen. If anything eventually needs more space we
+     will either make it scrolling (like the patient chart), or have them
+     be big buttons. But i hope to have it all on one screen. Close box
+     at top right."
+
+  JOHN'S SECOND PASS, after seeing three heading variants (2026-08-08).
+  This file now shows the CHOSEN design only; the rejected ones are
+  recorded here so they are not re-pitched:
+    1. RULED headings win - coloured marker caps over a full-width
+       stroke. (Rejected: B numbered discs, C quiet single-ink caps.)
+    2. The WELCOME heading and its rule are GONE. John's intro copy
+       stays, but it now runs straight under the logo as an opening
+       paragraph - so HOW TO PLAY is the only headed section.
+    3. Only the LOGO is 3D. Every later mention of the brand is FLAT -
+       "quieter, without the 3D effect, like the Triage! in the Settings
+       summary board."
+    4. The two mode sentences are SEPARATE LINES, one step each.
+    5. The CREDITS section is gone. The board ends on a two-line footer:
+       the fictional/disclaimer line and a version stamp.
+
+  BUILT INTO THE GAME 2026-08-08 (cache 2026-0808-about1d). styles.css
+  and index.html are the source of truth now; this file is the design
+  record and is kept in sync with what shipped.
+
+  JOHN'S FOURTH PASS simplified the first three steps to "Tap a waiting
+  patient.", "Tap the patient chart." and "Tap a treatment door to move
+  them to that room."
+
+  JOHN'S FIFTH PASS added the two difficulty lines, and with them the
+  leave to drop the blank line above the mode lines "if necessary". It
+  was necessary. Measured in the real app at a 375px shell: 6cqw with
+  the blank line = 7px of slack, 6cqw without = 24px, 5.8cqw without =
+  33px. The last shipped - half a pixel of glyph height is invisible,
+  a line of headroom is not. The BINDING line is the intro, not a step:
+  at 6.2cqw it takes a sixth line and slack collapses.
+
+  JOHN'S THIRD PASS (2026-08-08): the footer is CENTRED, and the steps
+  are rewritten in his words - examine, chart, door, review, then a
+  BLANK LINE, then the two mode lines. The room names and the recall
+  step are gone with that rewrite; the recall affordance is taught in
+  the game itself by the door hint, not here.
+
+  ONE SCREEN IS THE HARD CONSTRAINT. The chrome at the bottom carries a
+  live FIT readout (ink height vs face height, plus the slack above the
+  footer) so overflow is a number, not a judgement call. Check it on the
+  phone, not the desktop.
+
+  Shell + popup-card rules are COPIED from styles.css per the _mockups
+  convention; the whiteboard is the live asset by relative path. Opens
+  from disk on desktop; on the iPhone use John's bat server:
+  http://<pc-ip>:8090/_mockups/about-board-mockup.html
+
+  WHITEBOARD FACE GEOMETRY (measured off the 752x1387 art, 2026-08-08):
+    the white dry-erase face inside the silver frame is
+      x  56..703  ->  left 7.4%   right 6.5%
+      y  52..1348 ->  top  3.8%   bottom 2.8%
+  The live .popup-content insets (3.9 / 3.5 / 6.6 / 7.8) were tuned for
+  the BLACKBOARD and sit OUTSIDE this face - a full-width row on the
+  About board rides onto the silver frame today. This mockup gives the
+  About content its own insets, hugging the face with margin to spare:
+  10% sides, 7.5% top (which clears the close box), 6% bottom.
+
+  THE LOGO is .brand-sign, the game's ONE 3D brand treatment (styles.css:
+  #ec543d face, four stacked #a03426 extrusion shadows, soft cast),
+  copied verbatim - this board must not invent a second one. Its offsets
+  are in EM so it scales. "Triage RUSH!" runs about 7.6x the font size
+  wide, so 11cqw of the face puts the wordmark at about 87% of the face -
+  the same figure the sidewalk summary boards settled on for this exact
+  string, which leaves room for iOS's wider Arial Black metrics.
+  Re-measure before enlarging it.
+
+  THE FLAT BRAND (.brand-flat) is the same Arial Black face in the same
+  brand red, with the extrusion shadows REMOVED. Body copy is 13-14px
+  here; at that size the 3D stack reads as fringing rather than depth,
+  and it competed with the logo four lines above it.
+
+  MARKER COLOURS are dry-erase stock: red #b3241c (already the About
+  heading colour in styles.css), blue #1f4e79. HOW TO PLAY is blue on
+  purpose - a second marker reads as whiteboard, and red would sit too
+  close to the brand's own red-orange right above it.
+
+  COPY IS A DRAFT except John's opening paragraph and the version line,
+  which are his words. This closes the standing backlog item "Settings
+  and About placeholder text". Two things in it are deliberate and
+  should survive editing: nothing names the music (the tracks are
+  anonymous by design), and the footer says this is a game and not
+  medical training - the same stance doc 10 took when it ruled the Shift
+  Review may make no claim about level of training.
+-->
+<style>
+  :root {
+    --navy-950: #031019;
+    --marker-ink: #1d2a30;
+    --marker-red: #b3241c;
+    --marker-blue: #1f4e79;
+    --brand-face: #ec543d;
+    --brand-brick: #a03426;
+    --brand-cast: rgba(60, 30, 15, 0.55);
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: "Arial Narrow", "Roboto Condensed", Arial, sans-serif;
+    background: radial-gradient(circle at 50% 20%,
+      #244454 0%, #0d2532 40%, #02090e 100%);
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    padding:
+      max(5dvh, env(safe-area-inset-top))
+      max(4px, env(safe-area-inset-right))
+      max(5dvh, env(safe-area-inset-bottom))
+      max(4px, env(safe-area-inset-left));
+  }
+  [hidden] { display: none !important; }
+  button {
+    font: inherit; color: inherit; cursor: pointer;
+    border: none; background: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  img { user-select: none; -webkit-user-drag: none; }
+
+  /* ---- the 9:16 shell (copied from styles.css section 2) ---- */
+  .app-shell {
+    position: relative;
+    width: min(calc(100vw - 8px), calc(90dvh * 0.5625));
+    height: min(90dvh, calc((100vw - 8px) * 1.7778));
+    overflow: hidden;
+    background: var(--navy-950);
+    border: 2px solid #46606b;
+    box-shadow: 0 24px 80px #000c, inset 0 0 0 2px #0b1014;
+    container-type: inline-size;
+  }
+  @supports (height: 100svh) {
+    .app-shell {
+      width: min(
+        calc(100svw - max(4px, env(safe-area-inset-left))
+                    - max(4px, env(safe-area-inset-right))),
+        calc((100svh - max(5svh, env(safe-area-inset-top))
+                     - max(5svh, env(safe-area-inset-bottom))) * 0.5625));
+      height: min(
+        calc(100svh - max(5svh, env(safe-area-inset-top))
+                    - max(5svh, env(safe-area-inset-bottom))),
+        calc((100svw - max(4px, env(safe-area-inset-left))
+                     - max(4px, env(safe-area-inset-right))) * 1.7778));
+    }
+  }
+
+  /* ---- popup layer + card (copied from styles.css section 5) ------
+     The card IS the artwork. container-type makes every cqw inside the
+     popup track the CARD, so the board is phone-true at any window
+     size; the About FACE narrows that further to its own container. */
+  .popup-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    display: grid;
+    place-items: center;
+    background: rgb(2 7 10 / 68%);
+    backdrop-filter: blur(2px);
+  }
+  .popup-card {
+    position: relative;
+    height: 93.75%;
+    aspect-ratio: 752 / 1387;
+    max-width: 96%;
+    container-type: inline-size;
+  }
+  .popup-board-art {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .popup-close {
+    position: absolute;
+    top: 0;
+    right: 0.4%;
+    width: clamp(35px, 12.01cqw, 50px);
+    height: clamp(35px, 12.01cqw, 50px);
+    z-index: 3;
+    border-radius: 7px;
+    border: 2px solid #fff;
+    background: linear-gradient(#f4574c, #a20e08);
+    color: #fff;
+    font-weight: 900;
+    font-size: clamp(18px, 6.13cqw, 28px);
+    line-height: 1;
+  }
+
+  /* ---- the About face -------------------------------------------------
+     Its own insets, hugging the measured white face rather than the
+     blackboard's. container-type: inline-size means every size below is
+     a proportion of the usable whiteboard, so a future re-crop of the
+     art needs no type re-tuning - the same rule the letter boards use.
+     top 7.5% of the card is ~47px on a 375px phone, which clears the
+     40px close box, so the logo can be centred without dodging it. */
+  .about-face {
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    top: 7.5%;
+    bottom: 6%;
+    z-index: 2;
+    container-type: inline-size;
+    color: var(--marker-ink);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* THE LOGO. Copied verbatim from styles.css .brand-sign - the game's
+     one 3D brand treatment. Only the size is local. */
+  .brand-sign {
+    font-family: "Arial Black", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 900;
+    color: var(--brand-face);
+    text-shadow:
+      0.012em 0.012em 0 var(--brand-brick),
+      0.024em 0.024em 0 var(--brand-brick),
+      0.036em 0.036em 0 var(--brand-brick),
+      0.048em 0.048em 0 var(--brand-brick),
+      0.09em 0.11em 0.1em var(--brand-cast);
+  }
+  .brand-sign .brand-rush { font-size: 1.18em; }
+
+  .about-logo {
+    font-size: 11cqw;
+    line-height: 1.05;
+    text-align: center;
+    white-space: nowrap;
+    margin-bottom: 5cqw;
+  }
+
+  /* THE FLAT BRAND, for every mention after the logo (John,
+     2026-08-08): the same face and colour, no extrusion. RUSH! keeps
+     its step up, as it does on the sign. nowrap because "Triage /
+     RUSH!" broken across two lines is not the brand. */
+  .brand-flat {
+    font-family: "Arial Black", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 900;
+    color: var(--brand-face);
+    white-space: nowrap;
+  }
+  .brand-flat .brand-rush { font-size: 1.18em; }
+
+  /* ---- body -----------------------------------------------------------
+     A column so the footer can be parked at the bottom of the face
+     rather than trailing the last step. */
+  .about-body {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* John's opening paragraph. No heading and no rule above it (his
+     second pass) - the logo introduces it. */
+  .about-intro {
+    font-family: Arial, sans-serif;
+    font-size: 5.8cqw;
+    line-height: 1.36;
+    margin-bottom: 4.2cqw;
+  }
+
+  .about-heading {
+    font-family: Arial, sans-serif;
+    font-weight: 800;
+    font-size: 6.3cqw;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 3.4cqw;
+    color: var(--marker-blue);
+    padding-bottom: 1.1cqw;
+    border-bottom: 0.7cqw solid currentColor;
+  }
+
+  /* HOW TO PLAY reads as steps, not prose: a hanging marker dash keeps
+     the wrapped lines aligned under the text, not under the dash. */
+  .about-steps { list-style: none; }
+  .about-steps li {
+    font-family: Arial, sans-serif;
+    font-size: 5.8cqw;
+    line-height: 1.36;
+    padding-left: 4.8cqw;
+    text-indent: -4.8cqw;
+    margin-bottom: 1.9cqw;
+  }
+  .about-steps li:last-child { margin-bottom: 0; }
+
+  /* The blank line before the two mode lines is GONE as of the fifth
+     pass - spent on the two difficulty lines, with John's leave. It was
+     `.step-gap { margin-top: 1.36em }`, a margin rather than an empty
+     <li> (a spacer list item is announced as a real empty item by a
+     screen reader and would draw its own dash). Restoring it costs
+     ~22px of slack. */
+  .about-steps li::before {
+    content: "\2013\00a0\00a0";
+    font-weight: 700;
+  }
+
+  /* ---- footer ---------------------------------------------------------
+     margin-top: auto parks these two lines on the bottom of the face no
+     matter how the copy above grows or shrinks. */
+  .about-footer {
+    margin-top: auto;
+    padding-top: 4cqw;
+    text-align: center;
+  }
+  .about-fine {
+    font-family: Arial, sans-serif;
+    font-size: 4.7cqw;
+    line-height: 1.34;
+    opacity: 0.78;
+  }
+  .about-version {
+    font-family: Arial, sans-serif;
+    font-size: 4.1cqw;
+    letter-spacing: 0.02em;
+    margin-top: 1.6cqw;
+    opacity: 0.6;
+  }
+
+  /* ---- mockup chrome (NOT game UI) ---- */
+  .chrome {
+    position: fixed;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font: 600 11px/1.3 Arial, sans-serif;
+    color: #cfe3ee;
+    background: #071722dd;
+    border: 1px solid #2c4a5a;
+    border-radius: 999px;
+    padding: 5px 10px;
+  }
+  .chrome button {
+    border: 1px solid #375768;
+    border-radius: 999px;
+    padding: 4px 9px;
+    color: #cfe3ee;
+    background: #0d2331;
+  }
+  .chrome button[aria-pressed="true"] { background: #1d5f86; color: #fff; }
+  .chrome .fit.over { color: #ff8b7f; }
+  .chrome .fit.ok { color: #7fe0a8; }
+
+  /* Face outline, to see how close the lettering comes to the frame. */
+  .show-face .about-face { outline: 1px dashed #d0342c88; }
+</style>
+</head>
+<body>
+
+<div class="chrome">
+  <button type="button" id="faceToggle" aria-pressed="false">face</button>
+  <span class="fit" id="fitReadout">fit</span>
+</div>
+
+<div class="app-shell">
+  <div class="popup-layer">
+    <div class="popup-card" id="popupCard">
+      <img class="popup-board-art"
+           src="../triageRush/assets/lobby-page/about-whiteboard.png" alt="">
+
+      <button class="popup-close" type="button" aria-label="Close">&#10005;</button>
+
+      <div class="about-face" id="aboutFace">
+        <div class="about-logo">
+          <span class="brand-sign">Triage <span class="brand-rush">RUSH!</span></span>
+        </div>
+
+        <div class="about-body" id="aboutBody">
+
+          <!-- JOHN'S WORDS, 2026-08-08, verbatim. "ED, not ER" was his
+               own correction a minute later - the department is the ED
+               here, even though the entrance screen is still called the
+               ER ENTRANCE. -->
+          <p class="about-intro">
+            <span class="brand-flat">Triage
+            <span class="brand-rush">RUSH!</span></span> is a hospital ED
+            triage game/simulator. With high-density UI and patient
+            data, it will be a challenge for even the most ardent student
+            of emergency medicine.
+          </p>
+
+          <section class="about-section">
+            <h2 class="about-heading">How to Play</h2>
+            <!-- JOHN'S WORDS, 2026-08-08, verbatim - including the
+                 blank line before the two mode lines, which separates
+                 "what you do" from "which shift you chose". -->
+            <ul class="about-steps">
+              <li>Tap a waiting patient.</li>
+              <li>Tap the patient chart.</li>
+              <li>Tap a treatment door to move them to that room.</li>
+              <li>Review your shift when done.</li>
+              <li><span class="brand-flat">Triage!</span>
+                  is a steady shift.</li>
+              <li><span class="brand-flat">Triage
+                  <span class="brand-rush">RUSH!</span></span> is faster
+                  paced.</li>
+              <li>&lsquo;Strict&rsquo; requires the correct room.</li>
+              <li>&lsquo;Forgiving&rsquo; allows &lsquo;close
+                  enough&rsquo;.</li>
+            </ul>
+          </section>
+
+          <footer class="about-footer">
+            <p class="about-fine">Patients, charts and artwork are
+               fictional. A game, not medical training or advice.</p>
+            <p class="about-version">v 0.19.2 09/2026 jp/claude/chatty</p>
+          </footer>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* Mockup chrome only. None of this ships. */
+  const face = document.getElementById("aboutFace");
+  const card = document.getElementById("popupCard");
+  const readout = document.getElementById("fitReadout");
+
+  const faceToggle = document.getElementById("faceToggle");
+  faceToggle.addEventListener("click", () => {
+    const on = faceToggle.getAttribute("aria-pressed") !== "true";
+    faceToggle.setAttribute("aria-pressed", String(on));
+    document.body.classList.toggle("show-face", on);
+  });
+
+  /* THE ONE MEASUREMENT THAT MATTERS: does it fit on one screen?
+     Measure to the BOTTOM OF THE FOOTER, not the body's own height:
+     .about-body is flex:1 and stretches to fill the face, so its
+     scrollHeight reads 100% right up until it overflows. The footer is
+     bottom-parked, so the number that really matters is the SLACK above
+     it - that is the room the copy may still grow into. */
+  function measure() {
+    const steps = face.querySelector(".about-steps");
+    const footer = face.querySelector(".about-footer");
+    const faceTop = face.getBoundingClientRect().top;
+    const used = footer.getBoundingClientRect().bottom - faceTop;
+    const slack = footer.getBoundingClientRect().top
+      - steps.getBoundingClientRect().bottom;
+    const room = face.clientHeight;
+    readout.textContent =
+      "fit " + Math.round(used) + " / " + room + "px"
+      + "  (" + Math.round((used / room) * 100) + "%)"
+      + "   slack " + Math.round(slack) + "px"
+      + "   card " + Math.round(card.clientWidth) + "px";
+    /* 1px of tolerance: the footer is bottom-parked, so `used` lands on
+       the face's own height and sub-pixel rounding alone would otherwise
+       flag a board that fits. Slack is the real alarm. */
+    const over = used > room + 1 || slack < 0;
+    readout.classList.toggle("over", over);
+    readout.classList.toggle("ok", !over);
+  }
+
+  window.addEventListener("resize", measure);
+  window.addEventListener("load", measure);
+  measure();
+</script>
+
+</body>
+</html>

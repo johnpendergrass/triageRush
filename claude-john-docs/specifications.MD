@@ -1,8 +1,115 @@
 # triageRush — specifications (pointer file)
 
-**Last modified:** 2026-08-07 (local music + mode name in the game header)
+**Last modified:** 2026-08-08 (the ABOUT board is BUILT and APPROVED)
 
-## 2026-08-07 (fourth session): KING-FM is GONE; music is local files
+## 2026-08-08 (second session): the ABOUT board is BUILT and APPROVED
+
+Cache `2026-0808-about1d`. John: **"lets call that about panel done and
+approved."** The old About board was four paragraphs of placeholder prose
+on the whiteboard; it is now a designed reading surface. Designed in
+`_mockups/about-board-mockup.html` and built the same session, through
+five rounds of John's edits.
+
+- **The board, top to bottom:** the Triage RUSH! logo in the 3D brand
+  lettering; John's opening paragraph naming the game as a hospital **ED**
+  triage game/simulator; HOW TO PLAY, a blue marker heading over a
+  full-width rule with eight dashed lines under it (four actions, the two
+  modes, the two scoring difficulties); and a centered footer carrying the
+  fictional-content line and `v 0.19.2 09/2026 jp/claude/chatty`.
+- **ONLY THE LOGO IS 3D** (John). Every later mention of the brand is
+  FLAT - same Arial Black face, same brand red, extrusion removed. At body
+  size the stacked shadows read as fringing rather than depth, and they
+  competed with the logo four lines above. The brand never breaks across
+  two lines.
+- **Variant A "ruled" won** the heading comparison; numbered discs and
+  quiet single-ink caps were both rejected. The heading is BLUE, a second
+  dry-erase marker, because red would sit too close to the brand's own
+  red-orange right above it.
+- **The WELCOME and CREDITS headings were cut** by John after seeing them:
+  the intro needs no label when the logo introduces it, and the credits
+  became the footer. HOW TO PLAY is the only headed section.
+- **ONE SCREEN IS THE CONSTRAINT, and it was measured, never guessed** -
+  in the real app at a 375px shell, at every wording change. The board
+  ends with 33px between the last step and the footer (26px at a 320px
+  window). If the copy ever outgrows the face the answer is to make it
+  SCROLL like the patient chart, or to break the sections into buttons -
+  **not** to shrink the type.
+- **A blank line above the two mode lines was spent** to buy the two
+  difficulty lines, with John's leave ("you can get rid of the space above
+  the Triage lines if necessary"). It was necessary: keeping it left 7px
+  of slack.
+- **The whiteboard's face is NOT the blackboard's.** The shared
+  `.popup-content` insets were tuned for the blackboard and sit outside the
+  whiteboard's white area, so the About board now carries its own. This was
+  a live bug: anything drawn to the full shared width rode onto the silver
+  frame.
+- This closes the About half of the old "Settings and About placeholder
+  text" backlog item. **Settings placeholder text is still open.**
+- Docs 3/6/7/9 carry the built spec; doc 7 has the layout rules and doc 6
+  the two boards' differing face rects.
+
+## 2026-08-08 (first session): two icons fixed, and five items closed
+
+Cache `2026-0808-icon1c`. Two small builds — both about a GLYPH that could
+not be read — plus a round of decisions.
+
+- **THE MUTE ICON IS A DRAWN OVERLAY (TODO 6, BUILT).** The game-screen
+  glyph is now ALWAYS the note ♪; muting dims it and lays a **red diagonal
+  slash** over it from CSS (`.sound-button.is-muted::after` — a 2px bar at
+  92% width, rotated 45°, cased 1px in the button's own background so it
+  stays readable where it crosses the note). The old × glyph and the
+  line-through are gone. Red because red already means OFF everywhere in
+  this game — the settings radios, the summary-board values. The slash is
+  drawn rather than typed because **no plain-text muted-note character
+  exists**: the Unicode mute glyphs are colour emoji on iOS and would look
+  nothing like the rest of the header.
+- **THE MUSIC-UNLOCK GLYPH IS NOW ♫, AND IT IS APPROVED** (John: "that
+  amber eight note is perfect. it will work."). It went 🎼 → 🎶 → ♫ in one
+  sitting, both changes on appearance: the staff was clutter at drum size,
+  and the notes emoji drew DARK GREY on the blackboard. **A colour emoji
+  carries its own palette inside the font and ignores CSS `color`** — that
+  is the durable lesson. U+266B is a TEXT character, so it takes
+  `var(--amber)` and reads clearly. `ui.js writeInitials()` wraps that one
+  symbol wherever initials are drawn; the report's cream paper reverts it
+  to ink. No migration was written, by John's instruction — there are no
+  users, so old saved names simply fall back to defaults once.
+- **TODO 3 (settings blackboards) is FULLY CLOSED** — John's pass on the
+  summary boards, "fine, on iPhone and on desktop", and the review lines
+  confirmed as variant A (plain lettering).
+- **TODO 10 (loudness switch) is CLOSED as already delivered** by the
+  settings boards: GLOBAL SOUND plus off/lo/hi for GAME SOUNDS and MUSIC.
+  DECLINED, not pending: the game-screen icon will NOT cycle levels — it
+  stays a global toggle, because one persisted value should not mean two
+  different things.
+- **MUSIC LOUDNESS IS SETTLED** (John: "it is fine where it is").
+  `MUSIC_VOLUME` stays lo 0.02 / hi 0.06; the game family stays 0.22 / 1.
+  They were expected to want raising against the compressed tracks and did
+  not. Only the 3.3 dB spread BETWEEN tracks is still unjudged, and it is
+  not urgent.
+- **TODO 9 (iOS silent sounds) is CLOSED** — "not a problem in some time";
+  no recurrence in four sessions since the 2026-08-06 hardening. Reopen if
+  it returns; the three iOS Web Audio fixes and what to observe are kept in
+  the DONE entry.
+- **TODO 18 (board art paints after the text) stays OPEN and HELD.** Do not
+  fix it yet: the loading rework (TODO 1 + the asset-loading debt at Phase
+  10) decides what is decoded up front and may change or erase the symptom.
+- **The game header keeps `Triage RUSH!` in RUSH mode** (John: "not a
+  question"). Shortening it to `RUSH!` is rejected, not deferred.
+- **THE FORMER MUSIC STREAM IS SCRUBBED FROM THE LIVE DOCS** (John: "remove
+  all the kingfm stuff - it is history"). The station name is gone from the
+  code comments, docs 1/3/4/6/7/8, and these two files; item 20's pre-build
+  decision record was deleted outright. What was KEPT, because it still
+  binds every future audio decision, is the constraint without the story:
+  **music must stay LOCAL**, since iOS ignores `HTMLMediaElement.volume`
+  and the gain node that carries the level needs CORS for a remote source,
+  which iOS then refuses to play. Frozen history — `docs/2-dev-history.md`,
+  `docs/archive/**`, and past ToBeContinued files — was left alone.
+
+Open work is now THREE items: 1 (50-patient queue), 11 (shift history),
+and 18 (held for the loading rework). Items 3, 6, 9 and 10 all closed
+today.
+
+## 2026-08-07 (fourth session): music became LOCAL FILES
 
 TODO 20 is DONE (cache `2026-0807-music1b`). The stream lost because iOS
 ignores `HTMLMediaElement.volume` and the Web Audio gain node that would fix
@@ -26,7 +133,7 @@ are SAME-ORIGIN, so the gain node works and lo/hi are finally real there.
   catalog number - so renaming alone would have achieved nothing. They ship
   as `track-NN.mp3` with metadata stripped; originals, the name mapping, and
   the listening test are gitignored.
-- **MUSIC IS UNLOCKED BY THE PLAYER'S NAME** (John). 🎼 joined the initials
+- **MUSIC IS UNLOCKED BY THE PLAYER'S NAME** (John). ♫ joined the initials
   alphabet; if it is the MIDDLE of three initials, the MUSIC row appears on
   both the settings board and the summary board and playback is possible.
   Otherwise the row is ABSENT - not disabled - and no audio file is fetched
@@ -37,11 +144,10 @@ are SAME-ORIGIN, so the gain node works and lo/hi are finally real there.
   `abandonMusicRouting`, the failure path that wrote preferences, and
   `UI.setPendingMusicLoudness`. What survived is what earned it - the gain
   node, the pagehide release, audition-on-tap, cancel-reverts-to-saved.
-- **STILL UNTUNED: `MUSIC_VOLUME` (lo 0.02 / hi 0.06).** Those numbers were
-  set by ear against the loud, unfiltered stream and mean little against
-  compressed, band-limited files. John's ear is the authority. A 3.3 dB
-  spread between the five tracks is also open; one re-run of the transcode
-  script evens it out at no size cost.
+- **`MUSIC_VOLUME` (lo 0.02 / hi 0.06) was expected to want raising** —
+  the numbers were set against the loud, unfiltered stream. SUPERSEDED
+  2026-08-08: John listened and settled them exactly where they were. Only
+  the 3.3 dB spread between the five tracks is still open.
 
 ## 2026-08-07 (fourth session): the game header names the MODE
 
@@ -118,7 +224,7 @@ The PLAYER NAME and GAME OPTIONS letter boards are in the game (cache
 variant A — John's pick. What this changed beyond appearance:
 
 - **Sound model.** GLOBAL SOUND (off/on) is the master; GAME SOUNDS and
-  KING-FM each carry their own level (off/lo/hi), so per-family on/off
+  MUSIC each carry their own level (off/lo/hi), so per-family on/off
   toggles are gone. Levels are real volume: one gain node for every game
   sound (off 0, lo 0.35, hi 1) and the same figure on the music
   element's volume.
@@ -142,17 +248,15 @@ variant A — John's pick. What this changed beyond appearance:
   the board's wooden frame on the iPhone (the brand words are now at the
   regular option size), and the board face had been uppercasing the
   brand, which now keeps its "Triage RUSH!" sign spelling.
-- **KING-FM IS BEING RETIRED; music goes LOCAL** (John, 2026-08-07). iOS
-  ignores `HTMLMediaElement.volume`, and the only mechanism it honors - a
-  Web Audio gain node - needs CORS, which the routed stream element then
-  refused to play on the iPhone. So the stream had no level control at all
-  on the primary device, at full volume against the game sounds. NOTHING
-  WAS CHANGED IN THE APP at John's instruction: the stream still plays.
-  Local files are same-origin, so the gain node will work and lo/hi will
-  finally be real on the phone. TODO.md item 20 has the plan and lists
-  what carries over (everything but the source URL and the CORS
-  fallback).
-- **Sound levels audition as you tap them** (2026-08-07): KING-FM plays
+- **THE STREAMED MUSIC SOURCE WAS DROPPED; music goes LOCAL** (John,
+  2026-08-07). iOS ignores `HTMLMediaElement.volume`, and the only
+  mechanism it honors - a Web Audio gain node - needs CORS for a remote
+  source, which the routed element then refused to play on the iPhone. So
+  the stream had no level control at all on the primary device, at full
+  volume against the game sounds. Local files are same-origin, so the gain
+  node works and lo/hi are real on the phone. Built later the same day;
+  see the fourth-session entry above.
+- **Sound levels audition as you tap them** (2026-08-07): music plays
   or stops immediately, a GAME SOUNDS tap plays one sample sound, and
   both follow the board's pending selections. Cancelling the board puts
   music back to the saved setting - the red X discards an audition just
@@ -186,7 +290,7 @@ build record and what remains.
   keyboard; initials A-Z + "-" + 7 emoji; titles gain "Hey you!") and
   **GAME OPTIONS / SOUND OPTIONS** (two-line setting-groups, headline
   GAME MODE with enlarged brand words + headline GLOBAL SOUND;
-  GAME SOUNDS and KING-FM are off/lo/hi rows — OFF replaces per-family
+  GAME SOUNDS and MUSIC are off/lo/hi rows — OFF replaces per-family
   toggles). The game-screen sound icon will BE the global sound setting
   (one persisted value). No ambiance option until ambient assets exist.
   Mockups: `_mockups/settings-letterboard-mockup-{PLAYER,GAME}.html`.

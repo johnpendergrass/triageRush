@@ -45,6 +45,10 @@
      (TODO 3, 2026-08-07). */
   --letter: #f2ede1;
   --marker-ink: #1d2a30;
+  /* The second dry-erase marker on the About whiteboard (2026-08-08):
+     the HOW TO PLAY heading and its rule. Blue rather than red so the
+     heading does not compete with the brand's red-orange above it. */
+  --marker-blue: #1f4e79;
 
   /* The ER ENTRANCE sign lettering (TODO item 2, 2026-08-06): colors
      sampled from the "Triage RUSH!" channel letters in the entrance art. */
@@ -637,12 +641,9 @@ img {
   gap: clamp(8px, 2.38cqw, 18px);
 }
 
-.popup-heading {
-  text-align: center;
-  font-size: clamp(18px, 6.13cqw, 30px);
-  letter-spacing: 0.14em;
-  font-weight: 800;
-}
+/* `.popup-heading` and `.popup-fine-print` lived here until 2026-08-08.
+   Their only user was the old About board, whose rebuild replaced them
+   with .about-logo / .about-fine; the letter boards use .board-title. */
 
 /* ---- the letter boards (TODO 3, 2026-08-07) --------------------------
    Press-in white plastic lettering on the ribbed board art. Lettering
@@ -903,6 +904,24 @@ img {
   white-space: nowrap;
 }
 
+/* The music-unlock note (♫) is the ONE initials symbol that is a text
+   character rather than an emoji, which is exactly why it can be coloured
+   at all - a colour emoji carries its own palette in the font and ignores
+   `color`. It is painted amber on the dark boards because it drew as dark
+   grey ink there and could not be read (John, 2026-08-08), and it is set a
+   step larger because a text note is a smaller mark than the emoji beside
+   it. ui.js writeInitials() is what wraps it. */
+.initial-music {
+  color: var(--amber);
+  font-size: 1.15em;
+}
+
+/* On the review's cream paper the amber has nothing to stand against, so
+   the note stays ordinary ink there. */
+.review-meta-value .initial-music {
+  color: inherit;
+}
+
 /* Neighbors: squashed and dim, as if curving away on the cylinder. */
 .drum-cell--peek {
   transform: scaleY(0.62);
@@ -965,27 +984,152 @@ img {
 @keyframes drum-up { from { transform: translateY(-33.34%); } }
 @keyframes drum-down { from { transform: translateY(33.34%); } }
 
-/* Marker styling for the About whiteboard face. */
+/* ---- the ABOUT whiteboard (2026-08-08) -------------------------------
+   Built from _mockups/about-board-mockup.html, which stays as the design
+   record. Structure: the 3D logo, John's opening paragraph, one ruled
+   HOW TO PLAY section, and a footer parked on the bottom frame.
+
+   THE FACE HAS ITS OWN INSETS. The shared .popup-content numbers were
+   tuned for the BLACKBOARD; the whiteboard's white dry-erase area is a
+   different rect - measured off the 752x1387 art it runs x 7.4%-93.5%,
+   y 3.8%-97.2% - so the shared insets sit OUTSIDE it and a full-width
+   row would ride onto the silver frame. These hug the face with margin
+   to spare. The top inset also clears the close box (7.5% of the card is
+   ~47px against the button's 40px), so the logo can be centred without
+   dodging it.
+
+   container-type makes every cqw below a proportion of the FACE rather
+   than the card, the same arrangement the letter boards use: re-cropping
+   or re-insetting the art never means re-tuning the type. */
 .popup-content--marker {
+  left: 10%;
+  right: 10%;
+  top: 7.5%;
+  bottom: 6%;
+  container-type: inline-size;
   color: var(--marker-ink);
-  gap: clamp(10px, 3.5cqw, 20px);
+  gap: 0;
 }
 
-.popup-content--marker p {
+/* THE LOGO is the only 3D brand on this board (John, 2026-08-08).
+   "Triage RUSH!" runs about 7.6x its font size wide, so 11cqw puts the
+   wordmark at ~87% of the face - the figure the sidewalk summary boards
+   settled on for this exact string, leaving room for iOS's wider Arial
+   Black metrics. Re-measure at a 375px shell before enlarging it. */
+.about-logo {
+  font-size: 11cqw;
+  line-height: 1.05;
+  text-align: center;
+  white-space: nowrap;
+  margin-bottom: 5cqw;
+}
+
+/* Every mention of the brand AFTER the logo is flat (John: "quieter,
+   without the 3D effect"). Same face, same colour, no extrusion - at
+   body size the stacked shadows read as fringing rather than depth, and
+   they competed with the logo a few lines above. nowrap because
+   "Triage / RUSH!" split across two lines is not the brand. */
+.brand-flat {
+  font-family: "Arial Black", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 900;
+  color: var(--brand-face);
+  white-space: nowrap;
+}
+
+.brand-flat .brand-rush { font-size: 1.18em; }
+
+/* A column of its own so the footer can be parked at the bottom of the
+   face instead of trailing the last step. */
+.about-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* John's opening paragraph. It carries NO heading and no rule (his
+   second pass) - the logo introduces it. */
+.about-intro {
   font-family: Arial, sans-serif;
-  font-size: clamp(14px, 4.38cqw, 21px);
-  line-height: 1.45;
+  font-size: 5.8cqw;
+  line-height: 1.36;
+  margin-bottom: 4.2cqw;
 }
 
-.popup-heading--marker {
-  color: #b3241c;
-  letter-spacing: 0.04em;
+/* Blue on purpose: a second dry-erase marker reads as a whiteboard, and
+   red would sit too close to the brand's own red-orange right above it. */
+.about-heading {
+  font-family: Arial, sans-serif;
+  font-weight: 800;
+  font-size: 6.3cqw;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--marker-blue);
+  padding-bottom: 1.1cqw;
+  border-bottom: 0.7cqw solid currentColor;
+  margin-bottom: 3.4cqw;
 }
 
-.popup-fine-print {
+/* HOW TO PLAY reads as steps, not prose. The hanging dash keeps wrapped
+   lines aligned under the text rather than under the dash.
+
+   THE SIZE IS SET BY THE COPY, and it is measured in the app at a
+   375px shell - never guessed. Eight steps at 5.8cqw leave 33px between
+   the last one and the footer; the intro is sized with the steps, since
+   the two must read as one hand.
+
+   What the alternatives cost, measured 2026-08-08 with this copy:
+   6cqw + the old blank line = 7px of slack (too thin for iOS's wider
+   Arial), 6cqw without it = 24px, 5.8cqw without it = 33px. The last is
+   what shipped, because half a pixel of glyph height is invisible and a
+   line of headroom is not. Note the binding line is the INTRO, not a
+   step: at 6.2cqw it takes a sixth line and slack collapses. */
+.about-steps { list-style: none; }
+
+.about-steps li {
+  font-family: Arial, sans-serif;
+  font-size: 5.8cqw;
+  line-height: 1.36;
+  padding-left: 4.8cqw;
+  text-indent: -4.8cqw;
+  margin-bottom: 1.9cqw;
+}
+
+.about-steps li:last-child { margin-bottom: 0; }
+
+.about-steps li::before {
+  content: "\2013\00a0\00a0";
+  font-weight: 700;
+}
+
+/* There WAS a blank line before the two mode lines (a `.step-gap`
+   class carrying margin-top: 1.36em - a margin rather than an empty
+   <li>, since a spacer list item is announced as a real empty item by a
+   screen reader and would draw its own dash). It was spent on the two
+   difficulty lines added 2026-08-08, with John's leave: "you can get rid
+   of the space above the Triage lines if necessary." Restoring it costs
+   ~22px of the slack measured below. */
+
+/* margin-top: auto parks the footer on the bottom of the face however
+   the copy above grows or shrinks. Centred (John, 2026-08-08). */
+.about-footer {
   margin-top: auto;
-  font-size: clamp(11px, 3.5cqw, 15px);
-  opacity: 0.75;
+  padding-top: 4cqw;
+  text-align: center;
+}
+
+.about-fine {
+  font-family: Arial, sans-serif;
+  font-size: 4.7cqw;
+  line-height: 1.34;
+  opacity: 0.78;
+}
+
+.about-version {
+  font-family: Arial, sans-serif;
+  font-size: 4.1cqw;
+  letter-spacing: 0.02em;
+  margin-top: 1.6cqw;
+  opacity: 0.6;
 }
 
 /* ------------------------------------------------------------------------
@@ -1131,6 +1275,7 @@ img {
 }
 
 .sound-button {
+  position: relative; /* anchors the mute slash below */
   width: 24px;
   height: 28px;
   border-radius: 5px;
@@ -1141,9 +1286,29 @@ img {
   line-height: 1;
 }
 
+/* Muted = the same note, dimmed, with a red slash drawn across it
+   (John, 2026-08-08). Red because red already means OFF everywhere in
+   this game - the settings radios and the summary boards. The slash is
+   a rotated bar rather than a character: no font ships a plain-text
+   "muted note", and the Unicode mute glyphs render as colour emoji on
+   iOS, which would look nothing like the rest of the header. */
 .sound-button.is-muted {
   color: #8c979c;
-  text-decoration: line-through;
+}
+
+.sound-button.is-muted::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 92%;
+  height: 2px;
+  background: var(--red);
+  /* A 1px casing in the button's own background separates the slash
+     from the note it crosses, so both stay readable at 24px. */
+  box-shadow: 0 0 0 1px #102b38;
+  transform: translate(-50%, -50%) rotate(45deg);
+  pointer-events: none;
 }
 
 .play-area {

@@ -745,13 +745,13 @@ means the source has to survive `createMediaElementSource`. For a CROSS-ORIGIN
 source that additionally requires `crossOrigin = "anonymous"` (set before
 `src`) or the audio is silently muted.
 
-**The KING-FM stream failed that test and was retired (built 2026-08-07,
-TODO.md item 20 DONE).** With CORS requested, iOS refused to play the routed
-element at all; without it, routing produced silence. Local files are
-SAME-ORIGIN, so there is no CORS to negotiate, no refusal, and the gain node
-works on every device - lo/hi are finally real on the iPhone. All the
-crossOrigin and fallback machinery existed only to fight that one problem and
-is gone.
+**A streamed source fails that test, which is why the music is LOCAL.**
+This was tried and measured: with CORS requested, iOS refused to play the
+routed element at all; without it, routing produced silence. Local files
+are SAME-ORIGIN, so there is no CORS to negotiate, no refusal, and the gain
+node works on every device. Do not reintroduce a remote source, and do not
+reintroduce the `crossOrigin` / fallback machinery that existed only to
+fight this - it is gone.
 
 Playback is a plain playlist over `ASSETS.music.tracks`: set `src`, play, and
 on `ended` advance with a wrapping index. `preload` stays `"none"` so a locked
@@ -764,11 +764,11 @@ than attempting a second `createMediaElementSource`, which would throw.
 
 **Music is gated on the PLAYER NAME, not on the settings alone.** `game.js`
 owns two predicates: `musicUnlocked(state)` is true only when the initials are
-three symbols and the middle is `MUSIC_UNLOCK_SYMBOL` (🎼), and
+three symbols and the middle is `MUSIC_UNLOCK_SYMBOL` (♫), and
 `musicAudible(state)` additionally requires GLOBAL SOUND on and the MUSIC
 level above off. Every music path asks these, so the setting rows hide, the
 fetch never happens, and playback stops the moment a rename locks it again.
-The unlock symbol is U+1F3BC MUSICAL SCORE (an emoji), deliberately NOT
+The unlock symbol is U+266B BEAMED EIGHTH NOTES (an emoji), deliberately NOT
 U+1D11E MUSICAL SYMBOL G CLEF, whose font coverage on phones is patchy.
 
 Both sound levels AUDITION as they are tapped on the board: music plays or
