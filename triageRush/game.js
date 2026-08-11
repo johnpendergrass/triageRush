@@ -1,0 +1,1863 @@
+/* ============================================================================
+   triageRush - game.js
+   Domain state and rules. No DOM, no rendering, no audio, no timers.
+
+   Everything here is testable with plain data: the state tree is one
+   serializable object, actions validate legality before mutating, and all
+   totals are derived from the ledger by selectors (docs 4, 8).
+
+   Section map:
+     1. Canonical constants
+     2. Injected context (clock + random)
+     3. Initial state
+     4. Settings validation and application
+     5. Patient record validation (schema 2.2, schema-preserving)
+     6. Score selectors
+     7. Navigation actions (start / quit / stop / return-to-lobby)
+     8. State invariants (development checks)
+     9. Preference persistence (versioned localStorage envelope)
+   ========================================================================= */
+
+"use strict";
+
+/* ------------------------------------------------------------------------
+   1. Canonical constants (docs 3, 8)
+   --------------------------------------------------------------------- */
+
+const GAME_CONSTANTS = Object.freeze({
+  POINTS: Object.freeze({ correct: 100, close: 50, wrong: -50 }),
+  MAX_WAITING: 10,
+  MIN_VISIBLE_WAITING: 5,
+  RUSH_DOUBLE_PROBABILITY: 0.20,
+  /* Emptying the RUSH waiting room earns a courtesy refill: after a
+     one-second beat, one or two patients (a coin flip) walk in so the
+     player is never stuck with nobody to see (John, 2026-08-06). */
+  EMPTY_REFILL_DELAY_MS: 1000,
+  EMPTY_REFILL_DOUBLE_PROBABILITY: 0.50,
+  HEARTBEAT_MS: 250,
+  BURST_BEAT_MS: 250,
+
+  TRIAGE_LENGTH_CHOICES_SECONDS: Object.freeze([300, 600]),
+  RUSH_LENGTH_CHOICES_SECONDS: Object.freeze([60, 120]),
+
+  PLAYER_TITLES: Object.freeze([
+    "Doctor", "Nurse", "RN", "RES", "Intern", "EMS",
+    "MS1", "MS2", "MS3", "MS4", "MR", "MRS", "M", "MS",
+    "Hey you!"
+  ]),
+
+  /* The initials alphabet the odometer drums step through (TODO 3,
+     2026-08-07): A-Z, a "-" spacer, then the approved medical emoji.
+     Kept as an array of WHOLE STRINGS - several of these emoji are two
+     JS code units, so this list can never be produced by splitting a
+     string, and initials must be measured with Array.from, never
+     .length. */
+  INITIAL_SYMBOLS: Object.freeze([
+    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+    "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+    /* Digits earn their place: as the RIGHT initial they choose which
+       track of the selected playlist starts (John, 2026-08-09) - see
+       musicTrackNumber. 1-9 rather than 0-9 because there is no track
+       zero, and nine is far more headroom than any folder needs today.
+       Anywhere else in a name they are just characters. */
+    "1", "2", "3", "4", "5", "6", "7", "8", "9",
+    "-",
+    "⚕️",   /* staff of aesculapius */
+    "\u{1F691}",      /* ambulance */
+    "\u{1F480}",      /* skull */
+    "\u{1F637}",      /* face with medical mask */
+    "❤️",   /* red heart */
+    "➕",         /* heavy plus */
+    "⭐",         /* star */
+    "♫"          /* beamed notes - UNLOCKS MUSIC, see MUSIC_UNLOCK_SYMBOL */
+  ]),
+  INITIALS_LENGTH: 3,
+
+  /* Background music stays hidden until the player's MIDDLE initial is
+     this symbol - "J♫P" turns it on, "JMP" does not (John, 2026-08-07).
+     An easter egg rather than a lock: the music is copyrighted, and this
+     keeps it from playing for anyone who is just passing through.
+
+     RESTORED 2026-08-10. For one day (2026-08-09) this was six emoji
+     naming six playlist folders - a television for Scrubs, an accordion
+     for Weird Al, and so on. John collapsed it back to one playlist of
+     nine tracks, so one symbol is all that is needed again. What SURVIVED
+     from that day is the better half: the RIGHT initial still picks which
+     track starts, see musicTrackNumber.
+
+     A note on the glyph (John, 2026-08-08). It is U+266B BEAMED EIGHTH
+     NOTES, and it is deliberately the ONE symbol here that is NOT an
+     emoji. Two earlier tries failed on APPEARANCE: U+1F3BC MUSICAL SCORE
+     (a staff) was unreadable clutter at drum size, and U+1F3B6 MULTIPLE
+     MUSICAL NOTES drew DARK GREY on the blackboard - a colour emoji
+     carries its own palette in the font and ignores CSS colour entirely,
+     so it could not be fixed. U+266B is a TEXT character: it draws in
+     the surrounding ink and can therefore be coloured, which is why the
+     boards paint it amber (see .initial-music in styles.css). That
+     tintability is exactly what the six emoji could not offer.
+
+     Still avoid U+1D11E and the other U+1Dxxx notation characters -
+     those have patchy phone font coverage and render as tofu. U+266B is
+     safe: the game header has been drawing its sibling U+266A on John's
+     iPhone since 2026-08-07. Neither carries emoji presentation, so
+     neither needs a U+FE0E variation selector. */
+  MUSIC_UNLOCK_SYMBOL: "♫",
+
+  /* The one playlist folder under assets/audio/, and also the only key in
+     music-manifest.json. The manifest kept its {folders: {name: [...]}}
+     shape through the collapse back to one playlist, so a second playlist
+     would cost a constant here rather than a schema change. */
+  MUSIC_FOLDER: "music",
+
+  MODES: Object.freeze(["triage", "rush"]),
+  DIFFICULTIES: Object.freeze(["forgiving", "strict"]),
+  /* Per-family sound levels (TODO 3, 2026-08-07). OFF lives inside the
+     level, so there are no per-family on/off toggles; soundGlobal is the
+     master mute above both. */
+  LOUDNESS_LEVELS: Object.freeze(["off", "lo", "hi"]),
+
+  VIEWS: Object.freeze(["home", "game", "review"]),
+  PHASES: Object.freeze(["loading", "ready", "active", "complete", "error"])
+});
+
+/* ------------------------------------------------------------------------
+   2. Injected context.
+   The clock and random source are injected so scheduler and burst behavior
+   can be tested deterministically (doc 4). Production uses the real ones.
+   --------------------------------------------------------------------- */
+
+function createGameContext(overrides) {
+  const provided = overrides || {};
+  return {
+    /* Monotonic milliseconds for game timing (never wall clock). */
+    monotonicNowMs: provided.monotonicNowMs || (() => performance.now()),
+    /* Wall-clock timestamp for ledger bookkeeping and persistence. */
+    wallClockNowMs: provided.wallClockNowMs || (() => Date.now()),
+    /* Uniform [0, 1) random used for shuffles and RUSH burst draws. */
+    random: provided.random || (() => Math.random())
+  };
+}
+
+/* ------------------------------------------------------------------------
+   3. Initial state.
+   The full reference shape from doc 8, present from day one so later
+   phases add behavior without reshaping the tree.
+   --------------------------------------------------------------------- */
+
+function createInitialState() {
+  return {
+    version: 1,
+
+    view: "home",              // home | game | review
+    overlay: null,             // settings-player | settings-shift | about |
+                               // chart | patients-seen | confirm-quit |
+                               // confirm-stop | shift-over | null
+    phase: "ready",            // loading | ready | active | complete | error
+    pauseReasons: [],          // "confirmation" | "document-hidden"
+                               // (Chart deliberately does NOT pause)
+
+    /* First-run defaults (John, 2026-08-09): MS4 playing a 60-second
+       Triage RUSH! shift on Forgiving, with sound on and game sounds hi.
+       These apply only until the player saves their own preferences, so
+       they are also what a HARD RESET lands on - loadPreferences returns
+       false on missing storage and leaves this object untouched.
+
+       INITIALS ARE "AHP" (John, 2026-08-11), not the earlier "AAA". Two
+       reasons: they are the game's intended recipient, and real initials
+       read as somebody else's name, which prods a new player into setting
+       their own. "AAA" looked like a blank and invited being left alone.
+
+       The middle initial is deliberately an ORDINARY LETTER: it is the
+       music unlock (see MUSIC_UNLOCK_SYMBOL), so a default that unlocked
+       the music would give the easter egg away on first run. */
+    player: {
+      title: "MS4",
+      initials: "AHP"
+    },
+
+    settings: {
+      mode: "rush",            // triage | rush
+      difficulty: "forgiving", // forgiving | strict
+      triageLengthSeconds: 300,
+      rushLengthSeconds: 60,
+      /* Sound preferences (revised 2026-08-07, TODO 3): a GLOBAL master
+         mute plus one level per family - GAME SOUNDS and MUSIC. "off"
+         inside a level replaces the old per-family checkbox, which is the
+         standard games pattern. The game screen's sound icon is a second
+         view of soundGlobal, not a separate runtime flag.
+         Music additionally requires the unlock - see musicAudible(). */
+      soundGlobal: true,
+      gameLoudness: "hi",
+      musicLoudness: "off"
+    },
+
+    shift: {
+      id: null,
+      startedAtMs: null,
+      completedAtMs: null,
+      endReason: null,         // timer | stop | quit | null
+      elapsedMs: 0,
+      /* Must agree with the default mode's length above - RUSH's 60s, not
+         Triage's 300s. resetToLobby recomputes it from the live settings,
+         but this is the value before any of that runs. */
+      remainingMs: 60000,
+      lastLogicalQuarter: -1
+    },
+
+    deck: {
+      ids: [],
+      cursor: 0
+    },
+
+    /* One background key per ROW POSITION, drawn fresh at each shift start
+       and fixed for that whole shift (John, 2026-08-09). Empty at HOME. */
+    waitingBackgrounds: [],    // [backgroundKey] x MAX_WAITING, by row index
+    waiting: [],               // [{ patientId }]
+    active: null,              // { patientId, recalledFromRoomKey? } | null
+    assigned: null,            // { patientId, roomKey }
+    recallAvailable: false,
+
+    ledger: {
+      order: [],               // patient IDs in stable first-assignment order
+      byPatientId: {}          // id -> { patientId, roomKey, outcome,
+                               //   direction, points, assignmentCount,
+                               //   firstAssignedAtMs, lastAssignedAtMs }
+    },
+
+    rush: {
+      arrivalRemainingMs: 10000,
+      nextBaseIntervalMs: 10000,
+      stagedSecondArrivalAtMs: null,
+      currentArrivalEventId: 0,
+      emptyRefillAtMs: null,        // logical elapsedMs of a pending refill
+      emptyRefillSecondAtMs: null   // the refill pair's staged second member
+    },
+
+    chart: {
+      clinicalExpanded: false  // shift-level memory; resets at new shift
+    },
+
+    review: {
+      patientIndex: 0,
+      /* Set only while REVIEWING A PAST SHIFT (TODO 13): the settings
+         and player the shift was actually played with. A shift played
+         on Triage!/Forgiving must still say so after the player has
+         switched to RUSH/Strict. Null means "the review on screen is
+         the shift that just ended", so the live values are correct. */
+      playedWith: null,
+      /* Which stored shift is on screen while BROWSING past shifts
+         (TODO 11): 0 is the most recent, and the player sees it as
+         "1 OF n". Null means the report on screen is the shift that
+         just ended, which is exactly when the browse arrows and the
+         counter must NOT appear (John, 2026-08-08). One field answers
+         all three questions: whether to draw the arrows, where they
+         step from, and what the counter reads. */
+      storedIndex: null
+    },
+
+    /* Completed shifts, NEWEST FIRST, capped at MAX_STORED_SHIFTS and
+       persisted under their own storage key (TODO 11). A shift is
+       appended only when it reached the SHIFT ENDED screen, so quitting
+       stores nothing - but unlike the old single-snapshot version,
+       quitting no longer ERASES anything either: the button offers "your
+       past shifts", not "the last shift", so a quit has nothing to
+       invalidate (John, 2026-08-08). */
+    shiftHistory: []
+  };
+}
+
+/* ------------------------------------------------------------------------
+   4. Settings validation and application.
+   applySettings is legal only while no shift is active (phase ready);
+   an illegal call must leave state untouched (doc 4 action contract).
+   --------------------------------------------------------------------- */
+
+/* Split a stored initials string into its symbols. Array.from splits by
+   CODE POINT, which keeps two-code-unit emoji whole; the variation
+   selector that follows some emoji (⚕️, ❤️) is re-attached to the symbol
+   before it so one drum value stays one symbol. */
+const VARIATION_SELECTOR_16 = "️";
+
+function initialsSymbols(rawText) {
+  const symbols = [];
+  for (const codePoint of Array.from(String(rawText || ""))) {
+    if (codePoint === VARIATION_SELECTOR_16 && symbols.length > 0) {
+      symbols[symbols.length - 1] += codePoint;
+    } else {
+      symbols.push(codePoint);
+    }
+  }
+  return symbols;
+}
+
+/* Keep only symbols the drums can actually show (letters are upper-cased
+   first, so an older "abc" save still reads), at most three. An empty
+   result falls back to the previous value so a stray edit can never blank
+   the initials. */
+function normalizeInitials(rawText, previousInitials) {
+  const kept = initialsSymbols(String(rawText || "").toUpperCase())
+    .filter((symbol) => GAME_CONSTANTS.INITIAL_SYMBOLS.includes(symbol))
+    .slice(0, GAME_CONSTANTS.INITIALS_LENGTH);
+  return kept.length > 0 ? kept.join("") : previousInitials;
+}
+
+function isValidSettingsShape(candidate) {
+  if (!candidate || typeof candidate !== "object") return false;
+  return (
+    GAME_CONSTANTS.MODES.includes(candidate.mode) &&
+    GAME_CONSTANTS.DIFFICULTIES.includes(candidate.difficulty) &&
+    GAME_CONSTANTS.TRIAGE_LENGTH_CHOICES_SECONDS.includes(candidate.triageLengthSeconds) &&
+    GAME_CONSTANTS.RUSH_LENGTH_CHOICES_SECONDS.includes(candidate.rushLengthSeconds) &&
+    typeof candidate.soundGlobal === "boolean" &&
+    GAME_CONSTANTS.LOUDNESS_LEVELS.includes(candidate.gameLoudness) &&
+    GAME_CONSTANTS.LOUDNESS_LEVELS.includes(candidate.musicLoudness)
+  );
+}
+
+function isValidPlayerShape(candidate) {
+  if (!candidate || typeof candidate !== "object") return false;
+  if (!GAME_CONSTANTS.PLAYER_TITLES.includes(candidate.title)) return false;
+  if (typeof candidate.initials !== "string") return false;
+
+  /* Initials are 1-3 SYMBOLS from the drum alphabet - counted as symbols,
+     never as string length, because an emoji is two code units (and some
+     carry a variation selector on top of that). */
+  const symbols = initialsSymbols(candidate.initials);
+  return (
+    symbols.length >= 1 &&
+    symbols.length <= GAME_CONSTANTS.INITIALS_LENGTH &&
+    symbols.every((symbol) => GAME_CONSTANTS.INITIAL_SYMBOLS.includes(symbol))
+  );
+}
+
+/* Returns true when applied, false when rejected. Rejection leaves state
+   completely unchanged. */
+function applySettings(state, newPlayer, newSettings) {
+  if (state.phase !== "ready") return false;
+  if (!isValidPlayerShape(newPlayer)) return false;
+  if (!isValidSettingsShape(newSettings)) return false;
+
+  state.player = { title: newPlayer.title, initials: newPlayer.initials };
+  state.settings = {
+    mode: newSettings.mode,
+    difficulty: newSettings.difficulty,
+    triageLengthSeconds: newSettings.triageLengthSeconds,
+    rushLengthSeconds: newSettings.rushLengthSeconds,
+    soundGlobal: newSettings.soundGlobal,
+    gameLoudness: newSettings.gameLoudness,
+    musicLoudness: newSettings.musicLoudness
+  };
+  return true;
+}
+
+/* Are game sounds audible right now? The master mute and the GAME SOUNDS
+   level are one persisted pair - there is no separate runtime flag
+   (John, 2026-08-07: the game screen's sound icon IS the global
+   setting). */
+function gameSoundsAudible(state) {
+  return state.settings.soundGlobal && state.settings.gameLoudness !== "off";
+}
+
+/* Has this player unlocked background music? Everything music-related goes
+   through this: the row is hidden on both boards, no track is fetched, and
+   nothing plays when it is false. Locking again by renaming leaves
+   musicLoudness untouched, so unlocking later restores the level the
+   player last chose.
+
+   Initials may legitimately be shorter than three, and a one- or
+   two-symbol name has no middle, so those never unlock. */
+function musicUnlocked(state) {
+  const symbols = initialsSymbols(state.player.initials);
+  return (
+    symbols.length === GAME_CONSTANTS.INITIALS_LENGTH &&
+    symbols[1] === GAME_CONSTANTS.MUSIC_UNLOCK_SYMBOL
+  );
+}
+
+/* WHICH TRACK the playlist starts on - the RIGHT initial (John,
+   2026-08-09). "A<hat>2" starts Dr. Demento at his second track, then
+   plays on normally and wraps: 2, 3, 1, 2...
+
+   Returns a 1-BASED number, or null when the right initial is not a digit
+   (a letter, an emoji, or a name too short to have one) - which the caller
+   reads as "start at the beginning". The number is deliberately NOT capped
+   here: game.js has no idea how many tracks a folder holds, since that
+   comes from the music manifest. app.js clamps it, which is John's "once
+   they pick too high a number just play the highest numbered track". */
+function musicTrackNumber(state) {
+  const symbols = initialsSymbols(state.player.initials);
+  if (symbols.length !== GAME_CONSTANTS.INITIALS_LENGTH) return null;
+  const rightInitial = symbols[2];
+  if (!/^[1-9]$/.test(rightInitial)) return null;
+  return Number(rightInitial);
+}
+
+/* Should music be playing right now? The unlock, the master mute, and the
+   MUSIC level all have to agree. */
+function musicAudible(state) {
+  return (
+    musicUnlocked(state) &&
+    state.settings.soundGlobal &&
+    state.settings.musicLoudness !== "off"
+  );
+}
+
+/* The shift length that the current mode actually uses. */
+function selectedShiftLengthSeconds(state) {
+  return state.settings.mode === "rush"
+    ? state.settings.rushLengthSeconds
+    : state.settings.triageLengthSeconds;
+}
+
+/* ------------------------------------------------------------------------
+   5. Patient record validation.
+   Records are kept exactly as authored (schema-preserving boundary,
+   docs 4, 5). Validation reads canonical paths; it never copies or
+   renames anything.
+   --------------------------------------------------------------------- */
+
+function validatePatientRecord(record, expectedPatientId) {
+  const problems = [];
+  const check = (condition, message) => {
+    if (!condition) problems.push(message);
+  };
+
+  check(record && typeof record === "object", "record is not an object");
+  if (problems.length > 0) return problems;
+
+  check(record.schema && record.schema.version === "2.2",
+    `schema.version is ${record.schema && record.schema.version}, expected 2.2`);
+  check(record.id === expectedPatientId,
+    `id is ${record.id}, expected ${expectedPatientId}`);
+  check(record.patient && typeof record.patient === "object",
+    "patient group missing");
+  if (problems.length > 0) return problems;
+
+  const presentation = record.patient.presentation;
+  check(presentation && typeof presentation === "object",
+    "patient.presentation missing");
+  if (presentation) {
+    check(presentation.personal && typeof presentation.personal === "object",
+      "patient.presentation.personal missing");
+    check(typeof presentation.chiefComplaint === "string",
+      "patient.presentation.chiefComplaint missing");
+    check(presentation.vitals && typeof presentation.vitals === "object",
+      "patient.presentation.vitals missing");
+  }
+
+  const answer = record.patient.answer;
+  check(answer && typeof answer === "object", "patient.answer missing");
+  if (answer) {
+    check(Number.isInteger(answer.correctEsi) &&
+      answer.correctEsi >= 1 && answer.correctEsi <= 5,
+      `patient.answer.correctEsi is ${answer && answer.correctEsi}, expected 1-5`);
+    check(TRIAGE_RUSH_ASSETS.roomKeys.includes(answer.correctRoom),
+      `patient.answer.correctRoom is ${answer && answer.correctRoom}, not a legal room key`);
+  }
+
+  check(record.patient.clinical && typeof record.patient.clinical === "object",
+    "patient.clinical missing");
+
+  return problems; // empty array means valid
+}
+
+/* ------------------------------------------------------------------------
+   5b. Deck, waiting queue, and patient selection (doc 8).
+   The deck is a shuffled array of patient IDs plus a cursor. Waiting
+   entries are tiny records: { patientId }. The scene behind a row belongs
+   to the ROW POSITION and is fixed for the shift (state.waitingBackgrounds,
+   2026-08-09), so an entry carries nothing about how it looks. Actions
+   return one-time effect flags (e.g. doink) that app.js executes once;
+   nothing here plays sounds or touches the DOM.
+   --------------------------------------------------------------------- */
+
+function shuffledCopy(sourceArray, random) {
+  const shuffled = sourceArray.slice();
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+/* The trigger for reshuffling the served cards back in: John's rule is to
+   resort once the order "hits patient #150", and reaching card 150 of 160
+   is exactly the moment TEN are left. So a runway of ten tops up; eleven
+   does not. Same shape as the portrait reserve's low-water mark. */
+const DECK_RUNWAY_MINIMUM = 10;
+
+/* Build the session serving order: all 160 patients, shuffled once.
+
+   THE ORDER IS PER SESSION, NOT PER SHIFT (John, 2026-08-09): "the random
+   sort should carry through, until the patient list runs out... that
+   sorting will not carry through to restarting the game." So this is
+   called from app.js the moment the patient records land, a new shift
+   simply keeps walking the same list - which is what lets the next
+   shift's first patients already be preloaded - and only a page reload
+   starts a fresh shuffle. */
+function initializeDeck(state, context) {
+  state.deck = {
+    ids: shuffledCopy(TRIAGE_RUSH_ASSETS.patients.ids, context.random),
+    cursor: 0
+  };
+}
+
+function isPatientIdInUse(state, patientId) {
+  return (
+    state.waiting.some(entry => entry.patientId === patientId) ||
+    (state.active && state.active.patientId === patientId) ||
+    (state.assigned && state.assigned.patientId === patientId) ||
+    /* Current 160-patient shifts never repeat a seen patient (doc 8). */
+    Boolean(state.ledger.byPatientId[patientId])
+  );
+}
+
+/* How many cards a draw could still take before the cursor runs off the
+   end of the order. */
+function deckRunwayLength(state) {
+  let runway = 0;
+  for (let i = state.deck.cursor; i < state.deck.ids.length; i++) {
+    if (!isPatientIdInUse(state, state.deck.ids[i])) runway += 1;
+  }
+  return runway;
+}
+
+/* The endless stream, in John's words (2026-08-09): "maybe until the
+   patient list hits patient #150 in the sorted order, then it should
+   resort those 150 and add them to the end of the list."
+
+   Cards still ahead of the cursor keep their order; the ones already
+   served are reshuffled and put behind them, so the array stays 160 long
+   instead of growing all session.
+
+   app.js calls this before every portrait top-up, and that timing is the
+   whole point: peekUpcomingPatientIds does not wrap, so without it the
+   reserve would quietly run dry near the end of the order and the
+   reshuffle below would then hand the game ten portraits nobody had
+   preloaded - a once-a-session stutter that would be miserable to find.
+   Returns true if the order was rebuilt. */
+function topUpDeckRunway(state, context) {
+  if (state.deck.ids.length === 0) return false;
+  if (deckRunwayLength(state) > DECK_RUNWAY_MINIMUM) return false;
+
+  const remaining = state.deck.ids.slice(state.deck.cursor);
+  const served = state.deck.ids.slice(0, state.deck.cursor);
+  state.deck.ids = remaining.concat(shuffledCopy(served, context.random));
+  state.deck.cursor = 0;
+  return true;
+}
+
+/* Advance the cursor to the next unused ID. At exhaustion, reshuffle once;
+   if a full second pass finds nothing legal, return null (explicit error
+   beats looping forever).
+
+   The reshuffle here is now a SAFETY NET rather than the normal path:
+   topUpDeckRunway rebuilds the order well before the cursor reaches the
+   end, at a moment app.js can see, so the portraits of the new order get
+   preloaded. Reaching the branch below means something skipped that. */
+function drawUniquePatientId(state, context) {
+  for (let pass = 0; pass < 2; pass++) {
+    while (state.deck.cursor < state.deck.ids.length) {
+      const candidateId = state.deck.ids[state.deck.cursor];
+      state.deck.cursor += 1;
+      if (!isPatientIdInUse(state, candidateId)) return candidateId;
+    }
+    state.deck.ids = shuffledCopy(state.deck.ids, context.random);
+    state.deck.cursor = 0;
+  }
+  return null;
+}
+
+/* Backgrounds belong to ROW POSITIONS, and they hold still (John,
+   2026-08-09). Ten of the sixteen scenes are drawn at each shift start and
+   pinned to row 0..9 for the whole shift; a patient arriving, leaving, or
+   being swapped never changes the scene behind them.
+
+   WHY IT CHANGED, because the old rule looked reasonable: a background used
+   to be re-drawn every time a patient entered a row, which meant an arriving
+   patient's row switched to an image that <img> element had never held. Every
+   render rebuilds the rows (ui.js replaceChildren), so a NEW url has nothing
+   to paint for a frame - the panel blinked blank, painted the scene, then the
+   patient. The rooms panel rebuilds just as hard and never blinks, because
+   its urls are stable. Stability is the fix; nothing about the rendering
+   needed changing.
+
+   It also finally makes TODO 8's rule (2026-08-06) true. That change said the
+   background belongs to the row and "never travels" - but it was stored ON
+   THE ENTRY, so when the queue compacted upward the scene travelled with the
+   patient anyway. Keyed by position, it cannot. */
+function assignWaitingBackgrounds(state, context) {
+  const shuffled = shuffledCopy(
+    TRIAGE_RUSH_ASSETS.waitingBackgroundKeys, context.random);
+  state.waitingBackgrounds = shuffled.slice(0, GAME_CONSTANTS.MAX_WAITING);
+}
+
+/* The one queue-insertion primitive. The doink belongs here and nowhere
+   else: recall, swap, seeding (announce: false), and blocked attempts
+   never produce one (doc 4 sound contract). */
+function insertWaitingPatient(state, context, options) {
+  if (state.waiting.length >= GAME_CONSTANTS.MAX_WAITING) {
+    return { inserted: false, reason: "full", doink: false };
+  }
+  const patientId = drawUniquePatientId(state, context);
+  if (patientId === null) {
+    return { inserted: false, reason: "deck-exhausted", doink: false };
+  }
+  const entry = { patientId };
+  state.waiting.push(entry);
+  return { inserted: true, entry, doink: Boolean(options && options.announce) };
+}
+
+/* Shift start seeds silently: 5 patients for Triage, 2 for RUSH. */
+function seedInitialQueue(state, context) {
+  const seedCount = state.settings.mode === "rush" ? 2
+    : GAME_CONSTANTS.MIN_VISIBLE_WAITING;
+  for (let i = 0; i < seedCount; i++) {
+    insertWaitingPatient(state, context, { announce: false });
+  }
+}
+
+/* The IDs the next `count` draws would produce, for portrait preloading.
+   Draws skip in-use IDs, so peek must apply the same rule. */
+function peekUpcomingPatientIds(state, count) {
+  const upcoming = [];
+  for (let i = state.deck.cursor;
+       i < state.deck.ids.length && upcoming.length < count; i++) {
+    const candidateId = state.deck.ids[i];
+    if (!isPatientIdInUse(state, candidateId)) upcoming.push(candidateId);
+  }
+  return upcoming;
+}
+
+/* Tapping a waiting patient. Result includes effect flags for app.js.
+   - Empty center: patient moves in; Triage refills immediately (announced).
+   - Active unassigned center: the two swap; nothing else changes.
+   - Assigned patient behind a door: the tap FINALIZES that case (door
+     closes, recall opportunity ends, latest ledger result stands), then
+     proceeds exactly like an empty center (doc 8).                        */
+function selectWaitingPatient(state, context, waitingIndex) {
+  if (state.phase !== "active") return { accepted: false, doink: false };
+  if (waitingIndex < 0 || waitingIndex >= state.waiting.length) {
+    return { accepted: false, doink: false };
+  }
+
+  if (state.active !== null) {
+    /* Swap: no insert, no doink, no ledger change (doc 8). The scene behind
+       the row does not change - it belongs to the row, not to either
+       patient (2026-08-09). A recalled marker does not survive going back
+       to the queue. */
+    const waitingEntry = state.waiting[waitingIndex];
+    state.waiting[waitingIndex] = { patientId: state.active.patientId };
+    state.active = { patientId: waitingEntry.patientId };
+    return { accepted: true, doink: false };
+  }
+
+  /* Finalize any assigned case: its latest ledger record is already the
+     recorded result, so only the placement state clears here. */
+  if (state.assigned !== null) {
+    state.assigned = null;
+    state.recallAvailable = false;
+  }
+
+  const [selectedEntry] = state.waiting.splice(waitingIndex, 1);
+  state.active = { patientId: selectedEntry.patientId };
+  let doink = false;
+  if (state.settings.mode === "triage") {
+    const refill = insertWaitingPatient(state, context, { announce: true });
+    doink = refill.doink;
+  }
+  return { accepted: true, doink };
+}
+
+/* ------------------------------------------------------------------------
+   5c. Evaluation, assignment, recall, and ledger replacement (docs 3, 8).
+   Pure rules first (testable with plain records), then the two state
+   actions. Each seen patient owns exactly one ledger record keyed by
+   patient ID; reassignment REPLACES that record in place, and because
+   every total derives from the ledger, the old points and counts vanish
+   automatically - nothing subtracts anything by hand.
+   --------------------------------------------------------------------- */
+
+/* "esi-3" -> 3; "psych" / "discharge" -> null. */
+function parseEsiRoomNumber(roomKey) {
+  const match = /^esi-([1-5])$/.exec(String(roomKey));
+  return match ? Number(match[1]) : null;
+}
+
+/* The rooms worth full credit. Ordinary patients: their ESI room only.
+   Psych/Discharge patients: BOTH the named special room and the ESI room
+   from patient.answer.correctEsi (doc 3 dual correctness). */
+function fullCreditRoomKeys(patientRecord) {
+  const answer = patientRecord.patient.answer;
+  const rooms = new Set([answer.correctRoom]);
+  if (answer.correctRoom === "psych" || answer.correctRoom === "discharge") {
+    rooms.add("esi-" + answer.correctEsi);
+  }
+  return rooms;
+}
+
+/* Required evaluation order (doc 3): full credit first, then the Strict
+   short-circuit, then non-ESI rooms are Wrong, and finally ESI adjacency
+   earns Close in Forgiving. */
+function evaluateRoomChoice(patientRecord, roomKey, difficulty) {
+  if (fullCreditRoomKeys(patientRecord).has(roomKey)) return "correct";
+  if (difficulty === "strict") return "wrong";
+  const selectedEsi = parseEsiRoomNumber(roomKey);
+  if (selectedEsi === null) return "wrong";
+  const correctEsi = patientRecord.patient.answer.correctEsi;
+  return Math.abs(selectedEsi - correctEsi) === 1 ? "close" : "wrong";
+}
+
+/* Every room sits on ONE acuity ladder, most urgent first (doc 3):
+   the five ESI rooms rank 1-5, then Psych (6) and Discharge (7). */
+const ROOM_ACUITY_RANK = Object.freeze({
+  "esi-1": 1, "esi-2": 2, "esi-3": 3, "esi-4": 4, "esi-5": 5,
+  "psych": 6, "discharge": 7
+});
+
+/* Direction is explanatory and adds no points. It compares ladder RANKS:
+   a lower rank than the correct room means "over" (higher acuity than
+   required), a higher rank means "under". The correct side uses the
+   ROOM's rank, never answer.correctEsi - deliberate, so the rule cannot
+   break if a Psych or Discharge patient is ever authored at a different
+   ESI. Ties are impossible: the same rank means the same room, which is
+   full credit and returns at the first line. Every miss therefore moves
+   exactly one counter, in every mode and difficulty (doc 3). */
+function classifyTriageDirection(patientRecord, roomKey, outcome) {
+  if (outcome === "correct") return "correct";
+  const selectedRank = ROOM_ACUITY_RANK[roomKey];
+  const correctRank =
+    ROOM_ACUITY_RANK[patientRecord.patient.answer.correctRoom];
+  return selectedRank < correctRank ? "over" : "under";
+}
+
+/* Assigning the active patient to a room. The caller looks up and passes
+   the canonical patient record so this stays testable with plain data.
+   Feedback (pulse, toast, sound) is app.js's job, driven by the result. */
+function assignActivePatientToRoom(state, context, patientRecord, roomKey) {
+  if (state.phase !== "active" || state.active === null) {
+    return { accepted: false };
+  }
+  if (!TRIAGE_RUSH_ASSETS.roomKeys.includes(roomKey)) {
+    return { accepted: false };
+  }
+  if (!patientRecord || patientRecord.id !== state.active.patientId) {
+    return { accepted: false };
+  }
+
+  const outcome = evaluateRoomChoice(
+    patientRecord, roomKey, state.settings.difficulty);
+  const direction = classifyTriageDirection(patientRecord, roomKey, outcome);
+  const previousRecord = state.ledger.byPatientId[patientRecord.id];
+  const nowMs = context.wallClockNowMs();
+
+  /* One record per patient: order keeps the first-assignment position, so
+     a reassigned patient never moves in Patients Seen (doc 3). */
+  if (!previousRecord) state.ledger.order.push(patientRecord.id);
+  state.ledger.byPatientId[patientRecord.id] = {
+    patientId: patientRecord.id,
+    roomKey,
+    outcome,
+    direction,
+    points: GAME_CONSTANTS.POINTS[outcome],
+    assignmentCount: previousRecord ? previousRecord.assignmentCount + 1 : 1,
+    firstAssignedAtMs:
+      previousRecord ? previousRecord.firstAssignedAtMs : nowMs,
+    lastAssignedAtMs: nowMs
+  };
+
+  state.assigned = { patientId: patientRecord.id, roomKey };
+  state.active = null;
+  state.recallAvailable = true;
+
+  /* RUSH courtesy refill (doc 3): assigning the LAST waiting patient
+     books one-or-two arrivals a one-second beat from now, so the player
+     never sits with nobody to see. The scheduled-arrival countdown is
+     deliberately untouched - normal pacing continues on schedule. Only
+     the first emptying books a refill (a recall-and-reassign while one
+     is pending must not push the beat back). */
+  if (state.settings.mode === "rush" && state.waiting.length === 0 &&
+      state.rush.emptyRefillAtMs === null) {
+    state.rush.emptyRefillAtMs =
+      state.shift.elapsedMs + GAME_CONSTANTS.EMPTY_REFILL_DELAY_MS;
+  }
+
+  return { accepted: true, outcome, direction, roomKey };
+}
+
+/* Recall: activating the assigned patient's open door returns them to the
+   center for another look. The ledger record is untouched - it remains
+   the recorded result until a reassignment replaces it (doc 3). */
+function recallAssignedPatient(state, roomKey) {
+  if (state.phase !== "active") return { accepted: false };
+  if (!state.recallAvailable || state.assigned === null ||
+      state.assigned.roomKey !== roomKey) {
+    return { accepted: false };
+  }
+  state.active = {
+    patientId: state.assigned.patientId,
+    recalledFromRoomKey: roomKey
+  };
+  state.assigned = null;
+  state.recallAvailable = false;
+  return { accepted: true };
+}
+
+/* ------------------------------------------------------------------------
+   5d. Chart (doc 3, doc 8; Phase 6).
+   Chart is an active-patient tool: it can open only while a patient
+   occupies the center panel. Reading the chart does NOT pause the clock
+   (John, 2026-08-05): studying a patient costs shift time. Only the
+   Clinical section's expanded/collapsed choice is remembered (for the
+   rest of the shift); Answer never unlocks here, and Presentation resets
+   to expanded on the next open, so neither needs state.
+   --------------------------------------------------------------------- */
+
+function addPauseReason(state, reason) {
+  if (!state.pauseReasons.includes(reason)) state.pauseReasons.push(reason);
+}
+
+function removePauseReason(state, reason) {
+  state.pauseReasons = state.pauseReasons.filter(r => r !== reason);
+}
+
+function openChart(state) {
+  if (state.phase !== "active" || state.active === null) return false;
+  if (state.overlay !== null) return false;
+  state.overlay = "chart";
+  return true;
+}
+
+function closeChart(state) {
+  if (state.overlay !== "chart") return false;
+  state.overlay = null;
+  return true;
+}
+
+/* Called only when the player toggles the Clinical section inside Chart. */
+function setChartClinicalExpanded(state, expanded) {
+  state.chart.clinicalExpanded = Boolean(expanded);
+}
+
+/* ------------------------------------------------------------------------
+   5e. Confirmation dialogs and document visibility (doc 8 pause model).
+   The two things that pause the game are a confirm dialog being open and
+   the browser tab being hidden - each a pause reason, so the scheduler
+   needs no special cases. Both must clear before time moves again.
+   --------------------------------------------------------------------- */
+
+function openConfirmDialog(state, kind) {
+  if (kind !== "quit" && kind !== "stop") return false;
+  if (state.phase !== "active" || state.overlay !== null) return false;
+  state.overlay = "confirm-" + kind;
+  addPauseReason(state, "confirmation");
+  return true;
+}
+
+/* Cancel path only; accepting runs quitShift/stopShift, which clear all
+   pause state themselves. */
+function closeConfirmDialog(state) {
+  if (state.overlay !== "confirm-quit" && state.overlay !== "confirm-stop") {
+    return false;
+  }
+  state.overlay = null;
+  removePauseReason(state, "confirmation");
+  return true;
+}
+
+function setDocumentHidden(state, hidden) {
+  if (hidden && state.phase === "active") {
+    addPauseReason(state, "document-hidden");
+  } else if (!hidden) {
+    removePauseReason(state, "document-hidden");
+  }
+}
+
+/* ------------------------------------------------------------------------
+   5f. Logical scheduler (doc 8; Phase 7).
+   app.js runs one 250ms interval and asks this pure function to advance
+   the clock. Time is quantized to 250ms "logical quarters": elapsedMs is
+   always lastLogicalQuarter * 250, so a delayed browser callback that
+   reports the same quarter twice changes nothing. Each newly crossed
+   quarter is processed one at a time so no boundary event can be skipped
+   even when several quarters arrive in one late callback.
+   --------------------------------------------------------------------- */
+
+const QUARTER_MS = 250;
+
+/* The scheduler advances only when nothing is pausing the game (doc 8):
+   phase active, view GAME, and the pause-reason set empty. */
+function schedulerCanRun(state) {
+  return state.phase === "active" &&
+    state.view === "game" &&
+    state.pauseReasons.length === 0;
+}
+
+/* The clock cue for one logical quarter, or null for a silent quarter
+   (doc 3 "Clock, countdown, and sound timing"). Every cue lands on its
+   own 250ms boundary, so each quarter carries at most one cue; that is
+   also what makes "no duplicate tick at a coincident boundary" automatic
+   (a Triage minute boundary IS that ten-second boundary's tick).
+   Returns { sound, numeral } where numeral is 10..1 for the
+   pop-over-the-patient display (BOTH modes since 2026-08-08) and null
+   otherwise. */
+function clockCueForQuarter(state) {
+  const remainingMs = state.shift.remainingMs;
+  const elapsedMs = state.shift.elapsedMs;
+  const isRush = state.settings.mode === "rush";
+
+  /* Final ten seconds (both modes use the RUSH audio cadence, doc 3):
+     countdown tick on each whole second 10..1; during the final five,
+     extra beats at one-quarter and one-half second AFTER the integer,
+     silence at three-quarters - EXCEPT the last TWO seconds, which beat
+     on every quarter as a run-in to the dong (John, 2026-08-05).
+     Numerals run in BOTH modes (John, 2026-08-08). They were RUSH-only
+     until the two modes' final ten seconds already sounded identical, at
+     which point showing the numerals in one and not the other was just
+     an inconsistency: the last ten seconds of a Triage shift are as
+     final as RUSH's. */
+  if (remainingMs <= 10000) {
+    if (remainingMs % 1000 === 0) {
+      return { sound: "countdownTick", numeral: remainingMs / 1000 };
+    }
+    if (remainingMs < 2000) return { sound: "countdownTick", numeral: null };
+    const beatInSecond = remainingMs % 1000;
+    if (remainingMs < 5000 && (beatInSecond === 750 || beatInSecond === 500)) {
+      return { sound: "countdownTick", numeral: null };
+    }
+    return null;
+  }
+
+  if (isRush) {
+    /* Ten-second boundaries B above the final ten get a three-beat
+       emphasis: lead-in ticks at B+0.50 and B+0.25, then the ordinary
+       whole-second tick lands on B itself. The transition to 10 starts
+       the countdown instead, so B = 10s gets no lead-ins (doc 3). */
+    if ((remainingMs - 500) % 10000 === 0 && remainingMs - 500 > 10000) {
+      return { sound: "minuteTick", numeral: null };
+    }
+    if ((remainingMs - 250) % 10000 === 0 && remainingMs - 250 > 10000) {
+      return { sound: "minuteTick", numeral: null };
+    }
+    /* Ordinary tick on every whole second while time remains. Elapsed
+       zero is shift start, whose immediate tick app.js already plays. */
+    if (remainingMs % 1000 === 0 && elapsedMs > 0) {
+      return { sound: "tick", numeral: null };
+    }
+    return null;
+  }
+
+  /* Triage counts cues in ELAPSED time (John, 2026-08-06): EVERY
+     ten-second boundary gets the RUSH-style three-beat emphasis -
+     lead-ins at B-0.50 and B-0.25, then the boundary beat itself. The
+     boundary beat is the ordinary tick, except a completed MINUTE lands
+     the longer, deeper minuteDong instead. Lead-ins whose boundary falls
+     inside the final-ten countdown are suppressed, exactly like RUSH's
+     transition to 10. */
+  if ((elapsedMs + 500) % 10000 === 0 && remainingMs - 500 > 10000) {
+    return { sound: "minuteTick", numeral: null };
+  }
+  if ((elapsedMs + 250) % 10000 === 0 && remainingMs - 250 > 10000) {
+    return { sound: "minuteTick", numeral: null };
+  }
+  if (elapsedMs % 10000 === 0 && elapsedMs > 0) {
+    return {
+      sound: elapsedMs % 60000 === 0 ? "minuteDong" : "tick",
+      numeral: null
+    };
+  }
+  return null;
+}
+
+/* One scheduled RUSH arrival (doc 8). Draws the 20% double-burst chance,
+   inserts what capacity allows, stages the burst's second member exactly
+   one 250ms beat later (in LOGICAL game time, so pauses freeze it), and
+   walks the base interval down by one second to a 1-second floor. */
+function processRushArrival(state, context, effects) {
+  const requested =
+    context.random() < GAME_CONSTANTS.RUSH_DOUBLE_PROBABILITY ? 2 : 1;
+  const available = GAME_CONSTANTS.MAX_WAITING - state.waiting.length;
+  const actual = Math.min(requested, available);
+  const blocked = actual < requested;
+  state.rush.currentArrivalEventId += 1;
+
+  if (actual >= 1) {
+    const insertion = insertWaitingPatient(state, context, { announce: true });
+    if (insertion.inserted) {
+      effects.doinks += 1;
+      effects.queueChanged = true;
+    }
+  }
+  if (actual === 2) {
+    state.rush.stagedSecondArrivalAtMs =
+      state.shift.elapsedMs + GAME_CONSTANTS.BURST_BEAT_MS;
+  }
+  /* One shake per blocked event, however many members were refused. */
+  if (blocked) effects.blockedShake = true;
+
+  /* The next interval shrinks regardless of insertion success; a burst
+     never resets or delays the base schedule (doc 8). */
+  state.rush.nextBaseIntervalMs =
+    Math.max(1000, state.rush.nextBaseIntervalMs - 1000);
+  state.rush.arrivalRemainingMs = state.rush.nextBaseIntervalMs;
+}
+
+/* elapsedActiveMs is active play time only: app.js freezes it during
+   pauses by moving its anchor, so this function never sees paused time.
+   soundCues lists this callback's cue sounds in order; countdownNumeral
+   is the latest numeral to pop over the patient image (or null);
+   doinks/queueChanged/blockedShake are RUSH arrival effects. */
+function advanceShiftTime(state, elapsedActiveMs, context) {
+  const noChange = { timeChanged: false, shiftEnded: false,
+    soundCues: [], countdownNumeral: null,
+    doinks: 0, queueChanged: false, blockedShake: false };
+  if (state.phase !== "active") return noChange;
+
+  const reachedQuarter = Math.floor(elapsedActiveMs / QUARTER_MS);
+  if (reachedQuarter <= state.shift.lastLogicalQuarter) return noChange;
+
+  const shiftLengthMs = selectedShiftLengthSeconds(state) * 1000;
+  const isRush = state.settings.mode === "rush";
+  const soundCues = [];
+  let countdownNumeral = null;
+  const effects = { doinks: 0, queueChanged: false, blockedShake: false };
+
+  for (let quarter = state.shift.lastLogicalQuarter + 1;
+       quarter <= reachedQuarter; quarter++) {
+    state.shift.lastLogicalQuarter = quarter;
+    state.shift.elapsedMs = quarter * QUARTER_MS;
+    state.shift.remainingMs = Math.max(0, shiftLengthMs - state.shift.elapsedMs);
+
+    /* Zero completes the shift exactly once, before anything else this
+       quarter would do (doc 8 order); the completion dong suppresses
+       every other coincident cue INCLUDING a same-instant arrival
+       (doc 3). Later quarters in a late callback are ignored because
+       the phase is no longer active. */
+    if (state.shift.remainingMs === 0) {
+      stopShift(state, "timer", context);
+      return { timeChanged: true, shiftEnded: true,
+        soundCues: ["endDong"], countdownNumeral: null,
+        doinks: 0, queueChanged: effects.queueChanged, blockedShake: false };
+    }
+
+    if (isRush) {
+      /* The burst's staged second member lands exactly one beat after
+         the first; capacity is rechecked and a blocked staged insertion
+         is silent, sharing its event's one shake (doc 8). */
+      if (state.rush.stagedSecondArrivalAtMs !== null &&
+          state.shift.elapsedMs >= state.rush.stagedSecondArrivalAtMs) {
+        state.rush.stagedSecondArrivalAtMs = null;
+        const staged = insertWaitingPatient(state, context, { announce: true });
+        if (staged.inserted) {
+          effects.doinks += 1;
+          effects.queueChanged = true;
+        }
+      }
+
+      /* Courtesy refill, one second after the room was emptied (doc 3).
+         It fires even if a scheduled arrival landed during the beat -
+         simple and predictable - and a full room just skips silently
+         (a refill is a gift, never a blocked-event shake). The pair's
+         second member uses the burst rhythm: one beat later. */
+      if (state.rush.emptyRefillSecondAtMs !== null &&
+          state.shift.elapsedMs >= state.rush.emptyRefillSecondAtMs) {
+        state.rush.emptyRefillSecondAtMs = null;
+        const second = insertWaitingPatient(state, context, { announce: true });
+        if (second.inserted) {
+          effects.doinks += 1;
+          effects.queueChanged = true;
+        }
+      }
+      if (state.rush.emptyRefillAtMs !== null &&
+          state.shift.elapsedMs >= state.rush.emptyRefillAtMs) {
+        state.rush.emptyRefillAtMs = null;
+        const pair = context.random() <
+          GAME_CONSTANTS.EMPTY_REFILL_DOUBLE_PROBABILITY;
+        const first = insertWaitingPatient(state, context, { announce: true });
+        if (first.inserted) {
+          effects.doinks += 1;
+          effects.queueChanged = true;
+        }
+        if (pair) {
+          state.rush.emptyRefillSecondAtMs =
+            state.shift.elapsedMs + GAME_CONSTANTS.BURST_BEAT_MS;
+        }
+      }
+    }
+
+    const cue = clockCueForQuarter(state);
+    if (cue) {
+      soundCues.push(cue.sound);
+      if (cue.numeral !== null) countdownNumeral = cue.numeral;
+    }
+
+    /* Quarter 0 is the anchor instant - no play time has passed yet -
+       so the arrival countdown only ticks from quarter 1 on. */
+    if (isRush && state.shift.elapsedMs > 0) {
+      state.rush.arrivalRemainingMs -= QUARTER_MS;
+      if (state.rush.arrivalRemainingMs <= 0) {
+        processRushArrival(state, context, effects);
+      }
+    }
+  }
+
+  return { timeChanged: true, shiftEnded: false, soundCues, countdownNumeral,
+    doinks: effects.doinks, queueChanged: effects.queueChanged,
+    blockedShake: effects.blockedShake };
+}
+
+/* ------------------------------------------------------------------------
+   6. Score selectors.
+   All totals derive from the ledger; nothing stores an independently
+   mutable copy (doc 4). Header and review must both call these.
+   --------------------------------------------------------------------- */
+
+function selectLedgerRecords(state) {
+  return state.ledger.order.map(id => state.ledger.byPatientId[id]);
+}
+
+function selectScoreTotals(state) {
+  const records = selectLedgerRecords(state);
+  const totals = {
+    assignmentPoints: 0,
+    correct: 0,
+    close: 0,
+    wrong: 0,
+    over: 0,
+    under: 0,
+    patientsSeen: records.length,
+    score: 0
+  };
+  for (const record of records) {
+    totals.assignmentPoints += record.points;
+    if (record.outcome === "correct") totals.correct += 1;
+    if (record.outcome === "close") totals.close += 1;
+    if (record.outcome === "wrong") totals.wrong += 1;
+    if (record.direction === "over") totals.over += 1;
+    if (record.direction === "under") totals.under += 1;
+  }
+  /* Assignments are the WHOLE score. Patients left waiting cost nothing
+     in any mode: the waiting room can never be emptied, so charging for
+     it would penalise the game's premise, not the play (John,
+     2026-08-05). */
+  totals.score = totals.assignmentPoints;
+  return totals;
+}
+
+/* ------------------------------------------------------------------------
+   7. Navigation actions.
+   Phase 1 implements the primary-view cycle only; queue seeding, the
+   scheduler, and scoring arrive in later phases and slot into startShift.
+   --------------------------------------------------------------------- */
+
+/* Start Shift is HOME's only path into GAME. Returns false if illegal. */
+function startShift(state, context) {
+  if (state.phase !== "ready" || state.view !== "home") return false;
+
+  state.phase = "loading";
+
+  state.shift = {
+    id: "shift-" + context.wallClockNowMs(),
+    startedAtMs: context.wallClockNowMs(),
+    completedAtMs: null,
+    endReason: null,
+    elapsedMs: 0,
+    remainingMs: selectedShiftLengthSeconds(state) * 1000,
+    lastLogicalQuarter: -1
+  };
+
+  /* A new shift owns none of the previous shift's play state. */
+  state.waiting = [];
+  state.active = null;
+  state.assigned = null;
+  state.recallAvailable = false;
+  state.ledger = { order: [], byPatientId: {} };
+  state.review = { patientIndex: 0, playedWith: null, storedIndex: null };
+  state.pauseReasons = [];
+  state.chart.clinicalExpanded = false;
+
+  /* RUSH base interval: 10s for a 60s shift, 14.5s for 120s (doc 8). */
+  const rushBaseMs = state.settings.rushLengthSeconds === 120 ? 14500 : 10000;
+  state.rush = {
+    arrivalRemainingMs: rushBaseMs,
+    nextBaseIntervalMs: rushBaseMs,
+    stagedSecondArrivalAtMs: null,
+    currentArrivalEventId: 0,
+    emptyRefillAtMs: null,
+    emptyRefillSecondAtMs: null
+  };
+
+  /* Nothing to derive for sound: the in-game icon reads and writes
+     settings.soundGlobal directly, so a shift never carries its own
+     mute state (John, 2026-08-07).
+
+     THE DECK IS NOT REBUILT HERE ANY MORE (2026-08-09). It is a SESSION
+     order now: a shift picks up where the last one left off, which is
+     exactly what makes the next shift's first patients already
+     preloaded. The line below is only a safety net for a state that
+     never went through boot - a harness, or a deck cleared by hand.
+     Seeding still happens after the initial portraits decode (doc 4
+     loading contract), via seedInitialQueue. */
+  if (state.deck.ids.length === 0) initializeDeck(state, context);
+
+  /* A fresh set of ten scenes for the ten row positions, drawn now and
+     fixed for the whole shift (John, 2026-08-09). Doing it here rather
+     than at boot means every shift looks a little different, and the swap
+     happens while the game view is hidden, so it costs nothing visually. */
+  assignWaitingBackgrounds(state, context);
+
+  return true;
+}
+
+/* Called when required loading finished and GAME may be shown.
+   (Later phases seed the queue and anchor the scheduler here.) */
+function activateShift(state) {
+  if (state.phase !== "loading") return false;
+  state.phase = "active";
+  state.view = "game";
+  state.overlay = null;
+  return true;
+}
+
+/* Quit discards the shift after confirmation; no review results exist.
+
+   It stores NOTHING - a quit shift never reached the SHIFT ENDED screen
+   - but it no longer erases anything either. That clause existed while
+   the entrance offered "the last shift", where a quit made the offer a
+   lie. It now offers "past shifts", and the ones already played are
+   still perfectly real (TODO 11, John 2026-08-08). */
+function quitShift(state) {
+  if (state.phase !== "active" && state.phase !== "loading") return false;
+  state.shift.endReason = "quit";
+  resetToLobby(state);
+  return true;
+}
+
+/* Stop finalizes the shift and opens SHIFT REVIEW.
+
+   The review is fully rendered underneath, but a short acknowledgement
+   sits on top of it first (John, 2026-08-05): the player gets a beat to
+   register that the shift is over before the score is in front of them.
+   It is an overlay rather than a fourth view, so the HOME/GAME/REVIEW
+   model in doc 7 is untouched. */
+function stopShift(state, endReason, context) {
+  if (state.phase !== "active") return false;
+  state.phase = "complete";
+  state.shift.completedAtMs = context.wallClockNowMs();
+  state.shift.endReason = endReason; // "stop" | "timer"
+  state.view = "review";
+  state.overlay = "shift-over";
+  state.pauseReasons = [];
+  state.review.playedWith = null;
+  state.review.storedIndex = null;
+  /* Reaching here IS the test for "a shift happened": the SHIFT ENDED
+     screen appeared, whether the clock ran out or the player ended
+     early (John, 2026-08-06). Snapshot now, because returnToLobby is
+     about to wipe the ledger. The caller persists. */
+  recordCompletedShift(state);
+  return true;
+}
+
+/* ------------------------------------------------------------------------
+   7c. Past shifts: storing them, and browsing them (TODO 11).
+
+   The review screens render from the state tree, so re-reading a shift
+   is a matter of putting its data back: the shift-scoped slots (ledger,
+   shift) are restored outright, since HOME owns none of them, while the
+   player-scoped ones (settings, player) are handed to the review as
+   playedWith rather than written over what the player has since chosen.
+
+   There is no summary list, by design (John, 2026-08-08): the Shift
+   Report already prints DATE, PROVIDER, MODE, difficulty, length,
+   duration, patients seen and score in its own header, so a list would
+   have been a smaller, worse copy of the header of the thing it opens.
+   The player pages through the reports themselves instead.
+   --------------------------------------------------------------------- */
+
+/* How many completed shifts are kept. Deliberately ONE constant: a
+   stored shift is only a few KB, so this is a reading-comfort choice,
+   not a storage one, and raising it is meant to be a one-number change
+   (John, 2026-08-08). Numbering runs from the NEWEST - #1 is always the
+   shift you just played - so a shift's number keeps its meaning if this
+   number ever moves. */
+const MAX_STORED_SHIFTS = 10;
+
+/* A whole, independent copy - the snapshot must not share the ledger
+   objects the next shift will overwrite, and reviewing twice must not
+   consume it. */
+function captureShiftSnapshot(state) {
+  const byPatientId = {};
+  for (const patientId of state.ledger.order) {
+    byPatientId[patientId] = { ...state.ledger.byPatientId[patientId] };
+  }
+  return {
+    shift: { ...state.shift },
+    ledger: { order: [...state.ledger.order], byPatientId },
+    settings: { ...state.settings },
+    player: { ...state.player }
+  };
+}
+
+/* Newest first, oldest pruned. Called from stopShift only, so the
+   history holds exactly the shifts that reached SHIFT ENDED. */
+function recordCompletedShift(state) {
+  state.shiftHistory.unshift(captureShiftSnapshot(state));
+  if (state.shiftHistory.length > MAX_STORED_SHIFTS) {
+    state.shiftHistory.length = MAX_STORED_SHIFTS;
+  }
+  return true;
+}
+
+/* The ER ENTRANCE's REVIEW PAST SHIFTS line is live exactly when this
+   is true: HOME, idle, and at least one stored shift. A first-ever
+   player has none. */
+function canReviewPastShifts(state) {
+  return state.phase === "ready"
+    && state.view === "home"
+    && state.shiftHistory.length > 0;
+}
+
+/* DELETE PAST SHIFTS shares that rule - there is nothing to delete when
+   nothing is stored, so the line dims alongside its neighbour. (The
+   function keeps its "reset" name; only the player-facing word changed,
+   2026-08-09.) */
+function canResetPastShifts(state) {
+  return canReviewPastShifts(state);
+}
+
+/* Puts a stored shift on screen. Shared by opening the browser and by
+   stepping within it, so both paths restore identically. */
+function applyStoredShift(state, storedIndex) {
+  const snapshot = state.shiftHistory[storedIndex];
+  if (!snapshot) return false;
+  const byPatientId = {};
+  for (const patientId of snapshot.ledger.order) {
+    byPatientId[patientId] = { ...snapshot.ledger.byPatientId[patientId] };
+  }
+  state.ledger = { order: [...snapshot.ledger.order], byPatientId };
+  state.shift = { ...snapshot.shift };
+  state.review = {
+    patientIndex: 0,
+    playedWith: { settings: snapshot.settings, player: snapshot.player },
+    storedIndex
+  };
+  return true;
+}
+
+/* Opens the browser on the most recent shift. It lands on the report
+   itself, NOT on the SHIFT ENDED acknowledgement: that beat belongs to
+   finishing a shift, and replaying it when the player deliberately
+   asked to re-read the results would be theatre. */
+function openPastShifts(state) {
+  if (!canReviewPastShifts(state)) return false;
+  if (!applyStoredShift(state, 0)) return false;
+  state.phase = "complete";
+  state.view = "review";
+  state.overlay = null;
+  return true;
+}
+
+/* One shift per press, wrapping in both directions - the same rule the
+   Patients Seen browser uses, and the reason the counter exists: with a
+   wrap there is no dim arrow to say "that is all of them", so the
+   number has to (John, 2026-08-08).
+
+   Directions are named by TIME, not by which arrow was pressed, so the
+   arrow mapping lives in one place in app.js: "older" walks away from
+   the present (#1 -> #2 -> ...), "newer" walks back toward it. */
+function stepPastShifts(state, direction) {
+  if (state.view !== "review") return false;
+  if (state.review.storedIndex === null) return false;
+  const total = state.shiftHistory.length;
+  if (total === 0) return false;
+  const step = direction === "older" ? 1 : -1;
+  const nextIndex = (state.review.storedIndex + step + total) % total;
+  return applyStoredShift(state, nextIndex);
+}
+
+/* What the counter prints: "1 OF 3" on the newest of three stored
+   shifts. The total is how many are actually HELD, never the cap - a
+   player with three shifts must not be told there are ten. Null when no
+   stored shift is on screen, which is what hides the whole control. */
+function selectStoredShiftPosition(state) {
+  if (state.review.storedIndex === null) return null;
+  return {
+    number: state.review.storedIndex + 1,
+    total: state.shiftHistory.length
+  };
+}
+
+/* Erases every stored shift. Destructive and irreversible, so the
+   caller confirms first and then persists. Individual deletion was
+   considered and dropped (John, 2026-08-08): the queue prunes itself,
+   so an all-or-nothing reset is the whole requirement. */
+function resetPastShifts(state) {
+  if (!canResetPastShifts(state)) return false;
+  state.shiftHistory = [];
+  return true;
+}
+
+/* What the review should DISPLAY as its settings and player: the shift's
+   own when re-reading a past one, the live values otherwise. Scoring
+   never needs this - every point was banked into the ledger as it was
+   earned - so this is a display concern only. */
+function reviewPlayedWith(state) {
+  return state.review.playedWith || { settings: state.settings, player: state.player };
+}
+
+/* The acknowledgement waits for the player rather than timing out, so a
+   glance away never costs them the moment (John, 2026-08-05). Any tap or
+   key on it lands here and reveals the summary underneath. */
+function dismissShiftOverAcknowledgement(state) {
+  if (state.overlay !== "shift-over") return false;
+  state.overlay = null;
+  return true;
+}
+
+/* ------------------------------------------------------------------------
+   7b. Patients Seen browser (Phase 8).
+   Walks the ledger in its stable first-assignment order. A recalled and
+   reassigned patient is ONE entry showing the assignment that finally
+   stood, because replacement rewrites the record in place (doc 3).
+   --------------------------------------------------------------------- */
+
+function openPatientsSeen(state) {
+  if (state.phase !== "complete" || state.view !== "review") return false;
+  if (state.overlay !== null) return false;
+  if (state.ledger.order.length === 0) return false;
+  state.overlay = "patients-seen";
+  state.review.patientIndex = 0;
+  return true;
+}
+
+function closePatientsSeen(state) {
+  if (state.overlay !== "patients-seen") return false;
+  state.overlay = null;
+  return true;
+}
+
+/* Navigation wraps in both directions (doc 9). With a single patient
+   every step lands back on that patient, which is the documented
+   "safely no-ops" behavior rather than a disabled control. */
+function stepPatientsSeen(state, direction) {
+  if (state.overlay !== "patients-seen") return false;
+  const total = state.ledger.order.length;
+  if (total === 0) return false;
+  const step = direction === "previous" ? -1 : 1;
+  state.review.patientIndex =
+    (state.review.patientIndex + step + total) % total;
+  return true;
+}
+
+/* The ledger record currently on show, or null when the browser is not
+   open. ui.js needs both this and its patient record. */
+function selectPatientSeenRecord(state) {
+  const patientId = state.ledger.order[state.review.patientIndex];
+  if (patientId === undefined) return null;
+  return state.ledger.byPatientId[patientId];
+}
+
+/* Return to Lobby is SHIFT REVIEW's only primary-view destination. */
+function returnToLobby(state) {
+  if (state.phase !== "complete" || state.view !== "review") return false;
+  resetToLobby(state);
+  return true;
+}
+
+/* Shared teardown: HOME never owns an active or resumable shift. */
+function resetToLobby(state) {
+  state.phase = "ready";
+  state.view = "home";
+  state.overlay = null;
+  state.pauseReasons = [];
+  state.waiting = [];
+  /* Shift-scoped, unlike the deck: the next shift draws its own ten scenes
+     in startShift, and HOME never shows the waiting panel. */
+  state.waitingBackgrounds = [];
+  state.active = null;
+  state.assigned = null;
+  state.recallAvailable = false;
+  state.ledger = { order: [], byPatientId: {} };
+  /* THE DECK DELIBERATELY SURVIVES (2026-08-09). It used to be cleared
+     here, which was right when every shift shuffled its own; now the
+     order is per session, and wiping it on a quit would throw away both
+     the player's place in the list and the ten portraits already
+     preloaded for it. Do not re-add a deck reset to this function. */
+  state.review = { patientIndex: 0, playedWith: null, storedIndex: null };
+  state.shift.id = null;
+  state.shift.startedAtMs = null;
+  state.shift.completedAtMs = null;
+  state.shift.elapsedMs = 0;
+  state.shift.remainingMs = selectedShiftLengthSeconds(state) * 1000;
+  state.shift.lastLogicalQuarter = -1;
+}
+
+/* The in-game sound icon: it IS the GLOBAL SOUND setting (John,
+   2026-08-07), so tapping it writes the persisted preference - the
+   settings board shows the same value, and music follows it too. The
+   caller persists and re-syncs music. */
+function toggleGlobalSound(state) {
+  state.settings.soundGlobal = !state.settings.soundGlobal;
+}
+
+/* ------------------------------------------------------------------------
+   8. State invariants.
+   Run after every action during development; each violated rule is a bug
+   in a transition, never something to "fix up" here (doc 8).
+   --------------------------------------------------------------------- */
+
+function collectInvariantViolations(state) {
+  const violations = [];
+  const check = (condition, message) => {
+    if (!condition) violations.push(message);
+  };
+
+  check(GAME_CONSTANTS.VIEWS.includes(state.view), "illegal view");
+  check(GAME_CONSTANTS.PHASES.includes(state.phase), "illegal phase");
+
+  check(state.waiting.length <= GAME_CONSTANTS.MAX_WAITING,
+    "waiting exceeds 10");
+  const waitingIds = state.waiting.map(entry => entry.patientId);
+  check(new Set(waitingIds).size === waitingIds.length,
+    "duplicate patient in waiting");
+
+  if (state.active) {
+    check(!waitingIds.includes(state.active.patientId),
+      "active patient also in waiting");
+  }
+  if (state.assigned) {
+    check(!waitingIds.includes(state.assigned.patientId),
+      "assigned patient also in waiting");
+  }
+  check(!(state.active && state.assigned),
+    "active and assigned populated simultaneously");
+
+  /* The deck outlives a shift now (2026-08-09), so it is the first thing
+     that can drift across one. An empty deck is legal - that is the state
+     at boot, before the patient records land. */
+  check(state.deck.cursor >= 0 && state.deck.cursor <= state.deck.ids.length,
+    "deck cursor out of range");
+
+  /* Every visible row must have a scene to sit on. Empty is legal (HOME);
+     anything else must cover all ten positions. */
+  check(state.waitingBackgrounds.length === 0
+    || state.waitingBackgrounds.length === GAME_CONSTANTS.MAX_WAITING,
+    "waiting backgrounds do not cover every row");
+
+  check(state.ledger.order.length ===
+    Object.keys(state.ledger.byPatientId).length,
+    "ledger order and byPatientId disagree");
+  for (const patientId of state.ledger.order) {
+    const record = state.ledger.byPatientId[patientId];
+    check(!!record, `ledger order id ${patientId} has no record`);
+    if (record) {
+      check(record.points === GAME_CONSTANTS.POINTS[record.outcome],
+        `ledger points disagree with outcome for ${patientId}`);
+      /* Judged against the settings the LEDGER was built under: a
+         Forgiving shift being re-read after the player switched to
+         Strict legitimately holds Close records (TODO 13). */
+      if (reviewPlayedWith(state).settings.difficulty === "strict") {
+        check(record.outcome !== "close", "Close outcome under Strict");
+      }
+    }
+  }
+
+  check(!state.recallAvailable || !!state.assigned,
+    "recall available without an assigned patient");
+  check(state.overlay !== "chart" || !!state.active,
+    "Chart open without an active patient");
+  check(state.overlay !== "shift-over"
+    || (state.view === "review" && state.phase === "complete"),
+    "shift-over acknowledgement outside a completed shift review");
+  check(state.overlay !== "patients-seen"
+    || (state.view === "review" && state.phase === "complete"),
+    "Patients Seen open outside a completed shift review");
+  check(state.overlay !== "patients-seen"
+    || (state.review.patientIndex >= 0
+      && state.review.patientIndex < state.ledger.order.length),
+    "Patients Seen index outside the ledger");
+  /* A stored shift can only be on screen in the review, and its index
+     must address a shift that is actually held (TODO 11). */
+  check(state.review.storedIndex === null
+    || (state.view === "review" && state.phase === "complete"),
+    "a stored shift is on screen outside a completed shift review");
+  check(state.review.storedIndex === null
+    || (state.review.storedIndex >= 0
+      && state.review.storedIndex < state.shiftHistory.length),
+    "stored shift index outside the shift history");
+  check(state.shiftHistory.length <= MAX_STORED_SHIFTS,
+    "shift history longer than the cap");
+  check(!state.pauseReasons.includes("chart"),
+    "chart pause reason exists (Chart stopped pausing 2026-08-05)");
+  check(state.overlay === "confirm-quit" || state.overlay === "confirm-stop"
+    || !state.pauseReasons.includes("confirmation"),
+    "confirmation pause reason without a confirm dialog open");
+  check(state.phase === "active" || state.pauseReasons.length === 0,
+    "pause reasons outside an active shift");
+  check(state.shift.remainingMs >= 0, "remaining time below zero");
+  check(state.phase !== "active" || state.view === "game",
+    "active phase outside GAME view");
+  check(!(state.view === "home" && state.phase === "active"),
+    "HOME owns an active shift");
+
+  return violations;
+}
+
+function assertStateInvariants(state, actionName) {
+  const violations = collectInvariantViolations(state);
+  for (const violation of violations) {
+    console.warn(`[triageRush invariant] after ${actionName}: ${violation}`);
+  }
+  return violations.length === 0;
+}
+
+/* ------------------------------------------------------------------------
+   9. Preference persistence.
+   Versioned envelope (doc 8). Invalid stored data must never partially
+   apply: preferences are kept only when they validate as a whole.
+   activeShift recovery is a later phase; the envelope already carries the
+   field so the format will not need to change.
+   --------------------------------------------------------------------- */
+
+const STORAGE_KEY = "triageRush-local";
+
+function savePreferences(state, context) {
+  const envelope = {
+    schema: "triageRush-local",
+    version: 1,
+    savedAt: context.wallClockNowMs(),
+    preferences: {
+      player: { title: state.player.title, initials: state.player.initials },
+      settings: { ...state.settings }
+    },
+    activeShift: null
+  };
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(envelope));
+    return true;
+  } catch (storageError) {
+    console.warn("triageRush: could not save preferences", storageError);
+    return false;
+  }
+}
+
+/* Applies stored preferences onto a fresh state when they validate.
+   Returns true when preferences were restored. */
+function loadPreferences(state) {
+  let envelope = null;
+  try {
+    const storedText = localStorage.getItem(STORAGE_KEY);
+    if (!storedText) return false;
+    envelope = JSON.parse(storedText);
+  } catch (parseError) {
+    console.warn("triageRush: stored preferences unreadable; ignoring",
+      parseError);
+    return false;
+  }
+
+  if (!envelope || envelope.schema !== "triageRush-local" ||
+      envelope.version !== 1 || !envelope.preferences) {
+    return false;
+  }
+
+  const stored = envelope.preferences;
+
+  /* Titles removed 2026-08-06 (LPN, PA) map to the default rather than
+     invalidating the whole envelope - a stored title should never cost
+     the player their other settings. */
+  if (stored.player &&
+      (stored.player.title === "LPN" || stored.player.title === "PA")) {
+    stored.player.title = "Doctor";
+  }
+
+  /* The hints setting was removed 2026-08-07 (empty-state arrows became
+     permanent; queue badges deleted). Strip the stale key from older
+     saves so it never re-enters the state tree via the spread below. */
+  if (stored.settings && "hints" in stored.settings) {
+    delete stored.settings.hints;
+  }
+
+  /* The per-family sound checkboxes became loudness levels 2026-08-07
+     (TODO 3). Map an older save rather than rejecting it: a family that
+     was ON comes back at full volume, one that was OFF stays off. */
+  if (stored.settings && "soundGame" in stored.settings) {
+    stored.settings.gameLoudness = stored.settings.soundGame ? "hi" : "off";
+    delete stored.settings.soundGame;
+  }
+  if (stored.settings && "soundMusic" in stored.settings) {
+    stored.settings.musicLoudness = stored.settings.soundMusic ? "hi" : "off";
+    delete stored.settings.soundMusic;
+  }
+
+  if (!isValidPlayerShape(stored.player) ||
+      !isValidSettingsShape(stored.settings)) {
+    return false;
+  }
+
+  state.player = { title: stored.player.title, initials: stored.player.initials };
+  state.settings = { ...stored.settings };
+  state.shift.remainingMs = selectedShiftLengthSeconds(state) * 1000;
+  return true;
+}
+
+/* ------------------------------------------------------------------------
+   9b. Shift history persistence (TODO 11).
+
+   A SEPARATE storage key, deliberately. Preferences are tiny and are
+   rewritten on every settings apply; history is larger and is written
+   once per shift. Keeping them apart means a corrupt or oversized
+   history can never cost the player their name and settings, a quota
+   failure is isolated to the thing that caused it, and the preferences
+   envelope needed no version bump for any of this.
+   --------------------------------------------------------------------- */
+
+const SHIFT_HISTORY_KEY = "triageRush-shifts";
+
+/* A stored shift must be whole before it is trusted: it will be poured
+   straight back into the state tree. A single bad entry is SKIPPED
+   rather than costing the player the rest of their history. */
+function isValidStoredShift(entry) {
+  if (!entry || typeof entry !== "object") return false;
+  if (!entry.shift || typeof entry.shift !== "object") return false;
+  if (!entry.ledger || !Array.isArray(entry.ledger.order)) return false;
+  if (!entry.ledger.byPatientId
+    || typeof entry.ledger.byPatientId !== "object") return false;
+  for (const patientId of entry.ledger.order) {
+    if (!entry.ledger.byPatientId[patientId]) return false;
+  }
+  return isValidPlayerShape(entry.player)
+    && isValidSettingsShape(entry.settings);
+}
+
+function saveShiftHistory(state, context) {
+  const envelope = {
+    schema: "triageRush-shifts",
+    version: 1,
+    savedAt: context.wallClockNowMs(),
+    shifts: state.shiftHistory
+  };
+  try {
+    localStorage.setItem(SHIFT_HISTORY_KEY, JSON.stringify(envelope));
+    return true;
+  } catch (storageError) {
+    /* Never break play over history. The in-memory queue still works
+       for this session; only its survival across a reload is lost. */
+    console.warn("triageRush: could not save shift history", storageError);
+    return false;
+  }
+}
+
+/* Applies stored history onto a fresh state. Returns the number of
+   shifts restored, so the caller can tell "none stored" from "stored
+   but unreadable" in the console. */
+function loadShiftHistory(state) {
+  let envelope = null;
+  try {
+    const storedText = localStorage.getItem(SHIFT_HISTORY_KEY);
+    if (!storedText) return 0;
+    envelope = JSON.parse(storedText);
+  } catch (parseError) {
+    console.warn("triageRush: stored shift history unreadable; ignoring",
+      parseError);
+    return 0;
+  }
+
+  if (!envelope || envelope.schema !== "triageRush-shifts"
+    || envelope.version !== 1 || !Array.isArray(envelope.shifts)) {
+    return 0;
+  }
+
+  /* Trim to the cap on the way IN as well as on the way out, so
+     lowering MAX_STORED_SHIFTS cannot leave an over-long queue behind. */
+  state.shiftHistory = envelope.shifts
+    .filter(isValidStoredShift)
+    .slice(0, MAX_STORED_SHIFTS);
+  return state.shiftHistory.length;
+}
+
+/* Round-trip helper used by the Phase 1 gate: serialize then re-parse. */
+function serializeState(state) {
+  return JSON.stringify(state);
+}
+
+function deserializeState(serializedText) {
+  const parsed = JSON.parse(serializedText);
+  const violations = collectInvariantViolations(parsed);
+  if (violations.length > 0) {
+    throw new Error("deserialized state is illegal: " + violations.join("; "));
+  }
+  return parsed;
+}
+
+/* ------------------------------------------------------------------------
+   Exports (plain globals; no module system by design)
+   --------------------------------------------------------------------- */
+
+window.TRIAGE_RUSH_GAME = {
+  GAME_CONSTANTS,
+  createGameContext,
+  createInitialState,
+  normalizeInitials,
+  initialsSymbols,
+  gameSoundsAudible,
+  musicUnlocked,
+  musicTrackNumber,
+  musicAudible,
+  isValidSettingsShape,
+  isValidPlayerShape,
+  applySettings,
+  selectedShiftLengthSeconds,
+  validatePatientRecord,
+  insertWaitingPatient,
+  assignWaitingBackgrounds,
+  initializeDeck,
+  deckRunwayLength,
+  topUpDeckRunway,
+  seedInitialQueue,
+  peekUpcomingPatientIds,
+  selectWaitingPatient,
+  parseEsiRoomNumber,
+  ROOM_ACUITY_RANK,
+  fullCreditRoomKeys,
+  evaluateRoomChoice,
+  classifyTriageDirection,
+  assignActivePatientToRoom,
+  recallAssignedPatient,
+  openChart,
+  closeChart,
+  setChartClinicalExpanded,
+  openConfirmDialog,
+  closeConfirmDialog,
+  setDocumentHidden,
+  schedulerCanRun,
+  advanceShiftTime,
+  selectLedgerRecords,
+  selectScoreTotals,
+  startShift,
+  activateShift,
+  quitShift,
+  stopShift,
+  dismissShiftOverAcknowledgement,
+  openPatientsSeen,
+  closePatientsSeen,
+  stepPatientsSeen,
+  selectPatientSeenRecord,
+  MAX_STORED_SHIFTS,
+  canReviewPastShifts,
+  canResetPastShifts,
+  openPastShifts,
+  stepPastShifts,
+  selectStoredShiftPosition,
+  resetPastShifts,
+  reviewPlayedWith,
+  returnToLobby,
+  toggleGlobalSound,
+  collectInvariantViolations,
+  assertStateInvariants,
+  savePreferences,
+  loadPreferences,
+  saveShiftHistory,
+  loadShiftHistory,
+  serializeState,
+  deserializeState
+};

@@ -1,0 +1,54 @@
+# ---------------------------------------------------------------------------
+# ONE RULE: if it is in github-excluded/, it does not go to GitHub.
+#
+# Everything below that folder is development material - the specifications
+# and working notes, the hi-res art masters, the untreated audio sources, and
+# the scripts that turn masters into the files the game actually serves.
+#
+# Anything you do NOT want published - for any reason, including privacy and
+# third-party material - goes in that folder and needs no new rule here. The
+# rest of this repository IS what is published, with nothing hidden between
+# the lines.
+#
+# The masters are backed up to the NAS; this folder is the working copy.
+# ---------------------------------------------------------------------------
+github-excluded/
+
+# ---------------------------------------------------------------------------
+# Ordinary housekeeping below - secrets, tooling droppings, OS clutter.
+# ---------------------------------------------------------------------------
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+APIKEY/
+**/APIKEY/
+*.pem
+*.key
+
+# Dependencies and generated output
+node_modules/
+dist/
+build/
+coverage/
+*.log
+
+# Python tooling
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Editor and operating-system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*~

@@ -1,0 +1,44 @@
+{
+  "schema": "triageRush-music-manifest",
+  "version": 1,
+  "folders": {
+    "music": [
+      {
+        "file": "01-Superman-Scrubs-S1-Lazlo-Bane.mp3",
+        "gain": 1.0
+      },
+      {
+        "file": "02-Welcome-to-Sacred-Heart-Scrubs.mp3",
+        "gain": 1.0
+      },
+      {
+        "file": "03-Like-a-Surgeon-Weird-Al-1985.mp3",
+        "gain": 1.0
+      },
+      {
+        "file": "04-All-in-My-Head-Scrubs-Shawn-Mullins.mp3",
+        "gain": 1.0
+      },
+      {
+        "file": "05-How-Many-Fingers-Do-You-See-Scrubs.mp3",
+        "gain": 1.0
+      },
+      {
+        "file": "06-Living-with-a-Hernia-Weird-Al-1986.mp3",
+        "gain": 1.0
+      },
+      {
+        "file": "07-Overkill-Scrubs-Colin-Hay.mp3",
+        "gain": 1.0
+      },
+      {
+        "file": "08-Superman-Scrubs-S9-WAZ.mp3",
+        "gain": 1.0
+      },
+      {
+        "file": "09-End-Credit-Score-Scrubs-S1-Jan-Stevens.mp3",
+        "gain": 1.0
+      }
+    ]
+  }
+}

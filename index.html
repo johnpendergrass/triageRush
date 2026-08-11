@@ -1,0 +1,1258 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#071822" />
+
+    <!-- Added to the home screen on a phone, this is the icon and the launch
+     behaviour (2026-08-09).
+
+     THE ICON: without this link iOS invents one by screenshotting the page,
+     which for this game means a dark rectangle with a bit of lettering in
+     it. 180x180 is the iPhone 3x size; iOS scales it down for anything
+     smaller and masks it into a rounded square by itself, so the artwork is
+     square with its own margin and must NOT be pre-rounded.
+
+     CAPABLE: launched from the home screen the game then opens WITHOUT
+     Safari's address bar and toolbars, which hands the whole screen to a
+     9:16 shell that was designed for exactly that. The apple- prefix is the
+     one iOS still honours; the unprefixed name is the standard it became. -->
+    <link rel="apple-touch-icon" href="./Link-icons/iPhone-icon-180.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="Triage RUSH!" />
+
+    <!-- The same deal for ANDROID and desktop (2026-08-09), which ignore the
+     apple- tags above and read manifest.json instead. Without it, Add to
+     Home Screen on Android makes a plain bookmark: an invented icon, and
+     the game opening inside Chrome with the address bar taking a bite out
+     of a shell that wants the whole screen. With it, display "standalone"
+     gives the same full-screen launch an iPhone already gets.
+
+     Deliberately NO service worker, so nothing here caches or works
+     offline. Chrome will not raise its own install banner without one -
+     the manual menu item is enough, and a second caching layer is the last
+     thing this project needs. -->
+    <link rel="manifest" href="./manifest.json" />
+
+    <!-- Link previews (2026-08-09). This game travels by being texted and
+     emailed to people, and a bare github.io URL in Messages reads like
+     spam from an unknown number. These turn it into a card with the icon,
+     the name and a line of what it is. Absolute URLs are required: the
+     scrapers that read them are not browsing the page, so a ./ path has
+     nothing to resolve against.
+
+     THE URL IS ALL LOWERCASE (2026-08-11): the repository was renamed to
+     "triagerush" on GitHub, and a Pages path is CASE-SENSITIVE with no
+     redirect - /triageRush/ is now a hard 404. The repo rename does redirect
+     for git itself, which is why pushing kept working and this stayed
+     invisible. If the repo is ever renamed again, these two absolute URLs
+     and the QR code in Link-icons/ are what breaks. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Triage RUSH!" />
+    <meta property="og:title" content="Triage RUSH!" />
+    <meta
+      property="og:description"
+      content="An emergency-department triage game. Read the patient, pick the right door, beat the clock."
+    />
+    <meta
+      property="og:url"
+      content="https://johnpendergrass.github.io/triagerush/"
+    />
+    <meta
+      property="og:image"
+      content="https://johnpendergrass.github.io/triagerush/Link-icons/desktop-icon-512.png"
+    />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:image:alt" content="The Triage RUSH! logo" />
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="description"
+      content="An emergency-department triage game. Read the patient, pick the right door, beat the clock."
+    />
+
+    <title>Triage RUSH!</title>
+    <link
+      rel="stylesheet"
+      href="./triageRush/styles.css?v=2026-0811-release1"
+    />
+  </head>
+  <body>
+    <!-- Vital-sign icon definitions (TODO 12, 2026-08-06). Hand-authored inline
+     SVGs recreating the vitals-bubble artwork (mockup: _mockups/
+     vitals-icons-mockup.html, variant A chosen). Defined ONCE here, hidden;
+     every vitals tile stamps them with <use href="#vital-icon-...">, so the
+     icons work in the panel, the Chart clipboard, and Patients Seen alike.
+     No webfonts, no image files - same ethos as the brand lettering. -->
+    <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+      <defs>
+        <linearGradient id="vitalThermoGradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#f5822a" />
+          <stop offset="1" stop-color="#d81d0c" />
+        </linearGradient>
+        <clipPath id="vitalBpClip">
+          <path
+            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+          />
+        </clipPath>
+
+        <g id="vital-icon-hr">
+          <path
+            fill="#cf2015"
+            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+          />
+        </g>
+
+        <g id="vital-icon-bp">
+          <path
+            fill="#1a6b40"
+            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+          />
+          <polyline
+            clip-path="url(#vitalBpClip)"
+            points="2.5,10.6 8.6,10.6 10.4,7.4 12.5,14.2 14.2,10.6 21.5,10.6"
+            fill="none"
+            stroke="#fff"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+
+        <g id="vital-icon-rr">
+          <path
+            fill="#2e6cc6"
+            d="M10.6 9.2 C10.6 8 9.5 7.3 8.4 7.8 C5.2 9.2 3.2 12.8 3 16.8 C2.9 19.4 4 20.8 6.1 21 C8.8 21.3 10.6 19.8 10.6 17.2 Z"
+          />
+          <path
+            fill="#2e6cc6"
+            d="M13.4 9.2 C13.4 8 14.5 7.3 15.6 7.8 C18.8 9.2 20.8 12.8 21 16.8 C21.1 19.4 20 20.8 17.9 21 C15.2 21.3 13.4 19.8 13.4 17.2 Z"
+          />
+          <path
+            fill="none"
+            stroke="#2e6cc6"
+            stroke-width="1.9"
+            stroke-linecap="round"
+            d="M12 2.6 V6.8 M12 6.8 C12 8.2 11.2 8.8 10.1 9.4 M12 6.8 C12 8.2 12.8 8.8 13.9 9.4"
+          />
+        </g>
+
+        <g id="vital-icon-spo2">
+          <text
+            x="3"
+            y="17.5"
+            font-family="Arial Black, Arial, sans-serif"
+            font-weight="900"
+            font-size="16"
+            fill="#2565c0"
+          >
+            O
+          </text>
+          <text
+            x="15"
+            y="21.5"
+            font-family="Arial Black, Arial, sans-serif"
+            font-weight="900"
+            font-size="9"
+            fill="#2565c0"
+          >
+            2
+          </text>
+        </g>
+
+        <g id="vital-icon-temp">
+          <rect
+            x="10"
+            y="2"
+            width="4"
+            height="12.6"
+            rx="2"
+            fill="url(#vitalThermoGradient)"
+          />
+          <circle cx="12" cy="17.4" r="4.4" fill="#d81d0c" />
+          <circle cx="11" cy="16.4" r="1.5" fill="#f5822a" opacity="0.6" />
+        </g>
+
+        <g id="vital-icon-pain">
+          <circle cx="12" cy="5.1" r="2.9" fill="#e8941a" />
+          <path
+            fill="#e8941a"
+            d="M12 9 C8.8 9 6.5 11.1 6.2 14.3 L6 17.1 C6 18.1 6.6 18.7 7.5 18.7 L16.5 18.7 C17.4 18.7 18 18.1 18 17.1 L17.8 14.3 C17.5 11.1 15.2 9 12 9 Z"
+          />
+          <path
+            fill="none"
+            stroke="#f5f1e7"
+            stroke-width="1.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M8.2 12.6 L10.3 14.4 L8.6 16.4 M15.8 12.6 L13.7 14.4 L15.4 16.4"
+          />
+        </g>
+      </defs>
+    </svg>
+
+    <!-- One 9:16 shell on every device. HOME, GAME, and SHIFT REVIEW are separate
+     full-shell views inside it; only one is ever visible (doc 7). -->
+    <div class="app-shell" id="appShell">
+      <!-- ====================================================================
+       HOME view: the 852x1515 lobby composition. The title, sidewalk
+       boards, and ABOUT cover are baked into the background artwork;
+       transparent buttons registered over them are the real controls.
+       ================================================================= -->
+      <section class="home-view" id="homeView">
+        <img class="home-background" id="homeBackground" alt="" />
+
+        <!-- Closed-doors patch with START SHIFT lettering, registered at
+         source X319 Y447, 514x232 on the 852x1515 canvas. -->
+        <button class="door-start-button" id="startShiftButton" type="button">
+          <img class="door-start-art" id="startShiftArt" alt="" />
+          <span class="visually-hidden">Start Shift</span>
+        </button>
+
+        <!-- ================================================================
+         Sidewalk summary boards (TODO 3, built 2026-08-07 from
+         _mockups/summary-boards-mockup.html). Each board's lettering
+         sits in the ribbed FACE of its art - the rects in styles.css
+         are measured from the 852x1515 canvas - and carries the same
+         press-in white letter-board look as the detail boards, so a
+         board and its close-up read as one object.
+
+         Nothing announces that these are tappable (John, 2026-08-07):
+         a player will try the board and get the detail board.
+         ============================================================= -->
+
+        <!-- PLAYER board. Two halves, and they behave differently: the
+         welcome half is ONE button that opens PLAYER NAME, and the
+         review half below the rule holds its own two buttons. The edit
+         target therefore stops at the rule (John, 2026-08-07). -->
+        <div class="board-face board-face--player">
+          <div class="face-inner">
+            <button
+              class="player-edit"
+              id="playerBoardButton"
+              type="button"
+              aria-haspopup="dialog"
+              aria-label="Player name settings"
+            >
+              <span class="sum-welcome">Welcome!</span>
+              <span class="sum-player-name" id="playerBoardTitleLine"></span>
+              <span
+                class="sum-player-initials"
+                id="playerBoardInitialsLine"
+              ></span>
+            </button>
+
+            <hr class="sum-divider" />
+
+            <!-- Two buttons, each carrying its own REVIEW line, centered in
+             the space with equal air above, between and below (John,
+             2026-08-07). The shared REVIEW header is gone: it read as a
+             label for a group, when what is wanted is two whole
+             destinations. -->
+            <div class="player-half player-half--review">
+              <!-- Both lines need at least one stored shift; they dim
+               together otherwise (TODO 11). REVIEW LAST SHIFT used to
+               be the first of these two - it was absorbed 2026-08-08,
+               because the browser opens on the most recent shift, which
+               made the two lines the same destination. -->
+              <button
+                class="review-line review-line--primary"
+                id="reviewPastShiftsButton"
+                type="button"
+                aria-label="Review past shifts"
+              >
+                <span class="review-line-kicker">Review</span>
+                <span class="review-line-name">Past Shifts</span>
+              </button>
+              <!-- Deletes the whole queue; confirms first, since there is no
+               undo and no per-shift deletion (John, 2026-08-08).
+               The word is DELETE, not RESET (John, 2026-08-09) - "reset"
+               is what a scoreboard does, and this destroys shifts. The
+               red X in front says the same thing a second way, in the
+               colour this game already uses for off/destructive; it is
+               aria-hidden because the label carries the meaning. -->
+              <button
+                class="review-line review-line--secondary"
+                id="resetPastShiftsButton"
+                type="button"
+                aria-label="Delete past shifts"
+              >
+                <span class="review-line-kicker"
+                  ><span class="delete-x" aria-hidden="true">&#10005;</span>
+                  <span class="delete-word">Delete</span></span
+                >
+                <span class="review-line-name">Past Shifts</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- GAME board: a read-only mirror of the GAME OPTIONS detail
+         board. GAME MODE labels the brand words the way SCORING and
+         LENGTH label theirs; the board carries no title of its own. -->
+        <button
+          class="board-face board-face--game"
+          id="shiftBoardButton"
+          type="button"
+          aria-haspopup="dialog"
+          aria-label="Game and sound options"
+        >
+          <span class="face-inner face-inner--game">
+            <span class="sum-group sum-group--headline">
+              <span class="sum-group-label">Game Mode</span>
+              <!-- The brand is STATIC MARKUP in every spot it appears
+               (branding rule, 2026-08-06) - ui.js shows one of these
+               two and hides the other rather than writing the words. -->
+              <span
+                class="sum-group-value sum-mode sum-mode--triage brand-sign"
+                id="shiftBoardModeTriage"
+                >Triage!</span
+              >
+              <span
+                class="sum-group-value sum-mode sum-mode--rush brand-sign"
+                id="shiftBoardModeRush"
+                hidden
+                >Triage <span class="brand-rush">RUSH!</span></span
+              >
+            </span>
+
+            <span class="sum-group">
+              <span class="sum-group-label">Scoring</span>
+              <span
+                class="sum-group-value"
+                id="shiftBoardDifficultyLine"
+              ></span>
+            </span>
+
+            <span class="sum-group">
+              <span class="sum-group-label">Length</span>
+              <span class="sum-group-value" id="shiftBoardLengthLine"></span>
+            </span>
+
+            <!-- A span, not an <hr>: a button may only contain phrasing
+             content, and an <hr> inside one is invalid markup. -->
+            <span class="sum-divider"></span>
+
+            <span class="sum-row">
+              <span class="lbl">Sound</span>
+              <span class="val" id="shiftBoardSoundLine"></span>
+            </span>
+            <span class="sum-row sum-row--level">
+              <span class="lbl">Game</span>
+              <span class="val" id="shiftBoardGameLoudLine"></span>
+            </span>
+            <!-- Hidden with the settings row it mirrors, so a locked player
+             sees no trace of music on either board. -->
+            <span class="sum-row sum-row--level" id="shiftBoardMusicRow">
+              <span class="lbl">Music</span>
+              <span class="val" id="shiftBoardMusicLoudLine"></span>
+            </span>
+          </span>
+        </button>
+
+        <!-- Green utility-cover oval embossed ABOUT at bottom left. -->
+        <button
+          class="about-hotspot"
+          id="aboutButton"
+          type="button"
+          aria-haspopup="dialog"
+        >
+          <span class="visually-hidden">About Triage RUSH!</span>
+        </button>
+
+        <!-- Quiet loading status; Start Shift stays blocked until ready. -->
+        <p class="home-loading-status" id="homeLoadingStatus" role="status">
+          Loading&hellip;
+        </p>
+      </section>
+
+      <!-- ====================================================================
+       Board popups. One dialog layer; content swaps between the player
+       board, the shift board (both on the shared blackboard art), and
+       the About whiteboard. Red X cancels; green check applies.
+       ================================================================= -->
+      <section
+        class="popup-layer"
+        id="popupLayer"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Settings"
+        hidden
+      >
+        <div class="popup-card" id="popupCard">
+          <!-- TWO board images, not one that swaps its src (TODO 18, fixed
+           2026-08-09). Both srcs are set at boot and both are decoded
+           before HOME is ever revealed, so opening a board is a visibility
+           toggle with no work left to do. A single element whose src
+           changed at open time is what made the lettering appear a beat
+           before the board behind it: the text is plain DOM and paints
+           immediately, while the art still had a 1 MB PNG to fetch and
+           decode. Setting the src early is not enough on its own - an
+           image inside a hidden subtree is downloaded but not necessarily
+           DECODED, which is why boot awaits decode() on both. -->
+          <img class="popup-board-art" id="popupBlackboardArt" alt="" hidden />
+          <img class="popup-board-art" id="popupWhiteboardArt" alt="" hidden />
+
+          <button
+            class="popup-close"
+            id="popupCloseButton"
+            type="button"
+            aria-label="Cancel and close"
+          >
+            &#10005;
+          </button>
+
+          <!-- PLAYER NAME board (TODO 3, built 2026-08-07 from
+           _mockups/settings-letterboard-mockup-PLAYER.html). No section
+           headers: the machines are self-evident. The drums themselves
+           are built by ui.js buildPlayerWheels, which is also where the
+           values live - one title drum plus three initials drums. -->
+          <div
+            class="popup-content popup-content--board popup-content--player"
+            id="playerBoardContent"
+            hidden
+          >
+            <div class="board-title">Player Name</div>
+
+            <div class="wheel-block">
+              <div class="wheel wheel--title" id="playerTitleWheel"></div>
+            </div>
+
+            <div class="wheel-block" id="playerInitialsWheels"></div>
+          </div>
+
+          <!-- GAME OPTIONS board (TODO 3, built 2026-08-07 from
+           _mockups/settings-letterboard-mockup-GAME.html). Every setting
+           is a two-line group: left-justified header, centered options
+           row with wide tap gaps. The --headline groups (GAME MODE and
+           GLOBAL SOUND) open their section a step larger. -->
+          <div
+            class="popup-content popup-content--board"
+            id="shiftBoardContent"
+            hidden
+          >
+            <div class="board-title">Game Options</div>
+
+            <div class="setting-group setting-group--headline">
+              <div class="setting-group-label">Game Mode</div>
+              <div class="option-row">
+                <label
+                  ><input type="radio" name="settingMode" value="rush" />
+                  <span class="brand-sign"
+                    >Triage <span class="brand-rush">RUSH!</span></span
+                  ></label
+                >
+                <label
+                  ><input type="radio" name="settingMode" value="triage" />
+                  <span class="brand-sign">Triage!</span></label
+                >
+              </div>
+            </div>
+
+            <div class="setting-group">
+              <div class="setting-group-label">Scoring Difficulty</div>
+              <div class="option-row">
+                <label
+                  ><input
+                    type="radio"
+                    name="settingDifficulty"
+                    value="forgiving"
+                  />
+                  Forgiving</label
+                >
+                <label
+                  ><input
+                    type="radio"
+                    name="settingDifficulty"
+                    value="strict"
+                  />
+                  Strict</label
+                >
+              </div>
+            </div>
+
+            <div class="setting-group">
+              <div class="setting-group-label">Shift Length</div>
+              <!-- Only the selected mode's lengths are shown; ui.js
+               renderModeLengthVisibility swaps them. -->
+              <div class="option-row" id="rushLengthOptions" hidden>
+                <label
+                  ><input type="radio" name="settingRushLength" value="60" /> 60
+                  seconds</label
+                >
+                <label
+                  ><input type="radio" name="settingRushLength" value="120" />
+                  120 seconds</label
+                >
+              </div>
+              <div class="option-row" id="triageLengthOptions">
+                <label
+                  ><input type="radio" name="settingTriageLength" value="300" />
+                  5 minutes</label
+                >
+                <label
+                  ><input type="radio" name="settingTriageLength" value="600" />
+                  10 minutes</label
+                >
+              </div>
+            </div>
+
+            <hr class="board-divider" />
+
+            <div class="board-title board-title--sub">Sound Options</div>
+
+            <div class="setting-group setting-group--headline">
+              <div class="setting-group-label">Global Sound</div>
+              <div class="option-row">
+                <label
+                  ><input type="radio" name="settingSoundGlobal" value="off" />
+                  Off</label
+                >
+                <label
+                  ><input type="radio" name="settingSoundGlobal" value="on" />
+                  On</label
+                >
+              </div>
+            </div>
+
+            <div class="setting-group" id="settingGameSoundsGroup">
+              <div class="setting-group-label">Game Sounds</div>
+              <div class="option-row">
+                <label
+                  ><input type="radio" name="settingGameLoudness" value="off" />
+                  Off</label
+                >
+                <label
+                  ><input type="radio" name="settingGameLoudness" value="lo" />
+                  Lo</label
+                >
+                <label
+                  ><input type="radio" name="settingGameLoudness" value="hi" />
+                  Hi</label
+                >
+              </div>
+            </div>
+
+            <!-- Hidden entirely until the player's middle initial is the
+             music-unlock symbol (game.js MUSIC_UNLOCK_SYMBOL). Absent, not
+             disabled: a greyed-out control advertises itself. -->
+            <div
+              class="setting-group setting-group--last"
+              id="settingMusicGroup"
+            >
+              <div class="setting-group-label">Music</div>
+              <div class="option-row">
+                <label
+                  ><input
+                    type="radio"
+                    name="settingMusicLoudness"
+                    value="off"
+                  />
+                  Off</label
+                >
+                <label
+                  ><input type="radio" name="settingMusicLoudness" value="lo" />
+                  Lo</label
+                >
+                <label
+                  ><input type="radio" name="settingMusicLoudness" value="hi" />
+                  Hi</label
+                >
+              </div>
+            </div>
+
+            <p class="popup-note" id="musicStatusNote" hidden></p>
+          </div>
+
+          <!-- ABOUT whiteboard (2026-08-08, built from
+           _mockups/about-board-mockup.html). The 3D logo, John's
+           opening paragraph, one ruled section, and a centered footer
+           parked on the bottom frame. It is sized to fit on ONE screen -
+           if the copy ever outgrows the face, the plan is to make it
+           scroll like the patient chart, or to break the sections into
+           buttons; do not shrink the type to squeeze more in.
+
+           All of it is STATIC markup, like the other brand spots -
+           ui.js writes none of this. -->
+          <div
+            class="popup-content popup-content--marker"
+            id="aboutBoardContent"
+            hidden
+          >
+            <h2 class="about-logo">
+              <span class="brand-sign"
+                >Triage <span class="brand-rush">RUSH!</span></span
+              >
+            </h2>
+
+            <div class="about-body">
+              <!-- John's words, verbatim: the department is the ED here,
+               even though the entrance screen is the ER ENTRANCE. -->
+              <p class="about-intro">
+                <span class="brand-flat"
+                  >Triage <span class="brand-rush">RUSH!</span></span
+                >
+                is a hospital ED triage game/simulator. With high-density UI and
+                patient data, it will be a challenge for even the most ardent
+                student of emergency medicine.
+              </p>
+
+              <section>
+                <h3 class="about-heading">How to Play</h3>
+                <!-- John's words, including the blank line that separates
+                 "what you do" from "which shift you chose". -->
+                <ul class="about-steps">
+                  <li>Tap a waiting patient.</li>
+                  <li>Tap the patient chart.</li>
+                  <li>Tap a treatment door to move them to that room.</li>
+                  <!-- John, 2026-08-08. TRIAGE here is deliberately PLAIN -
+                   no .brand-sign, no .brand-flat, no colour: the line is
+                   about the medical act, not about the game's name, and
+                   branding it would say the opposite of what it means. -->
+                  <li class="about-step-strong">
+                    This is TRIAGE, not DIAGNOSIS!
+                  </li>
+                  <li>Review your shift when done.</li>
+                  <li>
+                    <span class="brand-flat">Triage!</span> is a steady shift.
+                  </li>
+                  <li>
+                    <span class="brand-flat"
+                      >Triage <span class="brand-rush">RUSH!</span></span
+                    >
+                    is faster paced.
+                  </li>
+                  <li>&lsquo;Strict&rsquo; requires the correct room.</li>
+                  <li>
+                    &lsquo;Forgiving&rsquo; allows &lsquo;close enough&rsquo;.
+                  </li>
+                </ul>
+              </section>
+
+              <footer class="about-footer">
+                <p class="about-fine">
+                  Patients, charts and artwork are fictional. A game, not
+                  medical training or advice.
+                </p>
+                <p class="about-version">v 0.19.2 08/2026 jp/claude/chatty</p>
+              </footer>
+            </div>
+          </div>
+
+          <button
+            class="popup-apply"
+            id="popupApplyButton"
+            type="button"
+            aria-label="Apply and close"
+            hidden
+          >
+            &#10003;
+          </button>
+        </div>
+      </section>
+
+      <!-- Blocking Start Shift status (doc 4 loading contract). -->
+      <section
+        class="arriving-overlay"
+        id="arrivingOverlay"
+        role="alert"
+        hidden
+      >
+        <p class="arriving-text">PATIENTS ARE ARRIVING&hellip;</p>
+      </section>
+
+      <!-- ====================================================================
+       GAME view: Phase 2 skeleton. Bands 7.2% / 85.8% / 7%, columns
+       22% / 56% / 22%. Panels fill with gameplay in later phases.
+       ================================================================= -->
+      <section class="game-view" id="gameView" hidden>
+        <header class="game-header">
+          <!-- The header names the MODE BEING PLAYED, not the game (John,
+           2026-08-07): "Triage RUSH!" in both modes read as branding and
+           told the player nothing about which shift they were on. Both
+           spellings are static markup and ui.js unhides one - the same
+           pattern the sidewalk summary board uses. One <p> so the header
+           grid still sees a single cell. -->
+          <p class="brand brand-sign" id="gameBrand">
+            <span class="brand-mode brand-mode--triage" id="gameBrandTriage"
+              >Triage!</span
+            >
+            <span class="brand-mode brand-mode--rush" id="gameBrandRush" hidden
+              >Triage <span class="brand-rush">RUSH!</span></span
+            >
+          </p>
+          <p class="header-scorecard" id="gameScorecard">
+            <strong class="score-correct" id="scoreCorrect">0</strong>
+            <span class="score-divider" id="scoreCloseDivider">/</span>
+            <strong class="score-close" id="scoreClose">0</strong>
+            <span class="score-divider">/</span>
+            <strong class="score-wrong" id="scoreWrong">0</strong>
+            <span class="score-divider">=</span>
+            <strong class="score-total" id="scoreTotal">0</strong>
+          </p>
+          <p class="status-box">
+            <small>TIME</small>
+            <strong id="gameTimer">5:00</strong>
+          </p>
+          <button
+            class="sound-button"
+            id="gameSoundButton"
+            type="button"
+            aria-label="Mute sounds"
+          >
+            &#9834;
+          </button>
+        </header>
+
+        <div class="play-area">
+          <aside class="waiting-panel" id="waitingPanel">
+            <!-- Waiting queue arrives in Phase 4 -->
+          </aside>
+
+          <div class="patient-panel" id="patientPanel">
+            <!-- The unified patient chart (panel setting) mounts here. -->
+            <div class="patient-chart-mount" id="patientChartMount"></div>
+            <div class="patient-empty-state" id="patientEmptyState">
+              <small>READY</small>
+              <strong>SELECT A PATIENT</strong>
+              <!-- Hint lines are filled by renderPatient: queue tap always,
+               plus the recall-door line when a recall is possible.
+               Always shown (permanent since 2026-08-07). -->
+              <span class="patient-empty-hint" id="patientEmptyHint"></span>
+            </div>
+            <!-- The entire occupied panel is the one Chart hit target: a
+             transparent button layer over the chart (doc 7). Hidden while
+             the panel is empty, so Chart can never open without a patient. -->
+            <button
+              class="patient-panel-hit"
+              id="patientPanelHitButton"
+              type="button"
+              hidden
+            >
+              <span class="visually-hidden">Open the patient chart</span>
+            </button>
+
+            <!-- RUSH final-countdown numerals (10..1) pop and fade over the
+             patient image; purely decorative and never an input layer
+             (doc 7). It stays ANCHORED HERE, over the patient image, but
+             paints at the top of the shell (styles.css z-index) so it
+             also shows over an open patient chart (John, 2026-08-08). -->
+            <div
+              class="countdown-numeral"
+              id="countdownNumeral"
+              aria-hidden="true"
+            ></div>
+            <!-- Transient assignment result: ✓ CORRECT / △ CLOSE / ✕ WRONG. -->
+            <p class="result-toast" id="resultToast" role="status" hidden></p>
+          </div>
+
+          <aside class="rooms-panel" id="roomsPanel">
+            <!-- Seven-room door rail arrives in Phase 4 -->
+          </aside>
+        </div>
+
+        <footer class="game-footer">
+          <button
+            class="footer-button footer-button--quit"
+            id="quitGameButton"
+            type="button"
+          >
+            <span class="footer-arrow footer-arrow--left" aria-hidden="true"
+              >&#9664;</span
+            >
+            <span>QUIT THIS SHIFT</span>
+            <small>RETURN TO ER ENTRANCE</small>
+          </button>
+          <div class="footer-neutral" aria-hidden="true"></div>
+          <button
+            class="footer-button footer-button--stop"
+            id="stopGameButton"
+            type="button"
+          >
+            <span class="footer-arrow footer-arrow--right" aria-hidden="true"
+              >&#9654;</span
+            >
+            <span>END SHIFT EARLY</span>
+            <small>REVIEW THIS SHIFT</small>
+          </button>
+        </footer>
+      </section>
+
+      <!-- ====================================================================
+       Chart overlay: the clipboard setting of the unified patient chart.
+       Opaque paper on a clipboard board with a header row (CSS-drawn; no
+       clipboard artwork exists). The paper scrolls internally; MORE
+       ABOVE / MORE BELOW appear only when hidden content exists (doc 7).
+       ================================================================= -->
+      <section
+        class="chart-overlay"
+        id="chartOverlay"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Patient chart"
+        hidden
+      >
+        <div class="chart-clipboard" id="chartClipboard">
+          <!-- Clipboard header row (John, 2026-08-05): PATIENT CHART
+           left-justified, then the live shift clock (the clock keeps
+           running while the chart is open), then the red X. -->
+          <div class="chart-timer" id="chartTimer" aria-hidden="true">
+            <small>TIME</small>
+            <strong id="chartTimerValue">0:00</strong>
+          </div>
+          <div class="chart-title" aria-hidden="true">PATIENT CHART</div>
+          <button
+            class="chart-close"
+            id="chartCloseButton"
+            type="button"
+            aria-label="Close the patient chart"
+          >
+            &#10005;
+          </button>
+          <div class="chart-scroll" id="chartScroll">
+            <div class="chart-overlay-mount" id="chartOverlayMount"></div>
+          </div>
+          <!-- Larger-photo view: covers the paper; content (name strip,
+           photo, close box) is rebuilt by renderChartPortraitZoom. -->
+          <div class="chart-zoom" id="chartZoomView" hidden></div>
+          <button
+            class="chart-more chart-more--above"
+            id="chartMoreAbove"
+            type="button"
+            hidden
+          >
+            &#9650;&#xFE0E; MORE ABOVE
+          </button>
+          <button
+            class="chart-more chart-more--below"
+            id="chartMoreBelow"
+            type="button"
+            hidden
+          >
+            &#9660;&#xFE0E; MORE BELOW
+          </button>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+       Patients Seen browser (Phase 8). The same clipboard as the in-game
+       Chart, so a reviewed patient looks like the patient did during
+       play. Two differences: the header slot that carries the live clock
+       during a shift carries the POSITION here (a finished shift has no
+       clock to show - John, 2026-08-05), and a fixed banner below the
+       header holds the name between circular previous/next buttons.
+       ================================================================= -->
+      <section
+        class="chart-overlay seen-overlay"
+        id="patientsSeenOverlay"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Patients seen"
+        hidden
+      >
+        <div class="chart-clipboard">
+          <div class="chart-timer" aria-hidden="true">
+            <small>PATIENT</small>
+            <strong id="seenPositionValue">1 / 1</strong>
+          </div>
+          <div class="chart-title" aria-hidden="true">PATIENT CHART</div>
+          <button
+            class="chart-close"
+            id="seenCloseButton"
+            type="button"
+            aria-label="Close Patients Seen"
+          >
+            &#10005;
+          </button>
+
+          <div class="chart-scroll" id="seenScroll">
+            <div class="chart-overlay-mount" id="seenMount"></div>
+          </div>
+
+          <!-- Larger-photo view (2026-08-06): the Chart's zoom treatment over
+           this clipboard - photo and close box only, deliberately WITHOUT
+           the outcome badge. Content rebuilt by renderSeenPortraitZoom. -->
+          <div class="chart-zoom" id="seenZoomView" hidden></div>
+
+          <!-- Navigation rails (John, 2026-08-05): tall arrows down both
+           edges of the paper, beside the patient photo, replacing the
+           old name banner - the chart's own nameplate already shows the
+           name, so the banner only repeated it. They are pinned to the
+           clipboard rather than sitting in the paper, so they stay
+           reachable after the player scrolls down a long chart. The
+           paper is inset (see .seen-overlay .chart-scroll) so no content
+           ever hides beneath them. -->
+          <button
+            class="seen-nav seen-nav--previous"
+            id="seenPreviousButton"
+            type="button"
+            aria-label="Previous patient"
+          >
+            <span aria-hidden="true">&#9664;&#xFE0E;</span>
+          </button>
+          <button
+            class="seen-nav seen-nav--next"
+            id="seenNextButton"
+            type="button"
+            aria-label="Next patient"
+          >
+            <span aria-hidden="true">&#9654;&#xFE0E;</span>
+          </button>
+          <button
+            class="chart-more chart-more--above"
+            id="seenMoreAbove"
+            type="button"
+            hidden
+          >
+            &#9650;&#xFE0E; MORE ABOVE
+          </button>
+          <button
+            class="chart-more chart-more--below"
+            id="seenMoreBelow"
+            type="button"
+            hidden
+          >
+            &#9660;&#xFE0E; MORE BELOW
+          </button>
+        </div>
+      </section>
+
+      <!-- Quit confirmation: destructive, so it always confirms (doc 7). -->
+      <section
+        class="confirm-overlay"
+        id="confirmQuitOverlay"
+        role="dialog"
+        aria-modal="true"
+        aria-label="End shift confirmation"
+        hidden
+      >
+        <div class="confirm-card">
+          <h2>Quit this shift?</h2>
+          <p>The shift will be discarded. There will be no shift review.</p>
+          <div class="confirm-actions">
+            <button class="confirm-cancel" id="confirmQuitCancel" type="button">
+              Whoops! I want to keep playing!
+            </button>
+            <button class="confirm-accept" id="confirmQuitAccept" type="button">
+              Yes, quit this shift
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Stop confirmation: ending early is final, so it confirms too. -->
+      <section
+        class="confirm-overlay"
+        id="confirmStopOverlay"
+        role="dialog"
+        aria-modal="true"
+        aria-label="End shift early confirmation"
+        hidden
+      >
+        <div class="confirm-card">
+          <h2>End this shift early?</h2>
+          <p>
+            The shift will end now and be scored. You will go to shift review.
+          </p>
+          <div class="confirm-actions">
+            <button class="confirm-cancel" id="confirmStopCancel" type="button">
+              Whoops! I want to keep playing!
+            </button>
+            <button class="confirm-accept" id="confirmStopAccept" type="button">
+              Yes, end shift early
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Delete confirmation: destroys every stored shift with no undo, so
+       it confirms like quit and stop do, and NAMES the number it will
+       destroy (TODO 11). Every word here is DELETE (John, 2026-08-09) -
+       the board says DELETE, so the dialog must not answer with a
+       different verb. -->
+      <section
+        class="confirm-overlay"
+        id="confirmResetOverlay"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Delete past shifts confirmation"
+        hidden
+      >
+        <div class="confirm-card">
+          <h2>Delete past shifts?</h2>
+          <p id="confirmResetLine">
+            This deletes all stored shifts. It cannot be undone.
+          </p>
+          <div class="confirm-actions">
+            <button
+              class="confirm-cancel"
+              id="confirmResetCancel"
+              type="button"
+            >
+              Whoops! Keep my shifts!
+            </button>
+            <button
+              class="confirm-accept"
+              id="confirmResetAccept"
+              type="button"
+            >
+              Yes, delete them all
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+       SHIFT REVIEW view (Phase 8; variant B "LEGIBLE" adopted 2026-08-06).
+       Printed-summary treatment: paper, rule lines, small caps.
+
+       Everything fits one screen with no scrolling, so every box below
+       sizes from container-relative clamps rather than fixed pixels.
+       The formula rows are built in ui.js; the table is ALWAYS the same
+       three rows (CORRECT / CLOSE / WRONG) - under Strict the CLOSE row
+       holds its place and reads NA (doc 3).
+       ================================================================= -->
+      <section class="review-view" id="reviewView" hidden>
+        <div class="review-paper">
+          <!-- A second exit, doing exactly what RETURN TO ER ENTRANCE at the
+           foot of the sheet does (John, 2026-08-08). Red X because that
+           is what a red X means everywhere else in this game - it is the
+           popup boards' close control, same shape, same colour. -->
+          <!-- &#10005; U+2715, the SAME glyph the popup boards and the Chart
+           use. It was &times; (U+00D7) at first, which is a small light
+           multiplication sign that left the mark looking lost inside its
+           square (John, 2026-08-08). -->
+          <button
+            class="review-close"
+            id="reviewCloseButton"
+            type="button"
+            aria-label="Return to ER entrance"
+          >
+            &#10005;
+          </button>
+
+          <header class="review-head">
+            <!-- One centered unit: the red 3D brand + serif small-caps
+             "Shift Report", static in every mode (John, 2026-08-06) -
+             only the MODE: line below names the mode. Never
+             text-transform the brand. -->
+            <p class="review-title" id="reviewTitleLine">
+              <span class="brand-sign"
+                >Triage <span class="brand-rush">RUSH!</span></span
+              >
+              <span class="review-title-report">Shift Report</span>
+            </p>
+            <p class="review-mode" id="reviewModeLine">
+              MODE: Triage, Forgiving, 5 minutes
+            </p>
+          </header>
+
+          <!-- Meta: a 2 x 2 grid of left-ruled cells, key over value. The
+           DURATION note appears only when the shift was ended early, so
+           the configured length in the mode line and a shorter time here
+           never sit unexplained next to each other (doc 7). -->
+          <div class="review-meta">
+            <div class="review-meta-cell">
+              <span class="review-meta-key">PROVIDER</span>
+              <span class="review-meta-value" id="reviewProvider"
+                >Doctor AAA</span
+              >
+            </div>
+            <div class="review-meta-cell">
+              <span class="review-meta-key">DURATION</span>
+              <span class="review-meta-value">
+                <span id="reviewDuration">0:00</span
+                ><span class="review-meta-note" id="reviewDurationNote" hidden>
+                  * ended shift early</span
+                >
+              </span>
+            </div>
+            <div class="review-meta-cell">
+              <span class="review-meta-key">PATIENTS SEEN</span>
+              <span class="review-meta-value" id="reviewSeen">0</span>
+            </div>
+            <div class="review-meta-cell">
+              <span class="review-meta-key">DATE</span>
+              <span class="review-meta-value" id="reviewDate">&mdash;</span>
+            </div>
+          </div>
+
+          <!-- The score, flanked by the past-shift browse arrows (TODO 11).
+           The report is a FIXED one-screen layout - flex column,
+           space-between, no scrolling - so vertical space is expensive
+           and the dead margin either side of the score is the only free
+           room on the sheet; the arrows cost nothing there.
+
+           They appear ONLY while browsing stored shifts, never on the
+           report of the shift just finished (John, 2026-08-08): that
+           report ends the shift, and its newest-stored twin is itself.
+           LEFT walks toward the present, RIGHT walks back into the
+           past, and both wrap - so the counter under the right arrow is
+           what says how deep you are. -->
+          <div class="review-score-block">
+            <!-- Glyphs copied EXACTLY from the Patients Seen rails, down to
+             the U+FE0E variation selector and the aria-hidden span: the
+             selector forces TEXT presentation, without which iOS draws
+             the triangle as a colour emoji (John, 2026-08-08 - "make the
+             arrows look like those of the review patients panel"). -->
+            <button
+              class="shift-nav shift-nav--newer"
+              id="shiftNewerButton"
+              type="button"
+              aria-label="More recent shift"
+              hidden
+            >
+              <span aria-hidden="true">&#9664;&#xFE0E;</span>
+            </button>
+            <div class="review-score-figures">
+              <p class="review-score-value" id="reviewScoreValue">0</p>
+              <p class="review-score-label">FINAL SCORE</p>
+            </div>
+            <button
+              class="shift-nav shift-nav--older"
+              id="shiftOlderButton"
+              type="button"
+              aria-label="Older shift"
+              hidden
+            >
+              <span aria-hidden="true">&#9654;&#xFE0E;</span>
+            </button>
+            <p class="shift-position" id="shiftPositionLine" hidden>1 OF 1</p>
+            <!-- Only on #1. The row is always RESERVED (visibility, not
+             hidden) so paging never shifts the sheet below it. -->
+            <strong class="shift-position-note" id="shiftMostRecentNote"
+              >MOST RECENT</strong
+            >
+          </div>
+
+          <!-- Rows built by ui.js renderReview: label, count, multiplier,
+           subtotal. They always sum to the score above (doc 9). -->
+          <div class="review-formulas" id="reviewFormulas"></div>
+
+          <!-- Direction counters explain wrong placement without scoring it
+           (doc 3). One boxed section: two counter buttons plus the
+           always-visible scoring disclaimer. Hover or tap swaps a
+           counter's OWN text for its explanation, in place - the button
+           height is RESERVED so the swap never shifts the page, and tap
+           works because iOS has no hover (doc 7). -->
+          <div class="review-directions-box">
+            <div class="review-directions">
+              <button
+                class="review-direction"
+                id="reviewUnderButton"
+                type="button"
+                aria-pressed="false"
+              >
+                <span class="review-direction-figures">
+                  <span class="review-direction-count" id="reviewUnder">0</span>
+                  <span class="review-direction-label">UNDER-TRIAGED</span>
+                </span>
+                <span class="review-direction-explain">
+                  <span class="review-direction-label">UNDER-TRIAGED</span>
+                  Sent to a room less urgent than the patient needed.</span
+                >
+              </button>
+              <button
+                class="review-direction"
+                id="reviewOverButton"
+                type="button"
+                aria-pressed="false"
+              >
+                <span class="review-direction-figures">
+                  <span class="review-direction-count" id="reviewOver">0</span>
+                  <span class="review-direction-label">OVER-TRIAGED</span>
+                </span>
+                <span class="review-direction-explain">
+                  <span class="review-direction-label">OVER-TRIAGED</span>
+                  Sent to a room more urgent than the patient needed.</span
+                >
+              </button>
+            </div>
+            <p class="review-directions-note">
+              * not used in scoring. These count which way you missed.
+            </p>
+          </div>
+
+          <div class="review-actions">
+            <button class="review-seen" id="patientsSeenButton" type="button">
+              Review the Patients Seen (0)
+            </button>
+            <button
+              class="review-return"
+              id="returnToLobbyButton"
+              type="button"
+            >
+              RETURN TO ER ENTRANCE
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+       Shift-over acknowledgement (Phase 8). A beat between the last
+       patient and the score: it waits for the player rather than timing
+       out (John, 2026-08-05). The whole frame is ONE button so a tap
+       anywhere works on touch while Enter and Space work for keyboard
+       players, who must be able to finish a shift without a mouse
+       (doc 9 Phase 11). It is declared last AND carries a z-index -
+       being last was not enough, because the report's close X is
+       positioned with a z-index of its own and floated over this screen
+       (2026-08-09).
+       ================================================================= -->
+      <button class="shift-over" id="shiftOverOverlay" type="button" hidden>
+        <span class="shift-over-brand brand-sign"
+          >Triage <span class="brand-rush">RUSH!</span></span
+        >
+        <span class="shift-over-headline" id="shiftOverHeadline"
+          >TIME&rsquo;S UP</span
+        >
+        <span class="shift-over-count" id="shiftOverCount">0 patients</span>
+        <span class="shift-over-hint">tap to see your results</span>
+      </button>
+
+      <!-- ====================================================================
+       Boot splash (Phase 10, 2026-08-09). An opaque cover over the whole
+       shell while the ED ENTRANCE art decodes, so the entrance appears
+       complete instead of lettering-first.
+
+       Four deliberate choices:
+       - It is a COVER, declared last, not a `hidden` attribute on
+         #homeView: renderShellView writes homeView.hidden on every render
+         and would undo a markup hidden on the first pass.
+       - IT IS NOT `hidden` HERE, and that is the whole point (fixed
+         2026-08-09 after John saw it on the desktop). The sidewalk board
+         lettering is static markup and the four scripts sit at the end of
+         this file, so the browser paints the whole home view - text, no
+         artwork - before it runs a line of JavaScript. A cover switched on
+         by JS therefore arrives a quarter second too late to cover
+         anything. Painted from the first frame, nothing can flash behind
+         it. The stylesheet is render-blocking, so this is the first thing
+         drawn.
+       - It carries NO ARTWORK of its own. A splash that waited on an
+         image would have exactly the problem it exists to cure.
+       - Only its WORDS are on a timer (app.js BOOT_SPLASH_DELAY_MS): a
+         warm reload shows a dark shell for a moment and nothing else,
+         while a slow one gets a real loading screen.
+       ================================================================= -->
+      <section class="boot-splash" id="bootSplash" role="status">
+        <span class="boot-splash-brand brand-sign"
+          >Triage <span class="brand-rush">RUSH!</span></span
+        >
+        <span class="boot-splash-status" id="bootSplashStatus"
+          >Loading&hellip;</span
+        >
+      </section>
+    </div>
+
+    <script src="./triageRush/assets.js?v=2026-0811-release1"></script>
+    <script src="./triageRush/game.js?v=2026-0811-release1"></script>
+    <script src="./triageRush/ui.js?v=2026-0811-release1"></script>
+    <script src="./triageRush/app.js?v=2026-0811-release1"></script>
+  </body>
+</html>

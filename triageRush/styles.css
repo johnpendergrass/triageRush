@@ -1,0 +1,3598 @@
+/* ============================================================================
+   triageRush - styles.css
+   All visual decisions live here. CSS owns every image's rendered box, crop,
+   fit, and alignment (docs 4, 7): JavaScript never reads image pixel sizes.
+
+   Section map:
+     1. Palette and base
+     2. Page stage and the 9:16 shell
+     3. Shared helpers
+     4. HOME view (852x1515 lobby composition)
+     5. Board popups (settings + about)
+     6. PATIENTS ARE ARRIVING overlay
+     7. GAME view skeleton (bands 7.2/85.8/7, columns 22/56/22)
+     7g. Patients Seen browser
+     8. Quit confirmation
+     9. SHIFT REVIEW - printed discharge summary
+     9b. Shift-over acknowledgement
+    10. Reduced motion
+   ========================================================================= */
+
+/* ------------------------------------------------------------------------
+   1. Palette and base (doc 7 core colors)
+   --------------------------------------------------------------------- */
+
+:root {
+  --navy-950: #031019;
+  --navy-900: #071c29;
+  --navy-800: #0b2d3e;
+  --steel: #91a1a8;
+  --cream: #efe6d6;
+  --orange: #ff9f1c;
+  --cyan: #12a8df;
+  --green: #27c978;
+  --amber: #f0a329;
+  --red: #ef4b3f;
+
+  /* Score numerals keep the demo's brighter readable variants. */
+  --score-correct: #42df8b;
+  --score-close: #ffd052;
+  --score-wrong: #ff6158;
+
+  /* Chalk and marker text for the lobby boards. */
+  --chalk: #e8e4da;
+  /* Press-in white plastic lettering on the settings letter boards
+     (TODO 3, 2026-08-07). */
+  --letter: #f2ede1;
+  --marker-ink: #1d2a30;
+  /* The second dry-erase marker on the About whiteboard (2026-08-08):
+     the HOW TO PLAY heading and its rule. Blue rather than red so the
+     heading does not compete with the brand's red-orange above it. */
+  --marker-blue: #1f4e79;
+
+  /* The ER ENTRANCE sign lettering (TODO item 2, 2026-08-06): colors
+     sampled from the "Triage RUSH!" channel letters in the entrance art. */
+  --brand-face: #ec543d;                 /* letter faces (red-orange) */
+  --brand-brick: #a03426;                /* letter sides - the 3D depth */
+  --brand-cast: rgba(60, 30, 15, 0.55);  /* soft warm cast shadow */
+
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden; /* the outer page never scrolls (doc 7) */
+}
+
+body {
+  font-family: "Arial Narrow", "Roboto Condensed", Arial, sans-serif;
+  color: var(--cream);
+  /* Dark spotlit stage behind the shell; reads as a phone on desktop. */
+  background: radial-gradient(circle at 50% 20%,
+    #244454 0%, #0d2532 40%, #02090e 100%);
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  /* ~5% viewport height above and below = the approved breathing room. */
+  padding:
+    max(5dvh, env(safe-area-inset-top))
+    max(4px, env(safe-area-inset-right))
+    max(5dvh, env(safe-area-inset-bottom))
+    max(4px, env(safe-area-inset-left));
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* iOS zooms the page on a DOUBLE TAP, and two taps inside ~300ms is
+   exactly what stepping an odometer chevron looks like - John's iPhone,
+   2026-08-07: the board would blow up and had to be pinched back down.
+   The same trap waits on any control tapped in a hurry, the waiting
+   rows and room doors in RUSH included, so this covers every control
+   rather than just the wheels.
+
+   This does NOT disable zooming: pinch still works everywhere, which is
+   the gesture that matters for reading a chart. Only the double-tap
+   shortcut (and the legacy 300ms click delay) goes away, and a double
+   tap on a control never meant "zoom" in the first place. */
+button,
+label,
+input,
+select,
+.wheel,
+.wheel-window {
+  touch-action: manipulation;
+}
+
+button:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 1px;
+}
+
+img {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* ------------------------------------------------------------------------
+   2. The 9:16 shell.
+   Aspect is locked by min() width/height math rather than aspect-ratio so
+   both constraints resolve identically; 0.5625 = 9/16, 1.7778 = 16/9.
+   container-type makes cqw units track shell width, which drives every
+   font-size clamp inside the app.
+   --------------------------------------------------------------------- */
+
+.app-shell {
+  position: relative;
+  width: min(calc(100vw - 8px), calc(90dvh * 0.5625));
+  height: min(90dvh, calc((100vw - 8px) * 1.7778));
+  overflow: hidden;
+  background: var(--navy-950);
+  border: 2px solid #46606b;
+  box-shadow: 0 24px 80px #000c, inset 0 0 0 2px #0b1014;
+  container-type: inline-size;
+  isolation: isolate;
+}
+
+/* Small-viewport override: derive from the truly-visible viewport minus
+   safe areas so expanded mobile browser chrome cannot clip the shell. */
+@supports (height: 100svh) {
+  .app-shell {
+    width: min(
+      calc(100svw - max(4px, env(safe-area-inset-left))
+                  - max(4px, env(safe-area-inset-right))),
+      calc((100svh - max(5svh, env(safe-area-inset-top))
+                   - max(5svh, env(safe-area-inset-bottom))) * 0.5625));
+    height: min(
+      calc(100svh - max(5svh, env(safe-area-inset-top))
+                  - max(5svh, env(safe-area-inset-bottom))),
+      calc((100svw - max(4px, env(safe-area-inset-left))
+                   - max(4px, env(safe-area-inset-right))) * 1.7778));
+  }
+}
+
+/* Rounded corners only where the shell floats with room around it. */
+@media (min-width: 700px) and (min-height: 800px) {
+  .app-shell {
+    border-radius: 10px;
+  }
+}
+
+/* ------------------------------------------------------------------------
+   3. Shared helpers
+   --------------------------------------------------------------------- */
+
+/* The hidden attribute must always win, even over display: grid/flex. */
+[hidden] {
+  display: none !important;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------------
+   4. HOME view.
+   The lobby background carries the brand artwork. Interactive elements are
+   registered onto it with percentages of the 852x1515 source canvas
+   (left = x/852, top = y/1515, and so on). object-fit: fill keeps those
+   percentages true even though 852:1515 differs from 9:16 by only 0.02%.
+   --------------------------------------------------------------------- */
+
+.home-view {
+  position: absolute;
+  inset: 0;
+}
+
+.home-background {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  z-index: 0;
+}
+
+/* Closed-doors START SHIFT patch: source X319 Y447, 514x232. */
+.door-start-button {
+  position: absolute;
+  left: 37.44%;   /* 319 / 852 */
+  top: 29.50%;    /* 447 / 1515 */
+  width: 60.33%;  /* 514 / 852 */
+  height: 15.31%; /* 232 / 1515 */
+  z-index: 2;
+  padding: 0;
+}
+
+.door-start-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.door-start-button:disabled {
+  cursor: wait;
+  filter: saturate(0.75) brightness(0.9);
+}
+
+.door-start-button:not(:disabled):active .door-start-art {
+  filter: brightness(1.08);
+}
+
+/* ---- Sidewalk summary boards (TODO 3, 2026-08-07) --------------------
+   The two slatted A-frame boards are in the artwork; these rects cover
+   the ribbed FACE inside each board's frame, measured off the 852x1515
+   canvas (player face x 133-378 y 846-1246, game face x 431-684
+   y 848-1247). They are deliberately SMALLER than the boards: the
+   frame and the legs are not tap targets, and lettering that reached
+   the frame would ride onto the wood the way the detail board's GAME
+   MODE row once did.
+
+   The lettering is the same press-in white letter-board look as the
+   detail boards, so a sidewalk board and its close-up read as one
+   object. Nothing marks either board as tappable (John, 2026-08-07): a
+   player tries the board and gets the detail board. */
+.board-face {
+  position: absolute;
+  z-index: 2;
+  container-type: inline-size;
+  overflow: hidden;
+  padding: 0;
+}
+
+.board-face--player { left: 15.6%; top: 55.8%; width: 28.8%; height: 26.4%; }
+.board-face--game   { left: 50.6%; top: 56.0%; width: 29.7%; height: 26.3%; }
+
+/* Worth knowing if lettering ever crowds the bottom again: the boards'
+   bottom edges are NOT level. The game board's ribbed area ends at
+   y1245 at its left edge but runs to y1248 at its right, so these rects
+   sit within about 2px of the shadowed bottom rail on one side. The
+   cure is vertical budget, not a redrawn rect - John's iPhone showed
+   the MUSIC row on the frame in 2026-08-07's summary1f, and giving the
+   sound rows their clearance back fixed it. */
+
+/* An element's OWN cqw units resolve against its nearest ANCESTOR
+   container, not itself - so the face cannot carry its own padding in
+   cqw without silently measuring the whole shell. Everything inside
+   this wrapper is a proportion of the FACE, which is what keeps the
+   lettering identical at every screen size. */
+.face-inner {
+  height: 100%;
+  padding: 3.5cqw 4cqw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--letter);
+  font-family: "Arial Black", "Arial Bold", Arial, sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.1;
+  text-shadow: 0 0.04em 0.06em rgb(0 0 0 / 55%);
+}
+
+/* Both boards hang their lettering from the TOP frame: the lettering
+   rides high on a real sidewalk board, and on the player board every
+   pixel saved up here becomes finger room for the review buttons. */
+.face-inner--game { justify-content: flex-start; }
+
+/* Every size below is set by the WIDEST string it can ever hold,
+   measured on the smallest phone the shell supports (375px wide, where
+   the faces are only 96 and 100px across), leaving about 15% headroom
+   for iOS's own Arial Black metrics. The percentages in the comments
+   are of the face's usable width - re-measure AT THAT WIDTH before
+   enlarging anything here. */
+
+/* A two-line group: dim label over its value - the same shape the
+   detail boards use, which is what makes the pair read as one setting
+   rather than two words. */
+.sum-group {
+  display: block;
+  text-align: center;
+  margin-bottom: 5.5cqw;
+}
+
+.sum-group-label {
+  display: block;
+  font-size: 9cqw;
+  opacity: 0.62;
+  letter-spacing: 0.08em;
+}
+
+/* The values run at the LABEL size (John, 2026-08-07): they are bright
+   white against dim grey labels, so they stand out on colour alone, and
+   holding them level frees the width and the air the mode headline
+   wants. */
+.sum-group-value {
+  display: block;
+  font-size: 9cqw;
+}
+
+/* The mode leads the board, labelled GAME MODE the way the other two
+   values are labelled. The brand words stay on ONE line in both modes
+   (John, 2026-08-07) so nothing below them shifts when the mode
+   changes; fitting "Triage RUSH!" across the face is what sets this
+   size, and the brand drops the board's tracking because the entrance
+   sign has none. */
+/* The row RESERVES the taller mode's height, so switching modes cannot
+   move anything below it - that was the point of keeping the brand on
+   one line in the first place. */
+.sum-group--headline {
+  margin-bottom: 7cqw;
+  min-height: 29cqw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* The two modes are sized SEPARATELY, because one line is a hard
+   constraint and "Triage RUSH!" (12 characters) already fills the face
+   at 10cqw - a shared size would cap them both there. John's call
+   (2026-08-07): leave RUSH exactly as it is and let "Triage!" (7
+   characters) grow into the width it has spare. */
+.sum-mode {
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+/* Matched BY EYE to the player board's initials (John, 2026-08-07):
+   17.5cqw of that face is 16.8px, and 17cqw of this slightly wider one
+   is 16.9px - the same lettering size across the two boards. */
+.sum-mode--triage { font-size: 17cqw; }
+.sum-mode--rush { font-size: 10cqw; }   /* "Triage RUSH!" = 87% */
+
+/* The board face uppercases its lettering, but the brand keeps the ER
+   ENTRANCE sign's own mixed-case spelling wherever it appears
+   (branding rule, 2026-08-06) - the same opt-out the detail board's
+   GAME MODE row carries. */
+.sum-group--headline .brand-sign { text-transform: none; }
+
+/* A one-line row for the short sound values: label left, value right,
+   both at the same size as everything else on the board (John,
+   2026-08-07) - the sound section reads as three quiet rows rather than
+   competing with the mode. */
+.sum-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 9cqw;
+  margin-top: 5.5cqw;
+}
+
+.sum-row .lbl { opacity: 0.62; letter-spacing: 0.06em; }
+.sum-row .val { letter-spacing: 0.03em; }
+
+/* OFF is a stop, not just another value - the same red the detail
+   board's OFF radios fill with. */
+.sum-row .val.is-off { color: var(--red); }
+
+/* Global sound off makes the two level rows moot; they say so by going
+   quiet rather than disappearing. */
+.sound-muted .sum-row--level { opacity: 0.38; }
+
+.sum-divider {
+  display: block;
+  width: 88%;
+  height: 0;
+  border: none;
+  border-top: 0.9cqw solid rgb(242 237 225 / 34%);
+  margin: 5cqw 0 7cqw;
+}
+
+/* The player board's rule sits its own distance from the initials above
+   it - half the WELCOME! size (John, 2026-08-07) - and adds NOTHING
+   below itself, because the review half distributes that air with
+   space-evenly; a margin there would make the gap above the first
+   button read wider than the other two. The game board keeps the
+   shared margins, which is what separates its sound rows. */
+.board-face--player .sum-divider { margin: 5.75cqw 0 0; }
+
+/* ---- PLAYER board: the welcome half ----------------------------------
+   ONE button, and it stops at the rule: the edit target is the top half
+   of the board, top frame to rule (John, 2026-08-07). It takes only the
+   height its three lines need, which is what leaves the review half
+   its room. */
+.player-edit {
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  text-shadow: inherit;
+}
+
+.sum-welcome {
+  font-size: 11.5cqw;
+  letter-spacing: 0.1em;
+  opacity: 0.78;
+  margin-bottom: 3.5cqw;
+}
+
+.sum-player-name {
+  font-size: 13cqw;     /* "HEY YOU!" = 82% */
+  text-align: center;
+}
+
+.sum-player-initials {
+  /* Sized by the WIDEST case, three emoji, which measure about 1.55em
+     each against a letter's 0.83em. Letters are nowhere near the
+     limit. */
+  font-size: 17.5cqw;   /* three emoji = 87%; "AHP" = 60% */
+  white-space: nowrap;
+  letter-spacing: 0.14em;
+  margin-top: 1.5cqw;
+  /* Letter-spacing adds trailing space after the last glyph, which
+     pulls a centered line visually left; half of it back the other way
+     re-centers the letters themselves. */
+  margin-left: 0.07em;
+}
+
+/* ---- PLAYER board: the review half ----------------------------------
+   Two whole destinations, each a single hit box carrying its own REVIEW
+   line (John, 2026-08-07). space-evenly is what puts equal air above,
+   between and below them; the buttons size to their own two lines plus
+   padding rather than stretching, or there would be no air left to
+   distribute. */
+/* REVIEW takes about two thirds of the space below the rule and RESET
+   about one third (John, 2026-08-08) - the flex ratio below IS that
+   split. They were equal until then, which made a destructive control
+   look exactly as inviting as the one the player actually wants. */
+.player-half--review {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.review-line {
+  font-family: inherit;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--letter);
+  text-shadow: inherit;
+  width: 100%;
+  flex: 0 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  /* The padding IS the tap target: it turns two lines of lettering into
+     a box worth aiming at - about 30px on the smallest phone, 38px on
+     John's. Because the box is never drawn, trading space-evenly's air
+     for padding costs nothing visually and buys target; the limit is
+     that padding widens the gap BETWEEN the two buttons faster than the
+     gaps above and below them, and those three should stay even. */
+  padding: 5.5cqw 0;
+}
+
+.review-line-kicker {
+  font-size: 8cqw;
+  opacity: 0.62;
+  letter-spacing: 0.1em;
+}
+
+.review-line-name {
+  font-size: 10.5cqw;   /* "PAST SHIFTS" = 86%, the tightest string on
+                           either board */
+}
+
+/* The two lines are no longer peers (John, 2026-08-08).
+
+   IMPORTANT - why the emphasis is not simply "make REVIEW bigger": at
+   10.5cqw "PAST SHIFTS" already fills 86% of the face, and it is the
+   tightest string on either board. There is almost no room to enlarge
+   the NAME line, and none at all to make it bolder, since the whole
+   board is already Arial Black 900. So the weight comes from three
+   other places: a much larger kicker (REVIEW is 6 characters against
+   PAST SHIFTS' 11, so it has width to spare), a real size gap to RESET,
+   and the 2:1 division of the space. */
+.review-line--primary {
+  flex: 2 1 0;
+}
+
+/* FULL WHITE, both lines - the primary line drops the kicker's usual
+   dimming entirely (John, 2026-08-08: "make the REVIEW PAST SHIFTS all
+   white text ... just to make it stand out more"). Since the board is
+   already Arial Black 900 and the name line is near its width ceiling,
+   ink is the one axis of emphasis still available. */
+.review-line--primary .review-line-kicker {
+  font-size: 10cqw;
+  opacity: 1;
+}
+
+.review-line--primary .review-line-name {
+  font-size: 11cqw;   /* near the ceiling - see the note above */
+}
+
+/* RESET matches the GAME board's SCORING / LENGTH rows (John,
+   2026-08-08) - both lines at one size, the label dimmed to 0.62, which
+   is exactly what .sum-group-label and .sum-group-value do over there.
+
+   9.28cqw, not 9: the game board runs at 9cqw of ITS face, and that face
+   is 29.7% of the shell against this one's 28.8%. Scaling by 29.7/28.8
+   is what makes the two boards' lettering the same ABSOLUTE size rather
+   than merely the same number. The board-wide 0.82 dimming is gone for
+   the same reason - nothing on the other board is dimmed twice. */
+.review-line--secondary {
+  flex: 1 1 0;
+}
+
+/* The 0.62 dimming moved OFF this span and onto .delete-word below
+   (2026-08-09). It had to: opacity on a parent is composited, so a child
+   cannot climb back out of it, and the red X would have been dimmed with
+   the word no matter what it asked for. The word looks exactly as it did
+   - the same 0.62 over the same text and text-shadow, just applied one
+   level down. */
+.review-line--secondary .review-line-kicker {
+  font-size: 9.28cqw;
+  opacity: 1;
+}
+
+.review-line--secondary .delete-word {
+  opacity: 0.62;
+}
+
+.review-line--secondary .review-line-name {
+  font-size: 9.28cqw;
+}
+
+/* The red X in front of DELETE (John, 2026-08-09): a second, wordless
+   statement of what this control does. Same glyph (U+2715) and same
+   --red token as every other destructive/off mark in the game - the
+   close boxes, the OFF radios, the summary board's OFF values - so it
+   needs no explaining. It rides INSIDE the kicker line rather than
+   sitting in its own column, which is what keeps DELETE + the X centred
+   as one unit over PAST SHIFTS.
+
+   It does NOT take the kicker's 0.62 dimming: a warning mark that is
+   dimmed reads as decoration. The line's own :disabled opacity still
+   fades it with everything else, which is correct - there is nothing to
+   warn about when there is nothing to delete. */
+.review-line--secondary .delete-x {
+  color: var(--red);
+  opacity: 1;
+  /* The glyph draws small on its em, the same thing that made the
+     report's close X look wrong (2026-08-08), so it is stepped up to
+     sit level with the capital D beside it. */
+  font-size: 1.15em;
+  letter-spacing: 0;
+  margin-right: 0.06em;
+}
+
+/* Nothing to review yet - a first run, a quit shift, or (for past
+   shifts) no persistence yet. The line stays visible so the player
+   learns the feature exists, but reads plainly inert. */
+.review-line:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.review-line:not(:disabled):active { color: var(--green); }
+
+/* Green ABOUT utility cover embossed in the concrete, bottom left. */
+.about-hotspot {
+  position: absolute;
+  left: 20%;
+  top: 89%;
+  width: 16%;
+  height: 8%;
+  z-index: 2;
+  border-radius: 50%;
+}
+
+/* Quiet loading/readiness line pinned to the shell's bottom edge. */
+.home-loading-status {
+  position: absolute;
+  left: 50%;
+  bottom: 1.2%;
+  transform: translateX(-50%);
+  z-index: 3;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: rgb(3 16 25 / 78%);
+  border: 1px solid rgb(255 255 255 / 25%);
+  font-size: clamp(8px, 2.4cqw, 12px);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.home-loading-status.is-error {
+  background: rgb(88 12 8 / 88%);
+  border-color: #ffb3ad;
+}
+
+.home-loading-status.is-ready {
+  opacity: 0;
+  transition: opacity 900ms ease 600ms;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------------
+   5. Board popups.
+   Approved geometry (lobby positioning spec): card centered, 93.75% of
+   frame height, aspect 941:1672, close box at top 8.5% / right 10.5%.
+   --------------------------------------------------------------------- */
+
+.popup-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  background: rgb(2 7 10 / 68%);
+  backdrop-filter: blur(2px);
+}
+
+/* The card IS the artwork (2026-08-07). Both board PNGs used to carry
+   about 20% transparent margin on a 941x1672 canvas; they were cropped
+   to their own edges (752x1387, one common box so a single geometry
+   still serves both), so the same 93.75% card height now shows a board
+   about 20% larger - which is where the extra finger room came from.
+   container-type makes every cqw inside the popup track this card, so
+   sizes stay phone-true at any screen size; the letter boards narrow
+   that further to their own face. If the art is ever re-cropped, the
+   numbers to re-derive are this aspect ratio, the .popup-content insets,
+   and the two corner buttons' positions - nothing else. */
+.popup-card {
+  position: relative;
+  height: 93.75%;
+  aspect-ratio: 752 / 1387;
+  max-width: 96%;
+  container-type: inline-size;
+}
+
+.popup-board-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.popup-close {
+  position: absolute;
+  top: 0;
+  right: 0.4%;
+  width: clamp(35px, 12.01cqw, 50px);
+  height: clamp(35px, 12.01cqw, 50px);
+  z-index: 3;
+  border-radius: 7px;
+  border: 2px solid #fff;
+  background: linear-gradient(#f4574c, #a20e08);
+  color: #fff;
+  font-weight: 900;
+  font-size: clamp(18px, 6.13cqw, 28px);
+  line-height: 1;
+}
+
+.popup-apply {
+  position: absolute;
+  bottom: 0;
+  right: 0.4%;
+  width: clamp(38px, 13.39cqw, 58px);
+  height: clamp(38px, 13.39cqw, 58px);
+  z-index: 3;
+  border-radius: 7px;
+  border: 2px solid #fff;
+  background: linear-gradient(#2fbd7c, #0a6b3e);
+  color: #fff;
+  font-weight: 900;
+  font-size: clamp(19px, 6.63cqw, 30px);
+  line-height: 1;
+}
+
+/* Content sits on the board's usable face inside its frame. */
+.popup-content {
+  position: absolute;
+  left: 3.9%;
+  right: 3.5%;
+  top: 6.6%;
+  bottom: 7.8%;
+  z-index: 2;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 2.38cqw, 18px);
+}
+
+/* `.popup-heading` and `.popup-fine-print` lived here until 2026-08-08.
+   Their only user was the old About board, whose rebuild replaced them
+   with .about-logo / .about-fine; the letter boards use .board-title. */
+
+/* ---- the letter boards (TODO 3, 2026-08-07) --------------------------
+   Press-in white plastic lettering on the ribbed board art. Lettering
+   variant A (John's pick): Arial Black, tight-ish tracking. Sizes are in
+   cqw of the popup card, exactly as tuned in the mockups, so the board
+   is the same at every screen size. The face never scrolls - the layout
+   is sized to fit. */
+.popup-content--board {
+  /* cqw inside a letter board tracks the FACE, not the card: every size
+     below is a proportion of the usable board area, so re-cropping or
+     re-insetting the art never means re-tuning the type (2026-08-07). */
+  container-type: inline-size;
+  color: var(--letter);
+  font-family: "Arial Black", "Arial Bold", Arial, sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  gap: 0;
+  overflow: hidden;
+}
+
+.board-title {
+  text-align: center;
+  font-size: 6.49cqw;
+  margin: 2.03cqw 0 5.41cqw;
+  letter-spacing: 0.09em;
+}
+
+/* The sub-title gets the same visual padding above it (below the
+   divider) that the main title gets from the board's top frame. */
+.board-title--sub {
+  font-size: 5.95cqw;
+  margin: 6.76cqw 0 2.7cqw;
+}
+
+/* Every setting is a two-line group: a left-justified header, then a
+   CENTERED options row with wide gaps so each radio is an easy
+   independent tap. */
+.setting-group { margin: 0 0 6.08cqw; }
+
+/* The last group's bottom margin is invisible slack - reclaimed to fund
+   the sub-title's top padding. Marked with a class rather than
+   :last-child because the music status note, hidden or not, is the real
+   last element and would quietly take the match. */
+.setting-group--last { margin-bottom: 0; }
+
+.setting-group-label {
+  font-size: 3.92cqw;
+  opacity: 0.72;
+  padding-left: 7.43cqw;
+  margin-bottom: 1.35cqw;
+}
+
+.option-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10.81cqw;
+}
+
+.option-row label {
+  display: flex;
+  align-items: center;
+  gap: 1.76cqw;
+  font-size: 3.92cqw;
+  opacity: 0.85;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.option-row input[type="radio"] {
+  accent-color: var(--green);
+  width: 4.59cqw;
+  height: 4.59cqw;
+  cursor: pointer;
+  margin: 0;
+}
+
+/* OFF is a stop, not just another choice, so it fills RED rather than
+   green when it is the selected option (John, 2026-08-07). This is the
+   same one-property native mechanism as the green - the browser still
+   draws the radio in every state - so nothing here is hand-drawn. */
+.option-row input[type="radio"][value="off"] {
+  accent-color: var(--red);
+}
+
+/* Each section opens with a headline group - GAME MODE, GLOBAL SOUND -
+   a step larger and brighter, with breathing room around it. The doubled
+   class beats the .setting-group margin shorthand above. */
+.setting-group.setting-group--headline { margin: 4.05cqw 0 9.46cqw; }
+
+.setting-group--headline .setting-group-label {
+  font-size: 5cqw;
+  opacity: 1;
+}
+
+.setting-group--headline .option-row { gap: 8.11cqw; }
+
+.setting-group--headline .option-row label {
+  font-size: 4.59cqw;
+  opacity: 1;
+}
+
+.setting-group--headline .option-row input[type="radio"] {
+  width: 6.22cqw;
+  height: 6.22cqw;
+}
+
+/* The board face uppercases its lettering, but the brand keeps the ER
+   ENTRANCE sign's own mixed-case spelling everywhere it appears
+   (branding rule, 2026-08-06), so it opts out of that transform.
+
+   The brand words run at the board's REGULAR option size, not the
+   headline size and certainly not the 5.27cqw first tried: GAME MODE is
+   the widest row on the board, and at 5.27cqw it measured the full width
+   of the content box and spilled onto the board's wooden frame on
+   John's iPhone (2026-08-07). At this size the row measures about the
+   same as SHIFT LENGTH, the next widest - so it is as wide as the board
+   ever gets. Re-measure that row before enlarging them again. */
+.setting-group--headline .option-row .brand-sign {
+  font-size: 3.92cqw;
+  text-transform: none;
+}
+
+/* Inset from both sides so the rule reads as ON the board rather than
+   touching the frame. */
+.board-divider {
+  border: 0;
+  border-top: 0.68cqw solid rgb(242 237 225 / 85%);
+  margin: 4.73cqw 9.46cqw 0;
+  width: auto;
+  align-self: stretch;
+}
+
+/* The music status note only appears when the stream fails, and the
+   board's layout is sized to fit exactly - so the note sits OVER the
+   bottom of the face on its own panel instead of pushing the settings
+   around. */
+.popup-note {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 2.7cqw 4.05cqw;
+  border-radius: 2.7cqw;
+  background: rgb(3 16 25 / 92%);
+  border: 1px solid rgb(242 237 225 / 35%);
+  font-size: 3.51cqw;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+/* ---- PLAYER NAME board: the odometer drums ---------------------------
+   The player id is the only content on this board, so it spreads out and
+   centers. Each wheel is a big chevron, a brushed-metal bezel around a
+   dark drum window (previous and next values peeking, squashed and dim,
+   above and below the current one), then the other chevron. */
+.popup-content--player {
+  align-items: center;
+  justify-content: center;
+  /* Clears the absolutely-positioned board title. */
+  padding-top: 13.51cqw;
+  gap: 10.81cqw;
+}
+
+.popup-content--player .board-title {
+  position: absolute;
+  top: 2.7cqw;
+  left: 0;
+  right: 0;
+  margin: 0;
+  font-size: 7.16cqw;
+}
+
+.wheel-block {
+  display: flex;
+  justify-content: center;
+  gap: 6.08cqw;
+}
+
+.wheel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.03cqw;
+}
+
+/* Chevron step buttons, sized well past the 44px tap-target floor. */
+.wheel-step {
+  width: 21.62cqw;
+  height: 14.86cqw;
+  color: var(--letter);
+  display: grid;
+  place-items: center;
+  border-radius: 3.38cqw;
+  background: rgb(255 255 255 / 6%);
+}
+
+.wheel-step:active { background: rgb(255 255 255 / 18%); }
+
+.wheel-step svg {
+  width: 12.16cqw;
+  height: 7.43cqw;
+  display: block;
+}
+
+.wheel-step svg path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.wheel-bezel {
+  padding: 1.62cqw;
+  border-radius: 4.05cqw;
+  background: linear-gradient(180deg,
+    #9aa2a8 0%, #5a6167 18%, #2e3338 50%, #565d63 84%, #8d959b 100%);
+  box-shadow:
+    0 1.35cqw 3.38cqw rgb(0 0 0 / 60%),
+    inset 0 0.41cqw 0.81cqw rgb(255 255 255 / 35%);
+}
+
+/* The drum window: fixed height, three stacked value rows inside. */
+.wheel-window {
+  position: relative;
+  width: 22.97cqw;
+  height: 32.43cqw;
+  border-radius: 2.7cqw;
+  background: #0a0c0e;
+  overflow: hidden;
+}
+
+.wheel--title .wheel-window { width: 75.68cqw; }
+
+.wheel-drum {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  /* A drum is a machine part, not text: without this a slightly long
+     press on iOS starts a text selection and raises the magnifying
+     loupe over the value. */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.drum-cell {
+  height: 33.34%;
+  display: grid;
+  place-items: center;
+  font-size: 11.49cqw;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* The music-unlock symbol, U+266B, is the one initial that is a TEXT glyph
+   rather than a colour emoji, so it draws in the surrounding ink and obeys
+   `color`. It is painted amber on the dark boards because it drew as dark
+   grey ink there and could not be read (John, 2026-08-08), and it is set a
+   step larger because a text note is a smaller mark than the emoji beside
+   it. ui.js writeInitials() is what wraps it.
+
+   DELETED 2026-08-09 and RESTORED 2026-08-10: for one day the unlock was
+   six colour emoji, which carry their own palette and cannot be tinted at
+   all. Tintability is part of why ♫ won the job back. */
+.initial-music {
+  color: var(--amber);
+  font-size: 1.15em;
+}
+
+/* On the review's cream paper the amber has nothing to stand against, so
+   the note stays ordinary ink there. */
+.review-meta-value .initial-music {
+  color: inherit;
+}
+
+/* Neighbors: squashed and dim, as if curving away on the cylinder. */
+.drum-cell--peek {
+  transform: scaleY(0.62);
+  opacity: 0.38;
+  color: #cfc9bb;
+}
+
+/* Cylinder shading plus the center "read line" highlight. */
+.wheel-window::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg,
+      rgb(0 0 0 / 88%) 0%,
+      rgb(0 0 0 / 30%) 22%,
+      rgb(255 255 255 / 7%) 38%,
+      rgb(255 255 255 / 7%) 62%,
+      rgb(0 0 0 / 30%) 78%,
+      rgb(0 0 0 / 88%) 100%);
+}
+
+/* Thin separator ridges between the rows, like a real odometer. */
+.wheel-window::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 33.34%;
+  height: 33.33%;
+  pointer-events: none;
+  z-index: 1;
+  border-top: 1px solid rgb(255 255 255 / 14%);
+  border-bottom: 1px solid rgb(255 255 255 / 14%);
+}
+
+/* Invisible native-picker trigger over the window: tapping the value
+   opens the platform picker (iOS shows its wheel), so both input styles
+   work and the keyboard never appears. The 16px font is what stops iOS
+   zooming the page on focus - do not shrink it. */
+.wheel-select {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  font-size: 16px;
+  cursor: pointer;
+  appearance: none;
+  border: 0;
+}
+
+/* Roll: the drum slides one cell from its old position into the new one
+   (ui.js rebuilds the cells first, then restarts the animation). */
+.wheel-drum.roll-up { animation: drum-up 150ms ease-out; }
+.wheel-drum.roll-down { animation: drum-down 150ms ease-out; }
+
+@keyframes drum-up { from { transform: translateY(-33.34%); } }
+@keyframes drum-down { from { transform: translateY(33.34%); } }
+
+/* ---- the ABOUT whiteboard (2026-08-08) -------------------------------
+   Built from _mockups/about-board-mockup.html, which stays as the design
+   record. Structure: the 3D logo, John's opening paragraph, one ruled
+   HOW TO PLAY section, and a footer parked on the bottom frame.
+
+   THE FACE HAS ITS OWN INSETS. The shared .popup-content numbers were
+   tuned for the BLACKBOARD; the whiteboard's white dry-erase area is a
+   different rect - measured off the 752x1387 art it runs x 7.4%-93.5%,
+   y 3.8%-97.2% - so the shared insets sit OUTSIDE it and a full-width
+   row would ride onto the silver frame. These hug the face with margin
+   to spare. The top inset also clears the close box (7.5% of the card is
+   ~47px against the button's 40px), so the logo can be centred without
+   dodging it.
+
+   container-type makes every cqw below a proportion of the FACE rather
+   than the card, the same arrangement the letter boards use: re-cropping
+   or re-insetting the art never means re-tuning the type. */
+.popup-content--marker {
+  left: 10%;
+  right: 10%;
+  top: 7.5%;
+  bottom: 6%;
+  container-type: inline-size;
+  color: var(--marker-ink);
+  gap: 0;
+}
+
+/* THE LOGO is the only 3D brand on this board (John, 2026-08-08).
+   "Triage RUSH!" runs about 7.6x its font size wide, so 11cqw puts the
+   wordmark at ~87% of the face - the figure the sidewalk summary boards
+   settled on for this exact string, leaving room for iOS's wider Arial
+   Black metrics. Re-measure at a 375px shell before enlarging it. */
+.about-logo {
+  font-size: 11cqw;
+  line-height: 1.05;
+  text-align: center;
+  white-space: nowrap;
+  margin-bottom: 5cqw;
+}
+
+/* Every mention of the brand AFTER the logo is flat (John: "quieter,
+   without the 3D effect"). Same face, same colour, no extrusion - at
+   body size the stacked shadows read as fringing rather than depth, and
+   they competed with the logo a few lines above. nowrap because
+   "Triage / RUSH!" split across two lines is not the brand. */
+.brand-flat {
+  font-family: "Arial Black", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 900;
+  color: var(--brand-face);
+  white-space: nowrap;
+}
+
+.brand-flat .brand-rush { font-size: 1.18em; }
+
+/* A column of its own so the footer can be parked at the bottom of the
+   face instead of trailing the last step. */
+.about-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* John's opening paragraph. It carries NO heading and no rule (his
+   second pass) - the logo introduces it. */
+.about-intro {
+  font-family: Arial, sans-serif;
+  font-size: 5.8cqw;
+  line-height: 1.36;
+  margin-bottom: 4.2cqw;
+}
+
+/* Blue on purpose: a second dry-erase marker reads as a whiteboard, and
+   red would sit too close to the brand's own red-orange right above it. */
+.about-heading {
+  font-family: Arial, sans-serif;
+  font-weight: 800;
+  font-size: 6.3cqw;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--marker-blue);
+  padding-bottom: 1.1cqw;
+  border-bottom: 0.7cqw solid currentColor;
+  margin-bottom: 3.4cqw;
+}
+
+/* HOW TO PLAY reads as steps, not prose. The hanging dash keeps wrapped
+   lines aligned under the text rather than under the dash.
+
+   THE SIZE IS SET BY THE COPY, and it is measured in the app at a
+   375px shell - never guessed. Eight steps at 5.8cqw leave 33px between
+   the last one and the footer; the intro is sized with the steps, since
+   the two must read as one hand.
+
+   What the alternatives cost, measured 2026-08-08 with this copy:
+   6cqw + the old blank line = 7px of slack (too thin for iOS's wider
+   Arial), 6cqw without it = 24px, 5.8cqw without it = 33px. The last is
+   what shipped, because half a pixel of glyph height is invisible and a
+   line of headroom is not. Note the binding line is the INTRO, not a
+   step: at 6.2cqw it takes a sixth line and slack collapses. */
+.about-steps { list-style: none; }
+
+.about-steps li {
+  font-family: Arial, sans-serif;
+  font-size: 5.8cqw;
+  line-height: 1.36;
+  padding-left: 4.8cqw;
+  text-indent: -4.8cqw;
+  margin-bottom: 1.9cqw;
+}
+
+.about-steps li:last-child { margin-bottom: 0; }
+
+/* The one step that is a RULE rather than an action, so it is the one
+   step set bold (John, 2026-08-08). Deliberately no brand treatment on
+   the word TRIAGE - see the note in index.html. */
+.about-step-strong { font-weight: 700; }
+
+.about-steps li::before {
+  content: "\2013\00a0\00a0";
+  font-weight: 700;
+}
+
+/* There WAS a blank line before the two mode lines (a `.step-gap`
+   class carrying margin-top: 1.36em - a margin rather than an empty
+   <li>, since a spacer list item is announced as a real empty item by a
+   screen reader and would draw its own dash). It was spent on the two
+   difficulty lines added 2026-08-08, with John's leave: "you can get rid
+   of the space above the Triage lines if necessary." Restoring it costs
+   ~22px of the slack measured below. */
+
+/* margin-top: auto parks the footer on the bottom of the face however
+   the copy above grows or shrinks. Centred (John, 2026-08-08). */
+.about-footer {
+  margin-top: auto;
+  padding-top: 4cqw;
+  text-align: center;
+}
+
+.about-fine {
+  font-family: Arial, sans-serif;
+  font-size: 4.7cqw;
+  line-height: 1.34;
+  opacity: 0.78;
+}
+
+.about-version {
+  font-family: Arial, sans-serif;
+  font-size: 4.1cqw;
+  letter-spacing: 0.02em;
+  margin-top: 1.6cqw;
+  opacity: 0.6;
+}
+
+/* ------------------------------------------------------------------------
+   6. PATIENTS ARE ARRIVING - blocking Start Shift status
+   --------------------------------------------------------------------- */
+
+.arriving-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 14;
+  display: grid;
+  place-items: center;
+  background: rgb(0 16 25 / 92%);
+  backdrop-filter: blur(4px);
+}
+
+.arriving-text {
+  font-size: clamp(15px, 5.4cqw, 28px);
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  animation: arriving-pulse 1.1s ease-in-out infinite alternate;
+}
+
+@keyframes arriving-pulse {
+  from { opacity: 0.55; }
+  to { opacity: 1; }
+}
+
+/* ------------------------------------------------------------------------
+   7. GAME view skeleton.
+   Approved geometry: header 7.2%, play area 85.8%, footer 7%;
+   columns 22% / 56% / 22% (docs 4, 7).
+   --------------------------------------------------------------------- */
+
+.game-view {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.game-header {
+  height: 7.2%;
+  min-height: 40px;
+  display: grid;
+  grid-template-columns: 1.02fr 1.48fr 0.72fr 24px;
+  gap: 4px;
+  align-items: center;
+  padding: 4px 5px;
+  background: linear-gradient(180deg, #102d3d 0%, #071720 55%, #030c12 100%);
+  border-bottom: 2px solid #59707a;
+  box-shadow: inset 0 -2px #0009;
+}
+
+/* The "Triage RUSH!" sign treatment (TODO item 2, 2026-08-06): the heavy
+   grotesque, face color and stacked brick-red extrusion of the channel
+   letters in the ER ENTRANCE art, drawn with fonts + text-shadow only
+   (mockup: _mockups/brand-font-mockups.html, variant B). Shared by the
+   game brand and the Shift Report masthead. Offsets are in em so the
+   depth scales with the font size. */
+.brand-sign {
+  font-family: "Arial Black", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 900;
+  color: var(--brand-face);
+  text-shadow:
+    0.012em 0.012em 0 var(--brand-brick),
+    0.024em 0.024em 0 var(--brand-brick),
+    0.036em 0.036em 0 var(--brand-brick),
+    0.048em 0.048em 0 var(--brand-brick),
+    0.09em 0.11em 0.1em var(--brand-cast);
+}
+
+/* "RUSH!" runs a step larger than "Triage", like the sign. */
+.brand-sign .brand-rush {
+  font-size: 1.18em;
+}
+
+.brand {
+  font-size: clamp(11px, 3.7cqw, 17px);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  /* Centered in the space between the shell's left edge and the
+     scorecard (John, 2026-08-06). */
+  text-align: center;
+}
+
+/* The two mode names are sized SEPARATELY, the same rule the sidewalk
+   summary board follows (2026-08-07). "Triage RUSH!" is left exactly as
+   it was; "Triage!" is five characters shorter and gets the freed width.
+   A shared size would cap both at what the longer one can afford.
+
+   The header cell is CONTENT-sized, not fixed: the grid column is `fr`,
+   but the brand is `nowrap`, so the column's min-content floor is the
+   text itself and the cell grows to fit it. Enlarging "Triage!" therefore
+   cannot clip - past a point it would squeeze the scorecard instead.
+
+   Measured on a 371px shell: "Triage RUSH!" is 13.6px and 104px of ink,
+   which is what sets the cell today. "Triage!" at 1.4em is 19px and only
+   70px of ink, so it sits well inside the footprint RUSH mode already
+   imposes and the header is untouched (scorecard 148px either way, no
+   overflow). It could reach about 2.07em before the header got any wider
+   than RUSH already makes it - that, not clipping, is the real ceiling.
+   Re-measure at this width before going past it. */
+.brand-mode--triage { font-size: 1.4em; }
+
+.header-scorecard {
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: #02080c;
+  border: 1px solid #71828a;
+  border-radius: 6px;
+  font-size: clamp(11px, 3.4cqw, 16px);
+  font-weight: 900;
+}
+
+.score-correct { color: var(--score-correct); }
+.score-close { color: var(--score-close); }
+.score-wrong { color: var(--score-wrong); }
+.score-total { color: #fff; }
+.score-divider { color: #83949b; font-weight: 700; }
+
+.status-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.05;
+}
+
+.status-box small {
+  font-size: clamp(6px, 1.9cqw, 8px);
+  letter-spacing: 0.12em;
+  color: #9fb3bb;
+  font-weight: 800;
+}
+
+.status-box strong {
+  font-size: clamp(17px, 5.3cqw, 23px);
+  font-weight: 900;
+  color: #fff;
+}
+
+.sound-button {
+  position: relative; /* anchors the mute slash below */
+  width: 24px;
+  height: 28px;
+  border-radius: 5px;
+  background: #102b38;
+  border: 1px solid #59707a;
+  color: #dce8ec;
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* Muted = the same note, dimmed, with a red slash drawn across it
+   (John, 2026-08-08). Red because red already means OFF everywhere in
+   this game - the settings radios and the summary boards. The slash is
+   a rotated bar rather than a character: no font ships a plain-text
+   "muted note", and the Unicode mute glyphs render as colour emoji on
+   iOS, which would look nothing like the rest of the header. */
+.sound-button.is-muted {
+  color: #8c979c;
+}
+
+.sound-button.is-muted::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 92%;
+  height: 2px;
+  background: var(--red);
+  /* A 1px casing in the button's own background separates the slash
+     from the note it crosses, so both stay readable at 24px. */
+  box-shadow: 0 0 0 1px #102b38;
+  transform: translate(-50%, -50%) rotate(45deg);
+  pointer-events: none;
+}
+
+.play-area {
+  height: 85.8%;
+  display: grid;
+  grid-template-columns: 22% 56% 22%;
+  background: #0f3d2f; /* flat dark green; no scene artwork here */
+}
+
+/* No artwork behind the rails - just a quiet dark green so the row art
+   and doors carry the scene (John, 2026-08-04; wall art retired). */
+.waiting-panel,
+.rooms-panel {
+  background: #0f3d2f;
+}
+
+.waiting-panel {
+  border-right: 3px solid #778c8e;
+  box-shadow: inset -1px 0 #d9cdbb, inset -4px 0 #778c8e;
+}
+
+.rooms-panel {
+  border-left: 3px solid #778c8e;
+  box-shadow: inset 1px 0 #d9cdbb, inset 4px 0 #778c8e;
+}
+
+.patient-panel {
+  position: relative;
+  background-image: var(--asset-patient-panel);
+  background-size: cover;
+  background-position: center top;
+  padding: 4px;
+}
+
+.patient-empty-state {
+  position: absolute;
+  /* Same width as before, but the height follows the game's own 9:16
+     proportion instead of filling the tall panel; centered vertically. */
+  left: 8%;
+  right: 8%;
+  top: 50%;
+  transform: translateY(-50%);
+  aspect-ratio: 9 / 16;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+  border: 2px dashed #d4e4e9;
+  border-radius: 9px;
+  background: #06202dcc;
+  box-shadow: inset 0 0 20px #001018cc;
+}
+
+.patient-empty-state small {
+  font-size: clamp(8px, 2.6cqw, 12px);
+  letter-spacing: 0.22em;
+  font-weight: 800;
+  color: #9fc3d0;
+}
+
+.patient-empty-state strong {
+  font-size: clamp(16px, 5.6cqw, 23px);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
+.patient-empty-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* A couple of blank lines' distance below SELECT A PATIENT, and clear
+     air above/below the "or" between the two hint lines. */
+  margin-top: clamp(14px, 5cqw, 26px);
+  gap: clamp(7px, 2.4cqw, 13px);
+  padding: 0 6%;
+  font-size: clamp(8px, 2.4cqw, 11px);
+  letter-spacing: 0.1em;
+  font-weight: 800;
+  color: #cfe4ec;
+  line-height: 1.35;
+}
+
+.patient-empty-hint-or {
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  opacity: 0.7;
+}
+
+.hint-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+/* Solid white arrows, larger than the hint text, nudging toward their
+   target so the eye finds them. */
+.hint-arrow {
+  font-size: 1.6em;
+  line-height: 1;
+  letter-spacing: -0.18em; /* fuse ◀ + ━ into one continuous arrow */
+  color: #fff;
+  text-shadow: 0 1px 2px #000b;
+  animation: hint-nudge 1.1s ease-in-out infinite;
+}
+
+.hint-arrow--left { --nudge-x: -3px; }
+.hint-arrow--right { --nudge-x: 3px; }
+
+@keyframes hint-nudge {
+  0%, 100% { translate: 0 0; }
+  50% { translate: var(--nudge-x) 0; }
+}
+
+/* ------------------------------------------------------------------------
+   7b. Waiting queue rows.
+   The panel is a grid whose row count JS sets (5 minimum, up to 10 in
+   RUSH); each occupied row is a layered button.
+   --------------------------------------------------------------------- */
+
+.waiting-panel {
+  display: grid;
+  gap: 3px;
+  padding: 3px;
+}
+
+.queue-patient,
+.queue-slot-empty {
+  position: relative;
+  overflow: hidden;
+  border-radius: 5px;
+  border: 2px solid #778c8e;
+  background: #e9dfcd;
+  padding: 0;
+}
+
+.queue-slot-empty {
+  opacity: 0.78;
+}
+
+.queue-background {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.queue-patient-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  filter: drop-shadow(0 1px 1px #172a3199);
+}
+
+.queue-cell-frame {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px #ffffff77, inset 0 0 0 2px #00000055;
+  border-radius: 3px;
+}
+
+.queue-complaint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1px 3px;
+  background: #031019dc;
+  color: var(--cream);
+  font-size: clamp(5px, 1.7cqw, 8px);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+/* Attract state while the center panel waits for a selection. */
+.queue-patient.is-selectable {
+  box-shadow: 0 0 8px #778c8ebb;
+  animation: queue-ready 1.25s ease-in-out infinite alternate;
+}
+
+@keyframes queue-ready {
+  from { filter: brightness(1); }
+  to { filter: brightness(1.13); }
+}
+
+.queue-patient:active {
+  transform: scale(0.97);
+}
+
+/* ------------------------------------------------------------------------
+   7c. The unified patient chart - transparent PANEL setting.
+   One content structure (built in ui.js); this wrapper gives it the
+   compact flow tuned to the narrow center column. The Chart clipboard
+   setting will restyle the identical structure.
+   --------------------------------------------------------------------- */
+
+.patient-chart-mount {
+  position: absolute;
+  inset: 4px;
+}
+
+.patient-chart {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.3%;
+}
+
+/* --- Scene: portrait against the framed clinical backdrop --- */
+
+.chart-scene {
+  /* Fully transparent: the panel's corridor artwork is the backdrop. */
+  position: relative;
+  flex: 43 1 0;
+  min-height: 0;
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.chart-nameplate {
+  /* Its own centered plate; the corridor shows on either side of it. */
+  flex: 0 0 auto;
+  align-self: center;
+  width: 86%;
+  margin-top: clamp(2px, 1cqw, 5px);
+  min-height: clamp(24px, 7.5cqw, 34px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 clamp(4px, 1.4cqw, 8px);
+  border-radius: 6px;
+  background: linear-gradient(#123b50, #041722);
+  border: 1px solid #3d6377;
+  box-shadow: 0 2px 4px #0008;
+}
+
+.chart-nameplate strong {
+  color: #fff;
+  font-size: clamp(10px, 3.4cqw, 16px);
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  /* A long name gives way (truncating with ..) before the age/sex chip
+     loses any space. */
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.chart-nameplate span {
+  /* Age + sex as a bright wristband chip so it reads at a glance,
+     instead of dim small text beside the name (John, 2026-08-04). */
+  color: #10222c;
+  background: #f3e7d8;
+  border: 1px solid #c09e62;
+  border-radius: 4px;
+  padding: 1px clamp(4px, 1.4cqw, 7px);
+  font-size: clamp(8px, 2.4cqw, 11px);
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.chart-portrait {
+  position: absolute;
+  bottom: -2%;
+  left: 50%;
+  height: 94%;
+  max-width: 96%;
+  object-fit: contain;
+  object-position: center bottom;
+  transform-origin: bottom center;
+  filter: drop-shadow(0 7px 5px #00101ba8);
+}
+
+.chart-complaint {
+  /* Its own centered plate below the portrait, like the nameplate above.
+     Stack gap provides the same spacing the other cards share. */
+  flex: 0 0 auto;
+  align-self: center;
+  width: 86%;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: #f3e7d8ed;
+  border: 1px solid #c09e62;
+  color: #1d2225;
+  font-size: clamp(8px, 2.6cqw, 12px);
+  font-weight: 900;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --- Quote card --- */
+
+.chart-quote {
+  flex: 17 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 3px 6px;
+  border-radius: 6px;
+  background: #f6ecddf5;
+  border: 1px solid #b19a79;
+  overflow: hidden;
+}
+
+.chart-quote small {
+  color: #8a4c16;
+  font-size: clamp(6px, 1.9cqw, 9px);
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-align: center;
+}
+
+/* Quote body matches the triage-note body size; italic serif voice. */
+.chart-quote p {
+  color: #2a2620;
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: clamp(8px, 2.4cqw, 11px);
+  line-height: 1.3;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* --- Vitals: 3 x 2 tiles; icon art arrives later --- */
+
+.chart-vitals {
+  flex: 18 1 0;
+  min-height: 0;
+  display: grid;
+  /* The middle column carries both long readings - BP (122/76) and TEMP
+     (41.2 / 106.2 at its widest) - while the outer columns hold two- and
+     three-character numbers. So the middle takes width from the sides
+     rather than everything wrapping to fit the narrowest case (John,
+     2026-08-07). This holds as long as VITAL_DISPLAY_ORDER keeps BP and
+     TEMP in the middle of each row. */
+  grid-template-columns: 0.75fr 1.5fr 0.75fr;
+  grid-template-rows: repeat(2, 1fr);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f2f3f2f2;
+  border: 1px solid #cbd0d1;
+}
+
+/* Variant A tile (mockup 2026-08-06): icon left, label-over-value stack
+   right. The icon is sized to sit within the stack's height, so the
+   tile's vertical rhythm is unchanged from the icon-less original. */
+.vital-tile {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(3px, 1.2cqw, 6px);
+  border: 0.5px solid #cbd0d1;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Enlarged 2026-08-07 once the middle column was widened: vertically an
+   icon has room until it reaches the label-over-value stack beside it
+   (25px in the panel, 31px in the clipboard), so WIDTH is what limits it,
+   and the widening paid for the growth. Measured on a small phone with
+   the widest readings the data can produce, every tile still fits on one
+   line and no tile changed height. */
+.vital-icon {
+  width: clamp(15px, 4.6cqw, 23px);
+  height: clamp(15px, 4.6cqw, 23px);
+  flex: none;
+}
+
+.vital-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  min-width: 0;
+}
+
+.vital-tile small {
+  color: #47616f;
+  font-size: clamp(6px, 1.9cqw, 8px);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.vital-tile strong {
+  color: #1d2a30;
+  font-size: clamp(9px, 3cqw, 13px);
+  font-weight: 900;
+}
+
+.vital-value.is-yellow { color: #b46a00; }
+.vital-value.is-red { color: #c72d25; }
+
+/* --- Triage note clipboard card --- */
+
+.chart-note {
+  flex: 19 1 0;
+  min-height: 0;
+  border-radius: 7px;
+  background: #f2e8d8;
+  border: 3px solid #8a4c16;
+  padding: clamp(4px, 1.5cqw, 8px) 6px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.chart-note small {
+  color: #8a4c16;
+  font-size: clamp(6px, 1.9cqw, 9px);
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-align: center;
+}
+
+.chart-note p {
+  color: #243036;
+  /* Regular Arial, not the condensed app face: chart prose reads better
+     at full width and visually matches the Georgia quote body. */
+  font-family: Arial, sans-serif;
+  font-size: clamp(8px, 2.4cqw, 11px);
+  font-weight: 700;
+  line-height: 1.35;
+  overflow: hidden;
+}
+
+/* --- The whole-panel Chart hit target --- */
+
+/* A transparent button layered over the occupied chart; the columns
+   beside it (queue, doors) are separate elements it never covers. */
+.patient-panel-hit {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  padding: 0;
+}
+
+.patient-panel-hit:focus-visible {
+  outline-offset: -4px;
+  border-radius: 6px;
+}
+
+/* ------------------------------------------------------------------------
+   7d. Seven-room door rail.
+   Equal rows; accepted door art centered at 61% width / 91% height,
+   bottom-aligned (doc 7).
+
+   Layered composition (TODO item 7, John 2026-08-06), back to front:
+   the rail's flat green, the shared wall art filling the whole cell,
+   the room's interior scene in the same box as the door art, the
+   assigned patient standing in the doorway (open room only), then the
+   door art itself - an open door's transparent doorway reveals the
+   interior and patient. The wall was drawn at roughly the cell's aspect
+   and the interiors at the door art's aspect, so plain fills line up;
+   stacking order comes from DOM order, no z-index needed.
+   --------------------------------------------------------------------- */
+
+.rooms-panel {
+  display: grid;
+  grid-template-rows: repeat(7, minmax(0, 1fr));
+}
+
+.room-choice {
+  position: relative;
+  min-height: 0;
+  border-bottom: 2px solid #18313c;
+  padding: 0;
+}
+
+.room-choice:last-child {
+  border-bottom: none;
+}
+
+.room-wall {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.room-interior {
+  position: absolute;
+  left: 50%;
+  bottom: 1%;
+  transform: translateX(-50%);
+  width: 61%;
+  height: 91%;
+  object-fit: fill;
+}
+
+/* Patient scale/placement — John-approved 2026-08-06: center at 45% of
+   the cell width, raised 9% off the bottom. The portraits are square
+   1024 cut-outs with transparency, so contain keeps the figure whole.
+   Re-tune only by adjusting left/bottom/height/max-width. */
+.room-patient {
+  position: absolute;
+  left: 45%;
+  bottom: 9%;
+  transform: translateX(-50%);
+  height: 80%;
+  max-width: 66%;
+  object-fit: contain;
+  object-position: bottom center;
+}
+
+.door-art {
+  position: absolute;
+  left: 50%;
+  bottom: 1%;
+  transform: translateX(-50%);
+  width: 61%;
+  height: 91%;
+  object-fit: fill;
+  filter: drop-shadow(0 1px 2px #0008);
+}
+
+.room-choice:active .door-art {
+  transform: translateX(-50%) scale(0.96);
+  transition: transform 160ms ease;
+}
+
+/* ------------------------------------------------------------------------
+   8b. Assignment feedback (Phase 5).
+   Orange recall arrow on the one open door; a colored pulse ring on the
+   selected door only (never the correct one); the transient result toast
+   over the center panel. Color always pairs with a symbol + word, so the
+   result reads in monochrome (doc 7). The global reduced-motion rule at
+   the end of this file already collapses these animations.
+   --------------------------------------------------------------------- */
+
+.room-recall-arrow {
+  position: absolute;
+  left: 2%;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ff8c1a;
+  font-size: clamp(14px, 5cqw, 22px);
+  font-weight: 900;
+  text-shadow: 0 1px 3px #000d;
+  pointer-events: none;
+  animation: recall-nudge 1.1s ease-in-out infinite;
+}
+
+@keyframes recall-nudge {
+  0%, 100% { translate: 0 0; }
+  50% { translate: -3px 0; }
+}
+
+/* Each outcome sets one color; the shared ::after ring below uses it.
+   is-outcome-* is the steady halo on the occupied door (state-driven,
+   lasts until the room closes); is-feedback-* is the transient
+   evaluation flash that app.js clears after a moment. */
+.room-choice.is-outcome-correct,
+.room-choice.is-feedback-correct { --feedback-color: #37c065; }
+
+.room-choice.is-outcome-close,
+.room-choice.is-feedback-close { --feedback-color: #ffc93c; }
+
+.room-choice.is-outcome-wrong,
+.room-choice.is-feedback-wrong { --feedback-color: #ff5a4e; }
+
+.room-choice.is-outcome-correct::after,
+.room-choice.is-outcome-close::after,
+.room-choice.is-outcome-wrong::after,
+.room-choice.is-feedback-correct::after,
+.room-choice.is-feedback-close::after,
+.room-choice.is-feedback-wrong::after {
+  content: "";
+  position: absolute;
+  inset: 4% 8%;
+  border: 3px solid var(--feedback-color);
+  border-radius: 8px;
+  box-shadow: 0 0 12px var(--feedback-color),
+    inset 0 0 10px var(--feedback-color);
+  pointer-events: none;
+}
+
+/* The flash: three quick pulses at evaluation, then the steady halo
+   (still painted by is-outcome-*) remains. */
+.room-choice.is-feedback-correct::after,
+.room-choice.is-feedback-close::after,
+.room-choice.is-feedback-wrong::after {
+  animation: feedback-pulse 460ms ease-in-out 3;
+}
+
+@keyframes feedback-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* A full waiting room refusing a RUSH arrival: one quick silent
+   side-to-side shake of the queue column (doc 3). */
+.waiting-panel.is-arrival-blocked {
+  animation: queue-blocked-shake 300ms ease-in-out;
+}
+
+@keyframes queue-blocked-shake {
+  0%, 100% { transform: none; }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+/* Result toast: about one-third down the center panel (doc 7). */
+.result-toast {
+  position: absolute;
+  left: 50%;
+  top: 33%;
+  transform: translate(-50%, -50%);
+  /* Raised from 6 with the countdown numeral's move to 13 (2026-08-08),
+     PRESERVING the original order: outcome feedback stays readable over a
+     numeral, which is why the numeral sat below it in the first place. 15
+     also clears the arriving overlay (14) rather than tying with it, and
+     stays under the confirm dialog (16), which pauses the clock anyway. */
+  z-index: 15;
+  padding: clamp(4px, 1.6cqw, 8px) clamp(10px, 3.4cqw, 18px);
+  border-radius: 8px;
+  background: #061620e6;
+  border: 2px solid var(--feedback-color, #fff);
+  color: var(--feedback-color, #fff);
+  font-size: clamp(13px, 4.6cqw, 20px);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  pointer-events: none;
+  text-shadow: 0 1px 2px #000c;
+  animation: toast-pop 240ms ease-out;
+}
+
+.result-toast.is-correct { --feedback-color: #37c065; }
+.result-toast.is-close { --feedback-color: #ffc93c; }
+.result-toast.is-wrong { --feedback-color: #ff5a4e; }
+
+@keyframes toast-pop {
+  from {
+    transform: translate(-50%, -50%) scale(0.6);
+    opacity: 0;
+  }
+
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+/* RUSH final countdown numerals: white, heavy, centered on the middle of
+   the patient image (the scene is the top ~43% of the panel, so its
+   midpoint sits ~21% down). Each numeral pops in quickly, then expands
+   and dissolves away over about half a second; the layer never
+   intercepts input (doc 7). Invisible until ui.js adds .is-popping; the
+   animation's forwards fill leaves it invisible again when it ends. */
+.countdown-numeral {
+  position: absolute;
+  left: 50%;
+  top: 21%;
+  transform: translate(-50%, -50%);
+  /* 13 clears the CHART OVERLAY's 12 (John, 2026-08-08): the countdown is
+     the one thing that must never be covered, and the chart does not pause
+     the clock, so a player reading a chart still has to see the shift run
+     out. Nothing was moved to achieve it - the numeral stays anchored over
+     the patient image and simply paints last, because no ancestor between
+     here and the shell creates a stacking context. It stays click-through
+     via pointer-events below, so the chart's X, paper, MORE pills and
+     photo zoom all keep working underneath it. */
+  z-index: 13;
+  font-size: clamp(64px, 34cqw, 170px);
+  font-weight: 900;
+  color: #fff;
+  opacity: 0;
+  pointer-events: none;
+  text-shadow: 0 2px 6px #000c, 0 0 20px #0009;
+}
+
+.countdown-numeral.is-popping {
+  animation: numeral-pop 500ms ease-out forwards;
+}
+
+@keyframes numeral-pop {
+  0% {
+    transform: translate(-50%, -50%) scale(0.4);
+    opacity: 0;
+    filter: blur(0);
+  }
+
+  20% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    filter: blur(0);
+  }
+
+  /* Expand while dissolving: the numeral grows past its resting size as
+     it fades and softens, so it reads as evaporating rather than merely
+     switching off (John, 2026-08-05). */
+  100% {
+    transform: translate(-50%, -50%) scale(1.7);
+    opacity: 0;
+    filter: blur(3px);
+  }
+}
+
+.game-footer {
+  height: 7%;
+  min-height: 40px;
+  display: grid;
+  /* The two action buttons get the width; the decorative middle strip
+     shrinks (it may never hold a gameplay action - doc 3). Narrowed a
+     touch more 2026-08-05 so each subtitle can hold one line on phones. */
+  grid-template-columns: 1.6fr 0.08fr 1.6fr;
+  gap: 5px;
+  padding: 4px 5px;
+  background: linear-gradient(#0d2938, #030c12);
+  border-top: 2px solid #61747d;
+}
+
+.footer-button {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.1;
+  /* Room for the edge arrows so the labels never sit under them. */
+  padding: 0 clamp(20px, 8.4cqw, 44px);
+  border-radius: 7px;
+  border: 1px solid rgb(255 255 255 / 30%);
+  box-shadow: inset 0 1px #ffffff55, 0 2px 4px #0008;
+  color: #fff;
+  overflow: hidden;
+}
+
+/* Direction arrows pinned to the button edges, sized to the box height
+   (~12.4cqw in the locked 9:16 shell), not the label text. */
+.footer-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: clamp(24px, 13cqw, 52px);
+  line-height: 1;
+  opacity: 0.9;
+  text-shadow: 0 2px 3px #0007;
+  pointer-events: none;
+}
+
+.footer-arrow--left { left: clamp(2px, 1cqw, 6px); }
+.footer-arrow--right { right: clamp(2px, 1cqw, 6px); }
+
+.footer-button span {
+  /* Midrange lowered 2026-08-05 so END SHIFT EARLY keeps to one line on
+     phones; desktop still reaches the 15px cap. */
+  font-size: clamp(9px, 3cqw, 15px);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+
+/* Subtitle: a small breath below the label, at about half its size so
+   it reads without leaning in (John, 2026-08-05). The cqw midrange is
+   kept low so the two lines never overflow the short mobile footer;
+   desktop still reaches the 9px cap. */
+.footer-button small {
+  margin-top: clamp(1px, 0.5cqw, 4px);
+  font-size: clamp(5px, 1.6cqw, 9px);
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  opacity: 0.9;
+}
+
+.footer-button--quit {
+  background: linear-gradient(#15935b, #07572f);
+}
+
+.footer-button--stop {
+  background: linear-gradient(#c94626, #7b1b10);
+}
+
+.footer-button:active {
+  transform: translateY(1px);
+}
+
+.footer-neutral {
+  border-radius: 7px;
+  background: rgb(255 255 255 / 4%);
+  border: 1px solid rgb(255 255 255 / 10%);
+}
+
+/* ------------------------------------------------------------------------
+   7e. Chart overlay - the clipboard setting of the unified chart.
+   Dark blurred scrim; the clipboard fills the shell inside ~8% outer
+   padding (doc 7). The board, its header row (title + live clock), and
+   the ruled paper are all CSS-drawn (no clipboard artwork exists). Only
+   the paper scrolls.
+   --------------------------------------------------------------------- */
+
+.chart-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  display: grid;
+  place-items: center;
+  padding: 8%;
+  background: rgb(2 10 16 / 72%);
+  backdrop-filter: blur(3px);
+}
+
+/* The board: warm hardboard with a darker rim. */
+.chart-clipboard {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  background: linear-gradient(160deg, #c08a4b, #9c6a33 70%, #8a5a2b);
+  border: 2px solid #6f4a20;
+  box-shadow: 0 18px 50px #000d, inset 0 1px #ffffff44;
+}
+
+/* Clipboard header row (John, 2026-08-05): PATIENT CHART left-justified
+   with a decent margin - subdued, as if pressed into the hardboard -
+   then the live shift clock, then the red X at the right edge. */
+.chart-title {
+  position: absolute;
+  top: clamp(8px, 3cqw, 16px);
+  left: clamp(26px, 8.6cqw, 44px);
+  z-index: 3;
+  font-size: clamp(10px, 3.4cqw, 16px);
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  color: #5c3d18;
+  text-shadow: 0 1px #ffffff30;
+  white-space: nowrap;
+}
+
+/* The live clock sits just left of the close box: same TIME-over-value
+   shape as the game header, in board tones so it belongs to the
+   clipboard rather than shouting. */
+.chart-timer {
+  position: absolute;
+  top: clamp(4px, 1.4cqw, 8px);
+  right: clamp(62px, 20.6cqw, 92px);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.05;
+}
+
+.chart-timer small {
+  font-size: clamp(6px, 1.9cqw, 8px);
+  letter-spacing: 0.12em;
+  color: #6d4a20;
+  font-weight: 800;
+}
+
+.chart-timer strong {
+  font-size: clamp(13px, 4.4cqw, 19px);
+  font-weight: 900;
+  color: #3f2a0f;
+  text-shadow: 0 1px #ffffff30;
+}
+
+/* RETIRED LOOK (kept for possible restore, John 2026-08-05): the metal
+   clamp that sat where .chart-title now is. To bring it back, restore
+   `<div class="chart-clamp" aria-hidden="true"></div>` in index.html in
+   place of the title/timer row and uncomment:
+
+.chart-clamp {
+  position: absolute;
+  top: clamp(5px, 1.8cqw, 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 38%;
+  height: clamp(15px, 5.2cqw, 26px);
+  z-index: 3;
+  border-radius: 7px 7px 4px 4px;
+  background: linear-gradient(#eef2f4, #9aa5ac 55%, #6c7880);
+  border: 1px solid #55606a;
+  box-shadow: 0 2px 5px #0009, inset 0 1px #fffb;
+}
+
+.chart-clamp::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 28%;
+  transform: translateX(-50%);
+  width: 24%;
+  height: 40%;
+  border-radius: 999px;
+  background: #3a444b;
+  box-shadow: inset 0 1px 2px #000c;
+}
+*/
+
+/* Prominent close control, pinned to the board's top-right corner so it
+   stays reachable no matter how far the paper scrolls (doc 7).
+   z-index 5, deliberately ABOVE the sticky nameplate's 4: the X dips a
+   few pixels into the paper region, and at an equal z-index the
+   nameplate's solid paper-colored shadow slab (later in the DOM) painted
+   over the X's corner (John, 2026-08-06). The photo-zoom scrim is also
+   5 but sits later in the DOM, so it still covers the X by design. */
+.chart-close {
+  position: absolute;
+  top: clamp(5px, 1.8cqw, 10px);
+  right: clamp(5px, 1.8cqw, 10px);
+  width: clamp(28px, 9cqw, 40px);
+  height: clamp(28px, 9cqw, 40px);
+  z-index: 5;
+  border-radius: 7px;
+  border: 2px solid #fff;
+  background: linear-gradient(#f4574c, #a20e08);
+  color: #fff;
+  font-weight: 900;
+  font-size: clamp(14px, 4.6cqw, 22px);
+  line-height: 1;
+}
+
+/* The ruled paper: the only scrolling region (the page never scrolls). */
+.chart-scroll {
+  position: absolute;
+  inset:
+    clamp(28px, 9.6cqw, 48px)
+    clamp(8px, 2.8cqw, 15px)
+    clamp(8px, 2.8cqw, 15px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: 6px;
+  background:
+    repeating-linear-gradient(transparent 0 25px,
+      rgb(58 74 110 / 8%) 25px 26px),
+    #f7f0e1;
+  box-shadow: inset 0 2px 8px #00000055;
+  padding: clamp(8px, 2.8cqw, 15px);
+}
+
+/* MORE ABOVE / MORE BELOW: appear only while hidden content exists; a
+   tap scrolls about 70% of the visible paper (doc 7). */
+.chart-more {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  padding: clamp(2px, 1cqw, 5px) clamp(10px, 3.4cqw, 18px);
+  border-radius: 999px;
+  background: #061620e6;
+  border: 1px solid rgb(255 255 255 / 45%);
+  color: #fff;
+  font-size: clamp(8px, 2.6cqw, 12px);
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px #000a;
+}
+
+/* MORE ABOVE clears the sticky nameplate, which now holds the top of the
+   paper (John, 2026-08-05) - otherwise the pill lands on the name. */
+.chart-more--above { top: clamp(66px, 22cqw, 110px); }
+.chart-more--below { bottom: clamp(12px, 4cqw, 22px); }
+
+/* --- Clipboard-setting overrides for the shared chart --- */
+
+/* On paper the chart flows naturally top to bottom; nothing competes for
+   a fixed height, so every card takes the room its content needs. */
+.chart-overlay-mount .patient-chart {
+  height: auto;
+  gap: clamp(6px, 2cqw, 12px);
+}
+
+/* The nameplate stays put while everything below it scrolls (John,
+   2026-08-05), so the patient's name and age are never out of sight
+   deep in a long chart. Applies to BOTH scrolling settings - the Chart
+   overlay during play and the review browser - because they share this
+   mount. The panel setting does not scroll, so it is unaffected.
+
+   The solid shadow above paints over the scroll container's top padding,
+   which content would otherwise show through as it passes behind. */
+.chart-overlay-mount .chart-nameplate {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  box-shadow: 0 calc(-1 * clamp(8px, 2.8cqw, 15px)) 0 #f7f0e1;
+}
+
+/* The scene loses the corridor art (the paper is opaque): a quiet
+   exam-room gradient frames the portrait cutout instead. */
+.chart-overlay-mount .chart-scene {
+  flex: none;
+  align-self: center;
+  width: 74%;
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(#e2e9ec, #b9c7cd);
+  border: 1px solid #a9b4b9;
+}
+
+.chart-overlay-mount .chart-nameplate {
+  width: 100%;
+  margin-top: 0;
+}
+
+.chart-overlay-mount .chart-nameplate strong {
+  font-size: clamp(12px, 4cqw, 18px);
+}
+
+.chart-overlay-mount .chart-nameplate span {
+  font-size: clamp(9px, 3cqw, 13px);
+}
+
+.chart-overlay-mount .chart-complaint {
+  width: 100%;
+  white-space: normal;
+  font-size: clamp(10px, 3.2cqw, 15px);
+}
+
+.chart-overlay-mount .chart-quote,
+.chart-overlay-mount .chart-vitals,
+.chart-overlay-mount .chart-note {
+  flex: none;
+  overflow: visible;
+}
+
+/* Generous flow: full text always visible, larger reading sizes. */
+.chart-overlay-mount .chart-quote p,
+.chart-overlay-mount .chart-note p {
+  font-size: clamp(10px, 3cqw, 14px);
+  overflow: visible;
+}
+
+.chart-overlay-mount .chart-quote small,
+.chart-overlay-mount .chart-note small {
+  font-size: clamp(7px, 2.2cqw, 10px);
+}
+
+.chart-overlay-mount .vital-tile {
+  padding: clamp(4px, 1.6cqw, 9px) 2px;
+}
+
+.chart-overlay-mount .vital-tile small {
+  font-size: clamp(7px, 2.2cqw, 10px);
+}
+
+.chart-overlay-mount .vital-tile strong {
+  font-size: clamp(11px, 3.6cqw, 16px);
+}
+
+/* --- Photo zoom (Chart overlay AND the Patients Seen browser) --- */
+
+/* The hit box is the whole photo minus a small pad just inside its
+   edges; the visible magnifier badge sits in the top-right corner
+   (John, 2026-08-05). */
+.chart-zoom-button {
+  position: absolute;
+  inset: 4%;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 0;
+  cursor: zoom-in;
+  border-radius: 6px;
+}
+
+.chart-zoom-badge {
+  display: grid;
+  place-items: center;
+  width: clamp(22px, 7.5cqw, 34px);
+  height: clamp(22px, 7.5cqw, 34px);
+  border-radius: 50%;
+  background: #061620d8;
+  border: 1px solid rgb(255 255 255 / 55%);
+  font-size: clamp(11px, 3.8cqw, 17px);
+  line-height: 1;
+  box-shadow: 0 2px 5px #0009;
+}
+
+/* The larger-photo view: a dark scrim covers the WHOLE clipboard
+   (including its red X, so only the photo's own close box shows) with
+   one square photo card centered on it (John, 2026-08-05). */
+.chart-zoom {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  padding: clamp(10px, 3.4cqw, 18px);
+  border-radius: 10px; /* follow the clipboard's rounded corners */
+  background: rgb(2 10 16 / 82%);
+  backdrop-filter: blur(2px);
+}
+
+/* The card reads as a printed photo: paper mat, rounded corners, deep
+   shadow against the scrim. overflow hidden crops the zoomed photo. */
+.chart-zoom-card {
+  position: relative;
+  width: 100%;
+  /* 3:5 (taller than wide): with the square source photo fit to the
+     card width, the extra height absorbs the 30% zoom vertically so
+     heads never crop (John, 2026-08-05). */
+  aspect-ratio: 3 / 5;
+  border-radius: 8px;
+  background: #f7f0e1;
+  padding: clamp(6px, 2cqw, 12px);
+  box-shadow: 0 14px 40px #000d, 0 0 0 1px #ffffff33;
+  overflow: hidden;
+  display: grid;
+}
+
+/* The photo starts 30% zoomed in (John, 2026-08-05); the card's
+   overflow: hidden crops the spill at the edges. */
+.chart-zoom-image {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: contain;
+  transform: scale(1.3);
+  filter: drop-shadow(0 6px 8px #00101b55);
+}
+
+.chart-zoom-image.is-flipped {
+  transform: scale(1.3) scaleX(-1);
+}
+
+/* The one visible close box, on the photo card's top-right corner. */
+.chart-zoom-close {
+  position: absolute;
+  top: clamp(8px, 2.8cqw, 15px);
+  right: clamp(8px, 2.8cqw, 15px);
+  width: clamp(26px, 8.5cqw, 38px);
+  height: clamp(26px, 8.5cqw, 38px);
+  border-radius: 7px;
+  border: 2px solid #fff;
+  background: linear-gradient(#f4574c, #a20e08);
+  color: #fff;
+  font-weight: 900;
+  font-size: clamp(13px, 4.4cqw, 20px);
+  line-height: 1;
+  box-shadow: 0 2px 6px #000a;
+}
+
+/* --- Section headers: PRESENTATION / ANSWER / CLINICAL --- */
+
+.chart-section-header {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: clamp(5px, 1.8cqw, 10px) clamp(8px, 2.6cqw, 14px);
+  border-radius: 6px;
+  border: 1px solid #698d9d;
+  background: linear-gradient(#205d75, #123c4e);
+  color: #fff;
+  font-size: clamp(9px, 3cqw, 14px);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-shadow: 0 1px 1px #0009;
+}
+
+.chart-section-chevron {
+  font-size: 1.1em;
+  line-height: 1;
+  transition: rotate 160ms ease;
+}
+
+.chart-section-header[aria-expanded="false"] .chart-section-chevron {
+  rotate: -90deg;
+}
+
+/* Answer stays visibly locked during active evaluation (doc 7). */
+.chart-section-header--answer.is-locked {
+  background: repeating-linear-gradient(135deg,
+    #59666b 0 8px, #4d595e 8px 16px);
+  border-color: #76848a;
+  cursor: not-allowed;
+}
+
+.chart-lock-badge {
+  padding: 1px clamp(6px, 2cqw, 10px);
+  border-radius: 999px;
+  background: #30393d;
+  border: 1px solid #8b979c;
+  font-size: clamp(7px, 2.2cqw, 10px);
+  letter-spacing: 0.14em;
+}
+
+/* Activating locked Answer reports "locked" with a shake, never opens. */
+.chart-section-header.is-denied {
+  animation: locked-shake 320ms ease;
+}
+
+@keyframes locked-shake {
+  0%, 100% { translate: 0 0; }
+  25% { translate: -4px 0; }
+  50% { translate: 4px 0; }
+  75% { translate: -3px 0; }
+}
+
+.chart-section-body {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 2cqw, 12px);
+}
+
+/* --- Clinical cards --- */
+
+.chart-clinical-card {
+  border-radius: 6px;
+  background: #f6ecddf5;
+  border: 1px solid #b19a79;
+  padding: clamp(5px, 1.8cqw, 10px) clamp(7px, 2.4cqw, 12px);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.chart-clinical-card small {
+  color: #8a4c16;
+  font-size: clamp(7px, 2.2cqw, 10px);
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+.chart-clinical-card p,
+.chart-clinical-card li {
+  color: #243036;
+  font-family: Arial, sans-serif;
+  font-size: clamp(10px, 3cqw, 14px);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.chart-clinical-card ul {
+  padding-left: 1.25em;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* --- Answer cards (review setting only) ---
+   During play this section is locked and empty; after the shift it opens
+   with the verdict on top, then the correct room and the rationale. */
+
+.chart-answer-verdict {
+  border-radius: 6px;
+  border: 2px solid var(--outcome-ink, #8b979c);
+  background: #f6ecddf5;
+  padding: clamp(5px, 1.8cqw, 10px) clamp(7px, 2.4cqw, 12px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(6px, 2cqw, 12px);
+}
+
+/* The outcome color drives the border and the result text together, so
+   one variable per outcome sets the whole card. */
+.chart-answer-verdict.is-outcome-correct { --outcome-ink: #17703f; }
+.chart-answer-verdict.is-outcome-close   { --outcome-ink: #8a6100; }
+.chart-answer-verdict.is-outcome-wrong   { --outcome-ink: #b3271c; }
+
+.chart-answer-choice {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.chart-answer-choice small {
+  color: #8a4c16;
+  font-size: clamp(7px, 2.2cqw, 10px);
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+.chart-answer-choice-line {
+  display: flex;
+  align-items: center;
+  gap: clamp(4px, 1.6cqw, 8px);
+}
+
+.chart-answer-choice strong {
+  color: #243036;
+  font-size: clamp(10px, 3cqw, 14px);
+  font-weight: 900;
+}
+
+/* The outcome mark beside the room the player chose: the same glyph the
+   in-game toast shows, in the same outcome color as the card's rim. */
+.chart-answer-mark {
+  flex: none;
+  color: var(--outcome-ink);
+  font-size: clamp(14px, 4.6cqw, 22px);
+  font-weight: 900;
+  line-height: 1;
+}
+
+/* The same mark stamped on the photo, bottom-right. A pale disc carries
+   it so the glyph stays readable over any portrait, light or dark.
+   Sized about 1.4x the Answer mark - down from the original 2x (John,
+   2026-08-06: unobtrusive, the photo is the point). */
+.chart-outcome-badge {
+  position: absolute;
+  right: clamp(6px, 2.2cqw, 12px);
+  bottom: clamp(6px, 2.2cqw, 12px);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: clamp(27px, 9cqw, 43px);
+  height: clamp(27px, 9cqw, 43px);
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  background: #f7f0e1ee;
+  font-size: clamp(19px, 6.4cqw, 31px);
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 2px 6px #0005;
+}
+
+.chart-outcome-badge.is-outcome-correct { color: #17703f; }
+.chart-outcome-badge.is-outcome-close   { color: #8a6100; }
+.chart-outcome-badge.is-outcome-wrong   { color: #b3271c; }
+
+.chart-answer-result {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+  color: var(--outcome-ink);
+  white-space: nowrap;
+}
+
+.chart-answer-result strong {
+  font-size: clamp(10px, 3.2cqw, 15px);
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+
+.chart-answer-result span {
+  font-size: clamp(9px, 2.8cqw, 13px);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------------
+   7g. Patients Seen browser
+
+   Reuses the Chart's clipboard wholesale. The only structural difference
+   is the fixed banner between the header row and the paper, so the paper
+   starts lower here than it does during play.
+   --------------------------------------------------------------------- */
+
+/* The paper keeps its full width here: the chart is framed exactly as it
+   is during play. The arrows claim no layout at all - they sit in the
+   blank paper margin BESIDE the patient photo, which the chart scene
+   already leaves empty (the scene is 74% wide and centred).
+
+   They are children of the clipboard, not of .chart-scroll, so they are
+   genuinely fixed: scrolling the chart never moves them. */
+.seen-nav {
+  position: absolute;
+  top: clamp(96px, 32cqw, 164px);
+  z-index: 3;
+  width: clamp(24px, 8cqw, 38px);
+  height: clamp(34px, 11cqw, 52px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: none;
+  color: #7a5a2e;
+  font-size: clamp(20px, 6.8cqw, 32px);
+  line-height: 1;
+  /* A pale halo keeps the arrowhead readable if a scrolled card passes
+     underneath it. */
+  text-shadow:
+    0 0 3px #f7f0e1, 0 0 6px #f7f0e1, 0 1px 0 #fff;
+}
+
+.seen-nav--previous { left: clamp(11px, 3.6cqw, 20px); }
+.seen-nav--next { right: clamp(11px, 3.6cqw, 20px); }
+
+.seen-nav:active {
+  background: #00000014;
+  color: #4a3517;
+}
+
+/* ------------------------------------------------------------------------
+   8. Quit confirmation
+   --------------------------------------------------------------------- */
+
+.confirm-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 16;
+  display: grid;
+  place-items: center;
+  padding: 6%;
+  background: rgb(0 16 25 / 90%);
+  backdrop-filter: blur(3px);
+}
+
+.confirm-card {
+  width: 100%;
+  max-width: 340px;
+  padding: clamp(14px, 5cqw, 24px);
+  border-radius: 12px;
+  border: 3px solid #81939a;
+  background: linear-gradient(145deg,
+    rgb(249 246 236 / 98%), rgb(220 229 230 / 98%));
+  color: #12232b;
+  box-shadow: 0 20px 60px #000d;
+  text-align: center;
+}
+
+.confirm-card h2 {
+  font-size: clamp(16px, 5.4cqw, 24px);
+  font-weight: 900;
+  color: #0c3548;
+}
+
+.confirm-card p {
+  margin-top: 6px;
+  font-size: clamp(11px, 3.4cqw, 15px);
+  line-height: 1.4;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: clamp(12px, 4cqw, 18px);
+}
+
+.confirm-actions button {
+  flex: 1;
+  min-height: 42px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  font-weight: 900;
+  font-size: clamp(11px, 3.4cqw, 15px);
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+  color: #fff;
+  border: 1px solid rgb(255 255 255 / 35%);
+  box-shadow: inset 0 1px #ffffff55, 0 2px 4px #0007;
+}
+
+.confirm-cancel {
+  background: linear-gradient(#5d7078, #37464d);
+}
+
+.confirm-accept {
+  background: linear-gradient(#c94626, #7b1b10);
+}
+
+/* ------------------------------------------------------------------------
+   9. SHIFT REVIEW - printed summary, variant B "LEGIBLE" (John, 2026-08-05;
+      built 2026-08-06 from _mockups/shift-review-mockups.html)
+
+   The whole summary fits one screen with NO scrolling, so every size here
+   is a container-width clamp. The shell is a fixed 9:16 box, so its height
+   is always 1.78x its width: sizing from width alone keeps the vertical
+   budget proportional at every device size. The paper stretches to the
+   full shell and spreads its blocks, so small leftovers become breathing
+   room instead of a short page.
+
+   The variant's legibility rules, which are the point of it:
+     - secondary ink is #4b585e - the old #6d7b81 was too light on cream;
+     - no clamp minimum sits below 10px;
+     - letter-spacing on small-caps labels stays near 0.06em - the old
+       0.22em hurt readability more than the font size did.
+   --------------------------------------------------------------------- */
+
+.review-view {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: stretch;
+  /* The dark mat around the sheet. The close X derives its offsets from
+     this token (see .review-close) so the two can never drift apart
+     again - they did, and the X came out shaved by the shell's frame
+     (2026-08-09).
+
+     WIDENING THIS DOES NOT BUY THE X ANY ROOM, which is worth knowing
+     before trying it: the straddle is measured from the sheet's edge, so
+     a wider mat moves the sheet's edge in by exactly what it adds and
+     the X ends up in the same screen position. All it actually does is
+     narrow the sheet, and the masthead has only ~8px of slack on one
+     line to give. Measured and reverted, 2026-08-09. */
+  --sheet-gutter: clamp(6px, 2.5cqw, 14px);
+  padding: var(--sheet-gutter);
+  background: linear-gradient(180deg, #0b2d3e, #031019 70%);
+}
+
+/* Paper: warm stock, hairline rule border, square-ish printed corners. */
+.review-paper {
+  --paper-ink: #16232a;
+  --paper-faint: #4b585e;
+  --paper-rule: #a9a191;
+  /* Outcome accents darkened for ink-on-paper legibility; the bright
+     --score-* variants are tuned for the dark GAME screen. */
+  --paper-correct: #14663a;
+  --paper-close: #7a5600;
+  --paper-wrong: #a52219;
+
+  /* Anchors the close X in the corner of the SHEET, not the view. */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(10px, 3.6cqw, 20px) clamp(11px, 4cqw, 22px);
+  border: 1px solid #8d8676;
+  border-radius: 2px;
+  background: #f7f3e7;
+  color: var(--paper-ink);
+  box-shadow: 0 18px 50px #000c;
+  text-align: left;
+  overflow: hidden;
+}
+
+/* --- Head: title over one strong rule, mode line beneath --- */
+
+/* The same red X the popup boards use, so it carries the same meaning -
+   but sized for a paper corner rather than a board frame, and kept clear
+   of the centred masthead beneath it. */
+.review-close {
+  position: absolute;
+  /* It STRADDLES the sheet's corner rather than sitting inside it. The
+     masthead is one centred unit that already fills the paper's width,
+     so an X inside the margin lands on "Shift Report" - measured at 10px
+     of overlap before this (2026-08-08). Reserving space instead is not
+     an option: it would wrap the brand onto two lines.
+
+     THE FRAME ALLOWANCE IS THE PART THAT WAS WRONG (John, 2026-08-09:
+     "the red X is cut off by the frame of the screen"). The offsets used
+     to be independent clamps that merely came out smaller than the
+     gutter - by 1.03px on the right at a 371px shell. That clears
+     `overflow: hidden`, which is what was checked, but NOT the shell's
+     `inset 0 0 0 2px` box-shadow, which paints a dark ring 2px INSIDE
+     the padding box, over whatever is there. A button 1px from the edge
+     is therefore shaved even though it is not clipped.
+
+     So the straddle is now DERIVED - gutter minus the allowance - which
+     pins the button a fixed distance inside the shell at every width
+     instead of leaving it to two clamps that happened to land close.
+
+     THE BUDGET IS FIXED AND SMALL, which is the thing to understand
+     before touching any of this. From the shell's inner edge to where
+     "Shift Report" stops printing is only ~33px at a 371px shell, and
+     that distance does NOT move: the sheet is centred, so its centred
+     masthead stays put whatever the gutter does. Everything in that 33px
+     - this allowance, the button, and the air before the title - comes
+     out of the same purse. The button was 29.4px of it, which is why it
+     could clear the title or clear the frame but never both.
+
+     THE BUTTON THEREFORE GAVE UP ~10% (2026-08-09, 8cqw -> 7.2cqw). That
+     is where the frame gap came from. The glyph shrank with it, keeping
+     the ratio that made it read properly at 47% of its box; the box, not
+     the mark, is what got smaller. The alternative was to tighten the
+     masthead's 1.3em gap to buy the same pixels - kept in reserve, since
+     it costs an approved look rather than an approved size. */
+  --frame-allowance: 4px;
+  top: calc(-1 * (var(--sheet-gutter) - var(--frame-allowance)));
+  right: calc(-1 * (var(--sheet-gutter) - var(--frame-allowance)));
+  z-index: 3;
+  width: clamp(23px, 7.2cqw, 33px);
+  height: clamp(23px, 7.2cqw, 33px);
+  border-radius: 6px;
+  border: 2px solid #fff;
+  background: linear-gradient(#f4574c, #a20e08);
+  color: #fff;
+  font-weight: 900;
+  font-size: clamp(13px, 4.14cqw, 19px);
+  line-height: 1;
+}
+
+.review-head {
+  border-bottom: 2px solid var(--paper-ink);
+  padding-bottom: clamp(5px, 1.8cqw, 9px);
+  text-align: center;
+}
+
+/* The brand is the sign spelling "Triage RUSH!" (John, 2026-08-06), so
+   text-transform must NEVER be applied here - the mixed case is the
+   brand. The span carries .brand-sign for the red 3D lettering.
+
+   Layout (John, 2026-08-06): brand + "Shift Report" read as ONE unit -
+   a four-or-five-space gap between them - centered as a whole in the
+   header. Baseline alignment keeps the two type families sitting on the
+   same line. The 4.8cqw/23px size (down from the original 5.6/27) is
+   what fits the whole unit on one line; every part scales with cqw, so
+   the fit holds at any shell width. */
+.review-title {
+  font-size: clamp(14px, 4.8cqw, 23px);
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  line-height: 1.05;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 1.3em;
+  white-space: nowrap;
+}
+
+/* "Shift Report" as a printed-report masthead: serif small-caps (John,
+   2026-08-06). small-caps renders the lowercase letters as capitals, so
+   the one text "Shift Report" serves both titles. */
+.review-title-report {
+  font-family: Georgia, "Times New Roman", serif;
+  font-variant: small-caps;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+/* The mode line earns some prominence (John, 2026-08-06): a blank-line
+   gap below the title and a size up from the meta text. */
+.review-mode {
+  margin-top: clamp(7px, 2.4cqw, 13px);
+  font-size: clamp(12px, 3.6cqw, 17px);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--paper-faint);
+}
+
+/* --- Meta: 2 x 2 cells with left rules, key over value --- */
+
+/* Uneven columns on purpose: the right column starts about three
+   characters left of center so DATE ("Aug 6, 2026 · 10:02 AM") fits on
+   one line; the left column's values (initials, a count) never need the
+   width (John, 2026-08-06). */
+.review-meta {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: clamp(4px, 1.6cqw, 9px) clamp(8px, 3cqw, 16px);
+  margin-top: clamp(7px, 2.4cqw, 13px);
+}
+
+.review-meta-cell {
+  border-left: 3px solid var(--paper-rule);
+  padding-left: clamp(5px, 1.8cqw, 9px);
+}
+
+.review-meta-key {
+  display: block;
+  font-size: clamp(10px, 2.6cqw, 12px);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--paper-faint);
+}
+
+.review-meta-value {
+  display: block;
+  font-size: clamp(13px, 3.7cqw, 17px);
+  font-weight: 800;
+}
+
+/* The ended-early note rides the DURATION value line at the key's size,
+   so it reads as an annotation on the number, not part of it. It exists
+   because the mode line above prints the CONFIGURED length; the asterisk
+   reconciles the two when the player stopped the shift early (doc 7). */
+.review-meta-note {
+  font-size: clamp(10px, 2.6cqw, 12px);
+  font-weight: 700;
+  color: var(--paper-faint);
+  white-space: nowrap;
+}
+
+/* --- Final score: the one large element on the page --- */
+
+/* Three columns - arrow, figures, arrow - with the shift counter hanging
+   in a SECOND ROW under the right arrow only, so the two arrowheads stay
+   level with each other (John, 2026-08-08). The figures span both rows
+   and stay centred by the 1fr middle column; with the browse controls
+   hidden the two auto columns collapse to zero, so a report that is not
+   being browsed lays out exactly as it always did. */
+/* The two side columns are EQUAL BY CONSTRUCTION (both 1fr) and the
+   score sits in an auto middle. That is what keeps the score centred on
+   the sheet: with auto side columns, "MOST RECENT" made the right column
+   wider than the left and visibly shoved the score off-centre
+   (2026-08-08). Everything in a side column is centred within it, so the
+   arrow, the counter and the note stay stacked in line. */
+.review-score-block {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-rows: auto auto auto;
+  align-items: center;
+  justify-items: center;
+  text-align: center;
+  margin: clamp(6px, 2cqw, 11px) 0;
+}
+
+.review-score-figures {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+}
+
+/* Deliberately the same glyph, size and ink as the Patients Seen arrows
+   the player has already met one screen away - they do the same job, so
+   they must not look like a different control. No halo here: nothing
+   scrolls underneath them on the report. */
+.shift-nav {
+  grid-row: 1;
+  width: clamp(24px, 8cqw, 38px);
+  height: clamp(34px, 11cqw, 52px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: none;
+  color: #7a5a2e;
+  font-size: clamp(20px, 6.8cqw, 32px);
+  line-height: 1;
+  /* Every value above, and the halo below, is copied from .seen-nav so
+     the two controls are indistinguishable (John, 2026-08-08). Both
+     resolve their cqw against the shell, so the sizes really do match. */
+  text-shadow:
+    0 0 3px #f7f0e1, 0 0 6px #f7f0e1, 0 1px 0 #fff;
+}
+
+.shift-nav--newer { grid-column: 1; }
+.shift-nav--older { grid-column: 3; }
+
+.shift-nav:active {
+  background: #00000014;
+  color: #4a3517;
+}
+
+/* "1 OF 3" - the only cue to how deep in the queue you are, because the
+   arrows wrap and so never go dim. */
+.shift-position {
+  grid-column: 3;
+  grid-row: 2;
+  color: var(--paper-faint);
+  font-size: clamp(9px, 2.9cqw, 13px);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+/* "MOST RECENT" under the counter, on shift #1 only. It is HIDDEN BY
+   VISIBILITY rather than by the hidden attribute, so its row keeps its
+   height on every other shift and paging never shifts the sheet below
+   (John, 2026-08-08). Darker than the counter because it is an
+   assertion about this shift, not a position readout. */
+.shift-position-note {
+  grid-column: 3;
+  grid-row: 3;
+  color: var(--paper-ink);
+  font-size: clamp(8px, 2.5cqw, 11px);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.shift-position-note.is-hidden {
+  visibility: hidden;
+}
+
+/* A step smaller than variant B's clamp(46px, 19cqw, 92px): the vertical
+   budget it gave up went to the direction buttons, whose reserved height
+   must fit label + explanation (John, 2026-08-06). */
+.review-score-value {
+  font-size: clamp(40px, 16.5cqw, 80px);
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* A losing shift is legitimately negative; say so in red rather than
+   letting a minus sign hide in the ink color. */
+.review-score-value.is-negative {
+  color: var(--paper-wrong);
+}
+
+.review-score-label {
+  font-size: clamp(11px, 3cqw, 13px);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--paper-faint);
+}
+
+/* --- Scoring table: ALWAYS three rows, CORRECT / CLOSE / WRONG.
+       Cells: label | count | multiplier | subtotal. --- */
+
+.review-formulas {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  align-items: baseline;
+  column-gap: clamp(6px, 2.2cqw, 13px);
+  row-gap: clamp(4px, 1.5cqw, 8px);
+  border-top: 2px solid var(--paper-ink);
+  border-bottom: 2px solid var(--paper-ink);
+  padding: clamp(6px, 2.2cqw, 12px) 0;
+  font-size: clamp(12px, 3.5cqw, 17px);
+  font-variant-numeric: tabular-nums;
+}
+
+.review-formula-label {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* The outcome glyph opening each label (John, 2026-08-06): the same
+   marks as the toast and photo badge, in the outcome's accent color -
+   the word beside it stays in label ink. */
+.review-formula-glyph {
+  margin-right: 0.4em;
+  font-weight: 900;
+}
+
+.review-formula-glyph.is-outcome-correct { color: var(--paper-correct); }
+.review-formula-glyph.is-outcome-close   { color: var(--paper-close); }
+.review-formula-glyph.is-outcome-wrong   { color: var(--paper-wrong); }
+
+/* Under Strict the whole CLOSE row recedes, glyph included. */
+.review-formula-label.is-na .review-formula-glyph { color: inherit; }
+
+.review-formula-count,
+.review-formula-multiplier {
+  color: var(--paper-faint);
+  font-weight: 700;
+  text-align: right;
+}
+
+.review-formula-subtotal {
+  font-weight: 900;
+  text-align: right;
+  min-width: 3.4em;
+}
+
+/* Outcome rows carry their color on the subtotal only, so the grid stays
+   calm and the eye still finds the good and bad numbers (doc 7). The
+   modifier sits on the same cell as the role class (the grid has no row
+   element to hang it on), so these are compound, not descendant. */
+.review-formula-subtotal.review-formula--correct { color: var(--paper-correct); }
+.review-formula-subtotal.review-formula--close   { color: var(--paper-close); }
+.review-formula-subtotal.review-formula--wrong   { color: var(--paper-wrong); }
+
+/* A row that does not apply in this difficulty (CLOSE under Strict).
+   It keeps its place so the table shape never changes, but recedes. */
+.review-formula-label.is-na,
+.review-formula-subtotal.is-na {
+  color: var(--paper-faint);
+  font-weight: 700;
+}
+
+.review-formula-subtotal.is-na {
+  letter-spacing: 0.06em;
+}
+
+/* --- Direction counters: explanatory, never scored (doc 3).
+       One boxed section: two counter buttons plus the always-visible
+       disclaimer. Hovering or pinning a button swaps its OWN content
+       for its explanation, in place. --- */
+
+.review-directions-box {
+  margin-top: clamp(6px, 2.2cqw, 12px);
+  border: 1px solid var(--paper-rule);
+  border-radius: 2px;
+  padding: clamp(5px, 1.8cqw, 10px);
+}
+
+.review-directions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(6px, 2.4cqw, 14px);
+}
+
+/* The min-height is RESERVED space: it must fit the label plus the
+   wrapped explanation, so the number->explanation swap never changes the
+   button's size and nothing shifts under the pointer or finger. */
+.review-direction {
+  min-height: clamp(56px, 17.5cqw, 74px); /* >= 44px touch floor (doc 7) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 1px solid var(--paper-rule);
+  padding: clamp(4px, 1.5cqw, 8px) clamp(3px, 1.2cqw, 7px);
+  background: transparent;
+  color: inherit;
+  border-radius: 2px;
+}
+
+.review-direction:focus-visible,
+.review-direction.is-active {
+  background: rgb(0 0 0 / 5%);
+  border-color: var(--paper-ink);
+  outline: none;
+}
+
+.review-direction-count {
+  display: block;
+  font-size: clamp(19px, 6cqw, 30px);
+  font-weight: 900;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.review-direction-label {
+  display: block;
+  margin-top: 2px;
+  font-size: clamp(10px, 2.6cqw, 12px);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--paper-faint);
+}
+
+/* The in-place swap. Hover covers desktop; the is-active pin covers
+   touch, set by app.js on tap (iOS has no hover) and released by its
+   own 5-second timeout. The explanation keeps the counter's label as
+   its first line, so the reader never loses which box they are in. */
+.review-direction-explain {
+  display: none;
+  font-size: clamp(10px, 2.8cqw, 13px);
+  line-height: 1.3;
+  font-weight: 700;
+  color: var(--paper-ink);
+}
+
+.review-direction-explain .review-direction-label {
+  margin-top: 0;
+  margin-bottom: 2px;
+}
+
+.review-direction:focus-visible .review-direction-figures,
+.review-direction.is-active .review-direction-figures {
+  display: none;
+}
+
+.review-direction:focus-visible .review-direction-explain,
+.review-direction.is-active .review-direction-explain {
+  display: block;
+}
+
+/* Hover participates ONLY where hover truly exists. iOS "sticks" the
+   :hover state after a tap until the next tap elsewhere, which kept the
+   explanation on screen after the pin's timeout had released it (John,
+   2026-08-06) - so on touch devices the is-active pin is the only driver
+   and the timeout visibly works. */
+@media (hover: hover) {
+  .review-direction:hover {
+    background: rgb(0 0 0 / 5%);
+    border-color: var(--paper-ink);
+  }
+
+  .review-direction:hover .review-direction-figures { display: none; }
+  .review-direction:hover .review-direction-explain { display: block; }
+}
+
+.review-directions-note {
+  margin-top: clamp(4px, 1.6cqw, 8px);
+  font-size: clamp(10px, 2.6cqw, 12px);
+  line-height: 1.3;
+  color: var(--paper-faint);
+  text-align: center;
+}
+
+/* --- Actions --- */
+
+.review-actions {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 2cqw, 10px);
+  padding-top: clamp(8px, 2.5cqw, 14px);
+}
+
+.review-seen,
+.review-return {
+  min-height: 44px; /* touch target floor (doc 7) */
+  border-radius: 4px;
+  font-weight: 900;
+  font-size: clamp(12px, 3.6cqw, 16px);
+  letter-spacing: 0.06em;
+  color: #fff;
+  border: 1px solid rgb(255 255 255 / 35%);
+  box-shadow: inset 0 1px #ffffff55, 0 2px 4px #0007;
+}
+
+.review-seen {
+  background: linear-gradient(#2a6f92, #123f57);
+}
+
+/* No patients seen means nothing to browse; the button says so quietly
+   instead of opening an empty browser. */
+.review-seen[disabled] {
+  cursor: default;
+  color: #6f6a5e;
+  background: #ddd6c6;
+  border-color: #c3bcaa;
+  box-shadow: none;
+}
+
+.review-return {
+  background: linear-gradient(#15935b, #07572f);
+}
+
+/* ------------------------------------------------------------------------
+   9b. Shift-over acknowledgement
+
+   Deliberately almost empty: it is a pause, not a screen. It sits over
+   the finished summary and dims it, so the score is already there the
+   moment the player taps through.
+   --------------------------------------------------------------------- */
+
+.shift-over {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Content flows from a fixed top edge rather than centering (John,
+     2026-08-06): the headline's BASELINE lands at ~50% of the shell
+     height, the brand's (absolutely positioned below) at ~30%. Only cqw
+     tracks the shell (container-type is inline-size); the shell is
+     locked 9:16, so height% x 16/9 converts to cqw. 50% = 88.9cqw, minus
+     ~0.85em of the 11cqw headline (top-of-line to baseline for the Arial
+     family) = ~79.5cqw of top padding. */
+  justify-content: flex-start;
+  gap: clamp(6px, 2.4cqw, 14px);
+  padding: 79.5cqw 8% 8%;
+  text-align: center;
+  /* Near-opaque plus a blur: the finished summary stays faintly present
+     behind the message, but as a soft wash rather than readable text
+     competing with the headline. */
+  background: rgb(3 12 18 / 95%);
+  backdrop-filter: blur(7px);
+  animation: shift-over-in 260ms ease-out both;
+  /* Being declared last was NOT enough (found 2026-08-09 while fixing
+     the clipped X): `.review-close` is positioned with z-index 3, and
+     `.review-view` creates no stacking context, so that X competed at
+     shell level and painted over this screen - a crisp, live control on
+     a blurred wash, and one that would have skipped the report the
+     player is being sent to. 4 is the smallest number that beats it,
+     which deliberately leaves the toast (15) still above this screen as
+     it always was. */
+  z-index: 4;
+}
+
+/* The sign brand crowns the acknowledgement, a touch smaller than the
+   headline (RUSH! at 1.18em brings it up to about the same presence).
+   Absolutely positioned so its BASELINE sits at ~30% of the shell height
+   (John, 2026-08-06): 30% = 53.3cqw, minus ~0.85em of the 9.5cqw font
+   = ~45cqw of top offset. */
+.shift-over-brand {
+  position: absolute;
+  top: 45cqw;
+  left: 0;
+  right: 0;
+  font-size: clamp(22px, 9.5cqw, 48px);
+  letter-spacing: -0.02em;
+}
+
+.shift-over-headline {
+  font-size: clamp(26px, 11cqw, 56px);
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  color: var(--cream);
+  text-shadow: 0 3px 14px #000a;
+}
+
+.shift-over-count {
+  font-size: clamp(11px, 4cqw, 19px);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--orange);
+}
+
+/* The prompt fades up late so the headline lands first. Same size and
+   weight as the patients-seen count, white, framed by a rule above and
+   below, and sitting about two line-heights lower than the quiet steel
+   version it replaced (John, 2026-08-06). */
+.shift-over-hint {
+  margin-top: clamp(36px, 13.5cqw, 70px);
+  font-size: clamp(11px, 4cqw, 19px);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #fff;
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  padding: 0.45em 0.6em;
+  animation: shift-over-hint-in 900ms ease-out both;
+}
+
+@keyframes shift-over-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes shift-over-hint-in {
+  0%   { opacity: 0; }
+  55%  { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* ------------------------------------------------------------------------
+   9c. Boot splash (Phase 10, 2026-08-09).
+   An opaque cover held over the shell until the ED ENTRANCE art has
+   decoded, so the entrance appears complete rather than lettering-first.
+
+   It is DRAWN ENTIRELY IN CSS AND TEXT. A loading screen that waited on
+   an image of its own would have the very problem it exists to cure, so
+   nothing here may ever gain a background-image.
+
+   THE COVER IS UP FROM THE FIRST PAINT. It has no `hidden` attribute in
+   the markup and this rule is in the render-blocking stylesheet, so it is
+   the first thing drawn - before the board lettering, which is static
+   markup that would otherwise be on screen for as long as it takes to
+   execute the four scripts at the end of index.html (John saw exactly
+   that on the desktop, 2026-08-09: "first the text comes up... then a
+   transition screen"). A cover that JavaScript switches on can only ever
+   arrive too late to cover anything.
+
+   Only the WORDS are timed. Splash and words must never fade or animate:
+   an element that is already on screen has nothing to fade in from, and a
+   fade here reads as one more flicker in a sequence that exists to remove
+   them.
+
+   z-index 20 puts it above every other layer in the app (the ladder runs
+   shift-over 4, popup 10, chart 12, numeral 13, arriving 14, toast 15,
+   confirm 16). Nothing should ever need to paint over the splash: while
+   it is up, the game has not started.
+   --------------------------------------------------------------------- */
+
+.boot-splash {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 5cqw, 26px);
+  background: var(--navy-950);
+}
+
+/* The lettering waits out BOOT_SPLASH_DELAY_MS: a warm load shows a dark
+   shell for an instant and no words at all, while a slow one gets a real
+   loading screen. `visibility` rather than `display` so the two lines keep
+   their places and appearing cannot shift anything. */
+.boot-splash-brand,
+.boot-splash-status {
+  visibility: hidden;
+}
+
+.boot-splash.is-slow .boot-splash-brand,
+.boot-splash.is-slow .boot-splash-status {
+  visibility: visible;
+}
+
+.boot-splash-brand {
+  font-size: clamp(22px, 9.5cqw, 48px);
+  letter-spacing: -0.02em;
+}
+
+/* Same size, weight and tracking as the shift-over count, which is the
+   game's existing voice for a quiet line under a big one. */
+.boot-splash-status {
+  font-size: clamp(11px, 4cqw, 19px);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--steel);
+}
+
+/* ------------------------------------------------------------------------
+   10. Reduced motion: shorten or remove nonessential animation (doc 7).
+   --------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}

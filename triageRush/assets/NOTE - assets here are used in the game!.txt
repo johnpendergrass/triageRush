@@ -1,0 +1,5 @@
+NOTE - assets here are used in the game!
+
+files or folders with an underscore prefix '_' are not used in the game.
+They are for archival or documenting purposes.
+

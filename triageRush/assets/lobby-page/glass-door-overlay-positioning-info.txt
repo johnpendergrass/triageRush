@@ -1,0 +1,12 @@
+The authoritative door-overlay details are:
+Base canvas: 852 × 1515
+Coordinate origin: upper-left
+
+Both overlays start at: X 319, Y 447
+
+Start Shift overlay: 514 × 232
+Resume Shift overlay: 473 × 267
+
+These are rectangular RGB patches placed directly over background-w-open-glass-doors 852x1515.png
+
+They should not be independently scaled or repositioned after the complete HOME composition is fitted to the viewport

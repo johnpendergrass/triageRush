@@ -1,0 +1,34 @@
+triageRush HOME popup positioning
+================================
+
+Approved popup assets:
+  popup-settings-player-board.png
+  popup-settings-shift-settings-board.png
+  popup-about-whiteboard.png
+
+Asset dimensions:
+  941 x 1672 pixels
+  RGBA PNG with transparent surround
+  Aspect ratio: 941 / 1672
+
+HOME frame coordinate system:
+  852 x 1515
+
+Approved popup presentation:
+  Center horizontally and vertically in the HOME frame.
+  Display at 93.75% of the HOME frame height.
+  Preserve the asset aspect ratio.
+  In the 402 x 715 desktop test frame, cap displayed width at 377 CSS pixels.
+
+Close box:
+  Position relative to the popup asset container.
+  Top: 8.5%
+  Right: 10.5%
+  Size in the current test app: 36 x 36 CSS pixels
+  The box sits inside the visible upper-right corner of the board frame.
+
+Current implementation:
+  triageRush/styles.css  (the prototype this note
+  pointed at, _testAppHomeScreen, was deleted 2026-08-08)
+
+Approved 2026-07-31.
