@@ -1,0 +1,12 @@
+{
+  "schema": "triageRush-music-manifest",
+  "version": 1,
+  "folders": {
+    "music": [
+      {
+        "file": "happy-birthday-alternative/happy-birthday.mp3",
+        "gain": 1.0
+      }
+    ]
+  }
+}
